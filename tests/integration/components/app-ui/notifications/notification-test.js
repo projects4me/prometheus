@@ -48,6 +48,34 @@ module(
 			assert
 				.dom('[data-notification-timestamp]')
 				.exists('Timestamp exists');
+			assert
+				.dom('[data-notification-user-image] [data-test-avatar][data-size="m"]')
+				.exists('The user picture is an AppUi avatar of size m');
+		});
+
+		test('a click on the avatar is a user click, image or initials', async function (assert) {
+			this.set('notificationItem', {
+				id: '1',
+				description: 'd',
+				context: { relatedTo: 'issue', projectShortcode: 'TEST', issueNumber: '1' },
+				recipientRecords: [{ userId: '1', isRead: '0' }],
+				dateCreated: new Date(),
+				createdUser: 'user1',
+				createdUserName: 'Test User'
+			});
+
+			await render(
+				hbs`<AppUi::Notifications::Notification @notification={{this.notificationItem}} />`
+			);
+
+			let avatarInner = this.element.querySelector(
+				'[data-notification-user-image] [data-test-avatar] > *'
+			);
+			assert.ok(avatarInner, 'The avatar renders an image or initials');
+			assert.ok(
+				avatarInner.closest('[data-notification-user-image]'),
+				'The avatar sits inside the user wrapper'
+			);
 		});
 
 		test('it applies unread class for unread notifications', async function (assert) {

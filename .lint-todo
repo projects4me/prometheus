@@ -375,3 +375,4 @@ add|ember-template-lint|no-at-ember-render-modifiers|199|43|199|43|db91e28a7f5d9
 add|ember-template-lint|no-inline-styles|26|31|26|31|b00966baff974390b46b170c5b7de04601e6d047|1794614400000|||tests/integration/components/app-ui/task-board/layout-test.js
 add|ember-template-lint|no-inline-styles|33|31|33|31|ea01c4cda5bc6652e7ff847e611b4d8ac15861ec|1794614400000|||tests/integration/components/app-ui/task-board/milestones-test.js
 remove|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
+remove|ember-template-lint|no-duplicate-attributes|1|46|1|46|a9eede4f9d695837927696fe167522dacfb391df|1794614400000|||app/components/app-ui/notifications/notification.hbs
