@@ -38,7 +38,7 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         this.set('size', 'xs');
         await render(hbs`<AppUi::Avatar @user={{this.user}} @size={{this.size}} />`);
 
-        let expected = { xs: ['xs', 20], s: ['s', 30], sm: ['s', 30], m: ['m', 40], l: ['l', 96], huge: ['m', 40] };
+        let expected = { xs: ['xs', 20], s: ['s', 30], sm: ['s', 30], m: ['m', 40], ml: ['ml', 64], l: ['l', 96], huge: ['m', 40] };
         for (let [size, [name, pixels]] of Object.entries(expected)) {
             this.set('size', size);
             await settled();
@@ -87,6 +87,20 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         assert.notStrictEqual(getComputedStyle(small).display, 'none', 'visible at s');
         assert.strictEqual(getComputedStyle(tiny).display, 'none', 'hidden at xs');
         assert.dom('[data-test-avatar]').hasAttribute('title', 'Odysseus (agent)');
+    });
+
+    test('size ml is 64px for a person, a person without an image and an agent', async function (assert) {
+        this.set('person', { id: 1, name: 'Ada' });
+        this.set('noImage', { name: 'Grace Hopper' });
+        this.set('agent', { id: 2, name: 'Odysseus', type: 'agent', profilePicture: '/img/pm.png' });
+        await render(hbs`<AppUi::Avatar @user={{this.person}} @size="ml" /><AppUi::Avatar @user={{this.noImage}} @size="ml" /><AppUi::Avatar @user={{this.agent}} @size="ml" />`);
+
+        for (let avatar of this.element.querySelectorAll('[data-test-avatar]')) {
+            assert.strictEqual(avatar.offsetWidth, 64);
+            assert.strictEqual(avatar.offsetHeight, 64);
+        }
+        assert.dom('[data-test-avatar-initials]').exists({ count: 1 });
+        assert.notStrictEqual(getComputedStyle(this.element.querySelector('[data-test-avatar-marker]')).display, 'none', 'marker visible');
     });
 
     test('an agent without a picture shows the robot icon and no marker', async function (assert) {

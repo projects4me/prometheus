@@ -1,5 +1,5 @@
 /*
-  AppUi::Avatar: the round picture of a user in the standard sizes xs 20px, s 30px, m 40px and l 96px.
+  AppUi::Avatar: the round picture of a user in the standard sizes xs 20px, s 30px, m 40px, ml 64px and l 96px.
   An agent shows a small robot marker at the bottom right from size s up.
 */
 .app-ui-avatar {
@@ -56,6 +56,13 @@
 
   &.app-ui-avatar-m {
     .app-ui-avatar-marker { display: inline-flex; }
+  }
+
+  &.app-ui-avatar-ml {
+    width: 64px;
+    height: 64px;
+    > .agent-avatar { font-size: 32px; }
+    .app-ui-avatar-marker { display: inline-flex; font-size: 14px; }
   }
 
   &.app-ui-avatar-l {
@@ -116,7 +123,9 @@ $avatarColors: $primaryColor, $highlightColor, $secondaryColor, $dangerColor, $w
 
   &.app-ui-avatar-xs .app-ui-avatar-initials { font-size: 10px; > .fa-user { font-size: 11px; } }
   &.app-ui-avatar-s .app-ui-avatar-initials { font-size: 13px; > .fa-user { font-size: 16px; } }
+  &.app-ui-avatar-ml .app-ui-avatar-initials { font-size: 25px; > .fa-user { font-size: 32px; } }
   &.app-ui-avatar-l .app-ui-avatar-initials { font-size: 38px; > .fa-user { font-size: 48px; } }
   &.app-ui-avatar-xs .app-ui-avatar-pattern--ring { border-width: 2px; }
+  &.app-ui-avatar-ml .app-ui-avatar-pattern--ring { border-width: 4px; }
   &.app-ui-avatar-l .app-ui-avatar-pattern--ring { border-width: 6px; }
 }

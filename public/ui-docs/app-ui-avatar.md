@@ -15,6 +15,7 @@ Extra attributes (a class, a title) go on the wrapping element.
 | xs | 20 |
 | s | 30 (`sm` is an alias of `s`) |
 | m | 40 (default) |
+| ml | 64 (stacked member grids with the name below) |
 | l | 96 |
 
 An unknown value falls back to `m`.
@@ -24,7 +25,7 @@ An unknown value falls back to `m`.
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
 | @user | Object | none | The user record: `id`, `name`, and optionally `type` and `profilePicture` |
-| @size | String | m | `xs`, `s` (or `sm`), `m` or `l` |
+| @size | String | m | `xs`, `s` (or `sm`), `m`, `ml` or `l` |
 
 ## Blocks
 
