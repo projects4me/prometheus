@@ -27,6 +27,14 @@ async function enter(expectUrlChange = true) {
 export const given = function () {
     return [
         {
+            'The gantt requests are recorded': (assert, ctx) => async function () {
+                ctx.set('ganttRequests', []);
+                server.pretender.handledRequest = (verb, path) => {
+                    ctx.set('ganttRequests', [...ctx.get('ganttRequests'), `${verb} ${path.split('?')[0]}`]);
+                };
+            }
+        },
+        {
             'The gantt saved search $name is $query': (assert, ctx) => async function (name, query) {
                 let project = ctx.get('currentProject');
                 server.create('savedsearch', { name, relatedTo: 'issue', searchquery: query, projectId: project.id });
@@ -81,6 +89,18 @@ export const when = function () {
 
 export const then = function () {
     return [
+        {
+            'The gantt sent one milestones request and one bulk request and no issue request': (assert, ctx) => async function () {
+                let sent = ctx.get('ganttRequests') || [];
+                let bulk = sent.findIndex((r) => r.startsWith('POST') && r.endsWith('/bulk'));
+                // the gantt's milestones GET is the last one before its bulk; earlier ones belong to other screens
+                let milestones = sent.slice(0, bulk).map((r, k) => (r.startsWith('GET') && r.endsWith('/milestone') ? k : -1)).filter((k) => k >= 0).pop();
+                assert.ok(bulk > 0 && milestones !== undefined, sent.join(' | '));
+                let gantt = sent.slice(milestones);
+                assert.strictEqual(gantt.filter((r) => r.endsWith('/bulk')).length, 1, sent.join(' | '));
+                assert.strictEqual(gantt.filter((r) => r.startsWith('GET') && r.endsWith('/issue')).length, 0, sent.join(' | '));
+            }
+        },
         {
             'The gantt issues were requested with "$text" and the milestone and project': (assert, ctx) => async function (text) {
                 let sent = ctx.get('issueQueries') || [];

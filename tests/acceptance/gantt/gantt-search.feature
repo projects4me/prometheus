@@ -17,6 +17,12 @@ Feature: Gantt | search the task list with ezSearch
     | 1   | 1           | 0         | 0    |  0       | 0       | 0        |
     ------------------------------------------------------------------------
 
+  Scenario: Opening the gantt chart loads the milestone lanes in one bulk request
+
+    Given The gantt requests are recorded
+    When User navigates to app/project/project_1/gantt
+    Then The gantt sent one milestones request and one bulk request and no issue request
+
   Scenario: Running a query requests the issues with it ANDed with milestone and project
 
     When User navigates to app/project/project_1/gantt
