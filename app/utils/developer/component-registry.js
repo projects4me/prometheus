@@ -191,11 +191,11 @@ export const ENTRIES = [
         label: 'Tag',
         group: 'Display',
         status: 'stable',
-        summary: 'AppUi::Tag, a tag or small label with square edges, in the default look of the app.',
+        summary: 'AppUi::Tag, a tag in the Task Board look: variant or palette colour from text, optionally removable.',
         usedIn: [],
         demo: 'developer/demos/tag',
         doc: 'app-ui-tag.md',
-        variants: ['default', 'primary', 'success', 'info', 'warning', 'danger']
+        variants: ['default', 'primary', 'info', 'success', 'warning', 'danger']
     }
 ];
 
