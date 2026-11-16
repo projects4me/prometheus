@@ -22,6 +22,7 @@ export default class DeveloperDemosAvatarComponent extends Component {
         { label: 'xs', value: 'xs' },
         { label: 's', value: 's' },
         { label: 'm', value: 'm' },
+        { label: 'ml', value: 'ml' },
         { label: 'l', value: 'l' }
     ];
 

@@ -9,11 +9,11 @@ import ENV from 'prometheus/config/environment';
 import { isDefaultProfilePicture } from 'prometheus/models/user';
 import { initials, identity, PATTERNS } from 'prometheus/utils/ui/avatar-identity';
 
-const SIZES = ['xs', 's', 'm', 'l'];
+const SIZES = ['xs', 's', 'm', 'ml', 'l'];
 const ALIASES = { sm: 's' };
 
 /**
- * The round picture of a user (person or agent) in the standard sizes xs, s, m (default) and l. A person
+ * The round picture of a user (person or agent) in the standard sizes xs, s, m (default), ml (64px, for member grids) and l. A person
  * without an image, or whose image fails to load, shows the initials on a generated background that is stable
  * per user (or a user icon when there is no name). An agent shows its own picture with
  * a small robot marker, or the robot icon when it has none.
