@@ -1,5 +1,7 @@
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
+let recorded = [];
+
 export default function (assert) {
 	return steps(assert)
 	.given('Each issue has $hours hours and $minutes minutes of $context time', function (hours, minutes, context) {
@@ -32,6 +34,18 @@ export default function (assert) {
 		let issue = server.schema.issues.all().models[0];
 		let issueDetails = document.querySelector('.issue-details-container .issue-details .issue-title');
 		assert.equal(issueDetails.innerText.includes(issue.subject), true);
+	})
+	.given('API requests are recorded', function () {
+		recorded = [];
+		server.pretender.handledRequest = (verb, path) => {
+			recorded.push({ verb, path });
+		};
+	})
+	.then('The board should have loaded through $count bulk requests and no per-milestone issue requests', function (count) {
+		let bulk = recorded.filter((request) => request.verb === 'POST' && /\/bulk$/.test(request.path.split('?')[0]));
+		let issueGets = recorded.filter((request) => request.verb === 'GET' && /\/issue$/.test(request.path.split('?')[0]) && decodeURIComponent(request.path).includes('Issue.milestoneId'));
+		assert.equal(bulk.length, parseInt(count), `${count} bulk requests`);
+		assert.equal(issueGets.length, 0, 'no separate issue requests');
 	})
 	.then(
 		'User should see $issuesCount issues in $status status',
