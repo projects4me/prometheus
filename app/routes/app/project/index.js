@@ -5,7 +5,6 @@
 import App from "prometheus/routes/app";
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { schedule } from '@ember/runloop';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
@@ -143,7 +142,7 @@ export default class ProjectIndexRoute extends App {
         controller.milestoneList.reset();
         controller.milestonesPage = 1;
         // Highlight the s_id milestone once the first page has rendered; page changes do not
-        controller.loadMilestonesPage(1).then(() => schedule('afterRender', controller, 'highlightTargetMilestone'));
+        controller.loadMilestonesPage(1).then(() => requestAnimationFrame(() => controller.highlightTargetMilestone()));
         controller.send('resetNewMilestone');
         controller.set('conversations', model.conversations);
     }

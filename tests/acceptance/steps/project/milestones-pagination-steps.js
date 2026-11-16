@@ -89,7 +89,7 @@ export const then = function () {
             }
         },
         {
-            "The milestones box lists the milestones $names": (assert, ctx) => async function (names) {
+            "The milestones box lists the milestones $names": (assert) => async function (names) {
                 assert.deepEqual(listedNames(), names.split(', '));
             }
         },
