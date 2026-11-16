@@ -7,9 +7,12 @@ import MD from "prometheus/utils/metadata/metadata";
 import _ from 'lodash';
 import { get } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
+import { service } from '@ember/service';
 
 const UTC = { zone: 'UTC' };
 const stamp = (date) => dates.format(date, 'YYYY-MM-DD HH:mm:ss', UTC);
+
+const STATUSES_ITEM = 'system-issuestatuses';
 
 const DEFAULT_WIDGETS = ['recentIssues', 'activeMilestones', 'weeklyActivities', 'weeklyIssueTimelogs', 'weeklyConversations'];
 
@@ -46,6 +49,15 @@ export default class AppIndexRoute extends App {
     availableWidgets = null;
 
     /**
+     * Batches the issue statuses and the widgets' first loads into one bulk request.
+     *
+     * @property bulk
+     * @type Ember.Service
+     * @private
+     */
+    @service bulk;
+
+    /**
      * This function is called by ember when the model has been
      * loaded, we are using this function to return promises
      * for the data for each of the widgets to be displayed
@@ -64,25 +76,45 @@ export default class AppIndexRoute extends App {
 
         _self.widgets = widgets;
 
+        // One bulk request for the issue statuses and the first load of every visible widget
+        // that declares one (model + options in views.Dashboard.widgets.<name>)
+        let loading = _.filter(widgets, (widget) => _self._declaresLoad(widgetSettings[widget]));
+        let results = await _self.bulk.query([
+            { id: STATUSES_ITEM, modelName: 'issuestatus', query: { query: `(Issuestatus.system : 1)`, limit: -1 } },
+            ...loading.map((widget) => ({
+                id: widget,
+                modelName: widgetSettings[widget].model,
+                query: widgetSettings[widget].options
+            }))
+        ]);
+
+        // The statuses only colour the labels, so a failed load is not reported (as before)
         let widgetResults = {};
-
-        //Load the issue statuses so the status labels of the widgets can use their configured colours
-        await _self.store.query('issuestatus', { query: `(Issuestatus.system : 1)`, limit: -1 }).catch(() => []);
-
         for (let widget of widgets) {
-            widgetResults[widget] = await _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
+            let result = results[widget];
+            if (result?.error) {
+                _self.errorManager.handleLoadError(result.error);
+            }
+            // A widget without a declaration loads itself; a failed item renders empty
+            widgetResults[widget] = result ? (result.records ?? []) : undefined;
         }
-        _self.widgetSettings = widgetSettings;
-        Logger.debug(_self);
-        Logger.debug(widgetSettings);
-        Logger.debug(widgets);
-        Logger.debug('-Prometheus.Routes.Index::afterModel');
 
-        try {
-            _self.widgets = widgetResults;
-        } catch (error) {
-            _self.errorManager.handleError(error);
-        }
+        _self.widgetSettings = widgetSettings;
+        _self.widgets = widgetResults;
+        Logger.debug('-Prometheus.Routes.Index::afterModel');
+    }
+
+    /**
+     * Whether a widget registers its first load with the dashboard, by declaring
+     * the model and options of the query in its metadata.
+     *
+     * @method _declaresLoad
+     * @param {Object} widgetSetting
+     * @return {Boolean}
+     * @private
+     */
+    _declaresLoad(widgetSetting){
+        return Boolean(widgetSetting?.model && widgetSetting?.options);
     }
 
     /**
@@ -141,6 +173,9 @@ export default class AppIndexRoute extends App {
         let LoadingAssetsController = _self.controllerFor('app.loading-assets');
 
         _.forEach(widgetSettings,function(widgetSetting,idx){
+            if (!_.isString(widgetSetting.options?.query)) {
+                return;
+            }
             let query = widgetSettings[idx].options.query;
             query = _.replace(query,'```ME```',_self.get('currentUser.user.id'));
             query = _.replace(query,'```TODAY_START```',stamp(dates.startOf(dates.now(), 'day', UTC)));
