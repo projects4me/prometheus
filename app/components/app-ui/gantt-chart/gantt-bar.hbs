@@ -44,9 +44,7 @@
       </div>
     </div>
     <span class="assignee-avatar">
-      <img src="{{this.apiHost}}/userimage/get/{{@issue.assignedTo.id}}" alt="{{@issue.assignedTo.name}}" class="img-circle img-sm"
-      {{initialize-tooltip content=@issue.assignedTo.name placement="right"}}
-      >
+      <AppUi::Avatar @user={{@issue.assignedTo}} @size="m" {{initialize-tooltip content=@issue.assignedTo.name placement="right"}} />
     </span>    
   {{/if}}
   {{#if this.showLabel}}

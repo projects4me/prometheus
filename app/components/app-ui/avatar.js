@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
+import { get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'prometheus/config/environment';
 import { isDefaultProfilePicture } from 'prometheus/models/user';
@@ -44,22 +45,29 @@ export default class AppUiAvatarComponent extends Component {
         return SIZES.includes(size) ? size : 'm';
     }
 
+    /** Reads through get() so belongsTo proxies (e.g. issue.assignedTo) work as well as plain objects. */
+    field(name) {
+        let user = this.args.user;
+
+        return user ? get(user, name) : undefined;
+    }
+
     get isAgent() {
-        return this.agentDirectory.isAgent(this.args.user?.id, this.args.user?.type);
+        return this.agentDirectory.isAgent(this.field('id'), this.field('type'));
     }
 
     get hasPicture() {
-        return !isDefaultProfilePicture(this.args.user?.profilePicture);
+        return !isDefaultProfilePicture(this.field('profilePicture'));
     }
 
     get title() {
-        let name = this.args.user?.name ?? '';
+        let name = this.field('name') ?? '';
 
         return this.isAgent ? `${name} (agent)`.trim() : name;
     }
 
     get imageUrl() {
-        let id = this.args.user?.id;
+        let id = this.field('id');
 
         return id ? `${ENV.api.host}/userimage/get/${id}` : null;
     }
@@ -69,7 +77,7 @@ export default class AppUiAvatarComponent extends Component {
     }
 
     get initials() {
-        return initials(this.args.user?.name, this.size);
+        return initials(this.field('name'), this.size);
     }
 
     get identity() {

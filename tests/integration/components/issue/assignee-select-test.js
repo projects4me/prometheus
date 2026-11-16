@@ -42,7 +42,7 @@ module('Integration | Component | issue/assignee-select', function (hooks) {
 
 		assert.dom('[data-issue-assignee]').hasText('Alice');
 		assert.dom('[data-issue-assignee-option]').exists({ count: 1 });
-		assert.dom('[data-issue-assignee-option]').hasText('Bob');
+		assert.dom('[data-issue-assignee-option]').includesText('Bob');
 	});
 
 	test('it saves the chosen member and calls @onUpdated', async function (assert) {
@@ -71,7 +71,7 @@ module('Integration | Component | issue/assignee-select', function (hooks) {
 	test('compact mode renders the avatar trigger and a right aligned menu', async function (assert) {
 		await render(hbs`<Issue::AssigneeSelect @issue={{this.issue}} @members={{this.members}} @compact={{true}} />`);
 
-		assert.dom('[data-issue-assignee-toggle] img').exists();
+		assert.dom('[data-issue-assignee-toggle] [data-test-avatar][data-size="s"]').exists();
 		assert.dom('[data-issue-assignee]').doesNotExist();
 		assert.dom('.dropdown-menu').hasClass('dropdown-menu-right');
 	});

@@ -31,7 +31,7 @@ export default function (assert) {
 			await settled();
 		})
 		.then('The first card shows User_2 as assignee', function () {
-			assert.dom(card() + ' [data-issue-assignee-toggle] img').hasAttribute('alt', 'User_2');
+			assert.dom(card() + ' [data-issue-assignee-toggle] [data-test-avatar]').hasAttribute('title', 'User_2');
 			assert.dom('.issue-details-container').doesNotExist('quick view stayed closed');
 		});
 }
