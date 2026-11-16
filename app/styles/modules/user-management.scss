@@ -45,7 +45,8 @@
         font-weight: 300;
       }
 
-      .user-img {
+      .app-ui-avatar {
+        flex-shrink: 0;
         margin-right: 1rem;
       }
     }
