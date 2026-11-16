@@ -142,10 +142,7 @@
                 </AppUi::Button>
 
                 <div class="member-avatar-wrap">
-                  <img
-                    src="{{this.apiHost}}/userimage/get/{{userrole.user.id}}"
-                    alt="{{userrole.user.name}}"
-                  >
+                  <AppUi::Avatar @user={{hash id=userrole.user.id type=userrole.user.type name=userrole.user.name profilePicture=userrole.user.profilePicture}} @size="ml" />
                 </div>
                 <LinkTo @route="app.user.page" @model={{userrole.user.id}} class="users-list-name">
                   {{userrole.user.name}}
@@ -226,11 +223,9 @@
                       data-role-userrole-id={{userrole.id}}
                       class="role-members-view-all__item"
                     >
-                      <img
-                        class="role-members-view-all__avatar"
-                        src="{{this.apiHost}}/userimage/get/{{userrole.user.id}}"
-                        alt="{{userrole.user.name}}"
-                      >
+                      <span class="role-members-view-all__avatar">
+                        <AppUi::Avatar @user={{hash id=userrole.user.id type=userrole.user.type name=userrole.user.name profilePicture=userrole.user.profilePicture}} @size="m" />
+                      </span>
                       <div class="role-members-view-all__info">
                         <LinkTo
                           @route="app.user.page"
