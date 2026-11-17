@@ -116,6 +116,40 @@ export default class NavBarComponent extends AppComponent {
 
         return sortedNavigationMeta;
     }
+
+    /**
+     * The navigation items that work across projects (projectRelated is not set).
+     *
+     * @property workspaceNavigationMeta
+     * @for NavBar
+     */
+    get workspaceNavigationMeta() {
+        return this._filterByProjectRelated(false);
+    }
+
+    /**
+     * The navigation items that belong to the selected project (projectRelated is set).
+     *
+     * @property projectNavigationMeta
+     * @for NavBar
+     */
+    get projectNavigationMeta() {
+        return this._filterByProjectRelated(true);
+    }
+
+    /**
+     * Keeps the order of navigationMeta and returns only the items on one side of projectRelated.
+     *
+     * @method _filterByProjectRelated
+     * @param {Boolean} projectRelated
+     * @return {Object}
+     * @private
+     */
+    _filterByProjectRelated(projectRelated) {
+        return Object.fromEntries(
+            Object.entries(this.navigationMeta).filter(([, item]) => Boolean(item.projectRelated) === projectRelated)
+        );
+    }
     /**
      * This property contains the metadata for admin navigation.
      * 
