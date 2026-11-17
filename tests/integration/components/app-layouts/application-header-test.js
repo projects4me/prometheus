@@ -58,6 +58,13 @@ module('Integration | Component | application-header', function (hooks) {
         assert.dom('header li.dropdown.user.user-menu span#user-name').hasText('Rana Nouman', 'current username matched');
         assert.dom('li.user-header p > small').hasText('Member since Feb 2022', 'date created matched');
     });
+    test('it renders the global search in the navbar and a compact New icon', async function (assert) {
+        await render(hbs`
+            <AppLayouts::ApplicationHeader />
+        `);
+        assert.dom('nav.navbar .global-search').exists('the search is in the navbar');
+        assert.dom('.create-module-btn .fa-plus').exists('the compact New icon is rendered');
+    });
     test('it renders module icons before the quick create entries', async function (assert) {
         await render(hbs`
             <AppLayouts::ApplicationHeader />
