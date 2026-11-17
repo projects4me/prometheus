@@ -1,6 +1,6 @@
 
 {{!-- Sidebar user panel (optional) --}}
-<div class="user-panel" {{initialize-sidebar}}>
+<div class="user-panel" {{initialize-sidebar}} {{close-sidebar-on-navigate this.router}}>
   <div class="pull-left image">
     <AppUi::Avatar @user={{this.currentUser.user}} @size="m" />
   </div>
