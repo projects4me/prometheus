@@ -37,7 +37,7 @@ Feature: App | Document title
     And There are 10 projects in system
     And User_4 selects Project 1
     When User navigates to app/project/project_1/issue
-    And User selects project 2 from sidebar
+    And User selects project 2 from header
     Then Browser tab title should contain "PROJECT_2"
     And Browser tab title should not contain "PROJECT_1"
 

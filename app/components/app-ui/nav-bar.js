@@ -74,16 +74,6 @@ export default class NavBarComponent extends AppComponent {
     }
 
     /**
-     * This function returns list of projects
-     *
-     * @method get
-     * @public
-     */
-    get projectsList() {
-        return this.args.projectsList ?? '';
-    }
-
-    /**
      * This function is used in order to handle navigation to our desired route
      *
      * @method navigate
@@ -104,49 +94,6 @@ export default class NavBarComponent extends AppComponent {
         }
         else {
             this.router.transitionTo(route);
-        }
-    }
-
-    /**
-     * This function is called when a project is selected
-     *
-     * @method projectChanged
-     * @param {String} projectId The selected project
-     * @public
-     */
-    @action projectChanged(project) {
-        this.projectId = project.value;
-        this.trackedProject.setProjectId(project.value);
-        let selectedProject = this.trackedProject.getProject();
-        let lastSelectedProject = this.trackedProject.lastSelectedProject;
-        if(selectedProject.shortCode !== undefined){
-            let url = this.getTransitionUrl(selectedProject, lastSelectedProject);
-            this.router.transitionTo(url);
-        }
-    }
-
-    /**
-     * This function is used to get the url when a project is changed
-     *
-     * @method getTransitionUrl
-     * @param {Object} selectedProject The selected project
-     * @param {Object} lastSelectedProject The last selected project
-     * @return {String} The url to transition to
-     */
-    getTransitionUrl(selectedProject, lastSelectedProject) {
-        let notAllowedTransitions = ['app.project.index', 'app.project.issue.page', 'app.project.wiki.page'];
-        if(notAllowedTransitions.includes(this.router.currentRouteName)){
-            return `/app/project/${selectedProject.shortCode.toLowerCase()}`;
-        }
-        let currentUrl = this.router.currentURL;
-        if(lastSelectedProject && currentUrl.includes(lastSelectedProject.shortCode.toLowerCase())){
-            let url = currentUrl.replace(lastSelectedProject.shortCode.toLowerCase(), selectedProject.shortCode.toLowerCase());
-            if(url.includes('?')){
-                url = url.split('?')[0];
-            }
-            return url;
-        } else {
-            return `/app/project/${selectedProject.shortCode.toLowerCase()}`;
         }
     }
 

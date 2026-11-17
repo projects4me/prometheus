@@ -2,7 +2,7 @@ import { find } from '@ember/test-helpers';
 import steps from '../steps';
 import { chooseOption, chooseOptionAt, noMatchesSelector, openSelect, searchSelect } from 'prometheus/tests/helpers/select';
 
-const SIDEBAR_PROJECT_SELECTOR = 'div.sidebar-form div.input-group';
+const HEADER_PROJECT_SWITCHER = '.project-switcher';
 
 export const given = function () {
     return [
@@ -19,25 +19,25 @@ export const given = function () {
 export const when = function () {
     return [
         {
-            "User selects project $projectId from sidebar": (assert) => async function (projectId) {
-                await openSelect(SIDEBAR_PROJECT_SELECTOR);
-                await chooseOptionAt(`${SIDEBAR_PROJECT_SELECTOR} > div`, projectId - 1);
-                assert.ok(true, `User selects project ${projectId} from sidebar`);
+            "User selects project $projectId from header": (assert) => async function (projectId) {
+                await openSelect(HEADER_PROJECT_SWITCHER);
+                await chooseOptionAt(`${HEADER_PROJECT_SWITCHER} > div`, projectId - 1);
+                assert.ok(true, `User selects project ${projectId} from header`);
             }
         },
         {
-            "User searches and selects project \"$label\" from sidebar": (assert) => async function (label) {
-                await openSelect(SIDEBAR_PROJECT_SELECTOR);
-                await searchSelect(SIDEBAR_PROJECT_SELECTOR, label);
-                await chooseOption(SIDEBAR_PROJECT_SELECTOR, label);
-                assert.ok(true, `User searches and selects project ${label} from sidebar`);
+            "User searches and selects project \"$label\" from header": (assert) => async function (label) {
+                await openSelect(HEADER_PROJECT_SWITCHER);
+                await searchSelect(HEADER_PROJECT_SWITCHER, label);
+                await chooseOption(HEADER_PROJECT_SWITCHER, label);
+                assert.ok(true, `User searches and selects project ${label} from header`);
             }
         },
         {
-            "User searches for \"$query\" in sidebar project selector": (assert) => async function (query) {
-                await openSelect(SIDEBAR_PROJECT_SELECTOR);
-                await searchSelect(SIDEBAR_PROJECT_SELECTOR, query);
-                assert.ok(true, `User searches for ${query} in sidebar project selector`);
+            "User searches for \"$query\" in header project switcher": (assert) => async function (query) {
+                await openSelect(HEADER_PROJECT_SWITCHER);
+                await searchSelect(HEADER_PROJECT_SWITCHER, query);
+                assert.ok(true, `User searches for ${query} in header project switcher`);
             }
         }
     ];
@@ -46,7 +46,7 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "Sidebar project selector shows no projects found": (assert) => async function () {
+            "Header project switcher shows no projects found": (assert) => async function () {
                 let noMatches = find(noMatchesSelector());
                 assert.ok(noMatches, 'no-matches message element is shown');
                 assert.equal(
