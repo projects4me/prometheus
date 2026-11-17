@@ -64,3 +64,48 @@
 .sidebar-mini.sidebar-collapse .sidebar-menu > li.nav-divider {
   display: block;
 }
+
+/* Sidebar width: project selection no longer lives in the navigation, so it is narrower than AdminLTE's 230px.
+   Logo, sidebar, navbar and content offsets all follow $sidebarWidth. */
+$sidebarWidth: 200px;
+
+.main-header .logo,
+.main-sidebar,
+.left-side {
+  width: $sidebarWidth;
+}
+
+@media (min-width: 768px) {
+  .main-header .navbar {
+    margin-left: $sidebarWidth;
+  }
+
+  .content-wrapper,
+  .right-side,
+  .main-footer {
+    margin-left: $sidebarWidth;
+  }
+
+  .sidebar-collapse .main-sidebar,
+  .sidebar-collapse .left-side {
+    transform: translate(-$sidebarWidth, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .main-sidebar,
+  .left-side {
+    transform: translate(-$sidebarWidth, 0);
+  }
+
+  .sidebar-open .content-wrapper,
+  .sidebar-open .right-side,
+  .sidebar-open .main-footer {
+    transform: translate($sidebarWidth, 0);
+  }
+
+  .sidebar-open .main-sidebar,
+  .sidebar-open .left-side {
+    transform: translate(0, 0);
+  }
+}
