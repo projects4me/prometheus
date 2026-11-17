@@ -146,3 +146,54 @@
     margin-right: 0.5rem;
   }
 }
+
+/* Header layout: the navbar is a flex row so the global search sits in the centre without overlapping the
+   switcher or the right-hand menu. Below the Bootstrap sm breakpoint the search wraps onto its own full-width row. */
+.main-header .navbar {
+  display: flex;
+  align-items: center;
+
+  .sidebar-toggle {
+    float: none;
+  }
+
+  .navbar-custom-menu {
+    float: none;
+    margin-left: auto;
+  }
+
+  .global-search {
+    flex: 0 1 42rem;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 1.2rem 1rem;
+
+    .ember-power-select-selected-item {
+      width: auto;
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .main-header .navbar {
+    flex-wrap: wrap;
+
+    .global-search {
+      order: 3;
+      flex: 0 0 100%;
+      margin: 0;
+      padding: 0 1rem 1rem;
+    }
+
+    .create-modules {
+      padding: 1.2rem 0.4rem !important;
+    }
+  }
+
+  /* The header is 50px taller with the search row: the content and the opened sidebar start below it. */
+  .fixed .content-wrapper,
+  .fixed .main-sidebar {
+    padding-top: 15rem;
+  }
+}
