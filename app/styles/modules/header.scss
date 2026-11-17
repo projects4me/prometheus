@@ -116,12 +116,48 @@
     opacity: 0.85;
   }
 
+  /* Mobile: use the free space between the sidebar toggle and the right-hand menu, show the full name and code,
+     and truncate with an ellipsis when it still does not fit. The list is as wide as the trigger. */
   @media (max-width: 767px) {
+    flex: 1 1 0;
     min-width: 0;
+    overflow: hidden;
+    padding-right: 0.6rem;
+
+    .ember-power-select-trigger {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .ember-power-select-selected-item {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: baseline;
+      min-width: 0;
+      margin-left: 0;
+    }
 
     .project-switcher-name {
-      display: none;
+      flex: 0 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+
+    .project-switcher-code {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .ember-power-select-option .project-switcher-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
