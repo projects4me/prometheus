@@ -1,6 +1,6 @@
 ## Overview
 
-`AppUi::Select` is the searchable single or multiple select of the app. It is the only component that renders ember-power-select: the `FormFields::FieldRelate`, `FieldRelateMulti` and `FieldMultiSelect` fields, the header's global search and the sidebar's project switcher all go through it.
+`AppUi::Select` is the searchable single or multiple select of the app. It is the only component that renders ember-power-select: the `FormFields::FieldRelate`, `FieldRelateMulti` and `FieldMultiSelect` fields, the header's global search and the header's project switcher all go through it.
 
 In a form, use the FormFields fields, not `AppUi::Select`: they add the label, validation and access control. Use `AppUi::Select` directly only for a switcher or search outside a form.
 
@@ -22,6 +22,7 @@ In a form, use the FormFields fields, not `AppUi::Select`: they add the label, v
 | `@disabled` | boolean | `false` | Disables the select |
 | `@closeOnSelect` | boolean | `true` | Closes the list after a choice (set `false` for multiple) |
 | `@renderInPlace` | boolean | `false` | Renders the list next to the trigger instead of at the document root. Required inside `AppUi::Modal`, whose dialog sits in the top layer |
+| `@afterOptionsComponent` | component | none | Rendered below the option list, e.g. a footer link. It receives `@select` (`@select.actions.close()` closes the list) |
 | `...attributes` | HTML attributes | none | Applied to the trigger, e.g. `class` or `data-test-*` hooks |
 
 ## Blocks

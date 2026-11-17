@@ -1,0 +1,15 @@
+<div class="project-switcher" data-test-project-switcher>
+  <AppUi::Select
+      @options={{this.options}}
+      @selected={{this.selected}}
+      @placeholder={{t "views.nav.projectSwitcher.placeholder"}}
+      @searchField="label"
+      @searchEnabled={{true}}
+      @noMatchesMessage={{t "views.nav.noprojectsfound"}}
+      @onChange={{this.projectChanged}}
+      @afterOptionsComponent={{component "app-layouts/project-switcher-footer"}}
+      as |project|>
+    <span class="project-switcher-name">{{project.label}}</span>
+    <span class="project-switcher-code">{{project.code}}</span>
+  </AppUi::Select>
+</div>

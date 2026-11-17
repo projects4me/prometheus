@@ -11,25 +11,6 @@
   </div>
 </div>
 
-{{!-- search form (Optional) --}}
-<div class="sidebar-form">
-  <div class="input-group">
-    <AppUi::Select
-        class="form-control"
-        @options={{this.projectsList}}
-        @selected={{find-by "value" this.trackedProject.id this.projectsList}}
-        @placeholder={{t "views.nav.selectproject"}}
-        @searchField="label"
-        @searchEnabled={{true}}
-        @noMatchesMessage={{t "views.nav.noprojectsfound"}}
-        @onChange={{this.projectChanged}}
-        as |project|>
-        {{project.label}}
-    </AppUi::Select>
-  </div>
-</div>
-{{!-- /.search form --}}
-
 {{!-- Sidebar Menu --}}
 <ul class="sidebar-menu">
   <li class="header">{{t "views.nav.mainnav"}}</li>

@@ -81,3 +81,68 @@
 }
 
 .create-module-dropdown-content.show { display: block; }
+
+/* Header project switcher: crimson trigger next to the sidebar toggle. The list renders at the document root,
+   so the option and footer rules are not nested under .project-switcher. */
+.project-switcher {
+  display: inline-block;
+  vertical-align: top;
+  padding: 1.2rem 0;
+  min-width: 18rem;
+
+  .ember-power-select-trigger {
+    background-color: $primaryColor;
+    border: 1px solid $primaryColor;
+    border-radius: 0;
+    color: white;
+    line-height: 2.4rem;
+
+    .ember-power-select-placeholder {
+      color: white;
+    }
+
+    .ember-power-select-status-icon {
+      border-top-color: white;
+    }
+  }
+
+  .project-switcher-name {
+    font-weight: 600;
+    margin-right: 0.6rem;
+  }
+
+  .project-switcher-code {
+    font-size: 1.2rem;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 767px) {
+    min-width: 0;
+
+    .project-switcher-name {
+      display: none;
+    }
+  }
+}
+
+.ember-power-select-option .project-switcher-code {
+  float: right;
+  color: $mediumColor;
+}
+
+.ember-power-select-option[aria-selected="true"]::before {
+  content: "\f00c";
+  font-family: FontAwesome;
+  margin-right: 0.6rem;
+}
+
+.project-switcher-all {
+  display: block;
+  padding: 0.8rem 1.2rem;
+  border-top: 1px solid $mediumColor;
+  color: $secondaryColor;
+
+  i {
+    margin-right: 0.5rem;
+  }
+}

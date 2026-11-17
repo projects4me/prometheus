@@ -3013,6 +3013,10 @@
       "mainnav": "Main Navigation",
       "selectproject": "Select a project..",
       "noprojectsfound": "No project found",
+      "projectSwitcher": {
+        "placeholder": "Select a project",
+        "allProjects": "All projects"
+      },
       "error": {
         "selectProjectFirst": "Please select a project first"
       },

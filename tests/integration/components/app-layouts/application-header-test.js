@@ -101,3 +101,25 @@ module('Integration | Component | application-header search task', function (hoo
         assert.ok(!searches[0].includes('alp'), 'the first query was cancelled');
     });
 });
+
+module('Integration | Component | application-header project switcher', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:acl', AclStub);
+        this.owner.register('service:current-user', CurrentUserStub);
+    });
+
+    test('with no project selected the label is Select a project', async function (assert) {
+        this.owner.lookup('service:tracked-project').setProjectId(null);
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        assert.dom('[data-test-project-switcher]').includesText('Select a project');
+    });
+
+    test('the list ends with an All projects link', async function (assert) {
+        this.owner.lookup('service:tracked-project').setProjectId(null);
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('[data-test-project-switcher]');
+        assert.dom('[data-test-project-switcher-all]').includesText('All projects');
+    });
+});
