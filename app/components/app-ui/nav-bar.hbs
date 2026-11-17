@@ -14,14 +14,31 @@
 {{!-- Sidebar Menu --}}
 <ul class="sidebar-menu">
   <li class="header">{{t "views.nav.mainnav"}}</li>
-
   <AppUi::NavbarItems
-    @meta={{this.navigationMeta}}
+    @meta={{this.workspaceNavigationMeta}}
     @appPrefix={{this.appPrefix}}
     @navigate={{this.navigate}}
     @trackedProject={{this.trackedProject}}
   />
 
+  <li class="nav-divider" role="separator"></li>
+  <li class="header" data-navigation-group="project">
+    <span>{{t "views.nav.project"}}</span>
+    {{#if this.trackedProject.shortCode}}
+      <span class="nav-project-code">{{this.trackedProject.shortCode}}</span>
+    {{else}}
+      <span class="nav-project-code nav-project-none">{{t "views.nav.projectSwitcher.placeholder"}}</span>
+    {{/if}}
+  </li>
+  <AppUi::NavbarItems
+    @meta={{this.projectNavigationMeta}}
+    @appPrefix={{this.appPrefix}}
+    @navigate={{this.navigate}}
+    @trackedProject={{this.trackedProject}}
+    @disabled={{not this.trackedProject.shortCode}}
+  />
+
+  <li class="nav-divider" role="separator"></li>
   <li class="header">{{t "views.app.components.navBar.admin"}}</li>
   <AppUi::NavbarItems
     @meta={{this.adminNavigationMeta}}

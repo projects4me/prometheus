@@ -31,3 +31,36 @@
     width: 70%;
   }
 }
+
+/* Sidebar groups: project code on the group header, disabled project items, collapsed divider */
+.sidebar-menu > li.header {
+  .nav-project-code {
+    float: right;
+    color: crimson;
+    text-transform: uppercase;
+    font-weight: 600;
+
+    &.nav-project-none {
+      color: #8aa4af;
+      text-transform: none;
+      font-weight: normal;
+    }
+  }
+}
+
+.sidebar-menu > li.nav-disabled > a {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+.sidebar-menu > li.nav-divider {
+  display: none;
+  height: 1px;
+  margin: 6px 10px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar-mini.sidebar-collapse .sidebar-menu > li.nav-divider {
+  display: block;
+}

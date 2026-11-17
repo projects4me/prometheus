@@ -1,5 +1,12 @@
 {{#each-in @meta as |module definition|}}
-{{#if definition.actions}}
+{{#if (and @disabled definition.projectRelated)}}
+  <li class="nav-disabled" data-navigation-module={{module}} title={{t "views.nav.selectProjectTitle"}}>
+    <a role="link" aria-disabled="true" tabindex="-1">
+      <i class="fa fa-{{definition.icon}}"></i>
+      <span>{{t definition.label}}</span>
+    </a>
+  </li>
+{{else if definition.actions}}
   <li class="treeview {{if (is-active-route definition.route) 'active menu-open'}}" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
       <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}">

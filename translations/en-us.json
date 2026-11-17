@@ -3010,7 +3010,9 @@
       }
     },
     "nav": {
-      "mainnav": "Main Navigation",
+      "mainnav": "Workspace",
+      "project": "Project",
+      "selectProjectTitle": "Select a project",
       "selectproject": "Select a project..",
       "noprojectsfound": "No project found",
       "projectSwitcher": {
