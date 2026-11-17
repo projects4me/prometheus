@@ -166,6 +166,12 @@
   color: $mediumColor;
 }
 
+/* The highlighted option turns its text white; keep the code readable on the highlight background. */
+.ember-power-select-option[aria-current="true"] .project-switcher-code,
+.ember-power-select-option:hover .project-switcher-code {
+  color: inherit;
+}
+
 .ember-power-select-option[aria-selected="true"]::before {
   content: "\f00c";
   font-family: FontAwesome;
