@@ -69,13 +69,16 @@
    Logo, sidebar, navbar and content offsets all follow $sidebarWidth. */
 $sidebarWidth: 200px;
 
-.main-header .logo,
 .main-sidebar,
 .left-side {
   width: $sidebarWidth;
 }
 
 @media (min-width: 768px) {
+  .main-header .logo {
+    width: $sidebarWidth;
+  }
+
   .main-header .navbar {
     margin-left: $sidebarWidth;
   }
