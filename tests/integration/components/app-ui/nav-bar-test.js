@@ -28,7 +28,8 @@ module('Integration | Component | nav-bar', function (hooks) {
             <AppUi::NavBar />
         `);
 
-        assert.dom('div.user-panel  div.pull-left.info p#user-name').hasText('Rana Nouman');
+        assert.dom('div.user-panel').doesNotExist('the sidebar no longer repeats the user');
+        assert.dom('ul.sidebar-menu > li.header').hasText('Workspace');
     });
 
     test('it groups the items by projectRelated and shows the project short code', async function (assert) {

@@ -30,8 +30,8 @@ This document was written by walking through the running app (`https://app.local
 
 | Part | What it is | Source |
 |---|---|---|
-| Header | White navbar. Logo "Projects4Me" top left; hamburger; global search (power-select, square); crimson **New ▾** dropdown (Issue / Thread / Project); bell; user avatar + name | `components/app-layouts/application-header` |
-| Sidebar | Light grey (`#f9fafc`), fixed. User block with "Online" dot; **crimson project selector** (power-select, full width, white text); sections "Main Navigation" and "Admin"; Font Awesome icon + label per item; active item has a crimson left bar; tree items use `fa-circle-o` bullets | `components/app-layouts/application-sidebar` |
+| Header | White navbar. Logo "Projects4Me" top left; hamburger; global search (power-select, square); crimson **New ▾** dropdown (Issue / Thread / Project); bell; user avatar + name (green status dot on the avatar; the user dropdown shows an "Online" row) | `components/app-layouts/application-header` |
+| Sidebar | Light grey (`#f9fafc`), fixed. **crimson project selector** (power-select, full width, white text); sections "Main Navigation" and "Admin"; Font Awesome icon + label per item; active item has a crimson left bar; tree items use `fa-circle-o` bullets | `components/app-layouts/application-sidebar` |
 | Content header | `<section class="content-header">`: page title as `<h1>` (24px/500), or the project name as a crimson `<small>` link inside a project; breadcrumb on the right (12px, Font Awesome icon + link per level, `>` separators) | `templates/app/project.hbs`, `<BreadCrumb/>` |
 | Content | `<section class="content">` on `#ecf0f5`, then Bootstrap `.row` / `.col-md-*` | |
 | Footer | "Copyright © 2026 **Projects4Me Inc.**" left, "Report Issue" link right | `components/app-layouts/application-footer` |

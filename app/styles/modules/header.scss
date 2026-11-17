@@ -197,3 +197,63 @@
     padding-top: 15rem;
   }
 }
+
+/* Presence dot on the header avatars and the Online row of the profile menu */
+.header-avatar-status {
+  position: relative;
+  display: inline-block;
+
+  .header-status-dot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: $successColor;
+    border: 0.2rem solid $backgroundColor;
+  }
+}
+
+.navbar .header-user-avatar-wrap {
+  float: left;
+  margin-top: -2px;
+  margin-right: 10px;
+
+  .header-user-avatar {
+    float: none;
+    margin: 0;
+  }
+}
+
+.navbar-nav > .user-menu > .dropdown-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.user-header > .header-menu-avatar-wrap {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+
+  .header-menu-avatar {
+    margin: 0;
+  }
+}
+
+.user-menu > .dropdown-menu > li.user-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.5rem;
+  border-bottom: 0.1rem solid $borderColor;
+
+  .header-status-dot-inline {
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.6rem;
+    border-radius: 50%;
+    background-color: $successColor;
+  }
+}
