@@ -54,7 +54,7 @@
         {{!-- Menu Toggle Button --}}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           {{!-- The user image in the navbar--}}
-          <AppUi::Avatar @user={{this.currentUser.user}} @size="s" class="header-user-avatar" />
+          <span class="header-avatar-status header-user-avatar-wrap"><AppUi::Avatar @user={{this.currentUser.user}} @size="s" class="header-user-avatar" /><i class="header-status-dot" aria-hidden="true"></i></span>
           {{!-- hidden-xs hides the username on small devices so only the image appears. --}}
           <span id="user-name" class="hidden-xs">{{this.currentUser.user.name}}</span>
 
@@ -62,12 +62,16 @@
         <ul class="dropdown-menu">
           {{!-- The user image in the menu --}}
           <li class="user-header">
-            <AppUi::Avatar @user={{this.currentUser.user}} @size="l" class="header-menu-avatar" />
+            <span class="header-avatar-status header-menu-avatar-wrap"><AppUi::Avatar @user={{this.currentUser.user}} @size="l" class="header-menu-avatar" /><i class="header-status-dot" aria-hidden="true"></i></span>
 
             <p>
               {{this.currentUser.user.name}} - {{this.currentUser.user.title}}
               <small>{{t "views.app.member"}}{{format-date date=this.currentUser.user.dateCreated format='MMM YYYY'}}</small>
             </p>
+          </li>
+          <li class="user-status-row">
+            <span class="user-status-label"><i class="header-status-dot header-status-dot-inline" aria-hidden="true"></i>{{t "views.app.online"}}</span>
+            <span class="user-status-hint text-muted">{{t "views.app.visibleToTeam"}}</span>
           </li>
           {{!-- Menu Footer--}}
           <li class="user-footer">

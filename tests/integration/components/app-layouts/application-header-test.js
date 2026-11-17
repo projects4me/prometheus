@@ -51,6 +51,16 @@ module('Integration | Component | application-header', function (hooks) {
         assert.dom('div#btn-signin > a').hasClass('disabled');
     });
 
+    test('it shows the online dot on both avatars and the Online row in the profile menu', async function (assert) {
+        await render(hbs`
+            <AppLayouts::ApplicationHeader />
+        `);
+        assert.dom('li.user-menu > a .header-avatar-status .header-status-dot').exists('dot on the header avatar');
+        assert.dom('li.user-header .header-avatar-status .header-status-dot').exists('dot on the menu avatar');
+        assert.dom('li.user-status-row .user-status-label').hasText('Online');
+        assert.dom('li.user-status-row .user-status-hint').hasText('Visible to your team');
+    });
+
     test('it renders component with logged in user name and created date of that user', async function (assert) {
         await render(hbs`
             <AppLayouts::ApplicationHeader />
