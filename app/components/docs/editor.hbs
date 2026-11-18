@@ -1,0 +1,5 @@
+<div class="doc-editor {{unless this.editable "doc-editor-readonly"}}" data-test-doc-editor ...attributes>
+  <div class="doc-editor-surface"
+    data-test-doc-editor-surface
+    {{docs-editor content=@content editable=this.editable extensions=@extensions onReady=@onReady}}></div>
+</div>

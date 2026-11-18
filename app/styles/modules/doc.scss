@@ -1,0 +1,110 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+@import "../variables.scss";
+
+// Docs editor, toolbar, outline and suggestion marks. Square edges, colours from variables.scss only.
+.doc-toolbar {
+  margin-bottom: 10px;
+
+  .btn-group {
+    margin-right: 5px;
+  }
+}
+
+.doc-editor {
+  background: $backgroundColor;
+  border: 1px solid $borderColor;
+  border-radius: 0;
+
+  .ProseMirror {
+    min-height: 300px;
+    padding: 10px 15px;
+    outline: none;
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    th,
+    td {
+      border: 1px solid $borderColor;
+      padding: 5px 8px;
+      vertical-align: top;
+      min-width: 50px;
+    }
+
+    th {
+      background: $primaryColorLight;
+      font-weight: 600;
+    }
+
+    ul[data-type="taskList"] {
+      list-style: none;
+      padding-left: 0;
+
+      li {
+        display: flex;
+
+        > label {
+          margin-right: 8px;
+          user-select: none;
+        }
+
+        > div {
+          flex: 1;
+        }
+      }
+    }
+
+    blockquote {
+      border-left: 3px solid $primaryColor;
+      padding: 5px 15px;
+      margin-left: 0;
+    }
+
+    pre {
+      border-radius: 0;
+    }
+
+    a {
+      color: $secondaryColor;
+    }
+  }
+}
+
+.doc-outline {
+  margin: 0;
+
+  li {
+    padding: 2px 0;
+  }
+
+  @for $level from 1 through 3 {
+    .doc-outline-level-#{$level} {
+      padding-left: ($level - 1) * 15px;
+    }
+  }
+
+  .doc-outline-level-1 {
+    font-weight: 600;
+  }
+}
+
+// Suggestion marks: inserted text underlined, deleted text struck through.
+.doc-suggestion {
+  text-decoration-thickness: 2px;
+}
+
+ins.doc-suggestion {
+  color: $successColor;
+  text-decoration: underline;
+}
+
+del.doc-suggestion {
+  color: $dangerColor;
+  text-decoration: line-through;
+}
