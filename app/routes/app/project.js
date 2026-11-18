@@ -43,6 +43,7 @@ export default class ProjectRoute extends App {
         _self.members = undefined;
         _self.issuetypes = undefined;
         _self.issues = undefined;
+        _self.issuestatuses = undefined;
         let projectShortCode = _self.paramsFor('app.project')?.shortcode;
         if(projectShortCode == undefined) {
             projectShortCode = _self.trackedProject.shortCode;
@@ -74,28 +75,38 @@ export default class ProjectRoute extends App {
             });
         });
 
-        let record = objectAt(project, 0);
-        _self.project = record;
-
-        if (record != undefined && record.get('members') != undefined) {
-            _self.members = record.get('members');
-            _self.issuetypes = record.get('issuetypes');
+        // a newer transition superseded this one while the project was loading: don't touch route or service state
+        if (transition.isAborted) {
+            return;
         }
 
-        if (record != undefined &&
-            record.get('issuestatuses').length !== 0) {
-            _self.issuestatuses = record.get('issuestatuses');
-        } else {
-            let issueStatuses = await this.store.query('issuestatus', {
+        let record = objectAt(project, 0);
+
+        // no project matches the short code (or the query failed, already reported above): leave no stale state
+        // behind and go to the project list, so no child route loads with the previous project's id
+        if (record == undefined) {
+            this.breadcrumb.setTitle(this.routeName, undefined);
+            transition.abort();
+            this.router.transitionTo('app.projects');
+            return;
+        }
+
+        let issuestatuses = record.get('issuestatuses');
+        if (issuestatuses.length === 0) {
+            issuestatuses = await this.store.query('issuestatus', {
                 query: `(Issuestatus.system : 1)`,
                 limit: -1,
             });
-            _self.issuestatuses = issueStatuses;
+            if (transition.isAborted) {
+                return;
+            }
         }
 
-        // no project matches the short code (or the query failed, already reported above)
-        if (record == undefined) {
-            return;
+        _self.project = record;
+        _self.issuestatuses = issuestatuses;
+        if (record.get('members') != undefined) {
+            _self.members = record.get('members');
+            _self.issuetypes = record.get('issuetypes');
         }
 
         // set projectId in trackedProject service
