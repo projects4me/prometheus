@@ -146,10 +146,14 @@ export default class ProjectRoute extends App {
             }
             _self.issues = issues;
             let controller = _self.controllerFor('app.project');
-            if (controller.get('projectId') === projectId) {
+            if (String(controller.get('projectId')) === String(projectId)) {
                 controller.set('issues', issues);
             }
         }).catch((error) => {
+            // A superseded request must not report an error for a project the user has left
+            if (_self.isDestroying || requestSeq !== _self.issuesRequestSeq) {
+                return;
+            }
             _self.errorManager.handleError(error, {
                 moduleName: "project"
             });

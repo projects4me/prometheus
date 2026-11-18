@@ -93,6 +93,23 @@ module('Unit | Route | app/project', function (hooks) {
             assert.deepEqual(controller.values.issues, ['new']);
         });
 
+        test('does not report the failure of a superseded request', async function (assert) {
+            let handled = [];
+            Object.defineProperty(route, 'errorManager', { configurable: true, get() { return { handleError: (e) => handled.push(e) }; } });
+            let rejects = [];
+            Object.defineProperty(route, 'store', {
+                configurable: true,
+                get() { return { query: () => new Promise((resolve, reject) => { rejects.push(reject); }) }; },
+            });
+            route.afterModel();
+            let olderRequest = route.issuesRequest;
+            route.afterModel();
+            rejects[0](new Error('old'));
+            await olderRequest;
+
+            assert.strictEqual(handled.length, 0);
+        });
+
         test('reports a failed issues query and keeps the list empty', async function (assert) {
             let handled = [];
             Object.defineProperty(route, 'errorManager', { configurable: true, get() { return { handleError: (e) => handled.push(e) }; } });
