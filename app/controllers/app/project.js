@@ -26,7 +26,7 @@ export default class AppProjectController extends PrometheusController {
      * @for Project
      * @public
      */
-    issues = {};
+    issues = [];
 
     /**
      * These are the members for the current project

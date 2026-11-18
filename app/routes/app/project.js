@@ -3,8 +3,6 @@
  */
 
 import App from "prometheus/routes/app";
-import { hashSettled } from 'rsvp';
-import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import { service } from '@ember/service';
 
 
@@ -42,7 +40,8 @@ export default class ProjectRoute extends App {
         _self.project = undefined;
         _self.members = undefined;
         _self.issuetypes = undefined;
-        _self.issues = undefined;
+        _self.issues = [];
+        _self.issuesProjectId = undefined;
         _self.issuestatuses = undefined;
         let projectShortCode = _self.paramsFor('app.project')?.shortcode;
         if(projectShortCode == undefined) {
@@ -131,11 +130,25 @@ export default class ProjectRoute extends App {
             limit: -1,
         };
 
-        return hashSettled({
-            issues: _self.store.query('issue', issuesOptions),
-        }).then(function (results) {
-            let data = extractHashSettled(results);
-            _self.issues = data.issues;
+        // Start from an empty list when the project changed, so another project's issues are never shown
+        if (_self.issuesProjectId !== projectId) {
+            _self.issues = [];
+        }
+        _self.issuesProjectId = projectId;
+        _self.issuesRequestSeq = (_self.issuesRequestSeq || 0) + 1;
+        let requestSeq = _self.issuesRequestSeq;
+
+        // Not returned: nested routes must not wait for the all-issues preload
+        _self.issuesRequest = _self.store.query('issue', issuesOptions).then(function (issues) {
+            // Ignore a result of an older request or one that arrives after the user left the project
+            if (_self.isDestroying || requestSeq !== _self.issuesRequestSeq) {
+                return;
+            }
+            _self.issues = issues;
+            let controller = _self.controllerFor('app.project');
+            if (controller.get('projectId') === projectId) {
+                controller.set('issues', issues);
+            }
         }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: "project"
