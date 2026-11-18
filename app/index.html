@@ -20,6 +20,115 @@
     {{content-for "head-footer"}}
   </head>
   <body class="hold-transition skin-black-light sidebar-mini fixed">
+    <!-- Boot skeleton shown until the application route is ready; routes/application.js removes it.
+         Keep in sync with app/components/app-ui/skeleton/page-loading-body.hbs (same markup, copied). -->
+    <div class="wrapper" data-boot-loader>
+      <header class="main-header">
+        <span class="logo"><span class="skeleton-line"></span></span>
+        <nav class="navbar navbar-static-top">
+          <div class="global-search"><span class="skeleton-line"></span></div>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li><a><span class="skeleton-line skeleton-line--xs"></span></a></li>
+              <li><a><span class="skeleton-line skeleton-line--xs"></span></a></li>
+              <li><a><span class="skeleton-line skeleton-line--xs"></span></a></li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <ul class="sidebar-menu">
+            <li><span class="skeleton-line"></span></li>
+            <li><span class="skeleton-line"></span></li>
+            <li><span class="skeleton-line"></span></li>
+            <li><span class="skeleton-line"></span></li>
+            <li><span class="skeleton-line"></span></li>
+            <li><span class="skeleton-line"></span></li>
+          </ul>
+        </section>
+      </aside>
+      <div class="content-wrapper">
+        <section class="content-header page-skeleton-header">
+          <span class="skeleton-line skeleton-line--title"></span>
+          <div class="page-skeleton-breadcrumb">
+            <span class="skeleton-line skeleton-line--xs"></span>
+            <span class="skeleton-line skeleton-line--xs"></span>
+          </div>
+        </section>
+        <section class="content">
+          <div class="page-skeleton">
+          <div class="box box-primary">
+            <div class="skeleton-box-header">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="skeleton-toolbar">
+              <span class="skeleton-line skeleton-line--xs"></span>
+              <span class="skeleton-line skeleton-line--xs"></span>
+              <span class="skeleton-line skeleton-line--xs"></span>
+            </div>
+            <div class="skeleton-box-body--flush">
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="box box-default">
+            <div class="skeleton-box-header">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="skeleton-box-body">
+              <span class="skeleton-line skeleton-line--heading"></span>
+              <span class="skeleton-line"></span>
+              <span class="skeleton-line"></span>
+              <span class="skeleton-line skeleton-line--medium"></span>
+              <span class="skeleton-rect skeleton-rect--content"></span>
+            </div>
+          </div>
+        </div>
+        </section>
+      </div>
+    </div>
+
     {{content-for "body"}}
 
     <script src="{{rootURL}}assets/vendor.js"></script>

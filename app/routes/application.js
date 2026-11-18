@@ -85,6 +85,22 @@ export default class ApplicationRoute extends Route {
      */
     async beforeModel() {
         super.beforeModel(...arguments);
+        try {
+            await this.restoreAndRedirect();
+        } finally {
+            // the static skeleton from index.html is no longer needed, whatever happened
+            document.querySelector('[data-boot-loader]')?.remove();
+        }
+    }
+
+    /**
+     * Restores the session, loads the translations and redirects to the signin
+     * route or the requested one, unless the route is public
+     *
+     * @method restoreAndRedirect
+     * @private
+     */
+    async restoreAndRedirect() {
         // restore the persisted session and enable its sign-in/sign-out handlers
         await this.session.setup();
         await this.translations.load();
