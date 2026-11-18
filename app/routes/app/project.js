@@ -39,6 +39,11 @@ export default class ProjectRoute extends App {
      */
     async beforeModel(transition) {
         let _self = this;
+        _self.project = undefined;
+        _self.members = undefined;
+        _self.issuetypes = undefined;
+        _self.issues = undefined;
+        _self.issuestatuses = undefined;
         let projectShortCode = _self.paramsFor('app.project')?.shortcode;
         if(projectShortCode == undefined) {
             projectShortCode = _self.trackedProject.shortCode;
@@ -51,6 +56,7 @@ export default class ProjectRoute extends App {
                     showCloseButton: true
                 });
                 transition.abort();
+                return;
             }
         }
 
@@ -69,32 +75,51 @@ export default class ProjectRoute extends App {
             });
         });
 
-        if (objectAt(project, 0) != undefined &&
-            objectAt(project, 0).get('members') != undefined) {
-            _self.members = objectAt(project, 0).get('members');
-            _self.issuetypes = objectAt(project, 0).get('issuetypes');
+        // a newer transition superseded this one while the project was loading: don't touch route or service state
+        if (transition.isAborted) {
+            return;
         }
 
-        if (objectAt(project, 0) != undefined &&
-            objectAt(project, 0).get('issuestatuses').length !== 0) {
-            _self.issuestatuses = objectAt(project, 0).get('issuestatuses');
-        } else {
-            let issueStatuses = await this.store.query('issuestatus', {
+        let record = objectAt(project, 0);
+
+        // no project matches the short code (or the query failed, already reported above): leave no stale state
+        // behind and go to the project list, so no child route loads with the previous project's id
+        if (record == undefined) {
+            this.breadcrumb.setTitle(this.routeName, undefined);
+            transition.abort();
+            this.router.transitionTo('app.projects');
+            return;
+        }
+
+        let issuestatuses = record.get('issuestatuses');
+        if (issuestatuses.length === 0) {
+            issuestatuses = await this.store.query('issuestatus', {
                 query: `(Issuestatus.system : 1)`,
                 limit: -1,
             });
-            _self.issuestatuses = issueStatuses;
+            if (transition.isAborted) {
+                return;
+            }
+        }
+
+        _self.project = record;
+        _self.issuestatuses = issuestatuses;
+        if (record.get('members') != undefined) {
+            _self.members = record.get('members');
+            _self.issuetypes = record.get('issuetypes');
         }
 
         // set projectId in trackedProject service
-        let projectId = objectAt(project, 0).id;
-        _self.trackedProject.setProjectId(projectId);
+        _self.trackedProject.setProjectId(record.id);
 
-        this.breadcrumb.setTitle(this.routeName, objectAt(project, 0).get('name'));
+        this.breadcrumb.setTitle(this.routeName, record.get('name'));
     }
 
     afterModel() {
         let _self = this;
+        if (_self.project == undefined) {
+            return;
+        }
         let projectId = _self.trackedProject.getProjectId();
 
         let issuesOptions = {
@@ -130,24 +155,10 @@ export default class ProjectRoute extends App {
         Logger.debug('AppProjectRoute::setupController');
         let _self = this;
 
-        let projectId = this.trackedProject.getProjectId();
-        let projectName = null;
-
-        let options = {
-            fields: "Project.id,Project.name",
-            query: "(Project.id : " + projectId + ")",
-            order: 'ASC',
-            limit: 1
-        };
-
-        _self.store.query('project', options).then(function (data) {
-            if (projectId !== null) {
-                projectName = data.find((item) => item.id === projectId).get('name');
-                controller.set('projectId', projectId);
-                controller.set('projectName', projectName);
-            }
-            controller.set('model', objectAt(data, 0));
-        });
+        let project = this.project;
+        controller.set('model', project);
+        controller.set('projectId', project?.id);
+        controller.set('projectName', project?.get('name'));
 
         controller.set('issues', _self.issues);
         controller.set('members', _self.members);
