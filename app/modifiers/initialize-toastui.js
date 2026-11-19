@@ -123,13 +123,15 @@ export default class ToastEditor extends Modifier {
         }
         let content = value ?? '';
         if (this.editor.isFocused?.() || this.element.contains(document.activeElement)) {
-            // keep lastValue as is, so the value is applied by the next modify() once focus has left
+            // lastValue stays as is, so the value is still pending; the blur handler syncs again
             return;
         }
         this.lastValue = value;
         if (content === this.getContent(this.editor)) {
             return;
         }
+        // the mentions belong to the text that is being replaced
+        this.mentionedIssues = [];
         if (this.output === 'markdown') {
             this.editor.setMarkdown(content, false);
         } else {
@@ -374,18 +376,23 @@ export default class ToastEditor extends Modifier {
             placeholder: _self.placeholder,
             events: {
                 change: () => {
-                    _self.onContentChange(_self.getContent(editor), _self.mentionedIssues);
+                    let content = _self.getContent(editor);
+                    // what the editor holds is what the parent last heard, so a later reset to an older value is a change
+                    _self.lastValue = content;
+                    _self.onContentChange(content, _self.mentionedIssues);
                 },
                 load: () => {
                     if (this.hide) {
                         this.hide.forEach((element) => {
                             let selector = elementSelectors[element];
-                            $(selector).css('display', 'none');
+                            $(selector, _self.element).css('display', 'none');
                         });
                     }
                 },
                 blur: () => {
                     _self.onBlur();
+                    // a value that arrived while the editor was focused is applied once focus has left
+                    _self.syncTimer = setTimeout(() => _self._syncValue(), 0);
                 }
             }
         });
@@ -689,6 +696,8 @@ export default class ToastEditor extends Modifier {
      * @private
      */
     _teardown() {
+        clearTimeout(this.syncTimer);
+        this.editor = null;
         if (this.clearListener) {
             this.pubSub.off(this.clearEvent, this.clearListener);
         }
