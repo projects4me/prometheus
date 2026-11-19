@@ -78,6 +78,11 @@ module('Unit | Component contracts', function () {
 		assert.deepEqual([...scriptUsage(fixtureSources.fixture.script)], ['onPick'], 'this.args reads, not comments');
 	});
 
+	test('it reads hyphenated arguments whole', function (assert) {
+		let usage = templateUsage('<Child @data-field={{@data-field}} /><span id={{@data-field}}>{{@label}}</span>');
+		assert.deepEqual([...usage.args].sort(), ['data-field', 'label'], 'not @data, and not the passed @data-field=');
+	});
+
 	test('a matching manifest has no problems', function (assert) {
 		assert.deepEqual(contractProblems('fixture.json', fixtureManifest(), fixtureSources, ['fixture.md']), []);
 	});

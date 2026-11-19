@@ -1,0 +1,30 @@
+{
+  "name": "AppUi::Editor",
+  "component": "app-ui/editor",
+  "doc": "app-ui-editor.md",
+  "description": "The standard rich-text component: a controlled Toast UI editor with optional label, ACL and validation message, mentions, #issue links and a read-only viewer.",
+  "arguments": {
+    "value": { "type": "string", "required": false, "description": "The content (html, or markdown with @output markdown)" },
+    "label": { "type": "string", "required": false, "description": "Shows a FormFields::Label above the editor" },
+    "required": { "type": "boolean", "required": false, "description": "Marks the label as required" },
+    "info": { "type": "string", "required": false, "description": "Help text of the label's info bubble" },
+    "data-field": { "type": "string", "required": false, "description": "Identifies the field for the label's info and the message" },
+    "aclContext": { "type": "string", "required": false, "description": "ACL context; the editor is rendered only when the user has access" },
+    "message": { "type": "string", "required": false, "description": "Validation message, shown once the editor has been left" },
+    "validate": { "type": "function", "required": false, "description": "Called with the content when the editor loses focus" },
+    "usersList": { "type": "array", "required": false, "description": "Users for @ mentions, each { value, label }" },
+    "issueSearch": { "type": "function", "required": false, "description": "Searches issues for # links; returns a promise of the issues" },
+    "placeholder": { "type": "string", "required": false, "description": "Placeholder of the empty editor" },
+    "output": { "type": "string", "required": false, "default": "html", "description": "Format of the content: html or markdown" },
+    "clearEvent": { "type": "string", "required": false, "description": "pubSub event that clears this editor" },
+    "readonly": { "type": "boolean", "required": false, "default": "false", "description": "Shows the content in the sanitized viewer instead of the editor" },
+    "disabled": { "type": "boolean", "required": false, "default": "false", "description": "Makes the editor inert and dimmed" }
+  },
+  "events": {
+    "onChange": { "payload": [{ "name": "value", "type": "string", "description": "The content" }], "description": "Called on every change" },
+    "onBlur": { "payload": [], "description": "Called when the editor loses focus" },
+    "onSubmit": { "payload": [{ "name": "value", "type": "string", "description": "The content" }], "description": "Called on Ctrl/⌘+Enter with non-empty content" },
+    "onImage": { "payload": [{ "name": "blob", "type": "Blob", "description": "The pasted or dropped image" }], "description": "Resolves to { url, alt } of the image to insert" }
+  },
+  "blocks": {}
+}

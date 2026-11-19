@@ -169,7 +169,7 @@ Use the `FormFields::*` components. Don't write raw `<input>` or `<select>`.
 |---|---|---|
 | Text | `FormFields::FieldText` | No box: one 1px `#999` **bottom border**, 10px padding, crimson label above |
 | Long text | `FormFields::FieldTextArea` | Same underline style |
-| Rich text | `AppUi::ToastUi` (`@editType='wysiwyg'`) | Square bordered editor with the existing toolbar |
+| Rich text | `AppUi::Editor` (wraps `AppUi::ToastUi`) | Square bordered editor with the existing toolbar; label, ACL and validation message by composition; `@readonly` shows the viewer |
 | Select / relate | `FormFields::FieldRelate` (`@relateType="relate-simple"`), `FieldRelateMulti`, `FieldMultiSelect` | ember-power-select, **square** 1px `#aaa` border, caret on the right; user options show an avatar |
 | Date | `FormFields::FieldDate` | Underline input (`YYYY-MM-DD`) |
 | Checkbox / switch | `FormFields::FieldCheckbox`, `FieldSwitch` | Existing awesome-bootstrap-checkbox styles |
@@ -224,7 +224,7 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Toolbars | `AppUi::Toolbar` and `components/toolbar.scss` |
 | Modals | `AppUi::Modal` (native `<dialog>`, square) |
 | Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
-| Reply / comment box | `ConversationUi::CommentComposer` (toast-ui WYSIWYG with its toolbar, mentions and issue links); never a plain textarea |
+| Reply / comment box | `AppUi::Editor` without label (bare box, with mentions, issue links and Ctrl/⌘+Enter `@onSubmit`) (the target for `ConversationUi::CommentComposer`, not yet migrated); never a plain textarea |
 | Record boxes | Plain `box box-*`, with no extra shadow or border |
 | Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` |
 

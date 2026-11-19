@@ -16,6 +16,7 @@
  */
 
 const IDENT = '[A-Za-z_][\\w]*';
+const IDENT_HYPHENATED = '[A-Za-z_][\\w-]*';
 
 /** Handlebars source without `{{!-- --}}` and `{{! }}` comments. */
 function stripTemplateComments(source) {
@@ -125,7 +126,8 @@ function yieldBodies(template) {
 export function templateUsage(source) {
 	let template = stripTemplateComments(source ?? '');
 	let args = new Set();
-	for (let [, name] of template.matchAll(new RegExp(`(?<![\\w.@])@(${IDENT})\\b(?!\\s*=)`, 'g'))) {
+	// Template arguments may be hyphenated (`@data-field`); the lookahead stops `@data-field=` backtracking to `@data`.
+	for (let [, name] of template.matchAll(new RegExp(`(?<![\\w.@])@(${IDENT_HYPHENATED})(?![\\w-])(?!\\s*=)`, 'g'))) {
 		args.add(name);
 	}
 	let blocks = new Set();
