@@ -173,7 +173,7 @@
         <AppUi::ToastUi
           @usersList={{@membersList}}
           @issueSearch={{perform @search}}
-          @initialValue={{this.newIssue.description}}
+          @value={{this.newIssue.description}}
           @editType='wysiwyg'
           @hide={{array 'footer'}}
           @onContentChange={{fn @selectStatic this.newIssue 'description'}}              

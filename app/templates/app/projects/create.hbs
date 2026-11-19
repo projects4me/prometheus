@@ -35,7 +35,7 @@
 
               <div data-field="project.description" class="form-field ember-view">
                 <AppUi::ToastUi
-                    @initialValue={{this.model.description}}
+                    @value={{this.model.description}}
                     @editType='wysiwyg'
                     @hide={{array 'footer'}}
                     @onContentChange={{fn this.selectStatic this.model 'description'}}              

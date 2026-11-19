@@ -101,7 +101,7 @@ export default class ToastEditor extends Modifier {
     editor = null;
 
     /**
-     * The last value handed in through @value / @initialValue
+     * The last value handed in through @value
      *
      * @property lastValue
      * @type String
@@ -175,14 +175,14 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
-     * The value the editor should show; falls back to the initial value
+     * The value the editor should show
      *
      * @method get
      * @returns String
      * @public
      */
     get value() {
-        return this.named.value ?? this.named.initialValue;
+        return this.named.value;
     }
 
     /**
@@ -241,17 +241,6 @@ export default class ToastEditor extends Modifier {
      */
     get placeholder() {
         return this.named.placeholder;
-    }
-
-    /**
-     * This function returns the initial value of issue description.
-     *
-     * @method get
-     * @returns String
-     * @public
-     */
-    get initialValue() {
-        return this.named.initialValue;
     }
 
     /**

@@ -195,9 +195,9 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         assert.ok(true, 'the pending value is applied after focus left the wrapper');
     });
 
-    test('an @initialValue that is not echoed back does not undo what the user typed', async function (assert) {
+    test('an @value that is not echoed back does not undo what the user typed', async function (assert) {
         this.set('noop', () => {});
-        await render(hbs`<div id="init-editor" {{initialize-toastui editType="wysiwyg" initialValue="<p>A</p>" onContentChange=this.noop}}></div>`);
+        await render(hbs`<div id="init-editor" {{initialize-toastui editType="wysiwyg" value="<p>A</p>" onContentChange=this.noop}}></div>`);
         let selector = '#init-editor .tui-editor-contents[contenteditable="true"]';
         let editable = document.querySelector(selector);
         editable.focus();
@@ -213,8 +213,8 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         this.set('noop', () => {});
         let pubSub = this.owner.lookup('service:pub-sub');
         await render(hbs`
-            <div id="ca" {{initialize-toastui initialValue="<p>one</p>" clearEvent="clear-a" onContentChange=this.noop}}></div>
-            <div id="cb" {{initialize-toastui initialValue="<p>two</p>" clearEvent="clear-b" onContentChange=this.noop}}></div>
+            <div id="ca" {{initialize-toastui value="<p>one</p>" clearEvent="clear-a" onContentChange=this.noop}}></div>
+            <div id="cb" {{initialize-toastui value="<p>two</p>" clearEvent="clear-b" onContentChange=this.noop}}></div>
         `);
         pubSub.trigger('clear-a');
         await settled();
@@ -226,8 +226,8 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         this.set('noop', () => {});
         let pubSub = this.owner.lookup('service:pub-sub');
         await render(hbs`
-            <div id="a" {{initialize-toastui initialValue="<p>one</p>" onContentChange=this.noop}}></div>
-            <div id="b" {{initialize-toastui initialValue="<p>two</p>" onContentChange=this.noop}}></div>
+            <div id="a" {{initialize-toastui value="<p>one</p>" onContentChange=this.noop}}></div>
+            <div id="b" {{initialize-toastui value="<p>two</p>" onContentChange=this.noop}}></div>
         `);
         pubSub.trigger('clearContents');
         await settled();
