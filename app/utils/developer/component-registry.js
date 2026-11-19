@@ -196,6 +196,17 @@ export const ENTRIES = [
         demo: 'developer/demos/tag',
         doc: 'app-ui-tag.md',
         variants: ['default', 'primary', 'info', 'success', 'warning', 'danger']
+    },
+    {
+        name: 'editor',
+        label: 'Editor',
+        group: 'Forms',
+        status: 'experimental',
+        summary: 'AppUi::Editor, the standard rich-text box: optional label, ACL, validation, mentions, #issue links and a read-only viewer.',
+        usedIn: [],
+        demo: 'developer/demos/editor',
+        doc: 'app-ui-editor.md',
+        variants: ['bare', 'form field', 'mentions', 'markdown', 'read-only', 'disabled']
     }
 ];
 

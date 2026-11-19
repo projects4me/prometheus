@@ -1,0 +1,37 @@
+/*
+  AppUi::Editor: the standard rich-text box. A square 1px bordered editor (design-system §5); the label sits above
+  it and a validation message below.
+*/
+@import '../variables.scss';
+
+.app-ui-editor {
+  margin-bottom: 10px;
+
+  > [data-form-field="label"] {
+    margin-bottom: 4px;
+  }
+
+  .toast-ui-editor {
+    border: 1px solid $borderColor;
+    border-radius: 0;
+  }
+
+  &.app-ui-editor-invalid .toast-ui-editor {
+    border-color: $dangerColor;
+  }
+
+  &.app-ui-editor-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    .app-ui-editor-box {
+      pointer-events: none;
+    }
+  }
+
+  .app-ui-editor-viewer {
+    border: 1px solid $borderColor;
+    border-radius: 0;
+    padding: 8px 10px;
+  }
+}

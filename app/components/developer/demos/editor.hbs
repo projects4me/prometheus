@@ -1,0 +1,27 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div data-demo-editor>
+      {{#if (eq this.variant "bare")}}
+        <AppUi::Editor @value={{this.value}} @onChange={{fn this.change log}} @onBlur={{fn this.blur log}} @onSubmit={{fn this.submit log}} @placeholder="Write a comment" />
+      {{else if (eq this.variant "form field")}}
+        <AppUi::Editor @value={{this.value}} @label="Description" @required={{true}} @info="Describe the issue" @data-field="description" @message={{this.message}}
+          @validate={{fn this.validate log}} @onChange={{fn this.change log}} />
+      {{else if (eq this.variant "mentions")}}
+        <AppUi::Editor @value={{this.value}} @usersList={{this.users}} @issueSearch={{this.issueSearch}} @placeholder="Type @ for people, # for issues" @onChange={{fn this.change log}} />
+      {{else if (eq this.variant "markdown")}}
+        <AppUi::Editor @value={{this.value}} @output="markdown" @onChange={{fn this.change log}} />
+      {{else if (eq this.variant "read-only")}}
+        <AppUi::Editor @value={{this.value}} @readonly={{true}} />
+      {{else}}
+        <AppUi::Editor @value={{this.value}} @disabled={{true}} />
+      {{/if}}
+    </div>
+  </:demo>
+  <:controls>
+    <Developer::StateSwitch @states={{this.variants}} @value={{this.variant}} @onChange={{this.setVariant}} />
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-editor.md" />
+  </:docs>
+</Developer::Entry>

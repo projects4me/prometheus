@@ -1,0 +1,38 @@
+<AccessControl @aclContext={{@aclContext}}>
+  <div class="app-ui-editor {{if @disabled 'app-ui-editor-disabled'}} {{if this.showMessage 'app-ui-editor-invalid'}}" data-app-ui-editor ...attributes>
+    {{#if @label}}
+      <FormFields::Label
+        @label={{@label}}
+        @showFieldInfo={{@info}}
+        @info={{@info}}
+        @data-field={{@data-field}}
+        @required={{@required}}
+      />
+    {{/if}}
+
+    {{#if @readonly}}
+      <div class="app-ui-editor-viewer" data-app-ui-editor-viewer {{render-markdown @value}}></div>
+    {{else}}
+      <div class="app-ui-editor-box" inert={{@disabled}}>
+        <AppUi::ToastUi
+          @value={{@value}}
+          @usersList={{@usersList}}
+          @issueSearch={{@issueSearch}}
+          @placeholder={{@placeholder}}
+          @output={{@output}}
+          @clearEvent={{@clearEvent}}
+          @onImage={{@onImage}}
+          @onContentChange={{this.change}}
+          @onKeyboardSubmit={{if @onSubmit this.submit}}
+          @onBlur={{this.blur}}
+        />
+      </div>
+    {{/if}}
+
+    {{#if this.showMessage}}
+      <span class="error text-red" role="alert" id={{@data-field}} data-app-ui-editor-message>
+        {{@message}}
+      </span>
+    {{/if}}
+  </div>
+</AccessControl>
