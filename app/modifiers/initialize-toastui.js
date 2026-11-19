@@ -118,7 +118,8 @@ export default class ToastEditor extends Modifier {
      */
     _syncValue() {
         let value = this.value;
-        if (!this.editor || value === this.lastValue) {
+        // without a @value the editor is not controlled by the parent, so there is nothing to push in
+        if (!this.editor || value === undefined || value === this.lastValue) {
             return;
         }
         let content = value ?? '';
@@ -377,8 +378,6 @@ export default class ToastEditor extends Modifier {
             events: {
                 change: () => {
                     let content = _self.getContent(editor);
-                    // what the editor holds is what the parent last heard, so a later reset to an older value is a change
-                    _self.lastValue = content;
                     _self.onContentChange(content, _self.mentionedIssues);
                 },
                 load: () => {
@@ -391,8 +390,6 @@ export default class ToastEditor extends Modifier {
                 },
                 blur: () => {
                     _self.onBlur();
-                    // a value that arrived while the editor was focused is applied once focus has left
-                    _self.syncTimer = setTimeout(() => _self._syncValue(), 0);
                 }
             }
         });
@@ -413,6 +410,14 @@ export default class ToastEditor extends Modifier {
                 return false;
             }
           });
+
+        // a value that arrived while the editor was focused is applied once focus has left the wrapper
+        // (the editor's own blur does not fire when focus moves on from a toolbar button)
+        this.focusOutListener = () => {
+            clearTimeout(this.syncTimer);
+            this.syncTimer = setTimeout(() => this._syncValue(), 0);
+        };
+        this.element.addEventListener('focusout', this.focusOutListener);
 
         this.clearEvent = _self.clearEventName;
         this.clearListener = () => {
@@ -697,6 +702,9 @@ export default class ToastEditor extends Modifier {
      */
     _teardown() {
         clearTimeout(this.syncTimer);
+        if (this.focusOutListener) {
+            this.element.removeEventListener('focusout', this.focusOutListener);
+        }
         this.editor = null;
         if (this.clearListener) {
             this.pubSub.off(this.clearEvent, this.clearListener);
