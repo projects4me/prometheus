@@ -4,6 +4,7 @@
 
 import Modifier from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
+import { guidFor } from '@ember/object/internals';
 import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
@@ -72,7 +73,7 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
-     * Sets up the editor on the first run; later runs only refresh the named arguments.
+     * Sets up the editor on the first run; later runs refresh the named arguments and re-sync the value.
      *
      * @method modify
      * @param {HTMLElement} element
@@ -83,10 +84,57 @@ export default class ToastEditor extends Modifier {
     modify(element, positional, named) {
         this.named = named;
         if (this.element) {
+            this._syncValue();
             return;
         }
         this.element = element;
         this._install();
+    }
+
+    /**
+     * The editor of this modifier
+     *
+     * @property editor
+     * @type Object
+     * @private
+     */
+    editor = null;
+
+    /**
+     * The last value handed in through @value / @initialValue
+     *
+     * @property lastValue
+     * @type String
+     * @private
+     */
+    lastValue = undefined;
+
+    /**
+     * Pushes a changed @value (a reset, a cancel, a late-loaded record) into the editor, unless the user is
+     * typing in it or the editor already holds it.
+     *
+     * @method _syncValue
+     * @private
+     */
+    _syncValue() {
+        let value = this.value;
+        if (!this.editor || value === this.lastValue) {
+            return;
+        }
+        let content = value ?? '';
+        if (this.editor.isFocused?.() || this.element.contains(document.activeElement)) {
+            // keep lastValue as is, so the value is applied by the next modify() once focus has left
+            return;
+        }
+        this.lastValue = value;
+        if (content === this.getContent(this.editor)) {
+            return;
+        }
+        if (this.output === 'markdown') {
+            this.editor.setMarkdown(content, false);
+        } else {
+            this.editor.setHtml(content, false);
+        }
     }
 
     /**
@@ -124,14 +172,14 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
-     * This function returns content
+     * The value the editor should show; falls back to the initial value
      *
      * @method get
      * @returns String
      * @public
      */
-    get contents() {
-        return this.named.contents;
+    get value() {
+        return this.named.value ?? this.named.initialValue;
     }
 
     /**
@@ -247,8 +295,17 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get clearEventName() {
-        return this.named.clearEvent ?? 'clearContents';
+        return this.named.clearEvent ?? this.defaultClearEvent;
     }
+
+    /**
+     * The clear event of this editor when none is given
+     *
+     * @property defaultClearEvent
+     * @type String
+     * @private
+     */
+    defaultClearEvent = `clearContents-${guidFor(this)}`;
 
     /**
      * Optional, called with a pasted or dropped image. It resolves to `{ url, alt }` of the image to insert,
@@ -311,7 +368,7 @@ export default class ToastEditor extends Modifier {
         const editor = new Editor({
             el: _self.element,
             previewStyle: 'vertical',
-            initialValue: _self.initialValue,
+            initialValue: _self.value,
             initialEditType: _self.editType,
             useDefaultHTMLSanitizer: true,
             placeholder: _self.placeholder,
@@ -386,7 +443,8 @@ export default class ToastEditor extends Modifier {
             };
             this.targetElement.addEventListener('keydown', this.keyboardHandler);
         }
-        this.element.value = this.contents;
+        this.editor = editor;
+        this.lastValue = this.value;
     }
 
     /**

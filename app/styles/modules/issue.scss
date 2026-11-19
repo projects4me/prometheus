@@ -289,7 +289,7 @@
 .create-issue {
   .form-group {
     div[data-field="issue.description"] {
-      > #editor {
+      > .toast-ui-editor {
         height: 600px !important;
       }
     }
@@ -311,7 +311,7 @@
 
 .issue {
   [data-field-type="wysiwyg"] {
-    > #editor {
+    > .toast-ui-editor {
       height: 18rem !important;
     }
   }

@@ -113,4 +113,31 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         await settled();
         assert.strictEqual(editable.querySelectorAll('div, p').length, 2, 'Enter is left to the editor and adds a line');
     });
+
+    test('a changed @value reaches the editor while it is not focused', async function (assert) {
+        this.set('noop', () => {});
+        this.set('value', '<p>first</p>');
+        await render(hbs`<div id="sync-editor" {{initialize-toastui value=this.value onContentChange=this.noop}}></div>`);
+        let editable = () => document.querySelector('#sync-editor .tui-editor-contents[contenteditable="true"]');
+        assert.ok(editable().textContent.includes('first'));
+
+        this.set('value', '<p>second</p>');
+        await settled();
+        assert.ok(editable().textContent.includes('second'), 'the editor shows the new value');
+    });
+
+    test('the default clear event clears only its own editor', async function (assert) {
+        this.set('noop', () => {});
+        let pubSub = this.owner.lookup('service:pub-sub');
+        let cleared = [];
+        this.set('onA', c => cleared.push(c));
+        await render(hbs`
+            <div id="a" {{initialize-toastui initialValue="<p>one</p>" onContentChange=this.noop}}></div>
+            <div id="b" {{initialize-toastui initialValue="<p>two</p>" onContentChange=this.noop}}></div>
+        `);
+        pubSub.trigger('clearContents');
+        await settled();
+        assert.dom('#a').includesText('one', 'a global clearContents no longer clears editors');
+        assert.dom('#b').includesText('two');
+    });
 });

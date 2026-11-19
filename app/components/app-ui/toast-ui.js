@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
+import { guidFor } from '@ember/object/internals';
 
 /**
  * This component is used to render the toast editor
@@ -151,6 +152,37 @@ export default class ToastUiComponent extends Component {
      * @public
      */
     @service intl;
+
+    /**
+     * The id of this editor's element, unique per instance
+     *
+     * @property editorId
+     * @type String
+     * @public
+     */
+    editorId = `editor-${guidFor(this)}`;
+
+    /**
+     * The edit type, WYSIWYG unless given
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get editType() {
+        return this.args.editType ?? 'wysiwyg';
+    }
+
+    /**
+     * What to hide from the editor, the footer unless given
+     *
+     * @method get
+     * @returns Array
+     * @public
+     */
+    get hide() {
+        return this.args.hide ?? ['footer'];
+    }
 
     /**
      * This function translate emojis using intl service

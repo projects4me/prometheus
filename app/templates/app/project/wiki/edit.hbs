@@ -40,7 +40,6 @@
             <AppUi::ToastUi
                 @usersList={{this.membersList}}
                 @issueSearch={{perform this.search}}
-                @contents={{readonly this.markUp}}
                 @editType= 'wysiwyg'
                 @hide={{array 'footer'}}
                 @onContentChange={{fn this.selectStatic this.model 'markUp'}}
