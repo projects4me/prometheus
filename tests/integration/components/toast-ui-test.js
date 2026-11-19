@@ -25,7 +25,7 @@ module('Integration | Component | toast-ui', function (hooks) {
             />
         `)
 
-        assert.dom('div#editor').exists('component rendered');
+        assert.dom('div.toast-ui-editor').exists('component rendered');
         assert.dom('div.tui-editor-contents.tui-editor-contents-placeholder').exists('toast modifier works');
         assert.dom('div[data-tribute="true"]').exists('tribute attached to editor');
     });

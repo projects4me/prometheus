@@ -54,8 +54,7 @@
 
                 <div data-field="agent.rolePrompt" class="form-field ember-view">
                   <AppUi::ToastUi
-                    @contents={{readonly this.model.rolePrompt}}
-                    @initialValue={{this.model.rolePrompt}}
+                    @value={{this.model.rolePrompt}}
                     @editType="markdown"
                     @hide={{array "footer"}}
                     @onContentChange={{fn this.selectStatic this.model "rolePrompt"}}

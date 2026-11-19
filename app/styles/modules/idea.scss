@@ -197,17 +197,17 @@
 }
 
 .idea-composer {
-  > #editor {
+  > .toast-ui-editor {
     height: 18rem !important;
   }
 
-  &.idea-composer-disabled > #editor {
+  &.idea-composer-disabled > .toast-ui-editor {
     opacity: 0.6;
   }
 }
 
 .idea-create .form-field {
-  > #editor {
+  > .toast-ui-editor {
     height: 18rem !important;
   }
 }

@@ -57,7 +57,7 @@
   }
 }
 
-.wiki-project #editor {
+.wiki-project .toast-ui-editor {
   height: 35rem;
 }
 .wiki-page-contents {
@@ -116,7 +116,7 @@
 
   .form-group {
     div[data-field="wiki.description"] {
-      > #editor {
+      > .toast-ui-editor {
         height: 600px !important;
       }
     }

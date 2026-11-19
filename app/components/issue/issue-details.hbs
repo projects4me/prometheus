@@ -421,7 +421,7 @@
                     @data-field="issue.editEstimateTime"
                     @editType= 'wysiwyg'
                     @hide={{array 'footer'}}
-                    @initialValue={{this.editingLog.description}}
+                    @value={{this.editingLog.description}}
                   />
                   <FormFields::Label
                     @label={{t "views.app.issue.detail.timelog.description"}}
@@ -453,7 +453,7 @@
                     @onContentChange={{fn @selectStatic this.newTimeLog 'description'}}              
                     @editType= 'wysiwyg'
                     @hide={{array 'footer'}}
-                    @initialValue={{this.newTimeLog.description}}
+                    @value={{this.newTimeLog.description}}
                   />
                   <FormFields::Label
                     @label={{t "views.app.issue.detail.timelog.description"}}
@@ -551,7 +551,7 @@
                     @data-field="issue.editTimelog"
                     @editType='wysiwyg'
                     @hide={{array 'footer'}}
-                    @initialValue={{this.editingLog.description}}
+                    @value={{this.editingLog.description}}
                   />
                   <FormFields::Label
                     @label={{t "views.app.issue.detail.timelog.description"}}
@@ -601,7 +601,7 @@
                     @data-field="issue.timelog"
                     @editType='wysiwyg'
                     @hide={{array 'footer'}}
-                    @initialValue={{this.newTimeLog.description}}
+                    @value={{this.newTimeLog.description}}
                   />
                   <FormFields::Label
                     @label={{t "views.app.issue.detail.timelog.description"}}

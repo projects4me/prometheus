@@ -138,8 +138,7 @@
           <div data-field="newConversation.description" class="form-field ember-view">
             <AppUi::ToastUi
                 @usersList={{this.membersList}}
-                @contents={{readonly this.newConversation.description}}
-                @initialValue={{this.newConversation.description}}
+                @value={{this.newConversation.description}}
                 @editType='wysiwyg'
                 @hide={{array 'footer'}}
                 @onContentChange={{this.setNewConversationDescription}}

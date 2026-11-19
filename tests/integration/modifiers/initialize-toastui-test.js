@@ -113,4 +113,125 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         await settled();
         assert.strictEqual(editable.querySelectorAll('div, p').length, 2, 'Enter is left to the editor and adds a line');
     });
+
+    test('a changed @value reaches the editor while it is not focused', async function (assert) {
+        this.set('noop', () => {});
+        this.set('value', '<p>first</p>');
+        await render(hbs`<div id="sync-editor" {{initialize-toastui value=this.value onContentChange=this.noop}}></div>`);
+        let editable = () => document.querySelector('#sync-editor .tui-editor-contents[contenteditable="true"]');
+        assert.ok(editable().textContent.includes('first'));
+
+        this.set('value', '<p>second</p>');
+        await settled();
+        assert.ok(editable().textContent.includes('second'), 'the editor shows the new value');
+    });
+
+    test('resetting @value to an older value restores it after the user edited the editor', async function (assert) {
+        this.set('value', '<p>A</p>');
+        this.set('echo', content => this.set('value', content));
+        await render(hbs`<div id="reset-editor" {{initialize-toastui editType="wysiwyg" value=this.value onContentChange=this.echo}}></div>`);
+        let selector = '#reset-editor .tui-editor-contents[contenteditable="true"]';
+        let editable = document.querySelector(selector);
+        editable.focus();
+        document.execCommand('insertText', false, 'B');
+        await new Promise(resolve => setTimeout(resolve, 400));
+        editable.blur();
+        await settled();
+        assert.ok(document.querySelector(selector).textContent.includes('B'), 'the user edit is in the editor');
+
+        this.set('value', '<p>A</p>');
+        await settled();
+        assert.notOk(document.querySelector(selector).textContent.includes('B'), 'the editor is back at A');
+    });
+
+    test('a @value that arrives while the editor is focused is applied once focus leaves', async function (assert) {
+        this.set('noop', () => {});
+        this.set('value', '<p>first</p>');
+        await render(hbs`<div id="pending-editor" {{initialize-toastui editType="wysiwyg" value=this.value onContentChange=this.noop}}></div>`);
+        let selector = '#pending-editor .tui-editor-contents[contenteditable="true"]';
+        let editable = document.querySelector(selector);
+        editable.focus();
+
+        this.set('value', '<p>second</p>');
+        await settled();
+        assert.ok(document.querySelector(selector).textContent.includes('first'), 'the focused editor is left alone');
+
+        document.querySelector(selector).blur();
+        await waitUntil(() => document.querySelector(selector).textContent.includes('second'), { timeout: 2000 });
+        assert.ok(document.querySelector(selector).textContent.includes('second'), 'the pending value is applied after blur');
+    });
+
+    test('an editor without @value keeps what the user typed after it loses focus', async function (assert) {
+        this.set('noop', () => {});
+        await render(hbs`<div id="free-editor" {{initialize-toastui editType="wysiwyg" onContentChange=this.noop}}></div>`);
+        let selector = '#free-editor .tui-editor-contents[contenteditable="true"]';
+        let editable = document.querySelector(selector);
+        editable.focus();
+        document.execCommand('insertText', false, 'typed');
+        await new Promise(resolve => setTimeout(resolve, 400));
+        editable.blur();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await settled();
+        assert.ok(document.querySelector(selector).textContent.includes('typed'), 'the text is still there');
+    });
+
+    test('a @value that arrives while focus is on a button of the wrapper is applied once focus leaves it', async function (assert) {
+        this.set('noop', () => {});
+        this.set('value', '<p>first</p>');
+        await render(hbs`<div id="btn-editor" {{initialize-toastui editType="wysiwyg" value=this.value onContentChange=this.noop}}></div><button id="outside" type="button">x</button>`);
+        let selector = '#btn-editor .tui-editor-contents[contenteditable="true"]';
+        let wrapper = document.querySelector('#btn-editor');
+        let button = document.createElement('button');
+        button.type = 'button';
+        wrapper.appendChild(button);
+        button.focus();
+
+        this.set('value', '<p>second</p>');
+        await settled();
+        assert.ok(document.querySelector(selector).textContent.includes('first'), 'the value waits while focus is inside the wrapper');
+
+        document.querySelector('#outside').focus();
+        await waitUntil(() => document.querySelector(selector).textContent.includes('second'), { timeout: 2000 });
+        assert.ok(true, 'the pending value is applied after focus left the wrapper');
+    });
+
+    test('an @value that is not echoed back does not undo what the user typed', async function (assert) {
+        this.set('noop', () => {});
+        await render(hbs`<div id="init-editor" {{initialize-toastui editType="wysiwyg" value="<p>A</p>" onContentChange=this.noop}}></div>`);
+        let selector = '#init-editor .tui-editor-contents[contenteditable="true"]';
+        let editable = document.querySelector(selector);
+        editable.focus();
+        document.execCommand('insertText', false, 'B');
+        await new Promise(resolve => setTimeout(resolve, 400));
+        editable.blur();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await settled();
+        assert.ok(document.querySelector(selector).textContent.includes('B'), 'the user edit is kept');
+    });
+
+    test('an explicit clearEvent clears only its own editor', async function (assert) {
+        this.set('noop', () => {});
+        let pubSub = this.owner.lookup('service:pub-sub');
+        await render(hbs`
+            <div id="ca" {{initialize-toastui value="<p>one</p>" clearEvent="clear-a" onContentChange=this.noop}}></div>
+            <div id="cb" {{initialize-toastui value="<p>two</p>" clearEvent="clear-b" onContentChange=this.noop}}></div>
+        `);
+        pubSub.trigger('clear-a');
+        await settled();
+        assert.dom('#ca').doesNotIncludeText('one', 'the editor of the event is cleared');
+        assert.dom('#cb').includesText('two', 'the other editor is untouched');
+    });
+
+    test('a global clearContents does not clear editors with the default clear event', async function (assert) {
+        this.set('noop', () => {});
+        let pubSub = this.owner.lookup('service:pub-sub');
+        await render(hbs`
+            <div id="a" {{initialize-toastui value="<p>one</p>" onContentChange=this.noop}}></div>
+            <div id="b" {{initialize-toastui value="<p>two</p>" onContentChange=this.noop}}></div>
+        `);
+        pubSub.trigger('clearContents');
+        await settled();
+        assert.dom('#a').includesText('one', 'a global clearContents no longer clears editors');
+        assert.dom('#b').includesText('two');
+    });
 });

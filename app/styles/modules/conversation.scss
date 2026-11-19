@@ -138,12 +138,12 @@
       display: inline-flex;
       width: 100%;
 
-      > #editor {
+      > .toast-ui-editor {
         height: 120px !important;
         width: 100% !important;
       }
 
-      > #editor div.tui-editor-contents {
+      > .toast-ui-editor div.tui-editor-contents {
         min-height: 0px !important;
         padding: 3px 4px !important;
       }
@@ -154,7 +154,7 @@
     }
 
     [data-field="issue.conversation"] {
-      > #editor {
+      > .toast-ui-editor {
         height: 15rem !important;
       }
     }
