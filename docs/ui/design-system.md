@@ -5,7 +5,9 @@ crimson Projects4Me palette, content grouped in boxes, and square edges.** Every
 Nothing gets rebuilt from scratch, restyled to match current trends, or given a new visual language.
 
 This document was written by walking through the running app (`https://app.local-projects4.me`, project
-*A Prometheus*) and reading `app/styles/`. Screens for reference are in [`screens/`](screens/).
+*A Prometheus*) and reading `app/styles/`. Screens for reference are in [`screens/`](screens/): the app shell in
+[`screens/shell/`](screens/shell/), the page patterns at the top level and every Component Library entry, with its
+documentation tabs, in [`screens/library/`](screens/library/). They were last taken on 20 Nov 2026 (aprom-4752).
 
 ## 1. Non-negotiable rules
 
@@ -30,11 +32,26 @@ This document was written by walking through the running app (`https://app.local
 
 | Part | What it is | Source |
 |---|---|---|
-| Header | White navbar. Logo "Projects4Me" top left; hamburger; global search (power-select, square); crimson **New ▾** dropdown (Issue / Thread / Project); bell; user avatar + name (green status dot on the avatar; the user dropdown shows an "Online" row) | `components/app-layouts/application-header` |
-| Sidebar | Light grey (`#f9fafc`), fixed. **crimson project selector** (power-select, full width, white text); sections "Main Navigation" and "Admin"; Font Awesome icon + label per item; active item has a crimson left bar; tree items use `fa-circle-o` bullets | `components/app-layouts/application-sidebar` |
+| Header | White navbar, a flex row. Left to right: logo "Projects4Me" (as wide as the sidebar); hamburger; **crimson project switcher** (`AppLayouts::ProjectSwitcher`: `AppUi::Select`, square, white text, project name in bold + short code, "All projects" link under the options); **global search** (`AppUi::Select`) centred, up to 42rem; then, on the right, the crimson **New ▾** dropdown (Issue / Thread / Project; Issue and Thread are greyed out until a project is selected), the bell (opens the notifications sidebar) and the user avatar (`AppUi::Avatar` `s`) + name with a green status dot; the user dropdown shows the avatar (`l`), an "Online" row, Profile and Sign out | `components/app-layouts/application-header`, `project-switcher`, `styles/modules/header.scss` |
+| Sidebar | Light grey (`#f9fafc`), fixed, **200px** wide (`$sidebarWidth` in `modules/nav.scss`; logo, navbar, content and footer offsets follow it). No project selector: that lives in the header. Three groups (`AppUi::NavBar`, items from the `Navigation` metadata in `utils/metadata/metadata.js`): **Workspace** (Dashboard, Projects), **Project** (Issues, Task Board, Gantt Cal, Threads, Ideas; the group header shows the selected project's short code, and the items are dimmed and disabled until a project is selected) and **Admin** (Workflows, Agents, Settings, Developer; each shown only when the user's ACL allows it). Font Awesome icon + label per item; the active item has a crimson left bar; tree items use `fa-circle-o` bullets. When the sidebar is collapsed to icons, a divider separates the groups | `components/app-layouts/application-sidebar`, `components/app-ui/nav-bar`, `navbar-items` |
+| Mobile (< 768px) | The header wraps: the project switcher fills the space between the hamburger and the right-hand menu (name truncated with an ellipsis), **New** becomes a `+` icon, the user name is hidden and the global search drops to its own full-width row. The sidebar slides in over a dimmed page and closes after each navigation (`close-sidebar-on-navigate`) | `modules/header.scss`, `components/sidebar-overlay.scss` |
 | Content header | `<section class="content-header">`: page title as `<h1>` (24px/500), or the project name as a crimson `<small>` link inside a project; breadcrumb on the right (12px, Font Awesome icon + link per level, `>` separators) | `templates/app/project.hbs`, `<BreadCrumb/>` |
 | Content | `<section class="content">` on `#ecf0f5`, then Bootstrap `.row` / `.col-md-*` | |
 | Footer | "Copyright © 2026 **Projects4Me Inc.**" left, "Report Issue" link right | `components/app-layouts/application-footer` |
+
+Screens of the shell:
+
+| Screen | Shows |
+|---|---|
+| [Desktop, no project](screens/shell/desktop-no-project.png) | The whole shell on the dashboard before a project is picked |
+| [Sidebar, no project](screens/shell/sidebar-no-project.png) / [with a project](screens/shell/sidebar-project.png) | The three groups; Project items disabled, then enabled with the short code in the group header |
+| [Sidebar collapsed](screens/shell/sidebar-collapsed.png) | Icons only, with the dividers between the groups |
+| [Project switcher](screens/shell/header-project-switcher.png) | The open switcher: name + code per project, "All projects" at the bottom |
+| [Global search](screens/shell/header-global-search.png) | Issue results while typing |
+| [New menu](screens/shell/header-new-menu.png) | The **New ▾** dropdown |
+| [User menu](screens/shell/header-user-menu.png) | Avatar, "Online" row, Profile and Sign out |
+| [Notifications sidebar](screens/shell/notifications-sidebar.png) | What the bell opens |
+| [Mobile header](screens/shell/mobile-header.png) / [mobile sidebar](screens/shell/mobile-sidebar-open.png) | The wrapped header, and the sidebar over the dimmed page (390px wide) |
 
 **Pages under `app.project` start directly with their `.row`.** They never render their own
 `section.content-header`, page title row, `<BreadCrumb/>` or `section.content`: `templates/app/project.hbs`
@@ -62,8 +79,15 @@ from `services/breadcrumb.js`.
   menu per row. The first column is `number - subject` with the status label underneath.
 - Base controller: `controllers/prometheus/list.js` (search, export, mass update). Extend it; don't
   reimplement it.
+- **New list pages** (Agents, Workflows) build this from components: `AppUi::ListToolbar` (search and actions in
+  the box header, selection bar and pager below it; `@position="bottom"` closes the list), `AppUi::DataTable`
+  (columns from descriptors, sorting, select-all, grouping, row actions) and `AppUi::Pager`, sharing one
+  `Selection` from `utils/state/selection.js`. The ListToolbar entry in the Component Library (section 14) demos the whole list page.
+  Screens: [agents](screens/list-agents.png), [workflows](screens/list-workflows.png),
+  [projects](screens/list-projects.png).
 
-**List + detail page (QuickList)** (Roles, Ideas, Threads)
+**List + detail page (QuickList)** ([roles](screens/quicklist-roles.png), [ideas](screens/quicklist-ideas.png),
+[threads](screens/quicklist-threads.png))
 - `.row` → `.col-md-3` with `QuickList` in a `box box-primary`, + `.col-md-9` with the outlet for the detail.
 - The detail is a `.col-md-8` record box (`box-primary`) + a `.col-md-4` info column of small boxes.
 - The first row opens by default (the index route does `replaceWith` to it). The empty state shows only when
@@ -85,7 +109,7 @@ from `services/breadcrumb.js`.
   any box.
 - Create and edit share one template (`layoutName` switch). Do the same for new forms.
 
-**Dashboard-style / profile page** ([profile](screens/profile.png))
+**Dashboard-style / profile page** ([dashboard](screens/dashboard.png), [profile](screens/profile.png))
 - A grid of equal-height boxes (`col-md-3` / `col-md-4` / `col-md-6`), each with one title and one widget:
   a stat, a small chart, a short list or a timeline.
 
@@ -204,8 +228,9 @@ translation, from the app or from Gaia, must extend the formatter first.
   composer, comment and notification rows), `m` 40px (default; table rows, member lists), `ml` 64px (member
   grids, the issue people box) and `l` 96px (profile and agent page heads). Do not size it with your own CSS.
 - No small uppercase type or "eyebrow" label above a box title. The title is the `h3.box-title`.
-- Issue statuses always render with the `status-label` + `status-style` helpers and the status class (as in
-  `components/issue/issue-details.hbs`), never the raw value.
+- Issue statuses render with `AppUi::StatusLabel` (`@status`), which wraps the `status-label` + `status-style`
+  helpers and the status class. Never print the raw value or repeat the helper markup.
+- Tags render with `AppUi::Tag` (Task Board look: variant or palette colour, optionally removable).
 - Information shown in a side box (for example a linked issue) is not repeated in the record header.
 
 ## 9. Other building blocks
@@ -216,7 +241,12 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Milestones | `milestone-block`: solid colour tiles (green done, red overdue) with a large icon on the left |
 | Stats | AdminLTE `info-box` / `small-box`, or a widget in `components/widgets/` |
 | Charts | Existing chart components (`chart-issueratio`, `chart-estimatedspent`, `components/charts/`) |
-| Tabs | Bootstrap `nav nav-tabs` (gantt "Days / Weeks"; board milestone tabs) |
+| Tabs | `AppUi::Tabs` (AdminLTE `nav-tabs-custom` with panes, counts and tools; the active tab is an argument, a change is an event). Older screens use plain `nav nav-tabs` (gantt "Days / Weeks", board milestone tabs) |
+| Select | `AppUi::Select`, the searchable single/multiple select behind every relate field, the global search and the project switcher. In forms, use the `FormFields::*` wrapper, not `AppUi::Select` directly |
+| Dropdown menus | `AppUi::Dropdown` (button + floating menu, auto alignment, standard menu colours): saved searches, board filters, row actions |
+| List pages | `AppUi::ListToolbar`, `AppUi::DataTable`, `AppUi::Pager` (section 3) |
+| Narrow record lists | `QuickList` (section 3) |
+| Search bar / query builder | `EzSearch`, `EzSearchCompact` |
 | Loading | `<route>-loading.hbs` with `AppUi::Skeleton`; `AppUi::Loader` (crimson spinner) inline |
 | Toasts | Messenger "air" theme through the notifications service; don't add another toast library |
 | Inline edit | `AppUi::InlineEditable` |
@@ -226,7 +256,7 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
 | Reply / comment box | `AppUi::Editor` without label (bare box, with mentions, issue links and Ctrl/⌘+Enter `@onSubmit`) (the target for `ConversationUi::CommentComposer`, not yet migrated); never a plain textarea |
 | Record boxes | Plain `box box-*`, with no extra shadow or border |
-| Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` |
+| Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` in the Component Library (section 14) |
 
 ## 10. Rounded corners already in the code (don't copy)
 
@@ -262,6 +292,7 @@ separate task with its own issue.
 - [ ] List + detail pages follow the QuickList order (create in the header, pagination in the footer)
 - [ ] Issue statuses use `status-label`; the comment input is the `CommentComposer`
 - [ ] Every user picture is `AppUi::Avatar` with a standard size (section 8)
+- [ ] Checked the Component Library (section 14) first; a new or changed shared component has its library entry
 - [ ] Compared side by side in the browser with an existing screen of the same type
 
 ## 13. Composing views from components
@@ -273,3 +304,58 @@ separate task with its own issue.
 - **R5 Test selectors are `data-test-*` only.** `ember-test-selectors` strips them from production builds; CSS and app JS never use them. The existing `data-field`, `data-btn` and `data-column` stay (4 stylesheets, `form-fields/label.js`, `controllers/app/project/board.js` and `modifiers/initialize-sortable.js` depend on them) and are replaced only when a page is touched.
 - **R6 Ship the whole set.** Every shared component ships with a ui-docs page, a contract manifest and integration tests.
 - **R7 Where components live.** Generic UI lives in `app-ui/`, domain UI in `<domain>/`. No new top-level components.
+
+## 14. Developer Component Library
+
+The live reference for the shared components: **Admin → Developer** in the sidebar, route
+`/app/developer/components` (`app.developer.*`, ACL `setting.read`). Look here before writing UI; if a component
+does the job, use it (CLAUDE.md: "use the existing component, always").
+
+**Layout.** The page follows the QuickList pattern: a `col-md-3` **Components** box (`Developer::ComponentNav`:
+entries by group, with a filter box) and a `col-md-9` entry page. Each entry page has:
+
+1. A header box (`Developer::EntryHeader`, `box-primary`): name, status label (`stable` / `experimental`),
+   summary and "Used in" links to the screens that use it.
+2. A **Demo** box (`col-md-7`) with a Reset button, rendering the component live.
+3. A **Controls** box (`col-md-5`) to switch arguments and states (form controls, or `Developer::StateSwitch`
+   for loading / empty / error states), and an **Event log** (`Developer::EventLog`) showing every callback the
+   demo fires.
+4. The docs (`Developer::Docs`), rendering the component's `public/ui-docs/<name>.md` as tabs: Overview,
+   Arguments, Blocks, Events, Do and Avoid.
+
+**Entries** (`utils/developer/component-registry.js`, grouped as the Components box shows them):
+
+| Group | Entry | Component | Status | Docs | Manifest | Screens |
+|---|---|---|---|---|---|---|
+| Lists | QuickList | `QuickList` | stable | [quick-list.md](../../public/ui-docs/quick-list.md) | [quick-list.json](../../public/ui-docs/quick-list.json) | [entry](screens/library/quick-list.png), [docs](screens/library/quick-list-docs.png) |
+| Lists | ListToolbar | `AppUi::ListToolbar` | experimental | [list-toolbar.md](../../public/ui-docs/list-toolbar.md) | [list-toolbar.json](../../public/ui-docs/list-toolbar.json) | [entry](screens/library/list-toolbar.png), [docs](screens/library/list-toolbar-docs.png) |
+| Lists | DataTable | `AppUi::DataTable` | experimental | [data-table.md](../../public/ui-docs/data-table.md) | [data-table.json](../../public/ui-docs/data-table.json) | [entry](screens/library/data-table.png), [docs](screens/library/data-table-docs.png) |
+| Lists | Pager | `AppUi::Pager` | experimental | [pager.md](../../public/ui-docs/pager.md) | [pager.json](../../public/ui-docs/pager.json) | [entry](screens/library/pager.png), [docs](screens/library/pager-docs.png) |
+| Search | ezSearch | `EzSearch`, `EzSearchCompact` | stable | [ez-search.md](../../public/ui-docs/ez-search.md) | none yet | [entry](screens/library/ez-search.png), [docs](screens/library/ez-search-docs.png) |
+| Forms | Form fields | `FormFields::*` | stable | [form-fields.md](../../public/ui-docs/form-fields.md) | none yet | [entry](screens/library/form-fields.png), [docs](screens/library/form-fields-docs.png) |
+| Forms | Select | `AppUi::Select` | stable | [select.md](../../public/ui-docs/select.md) | none yet | [entry](screens/library/select.png), [docs](screens/library/select-docs.png) |
+| Forms | Editor | `AppUi::Editor` | experimental | [app-ui-editor.md](../../public/ui-docs/app-ui-editor.md) | [app-ui-editor.json](../../public/ui-docs/app-ui-editor.json) | [entry](screens/library/editor.png), [docs](screens/library/editor-docs.png) |
+| Overlays | Modal | `AppUi::Modal` | stable | [modal.md](../../public/ui-docs/modal.md) | none yet | [entry](screens/library/modal.png), [docs](screens/library/modal-docs.png) |
+| Menus | Dropdown | `AppUi::Dropdown` | stable | [dropdown.md](../../public/ui-docs/dropdown.md) | [dropdown.json](../../public/ui-docs/dropdown.json) | [entry](screens/library/dropdown.png), [docs](screens/library/dropdown-docs.png) |
+| Navigation | Tabs | `AppUi::Tabs` | stable | [tabs.md](../../public/ui-docs/tabs.md) | [tabs.json](../../public/ui-docs/tabs.json) | [entry](screens/library/tabs.png), [docs](screens/library/tabs-docs.png) |
+| Display | Box | `AppUi::Box` | stable | [app-ui-box.md](../../public/ui-docs/app-ui-box.md) | [app-ui-box.json](../../public/ui-docs/app-ui-box.json) | [entry](screens/library/box.png), [docs](screens/library/box-docs.png) |
+| Display | EmptyState | `AppUi::EmptyState` | stable | [app-ui-empty-state.md](../../public/ui-docs/app-ui-empty-state.md) | [app-ui-empty-state.json](../../public/ui-docs/app-ui-empty-state.json) | [entry](screens/library/empty-state.png), [docs](screens/library/empty-state-docs.png) |
+| Display | Avatar | `AppUi::Avatar` | stable | [app-ui-avatar.md](../../public/ui-docs/app-ui-avatar.md) | [app-ui-avatar.json](../../public/ui-docs/app-ui-avatar.json) | [entry](screens/library/avatar.png), [docs](screens/library/avatar-docs.png) |
+| Display | Status | `AppUi::StatusLabel` | stable | [app-ui-status-label.md](../../public/ui-docs/app-ui-status-label.md) | [app-ui-status-label.json](../../public/ui-docs/app-ui-status-label.json) | [entry](screens/library/status-label.png), [docs](screens/library/status-label-docs.png) |
+| Display | Tag | `AppUi::Tag` | stable | [app-ui-tag.md](../../public/ui-docs/app-ui-tag.md) | [app-ui-tag.json](../../public/ui-docs/app-ui-tag.json) | [entry](screens/library/tag.png), [docs](screens/library/tag-docs.png) |
+
+The ListToolbar demo is a whole list page (ListToolbar, DataTable and Pager together). `AppUi::UserChip` has
+its docs ([app-ui-user-chip.md](../../public/ui-docs/app-ui-user-chip.md)) but no library entry yet. Each **entry** screen shows the header, demo, controls and event log; each **docs** screen
+stacks every documentation tab of the entry, as `Developer::Docs` renders it.
+
+**Adding an entry.** A new shared component (R6), or an existing one the first time it is changed (R4), gets:
+
+- a registry entry in `ENTRIES`: `name` (URL segment), `label`, `group` (one of `GROUPS`; add a group only
+  when none fits), `status`, `summary`, `usedIn`, `demo`, `doc` and optional `variants`;
+- a demo component in `components/developer/demos/<name>` that wraps its content in `Developer::Entry`
+  (blocks `<:demo>`, `<:controls>`, `<:docs>`) and logs every event to the event log;
+- the docs page `public/ui-docs/<name>.md` and, for a shared component, its contract manifest
+  `<name>.json` (format and the contract test: `public/ui-docs/README.md`);
+- tests for the demo like any other component.
+
+The library itself follows this design system: AdminLTE boxes, square edges, Font Awesome 4, no new colours.
