@@ -33,6 +33,15 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         assert.dom('[data-idea-created-empty]').exists();
     });
 
+    test('a failed load shows an error, not the empty state', async function (assert) {
+        this.set('plans', []);
+        this.set('planIssues', []);
+        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @loadFailed={{true}} />`);
+
+        assert.dom('[data-idea-created-error]').hasText('The created issues could not be loaded.');
+        assert.dom('[data-idea-created-empty]').doesNotExist();
+    });
+
     test('only issues of readable projects are links, the others and links without an issue are plain text', async function (assert) {
         this.set('readable', ['1']);
         this.set('plans', [{ id: '1', version: 1, body: JSON.stringify({ issues: [{ key: 'c', subject: 'Planned' }] }) }]);

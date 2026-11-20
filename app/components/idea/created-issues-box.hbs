@@ -3,6 +3,9 @@
     <h3 class="box-title">{{t "views.app.idea.createdIssues.title"}}</h3>
   </div>
   <div class="box-body">
+    {{#if @loadFailed}}
+      <div class="alert alert-danger" role="alert" data-idea-created-error>{{t "views.app.idea.createdIssues.error"}}</div>
+    {{/if}}
     {{#each this.groups as |group|}}
       <h5 data-idea-created-group={{group.version}}>{{t "views.app.idea.createdIssues.version" version=group.version}}</h5>
       <ul class="list-unstyled">
@@ -19,7 +22,7 @@
           </li>
         {{/each}}
       </ul>
-    {{else}}
+    {{else if (not @loadFailed)}}
       <p class="text-muted text-center" data-idea-created-empty>{{t "views.app.idea.createdIssues.empty"}}</p>
     {{/each}}
   </div>

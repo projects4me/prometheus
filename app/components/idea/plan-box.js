@@ -219,6 +219,9 @@ export default class IdeaPlanBoxComponent extends Component {
                         issueNumber,
                         readable: isProjectReadable(issue.projectId, this.readableProjectIds)
                     };
+                } else {
+                    // the link exists but its issue did not load: still created, shown by its key
+                    created[link.key] = { unloaded: true };
                 }
             });
         return created;
@@ -331,6 +334,43 @@ export default class IdeaPlanBoxComponent extends Component {
             return false;
         } finally {
             this.isApproving = false;
+        }
+    }
+
+    /**
+     * The id and status of the shown plan as one value, so a change of either is seen by `on-update`
+     *
+     * @property shownKey
+     * @type String
+     * @private
+     */
+    get shownKey() {
+        return `${this.selected?.id ?? ''}|${this.selected?.status ?? ''}`;
+    }
+
+    /**
+     * The id of the plan shown at the last change, to tell a status change from a version switch
+     *
+     * @property lastShownId
+     * @type String
+     * @private
+     */
+    lastShownId = this.selected?.id;
+
+    /**
+     * Calls `@onPlanSettled` when the shown plan itself (not a switch to another version) becomes created or
+     * failed, so the page can reload the issues created from it
+     *
+     * @method shownStatusChanged
+     * @private
+     */
+    @action
+    shownStatusChanged() {
+        let plan = this.selected;
+        let previousId = this.lastShownId;
+        this.lastShownId = plan?.id;
+        if (plan && previousId === plan.id && ['created', 'failed'].includes(plan.status)) {
+            this.args.onPlanSettled?.(plan);
         }
     }
 

@@ -138,6 +138,46 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-meta]').includesText('b');
     });
 
+    test('a created link whose issue is not loaded still shows as created with its key', async function (assert) {
+        this.set('plans', [{ id: '2', version: 2, status: 'created', body: JSON.stringify({ summary: 'S', issues: [
+            { key: 'a', subject: 'One', priority: 'high', type: 'Task', complexity: 'simple', milestone: 'M' },
+            { key: 'b', subject: 'Two', priority: 'low', type: 'Task', complexity: 'simple', milestone: 'M' }
+        ] }) }]);
+        this.set('planIssues', [
+            { ideaplanId: '2', key: 'a', loadedIssue: null },
+            { ideaplanId: '2', key: 'b', loadedIssue: { issueNumber: 7, projectShortcode: '', projectId: '1' } }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-issue="a"] [data-idea-plan-issue-unloaded]').hasText('a');
+        assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-unloaded]').hasText('b', 'an issue without its number is not dropped');
+    });
+
+    test('the shown plan reports when it becomes created or failed, not when another version is picked', async function (assert) {
+        let settledPlans = [];
+        this.set('onPlanSettled', plan => settledPlans.push(`${plan.id}:${plan.status}`));
+        this.set('plans', [
+            { id: '1', version: 1, status: 'created', body: body('First plan', 'Old issue') },
+            { id: '2', version: 2, status: 'proposed', body: body('Second plan', 'New issue') }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} @onPlanSettled={{this.onPlanSettled}} />`);
+        assert.deepEqual(settledPlans, [], 'nothing on first render');
+
+        this.set('plans', [this.plans[0], { ...this.plans[1], status: 'creating' }]);
+        await settled();
+        this.set('plans', [this.plans[0], { ...this.plans[1], status: 'created' }]);
+        await settled();
+        assert.deepEqual(settledPlans, ['2:created']);
+
+        await click('[data-idea-plan-version="1"]');
+        assert.deepEqual(settledPlans, ['2:created'], 'picking a version that is already created does not report');
+
+        await click('[data-idea-plan-version="2"]');
+        this.set('plans', [this.plans[0], { ...this.plans[1], status: 'failed' }]);
+        await settled();
+        assert.deepEqual(settledPlans, ['2:created', '2:failed']);
+    });
+
     test('the empty state shows when there is no plan', async function (assert) {
         this.set('plans', []);
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
