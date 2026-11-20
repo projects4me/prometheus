@@ -513,6 +513,18 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
+     * Opens the new idea form
+     *
+     * @method newIdea
+     * @returns {void}
+     * @public
+     */
+    @action
+    newIdea() {
+        this.router.transitionTo('app.project.idea.create');
+    }
+
+    /**
      * Sorts the list by a field; a date starts with the newest first, a title from A to Z
      *
      * @method sortList

@@ -101,6 +101,12 @@ export const when = function () {
             }
         },
         {
+            "User clicks the New idea button": (assert) => async function () {
+                await click('[data-new-idea]');
+                assert.ok(true, 'User clicks the New idea button');
+            }
+        },
+        {
             "User clicks the Ideas entry in the sidebar": (assert) => async function () {
                 await click('.sidebar-menu [data-navigation-module="Idea"] > a');
                 assert.ok(true, 'User clicks the Ideas entry in the sidebar');
@@ -302,17 +308,13 @@ export const then = function () {
         },
         {
             "The New idea button is shown disabled": (assert) => async function () {
-                assert.dom('[data-new-idea]').hasClass('btn-default');
-                assert.dom('[data-new-idea]').hasClass('disabled');
-                assert.dom('[data-new-idea]').hasAttribute('aria-disabled', 'true');
-                assert.notEqual(document.querySelector('[data-new-idea]').tagName, 'A', 'it is not a link');
+                assert.dom('button.btn-primary[data-new-idea]').isDisabled();
             }
         },
         {
-            "The New idea button is shown as a link": (assert) => async function () {
-                assert.dom('a[data-new-idea]').exists();
-                assert.dom('[data-new-idea]').hasClass('btn-primary');
-                assert.dom('[data-new-idea]').doesNotHaveClass('disabled');
+            "The New idea button is shown as a button": (assert) => async function () {
+                assert.dom('button.btn-primary[data-new-idea]').exists();
+                assert.dom('[data-new-idea]').isNotDisabled();
             }
         },
         {
