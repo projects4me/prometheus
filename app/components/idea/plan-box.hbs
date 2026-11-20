@@ -1,4 +1,4 @@
-<div class="box box-success idea-plan" data-idea-plan>
+<div class="box box-success idea-plan" data-idea-plan {{on-update this.shownKey this.shownStatusChanged}}>
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
     <div class="box-tools pull-right">
@@ -60,6 +60,8 @@
                     <LinkTo @route="app.project.issue.page" @models={{array created.projectShortcode created.issueNumber}} data-idea-plan-issue-link>
                       <i class="fa fa-external-link"></i> {{created.projectShortcode}}-{{created.issueNumber}}
                     </LinkTo>
+                  {{else if created.unloaded}}
+                    <span class="text-muted" title={{t "views.app.idea.plan.createdUnloaded"}} data-idea-plan-issue-unloaded><span class="fa fa-check" aria-hidden="true"></span> {{issue.key}}</span>
                   {{else if created}}
                     <span class="text-muted" data-idea-plan-issue-unreadable>{{created.projectShortcode}}-{{created.issueNumber}}</span>
                   {{else}}

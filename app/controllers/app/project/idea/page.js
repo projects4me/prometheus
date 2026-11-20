@@ -103,6 +103,15 @@ export default class AppProjectIdeaPageController extends Controller {
     @tracked planIssues = [];
 
     /**
+     * Whether the last load of the created issues failed, so the box shows an error instead of an empty list
+     *
+     * @property planIssuesFailed
+     * @type Boolean
+     * @public
+     */
+    @tracked planIssuesFailed = false;
+
+    /**
      * The request to show a plan version, a new object per request so the same plan can be requested again
      *
      * @property shownPlan
@@ -247,27 +256,55 @@ export default class AppProjectIdeaPageController extends Controller {
         if (!idea) {
             this.plans = [];
             this.planIssues = [];
+            this.planIssuesFailed = false;
             this.loadedPlansIdeaId = null;
             return;
         }
         if (this.loadedPlansIdeaId !== idea.id) {
             this.plans = [];
             this.planIssues = [];
+            this.planIssuesFailed = false;
             this.loadedPlansIdeaId = idea.id;
         }
         let sequence = ++this.planSequence;
-        try {
-            let [plans, links] = await Promise.all([
-                this.store.query('ideaplan', { query: `(Ideaplan.ideaId : ${idea.id})`, limit: -1 }),
-                this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, rels: 'issue', limit: -1 })
-            ]);
-            if (this.model?.id === idea.id && sequence === this.planSequence) {
-                this.plans = plans.slice();
-                this.planIssues = links.slice();
+        // settled separately: a failed links query (e.g. no ideaplanissue.read) must not hide the plans
+        let [plans, links] = await Promise.allSettled([
+            this.store.query('ideaplan', { query: `(Ideaplan.ideaId : ${idea.id})`, limit: -1 }),
+            this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, rels: 'issue', limit: -1 })
+        ]);
+        let current = this.model?.id === idea.id && sequence === this.planSequence;
+        if (plans.status === 'fulfilled') {
+            if (current) {
+                this.plans = plans.value.slice();
             }
-        } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'idea' });
+        } else {
+            this.errorManager.handleError(plans.reason, { moduleName: 'idea' });
         }
+        if (links.status === 'fulfilled') {
+            if (current) {
+                this.planIssues = links.value.slice();
+                this.planIssuesFailed = false;
+            }
+        } else {
+            if (current) {
+                this.planIssuesFailed = true;
+            }
+            this.errorManager.handleError(links.reason, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * Reloads the plans and their created issues when the shown plan has settled (created or failed). Its
+     * status can change through a store reload elsewhere (the idea list reloads plan statuses on the same
+     * events), so the created issues are fetched again rather than trusted to a separate event.
+     *
+     * @method onPlanSettled
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    onPlanSettled() {
+        return this.loadPlans();
     }
 
     /**
@@ -353,7 +390,12 @@ export default class AppProjectIdeaPageController extends Controller {
             let message = await this.store.findRecord('ideamessage', id);
             if (this.model === idea && !this.messages.some(item => item.id === message.id)) {
                 this.messages = [...this.messages, message];
-                await this.loadPlansFor(message.ideaplanId);
+                // Talos reports created issues in a system message without a plan id
+                if (message.kind === 'system') {
+                    await this.loadPlans();
+                } else {
+                    await this.loadPlansFor(message.ideaplanId);
+                }
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });

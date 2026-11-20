@@ -1071,6 +1071,7 @@
           "after": "after {keys}",
           "newMilestone": " (new)",
           "newMilestoneTitle": "Created in the project on approval",
+          "createdUnloaded": "Created, but the issue could not be loaded",
           "approve": "Approve v{version}",
           "approveTitle": "Approve plan",
           "approveConfirm": "Approve",
@@ -1087,6 +1088,7 @@
         "createdIssues": {
           "title": "Created Issues",
           "empty": "No issues created yet",
+          "error": "The created issues could not be loaded.",
           "version": "Plan v{version}"
         },
         "summary": {

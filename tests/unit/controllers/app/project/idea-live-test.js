@@ -104,6 +104,51 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.strictEqual(controller.shownPlan.id, "plan2");
   });
 
+  test("page reloads plans and created issues when a system message arrives", async function (assert) {
+    let controller = this.owner.lookup("controller:app.project.idea.page");
+    let calls = [];
+    controller.store = {
+      findRecord(type, id) {
+        return Promise.resolve(EmberObject.create({ id, kind: "system", ideaplanId: null }));
+      },
+      query(type) {
+        calls.push(type);
+        return Promise.resolve(recordArray([]));
+      },
+    };
+    controller.model = EmberObject.create({ id: "i1" });
+    controller.plans = [EmberObject.create({ id: "plan1" })];
+    controller.registerHermesIntents("p1");
+
+    emitDomainEvent(this.owner, event("idea.message.created", "i1"));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.deepEqual(calls.sort(), ["ideaplan", "ideaplanissue"], "the Talos message about created issues reloads both");
+  });
+
+  test("a failed created-issues query is reported, the plans still load", async function (assert) {
+    let controller = this.owner.lookup("controller:app.project.idea.page");
+    let failing = true;
+    controller.store = {
+      query(type) {
+        if (type === "ideaplanissue" && failing) {
+          return Promise.reject(new Error("403"));
+        }
+        return Promise.resolve(recordArray(type === "ideaplan" ? [EmberObject.create({ id: "plan1" })] : [EmberObject.create({ id: "l1" })]));
+      },
+    };
+    controller.errorManager = { handleError() {} };
+    controller.model = EmberObject.create({ id: "i1" });
+
+    await controller.loadPlans();
+    assert.deepEqual(controller.plans.map((p) => p.id), ["plan1"]);
+    assert.true(controller.planIssuesFailed);
+
+    failing = false;
+    await controller.loadPlans();
+    assert.false(controller.planIssuesFailed, "a later load clears the error");
+    assert.deepEqual(controller.planIssues.map((l) => l.id), ["l1"]);
+  });
+
   test("showPlan reloads plans for an unknown plan before showing it", async function (assert) {
     let controller = this.owner.lookup("controller:app.project.idea.page");
     let calls = [];
