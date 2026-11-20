@@ -37,6 +37,23 @@
         </ul>
       {{/if}}
     </div>
+    {{#if (and this.canApprove this.body.issues.length)}}
+      <div class="idea-plan-milestone" data-idea-plan-milestone>
+        <FormFields::FieldRelate
+          @label={{t "views.app.idea.plan.milestone"}}
+          @options={{this.milestoneOptions}}
+          @selected={{this.selectedMilestone}}
+          @placeholder={{t this.milestonePlaceholderKey}}
+          @searchField="label"
+          @onchange={{this.pickMilestone}}
+          @relateType="relate-simple"
+          @disabled={{this.isSavingMilestone}}
+          @data-field="ideaplan.milestone"
+          @aclContext="ideaplan.update"
+        />
+        <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.idea.plan.milestoneInfo"}} data-idea-plan-milestone-info></i>
+      </div>
+    {{/if}}
     {{#if this.body.issues.length}}
       <ul class="list-unstyled idea-plan-issues" data-idea-plan-issues>
         {{#each this.body.issues as |issue|}}
@@ -79,7 +96,7 @@
     {{/if}}
     {{#if this.canApprove}}
       <div class="box-footer">
-        <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" disabled={{this.isApproving}} data-idea-plan-approve>
+        <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" disabled={{or this.isApproving this.isSavingMilestone}} data-idea-plan-approve>
           {{t "views.app.idea.plan.approve" version=this.selected.version}}
         </AppUi::Button>
       </div>
