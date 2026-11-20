@@ -52,7 +52,6 @@
       flex-wrap: wrap;
       gap: 0.4rem 1rem;
       margin: 0.4rem 0 0 1.4rem;
-      font-size: 1.2rem;
       color: #666;
     }
 
@@ -91,12 +90,40 @@
 
   .idea-plan-description {
     padding: 0 1rem 1rem 2.4rem;
-    font-size: 1.3rem;
   }
 }
 
 .idea-page {
   .idea-conversation {
+    // the toastui viewer brings its own face and size; use the app font and body size
+    .toastui-editor-contents {
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 1.4rem;
+
+      p,
+      li,
+      ul,
+      ol,
+      blockquote,
+      code,
+      pre,
+      td,
+      th {
+        font-size: 1.4rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: inherit;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+    }
+
     .box-title .app-ui-inline-editable {
       display: inline-block;
     }
@@ -174,7 +201,6 @@
 
     .idea-plan-issue-head .meta {
       gap: 0.4rem 2rem;
-      font-size: 1.3rem;
     }
 
     .idea-plan-description {
