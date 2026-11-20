@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render, settled, waitUntil } from '@ember/test-helpers';
+import { click, findAll, render, settled, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 
@@ -247,5 +247,23 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
 
         assert.dom('[data-idea-plan-approve]').exists({ count: 1 });
+    });
+
+    test('the milestone picker shows only when approvable, tells Mixed and emits the name', async function (assert) {
+        let two = JSON.stringify({ summary: 'S', issues: [{ key: 'a', milestone: 'M1' }, { key: 'b', milestone: 'M2' }] });
+        this.set('plans', [{ id: '1', version: 1, status: 'proposed', body: two }]);
+        this.set('milestones', ['M1', 'M2']);
+        this.set('picked', []);
+        this.set('onMilestone', (plan, name) => this.picked.push(name));
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @milestones={{this.milestones}} @onMilestone={{this.onMilestone}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-milestone]').exists();
+        assert.dom('[data-idea-plan-milestone]').includesText('Mixed');
+        await click('[data-idea-plan-milestone] .ember-power-select-trigger');
+        await click(findAll('.ember-power-select-option').find(el => el.textContent.trim() === 'M2'));
+        assert.deepEqual(this.picked, ['M2']);
+
+        this.set('plans', [{ id: '1', version: 1, status: 'approved', body: two }]);
+        assert.dom('[data-idea-plan-milestone]').doesNotExist('an approved plan has no picker');
     });
 });

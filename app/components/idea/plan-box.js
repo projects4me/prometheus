@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action, get } from '@ember/object';
-import decodePlanBody, { isProjectReadable } from 'prometheus/utils/idea-plan-body';
+import decodePlanBody, { isProjectReadable, sharedPlanMilestone } from 'prometheus/utils/idea-plan-body';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 
@@ -247,6 +247,76 @@ export default class IdeaPlanBoxComponent extends Component {
      */
     get canApprove() {
         return !!this.selected && !this.isSuperseded && ['proposed', 'failed'].includes(this.selected.status);
+    }
+
+    /**
+     * The milestone options of the picker: the names of the open milestones of the idea's project
+     *
+     * @property milestoneOptions
+     * @type Array
+     * @public
+     */
+    get milestoneOptions() {
+        return (this.args.milestones ?? []).map(name => ({ value: name, label: name }));
+    }
+
+    /**
+     * The picked option: the milestone all issues share, nothing when they differ or none is set
+     *
+     * @property selectedMilestone
+     * @type Object
+     * @public
+     */
+    get selectedMilestone() {
+        let name = sharedPlanMilestone(this.body.issues);
+        return name ? { value: name, label: name } : null;
+    }
+
+    /**
+     * The placeholder of the picker: Mixed when the issues differ, the default milestone when none is set
+     *
+     * @property milestonePlaceholderKey
+     * @type String
+     * @public
+     */
+    get milestonePlaceholderKey() {
+        return sharedPlanMilestone(this.body.issues) === undefined
+            ? 'views.app.idea.plan.milestoneMixed'
+            : 'views.app.idea.plan.milestoneDefault';
+    }
+
+    /**
+     * Whether the milestone of the plan is being saved
+     *
+     * @property isSavingMilestone
+     * @type Boolean
+     * @public
+     */
+    @tracked isSavingMilestone = false;
+
+    /**
+     * Emits the picked milestone name for the whole plan; the controller saves it
+     *
+     * @method pickMilestone
+     * @param {Object} option
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async pickMilestone(option) {
+        if (!option?.value || !this.args.onMilestone) {
+            return;
+        }
+        this.isSavingMilestone = true;
+        try {
+            await this.args.onMilestone(this.selected, option.value);
+        } catch {
+            // Already reported and rolled back by the controller.
+        } finally {
+            if (!this.isDestroying && !this.isDestroyed) {
+                this.isSavingMilestone = false;
+            }
+        }
     }
 
     /**

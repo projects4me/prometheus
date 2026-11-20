@@ -7,6 +7,7 @@ import { action } from '@ember/object';
 import { inject as controller } from '@ember/controller';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import { withPlanMilestone } from 'prometheus/utils/idea-plan-body';
 
 /**
  * The view value of the plan review mode
@@ -110,6 +111,15 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     @tracked planIssuesFailed = false;
+
+    /**
+     * The names of the open milestones of the idea's project, the options of the plan milestone picker
+     *
+     * @property milestoneNames
+     * @type Array
+     * @public
+     */
+    @tracked milestoneNames = [];
 
     /**
      * The request to show a plan version, a new object per request so the same plan can be requested again
@@ -459,6 +469,51 @@ export default class AppProjectIdeaPageController extends Controller {
             plan.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'idea' });
             throw error;
+        }
+    }
+
+    /**
+     * Sets the milestone of every issue of a plan and saves the plan, it is rolled back when the save fails
+     *
+     * @method setPlanMilestone
+     * @param {Prometheus.Models.Ideaplan} plan
+     * @param {String} milestone the milestone name
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async setPlanMilestone(plan, milestone) {
+        plan.body = withPlanMilestone(plan.body, milestone);
+        try {
+            await plan.save();
+        } catch (error) {
+            plan.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+            throw error;
+        }
+    }
+
+    /**
+     * Loads the names of the milestones of the idea's project that are not completed
+     *
+     * @method loadMilestones
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async loadMilestones() {
+        let idea = this.model;
+        if (!idea?.projectId) {
+            this.milestoneNames = [];
+            return;
+        }
+        try {
+            let milestones = await this.store.query('milestone', { query: `(Milestone.projectId : ${idea.projectId})`, limit: -1 });
+            if (!this.isDestroying && !this.isDestroyed && this.model?.id === idea.id) {
+                this.milestoneNames = milestones.filter(milestone => milestone.status !== 'completed').map(milestone => milestone.name);
+            }
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
         }
     }
 

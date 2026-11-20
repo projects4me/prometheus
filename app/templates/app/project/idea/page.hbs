@@ -14,7 +14,7 @@
   </div>
   <div class={{this.sideClass}} data-idea-side>
     {{#if this.model}}
-      <Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @shownPlan={{this.shownPlan}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @onApprove={{this.approvePlan}} @onPlanSettled={{this.onPlanSettled}} @isReviewMode={{this.isReviewMode}} @onToggleReview={{this.toggleReviewMode}} />
+      <Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @shownPlan={{this.shownPlan}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @milestones={{this.milestoneNames}} @onMilestone={{this.setPlanMilestone}} @onApprove={{this.approvePlan}} @onPlanSettled={{this.onPlanSettled}} @isReviewMode={{this.isReviewMode}} @onToggleReview={{this.toggleReviewMode}} />
       <Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @loadFailed={{this.planIssuesFailed}} @readableProjectIds={{this.readableProjectIds}} />
       <Idea::SummaryBox @idea={{this.model}} @messages={{this.messages}} @plans={{this.plans}} @createdUserName={{this.createdUserName}} />
     {{/if}}

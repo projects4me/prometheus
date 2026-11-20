@@ -60,6 +60,7 @@ export default class AppProjectIdeaPageRoute extends App {
         controller.model = model;
         controller.loadMessages();
         controller.loadPlans();
+        controller.loadMilestones();
         controller.registerHermesIntents(this.trackedProject.getProjectId());
     }
 
