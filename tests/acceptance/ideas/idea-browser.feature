@@ -213,7 +213,9 @@ Feature: Ideas | idea browser
     Then The idea browser opens on the new idea form
     And The New idea button is shown disabled
     When User selects the idea First one in the browser
-    Then The New idea button is shown as a link
+    Then The New idea button is shown as a button
+    When User clicks the New idea button
+    Then The idea browser opens on the new idea form
 
   Scenario: The Ideas nav item is a direct link without a submenu
 

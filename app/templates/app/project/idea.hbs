@@ -25,15 +25,9 @@
       >
         <:actions>
           <AccessControl @aclContext="idea.create">
-            {{#if this.isCreating}}
-              <span class="btn btn-default btn-sm disabled" role="link" aria-disabled="true" data-new-idea>
-                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
-              </span>
-            {{else}}
-              <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
-                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
-              </LinkTo>
-            {{/if}}
+            <button type="button" class="btn btn-primary btn-sm" disabled={{this.isCreating}} {{on "click" this.newIdea}} data-new-idea>
+              <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+            </button>
           </AccessControl>
         </:actions>
         <:search>
