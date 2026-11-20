@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { action, get } from '@ember/object';
 import decodePlanBody, { isProjectReadable, sharedPlanMilestone } from 'prometheus/utils/idea-plan-body';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 /**
@@ -17,6 +18,8 @@ import { tracked } from '@glimmer/tracking';
  * @extends Glimmer.Component
  */
 export default class IdeaPlanBoxComponent extends Component {
+    @service intl;
+
     /**
      * The version the user picked, the latest one by default
      *
@@ -293,6 +296,27 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     @tracked isSavingMilestone = false;
+
+    /**
+     * The options the picker shows for the typed text: the open milestones that match it, and a "Create" entry
+     * for the typed name when no milestone has it yet, so a plan can go into a milestone that does not exist
+     *
+     * @method searchMilestones
+     * @param {String} term the text typed in the picker
+     * @returns {Array}
+     * @public
+     */
+    @action
+    searchMilestones(term) {
+        let name = String(term ?? '').trim();
+        let needle = name.toLowerCase();
+        let options = this.milestoneOptions;
+        let matches = options.filter(option => option.label.toLowerCase().includes(needle));
+        if (name && !options.some(option => option.label.toLowerCase() === needle)) {
+            matches.push({ value: name, label: this.intl.t('views.app.idea.plan.milestoneCreate', { name }) });
+        }
+        return matches;
+    }
 
     /**
      * Emits the picked milestone name for the whole plan; the controller saves it
