@@ -1,10 +1,8 @@
-<AppUi::ToastUi
+<AppUi::Editor
     @usersList={{@usersList}}
     @issueSearch={{@issueSearch}}
-    @editType= 'wysiwyg'
-    @hide={{array 'footer' @hide}}
-    @onContentChange={{this.setContent}}
-    @onKeyboardSubmit={{this.handleKeyboardSubmit}}
+    @onChange={{this.setContent}}
+    @onSubmit={{this.handleKeyboardSubmit}}
     @placeholder={{@placeholder}}
     @clearEvent={{@clearEvent}}
 />

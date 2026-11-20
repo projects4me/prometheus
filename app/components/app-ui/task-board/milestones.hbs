@@ -169,23 +169,15 @@
         {{autofocus}}
       />
 
-      <div data-field="issue.description" class="form-field ember-view">
-        <AppUi::ToastUi
-          @usersList={{@membersList}}
-          @issueSearch={{perform @search}}
-          @value={{this.newIssue.description}}
-          @editType='wysiwyg'
-          @hide={{array 'footer'}}
-          @onContentChange={{fn @selectStatic this.newIssue 'description'}}              
-        />
-        <span class="highlight"></span>
-        <span class="bar"></span>
-        <FormFields::Label
-          @label={{t "views.app.issue.create.description"}}
-          @data-field="issue.description"
-        />                
-        <span class="count pull-right"></span>
-      </div>        
+      <AppUi::Editor
+        @label={{t "views.app.issue.create.description"}}
+        @data-field="issue.description"
+        data-field="issue.description"
+        @usersList={{@membersList}}
+        @issueSearch={{perform @search}}
+        @value={{this.newIssue.description}}
+        @onChange={{fn @selectStatic this.newIssue 'description'}}
+      />
 
       <FormFields::FieldRelate
         @renderInPlace={{true}}

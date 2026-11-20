@@ -11,7 +11,8 @@ import { isEditorEmpty } from 'prometheus/utils/ui/editor-empty';
  * The standard rich-text component, wrapping AppUi::ToastUi. It is controlled: @value in, @onChange(value) out.
  * The form chrome is optional and by composition: @label (FormFields::Label), @aclContext (AccessControl),
  * @message and @validate (on blur). Without them it is a bare box, such as a comment composer. With @readonly it
- * shows the content in the sanitized Toast UI viewer.
+ * shows the content in the sanitized Toast UI viewer. @editType (wysiwyg unless given) picks the editing mode;
+ * markdown keeps text such as a prompt exactly as typed, with no WYSIWYG round trip.
  *
  * @class AppUiEditorComponent
  * @namespace Prometheus.Components

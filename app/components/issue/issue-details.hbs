@@ -414,20 +414,17 @@
                   @update={{fn this.updateTimelog this.editingLog}}
                 />                      
 
-                <div data-field="issue.editEstimateTime" data-field-type="wysiwyg" class="form-field ember-view">
-                  <AppUi::ToastUi
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @onContentChange={{fn @selectStatic this.editingLog 'description'}}              
-                    @data-field="issue.editEstimateTime"
-                    @editType= 'wysiwyg'
-                    @hide={{array 'footer'}}
-                    @value={{this.editingLog.description}}
-                  />
-                  <FormFields::Label
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @data-field="issue.editEstimateTime"
-                  />
-                </div>
+                <AppUi::Editor
+                  @label={{t "views.app.issue.detail.timelog.description"}}
+                  @data-field="issue.editEstimateTime"
+                  data-field="issue.editEstimateTime"
+                  data-field-type="wysiwyg"
+                  @usersList={{this.usersList}}
+                  @issueSearch={{perform this.search}}
+                  @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                  @onChange={{fn @selectStatic this.editingLog 'description'}}
+                  @value={{this.editingLog.description}}
+                />
 
               </AppUi::Modal>
             {{/if}}
@@ -447,19 +444,17 @@
                   @update={{fn this.updateTimelog this.newTimeLog}}
                 />                      
 
-                <div data-field="issue.estimateTime" data-field-type="wysiwyg" class="form-field ember-view">
-                  <AppUi::ToastUi 
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @onContentChange={{fn @selectStatic this.newTimeLog 'description'}}              
-                    @editType= 'wysiwyg'
-                    @hide={{array 'footer'}}
-                    @value={{this.newTimeLog.description}}
-                  />
-                  <FormFields::Label
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @data-field="issue.estimateTime"
-                  />
-                </div>
+                <AppUi::Editor
+                  @label={{t "views.app.issue.detail.timelog.description"}}
+                  @data-field="issue.estimateTime"
+                  data-field="issue.estimateTime"
+                  data-field-type="wysiwyg"
+                  @usersList={{this.usersList}}
+                  @issueSearch={{perform this.search}}
+                  @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                  @onChange={{fn @selectStatic this.newTimeLog 'description'}}
+                  @value={{this.newTimeLog.description}}
+                />
 
               </AppUi::Modal>
             {{/if}}
@@ -544,20 +539,17 @@
                     @minDate='1990'
                 />
 
-                <div data-field="issue.editTimelog" data-field-type="wysiwyg" class="form-field ember-view">
-                  <AppUi::ToastUi
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @onContentChange={{fn @selectStatic this.editingLog 'description'}}              
-                    @data-field="issue.editTimelog"
-                    @editType='wysiwyg'
-                    @hide={{array 'footer'}}
-                    @value={{this.editingLog.description}}
-                  />
-                  <FormFields::Label
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @data-field="issue.editTimelog"
-                  />
-                </div>
+                <AppUi::Editor
+                  @label={{t "views.app.issue.detail.timelog.description"}}
+                  @data-field="issue.editTimelog"
+                  data-field="issue.editTimelog"
+                  data-field-type="wysiwyg"
+                  @usersList={{this.usersList}}
+                  @issueSearch={{perform this.search}}
+                  @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                  @onChange={{fn @selectStatic this.editingLog 'description'}}
+                  @value={{this.editingLog.description}}
+                />
 
               </AppUi::Modal>
             {{/if}}
@@ -594,20 +586,17 @@
                     @minDate='1990'
                 />
 
-                <div data-field="issue.timelog" data-field-type="wysiwyg" class="form-field ember-view">
-                  <AppUi::ToastUi
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @onContentChange={{fn @selectStatic this.newTimeLog 'description'}}              
-                    @data-field="issue.timelog"
-                    @editType='wysiwyg'
-                    @hide={{array 'footer'}}
-                    @value={{this.newTimeLog.description}}
-                  />
-                  <FormFields::Label
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @data-field="issue.timelog"
-                  />
-                </div>
+                <AppUi::Editor
+                  @label={{t "views.app.issue.detail.timelog.description"}}
+                  @data-field="issue.timelog"
+                  data-field="issue.timelog"
+                  data-field-type="wysiwyg"
+                  @usersList={{this.usersList}}
+                  @issueSearch={{perform this.search}}
+                  @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                  @onChange={{fn @selectStatic this.newTimeLog 'description'}}
+                  @value={{this.newTimeLog.description}}
+                />
 
               </AppUi::Modal>
             {{/if}}

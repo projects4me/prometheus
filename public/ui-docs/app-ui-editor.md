@@ -19,6 +19,7 @@ With `@readonly` the content is shown in the Toast UI viewer, which sanitizes it
 | @issueSearch | Function | none | Issue search for # links |
 | @placeholder | String | none | Placeholder |
 | @output | String | html | html or markdown |
+| @editType | String | wysiwyg | wysiwyg or markdown. Text that must stay exactly as typed, such as an agent prompt, takes markdown with `@output="markdown"` |
 | @clearEvent | String | none | pubSub event that clears this editor |
 | @readonly | Boolean | false | Shows the viewer |
 | @disabled | Boolean | false | Inert and dimmed |

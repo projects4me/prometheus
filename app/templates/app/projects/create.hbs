@@ -33,21 +33,13 @@
                   />
                 </div>
 
-              <div data-field="project.description" class="form-field ember-view">
-                <AppUi::ToastUi
-                    @value={{this.model.description}}
-                    @editType='wysiwyg'
-                    @hide={{array 'footer'}}
-                    @onContentChange={{fn this.selectStatic this.model 'description'}}              
-                />
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <FormFields::Label
-                  @label={{t "views.app.project.create.description"}}
-                  @data-field="project.description"
-                />
-                <span class="count pull-right"></span>
-              </div>                
+              <AppUi::Editor
+                @label={{t "views.app.project.create.description"}}
+                @data-field="project.description"
+                data-field="project.description"
+                @value={{this.model.description}}
+                @onChange={{fn this.selectStatic this.model 'description'}}
+              />
 
                 <FormFields::FieldDate
                   @placeholder={{t "views.app.project.create.startdateplaceholder"}}

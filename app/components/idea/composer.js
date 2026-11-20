@@ -191,18 +191,14 @@ export default class IdeaComposerComponent extends Component {
     }
 
     /**
-     * Ctrl+Enter sends, unless it only picked an item of the editor's suggestion menu
+     * Ctrl+Enter sends; AppUi::Editor already skips an empty text and a key that picked a suggestion
      *
      * @method handleKeyboardSubmit
-     * @param {String} content
-     * @param {Boolean} canSubmit
      * @public
      */
     @action
-    handleKeyboardSubmit(content, canSubmit) {
-        if (canSubmit) {
-            this.send();
-        }
+    handleKeyboardSubmit() {
+        this.send();
     }
 
     /**

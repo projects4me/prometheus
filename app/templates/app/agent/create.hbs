@@ -52,15 +52,15 @@
                   @data-field="agent.purpose"
                 />
 
-                <div data-field="agent.rolePrompt" class="form-field ember-view">
-                  <AppUi::ToastUi
-                    @value={{this.model.rolePrompt}}
-                    @editType="markdown"
-                    @hide={{array "footer"}}
-                    @onContentChange={{fn this.selectStatic this.model "rolePrompt"}}
-                  />
-                  <FormFields::Label @label={{t "views.app.agent.form.rolePrompt"}} @data-field="agent.rolePrompt" />
-                </div>
+                <AppUi::Editor
+                  @label={{t "views.app.agent.form.rolePrompt"}}
+                  @data-field="agent.rolePrompt"
+                  data-field="agent.rolePrompt"
+                  @output="markdown"
+                  @editType="markdown"
+                  @value={{this.model.rolePrompt}}
+                  @onChange={{fn this.selectStatic this.model "rolePrompt"}}
+                />
 
                 <h4 class="model-limits-title">{{t "views.app.agent.form.modelAndLimits"}}</h4>
                 <div class="row model-limits">

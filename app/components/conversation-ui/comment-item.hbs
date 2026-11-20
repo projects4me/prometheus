@@ -43,21 +43,17 @@
       @confirm={{this.updateComment}}
     >
       <div class="edit-comment-form">
-        <div data-field="comment.edit" data-field-type="wysiwyg" class="form-field ember-view">
-          <AppUi::ToastUi
-            @usersList={{@usersList}}
-            @issueSearch={{@issueSearch}}
-            @editType='wysiwyg'
-            @hide={{array 'footer'}}
-            @onContentChange={{this.handleEditContentChange}}
-            @value={{this.comment.comment}}
-            @placeholder={{t "views.app.conversation.messagebox"}}
-          />
-          <FormFields::Label
-            @label={{t "views.app.conversation.comment.edit.comment"}}
-            @data-field="comment.edit"
-          />
-        </div>
+        <AppUi::Editor
+          @label={{t "views.app.conversation.comment.edit.comment"}}
+          @data-field="comment.edit"
+          data-field="comment.edit"
+          data-field-type="wysiwyg"
+          @usersList={{@usersList}}
+          @issueSearch={{@issueSearch}}
+          @onChange={{this.handleEditContentChange}}
+          @value={{this.comment.comment}}
+          @placeholder={{t "views.app.conversation.messagebox"}}
+        />
       </div>
     </AppUi::Modal>
   {{/if}}

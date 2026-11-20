@@ -16,6 +16,7 @@
     "issueSearch": { "type": "function", "required": false, "description": "Searches issues for # links; returns a promise of the issues" },
     "placeholder": { "type": "string", "required": false, "description": "Placeholder of the empty editor" },
     "output": { "type": "string", "required": false, "default": "html", "description": "Format of the content: html or markdown" },
+    "editType": { "type": "string", "required": false, "default": "wysiwyg", "description": "Editing mode: wysiwyg or markdown. Text that must stay exactly as typed, such as an agent prompt, takes markdown with @output markdown" },
     "clearEvent": { "type": "string", "required": false, "description": "pubSub event that clears this editor" },
     "readonly": { "type": "boolean", "required": false, "default": "false", "description": "Shows the content in the sanitized viewer instead of the editor" },
     "disabled": { "type": "boolean", "required": false, "default": "false", "description": "Makes the editor inert and dimmed" }

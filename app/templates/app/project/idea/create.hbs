@@ -16,22 +16,15 @@
               @message={{this.message.ideaCreate.title}}
               {{autofocus}}
             />
-            <div data-field="idea.description" class="form-field">
-              <AppUi::ToastUi
-                @editType="wysiwyg"
-                @output="markdown"
-                @clearEvent={{this.clearEvent}}
-                @hide={{array "footer"}}
-                @placeholder={{t "views.app.idea.create.descriptionPlaceholder"}}
-                @onContentChange={{fn this.selectStatic this.model "description"}}
-              />
-              <span class="highlight"></span>
-              <span class="bar"></span>
-              <FormFields::Label
-                @label={{t "views.app.idea.fields.description"}}
-                @data-field="idea.description"
-              />
-            </div>
+            <AppUi::Editor
+              @label={{t "views.app.idea.fields.description"}}
+              @data-field="idea.description"
+              data-field="idea.description"
+              @output="markdown"
+              @clearEvent={{this.clearEvent}}
+              @placeholder={{t "views.app.idea.create.descriptionPlaceholder"}}
+              @onChange={{fn this.selectStatic this.model "description"}}
+            />
           </div>
         </div>
       </div>
