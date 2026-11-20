@@ -171,7 +171,31 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get statusClass() {
-        return planStatusClass(this.selected?.status);
+        return planStatusClass(this.displayStatus);
+    }
+
+    /**
+     * Whether the selected plan is an older version than the latest
+     *
+     * @property isSuperseded
+     * @type Boolean
+     * @public
+     */
+    get isSuperseded() {
+        return !!this.selected && Number(this.selected.version) !== Number(this.latest?.version);
+    }
+
+    /**
+     * The status shown for the selected plan: an older version that was never approved reads as superseded
+     * (display only, nothing is saved)
+     *
+     * @property displayStatus
+     * @type String
+     * @public
+     */
+    get displayStatus() {
+        let status = this.selected?.status;
+        return this.isSuperseded && ['proposed', 'failed'].includes(status) ? 'superseded' : status;
     }
 
     /**
@@ -219,7 +243,7 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get canApprove() {
-        return !!this.selected && this.selected === this.latest && ['proposed', 'failed'].includes(this.selected.status);
+        return !!this.selected && !this.isSuperseded && ['proposed', 'failed'].includes(this.selected.status);
     }
 
     /**

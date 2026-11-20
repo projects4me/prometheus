@@ -183,4 +183,29 @@ module('Integration | Component | idea/plan-box', function (hooks) {
 
         assert.dom('.box-tools.pull-right [data-idea-plan-status]').exists();
     });
+
+    test('an older proposed version shows Superseded and cannot be approved, only the latest can', async function (assert) {
+        this.set('plans', [
+            { id: '1', version: 1, status: 'proposed', body: body('First plan', 'Old issue') },
+            { id: '2', version: 2, status: 'proposed', body: body('Second plan', 'New issue') }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-approve]').includesText('Approve v2');
+        await click('[data-idea-plan-version="1"]');
+        assert.dom('[data-idea-plan-status]').hasText('Superseded');
+        assert.dom('[data-idea-plan-status]').hasClass('deferred');
+        assert.dom('[data-idea-plan-approve]').doesNotExist();
+    });
+
+    test('two records with the same latest version give one Approve', async function (assert) {
+        this.set('plans', [
+            { id: '1', version: 1, status: 'proposed', body: body('First plan', 'Old issue') },
+            { id: '2', version: 2, status: 'proposed', body: body('Second plan', 'New issue') },
+            { id: '3', version: 2, status: 'proposed', body: body('Second plan', 'New issue') }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-approve]').exists({ count: 1 });
+    });
 });
