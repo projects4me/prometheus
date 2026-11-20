@@ -1,6 +1,17 @@
 # templates/ingress.yaml
 
 {{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.tls .Values.ingress.tls.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-redirect-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+{{- end }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -8,6 +19,7 @@ metadata:
   {{- if and .Values.ingress.tls .Values.ingress.tls.enabled }}
   annotations:
     cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.issuer }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-redirect-https@kubernetescrd
   {{- end }}
 spec:
   {{- if and .Values.ingress.tls .Values.ingress.tls.enabled }}
