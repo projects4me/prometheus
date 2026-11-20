@@ -78,6 +78,42 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(calls.filter(([kind, type]) => kind === "query" && type === "ideaplanissue").length, 3);
   });
 
+  test("page reloads plans when a message references a plan it does not have", async function (assert) {
+    let controller = this.owner.lookup("controller:app.project.idea.page");
+    let calls = [];
+    controller.store = {
+      findRecord(type, id) {
+        return Promise.resolve(EmberObject.create({ id, ideaplanId: "plan2" }));
+      },
+      query(type) {
+        calls.push(type);
+        return Promise.resolve(recordArray(type === "ideaplan" ? [EmberObject.create({ id: "plan1" }), EmberObject.create({ id: "plan2" })] : []));
+      },
+    };
+    controller.model = EmberObject.create({ id: "i1" });
+    controller.plans = [EmberObject.create({ id: "plan1" })];
+    controller.registerHermesIntents("p1");
+
+    emitDomainEvent(this.owner, event("idea.message.created", "i1"));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.deepEqual(controller.plans.map((p) => p.id), ["plan1", "plan2"]);
+    assert.strictEqual(calls.filter((c) => c === "ideaplan").length, 1);
+
+    await controller.showPlan("plan2");
+    assert.strictEqual(calls.filter((c) => c === "ideaplan").length, 1, "known plan: no reload");
+    assert.strictEqual(controller.shownPlan.id, "plan2");
+  });
+
+  test("showPlan reloads plans for an unknown plan before showing it", async function (assert) {
+    let controller = this.owner.lookup("controller:app.project.idea.page");
+    let calls = [];
+    stubStore(controller, calls);
+    controller.model = EmberObject.create({ id: "i1" });
+    await controller.showPlan("plan9");
+    assert.strictEqual(calls.filter((c) => c[1] === "ideaplan").length, 1);
+    assert.strictEqual(controller.shownPlan.id, "plan9");
+  });
+
   test("page reloads the idea header on idea.updated", async function (assert) {
     let controller = this.owner.lookup("controller:app.project.idea.page");
     let reloads = 0;

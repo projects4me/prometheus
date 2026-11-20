@@ -353,9 +353,24 @@ export default class AppProjectIdeaPageController extends Controller {
             let message = await this.store.findRecord('ideamessage', id);
             if (this.model === idea && !this.messages.some(item => item.id === message.id)) {
                 this.messages = [...this.messages, message];
+                await this.loadPlansFor(message.ideaplanId);
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * Reloads the plans when a plan version is referenced that the page does not have yet
+     *
+     * @method loadPlansFor
+     * @param {String} planId
+     * @returns {Promise}
+     * @private
+     */
+    async loadPlansFor(planId) {
+        if (planId && !this.plans.some(plan => plan.id === String(planId))) {
+            await this.loadPlans();
         }
     }
 
@@ -413,7 +428,8 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     @action
-    showPlan(planId) {
+    async showPlan(planId) {
+        await this.loadPlansFor(planId);
         this.shownPlan = { id: planId };
         document.querySelector('[data-idea-plan]')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
     }
