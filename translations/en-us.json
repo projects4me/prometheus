@@ -330,6 +330,34 @@
     "exclamation": "exclamation"
   },
   "components": {
+    "docs": {
+      "toolbar": {
+        "label": "Formatting",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strike": "Strikethrough",
+        "h1": "Heading 1",
+        "h2": "Heading 2",
+        "h3": "Heading 3",
+        "bulletList": "Bullet list",
+        "orderedList": "Numbered list",
+        "taskList": "Checklist",
+        "blockquote": "Quote",
+        "codeBlock": "Code block",
+        "link": "Link",
+        "linkPrompt": "Link address",
+        "insertTable": "Insert table",
+        "addRow": "Add row",
+        "removeRow": "Remove row",
+        "addColumn": "Add column",
+        "removeColumn": "Remove column"
+      },
+      "outline": {
+        "title": "Outline",
+        "empty": "No headings yet."
+      }
+    },
     "developerDocs": {
       "title": "Documentation",
       "loading": "Loading documentation...",
