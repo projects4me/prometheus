@@ -37,17 +37,15 @@
           />
         </div>
 
-        <div data-field="wiki.description" class="form-field">
-          <AppUi::ToastUi
-            @usersList={{this.membersList}}
-            @issueSearch={{perform this.search}}
-            @editType= 'wysiwyg'
-            @hide={{array 'footer'}}
-            @onContentChange={{fn this.selectStatic this.model 'markUp'}}
-            @onBlur={{fn this.validateField "wikiCreate" (hash name="markUp" value=this.markUp)}}
-            @message={{this.message.wikiCreate.markUp}}
-          />
-        </div>
+        <AppUi::Editor
+          @data-field="wiki.description"
+          data-field="wiki.description"
+          @usersList={{this.membersList}}
+          @issueSearch={{perform this.search}}
+          @onChange={{fn this.selectStatic this.model 'markUp'}}
+          @validate={{fn this.validateField "wikiCreate" (hash name="markUp" value=this.model.markUp)}}
+          @message={{this.message.wikiCreate.markUp}}
+        />
         
       </div>
     </div>

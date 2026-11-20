@@ -203,7 +203,20 @@ export const ENTRIES = [
         group: 'Forms',
         status: 'experimental',
         summary: 'AppUi::Editor, the standard rich-text box: optional label, ACL, validation, mentions, #issue links and a read-only viewer.',
-        usedIn: [],
+        usedIn: [
+            { label: 'Issue create' },
+            { label: 'Milestone quick-add' },
+            { label: 'Issue details time logs' },
+            { label: 'Conversation create' },
+            { label: 'Edit thread modal' },
+            { label: 'Comment edit' },
+            { label: 'Message box' },
+            { label: 'Idea create' },
+            { label: 'Idea composer' },
+            { label: 'Wiki create and edit' },
+            { label: 'Project create' },
+            { label: 'Agent role prompt' }
+        ],
         demo: 'developer/demos/editor',
         doc: 'app-ui-editor.md',
         variants: ['bare', 'form field', 'mentions', 'markdown', 'read-only', 'disabled']

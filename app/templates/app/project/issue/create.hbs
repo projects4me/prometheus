@@ -31,23 +31,15 @@
                   @message={{this.message.issueCreate.subject}}
                   {{autofocus}}
               />
-              <div data-field="issue.description" class="form-field ember-view">
-                <AppUi::ToastUi
-                    @usersList={{this.membersList}}
-                    @issueSearch={{perform this.search}}
-                    @value={{this.issueDescription}}
-                    @editType='wysiwyg'
-                    @hide={{array 'footer'}}
-                    @onContentChange={{fn this.selectStatic this.model 'description'}}              
-                />
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <FormFields::Label
-                  @label={{t "views.app.issue.create.description"}}
-                  @data-field="issue.description"
-                />                
-                <span class="count pull-right"></span>
-              </div>
+              <AppUi::Editor
+                @label={{t "views.app.issue.create.description"}}
+                @data-field="issue.description"
+                data-field="issue.description"
+                @usersList={{this.membersList}}
+                @issueSearch={{perform this.search}}
+                @value={{this.issueDescription}}
+                @onChange={{fn this.selectStatic this.model 'description'}}
+              />
 
               <FormFields::FieldRelate
                   @placeholder={{t "views.app.issue.create.type"}}

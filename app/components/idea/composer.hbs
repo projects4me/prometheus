@@ -1,16 +1,15 @@
 <div class="idea-composer {{if this.isDisabled "idea-composer-disabled"}}" data-idea-composer inert={{if this.isDisabled "inert"}}>
-  <AppUi::ToastUi
-    @editType="wysiwyg"
+  <AppUi::Editor
     @output="markdown"
     @clearEvent={{this.clearEvent}}
-    @hide={{array "footer"}}
     @placeholder={{t "views.app.idea.conversation.placeholder"}}
-    @onContentChange={{this.updateBody}}
-    @onKeyboardSubmit={{this.handleKeyboardSubmit}}
+    @onChange={{this.updateBody}}
+    @onSubmit={{this.handleKeyboardSubmit}}
     @onImage={{this.addImage}}
-    @message={{this.imageError}}
-    @data-field="idea.composer.image"
   />
+  {{#if this.imageError}}
+    <span class="error text-red" role="alert" data-idea-image-error>{{this.imageError}}</span>
+  {{/if}}
   {{#if this.isUploading}}
     <span class="text-muted" data-idea-image-uploading>
       <i class="fa fa-spinner fa-spin"></i> {{t "views.app.idea.conversation.image.uploading"}}

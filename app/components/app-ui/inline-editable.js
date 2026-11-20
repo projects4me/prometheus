@@ -302,7 +302,7 @@ export default class AppUiInlineEditableComponent extends Component {
     /**
      * This method handles keyboard events inside the edit slot. Pressing
      * Escape cancels the edit session and pressing Enter confirms the save,
-     * unless @submitOnEnter is false or the focus is inside a textarea element.
+     * unless @submitOnEnter is false or the focus is inside a textarea or a contenteditable element (a rich-text editor).
      *
      * @method handleEditKeydown
      * @for AppUiInlineEditableComponent
@@ -317,7 +317,8 @@ export default class AppUiInlineEditableComponent extends Component {
         } else if (
             event.key === "Enter" &&
             this.args.submitOnEnter !== false &&
-            event.target.tagName !== "TEXTAREA"
+            event.target.tagName !== "TEXTAREA" &&
+            !event.target.isContentEditable
         ) {
             event.preventDefault();
             this.commitSave();

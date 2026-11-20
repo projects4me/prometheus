@@ -17,21 +17,17 @@
         @onInput={{this.handleSubjectChange}}
       />
     </div>
-    <div data-field="conversation.description" data-field-type="wysiwyg" class="form-field ember-view">
-      <AppUi::ToastUi
-        @usersList={{@membersList}}
-        @issueSearch={{perform @search}}
-        @editType='wysiwyg'
-        @hide={{array 'footer'}}
-        @onContentChange={{this.handleDescriptionChange}}
-        @value={{this.editedDescription}}
-        @placeholder={{t "views.app.conversation.fields.description"}}
-      />
-      <FormFields::Label
-        @label={{t "views.app.conversation.fields.description"}}
-        @data-field="conversation.description"
-      />
-    </div>
+    <AppUi::Editor
+      @label={{t "views.app.conversation.fields.description"}}
+      @data-field="conversation.description"
+      data-field="conversation.description"
+      data-field-type="wysiwyg"
+      @usersList={{@membersList}}
+      @issueSearch={{perform @search}}
+      @onChange={{this.handleDescriptionChange}}
+      @value={{this.editedDescription}}
+      @placeholder={{t "views.app.conversation.fields.description"}}
+    />
     {{#if @linkIssueSearch}}
       <div class="form-group">
         <FormFields::FieldRelate

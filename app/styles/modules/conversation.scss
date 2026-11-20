@@ -138,24 +138,22 @@
       display: inline-flex;
       width: 100%;
 
-      > .toast-ui-editor {
-        height: 120px !important;
-        width: 100% !important;
-      }
+      > .app-ui-editor {
+        flex: 1;
+        margin-bottom: 0;
 
-      > .toast-ui-editor div.tui-editor-contents {
-        min-height: 0px !important;
-        padding: 3px 4px !important;
+        .toast-ui-editor {
+          height: 120px !important;
+        }
+
+        div.tui-editor-contents {
+          min-height: 0px !important;
+          padding: 3px 4px !important;
+        }
       }
       .btn {
         height: 4rem;
         margin-left: 1rem;
-      }
-    }
-
-    [data-field="issue.conversation"] {
-      > .toast-ui-editor {
-        height: 15rem !important;
       }
     }
 

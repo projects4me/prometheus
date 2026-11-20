@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, focus, blur } from '@ember/test-helpers';
+import { render, focus, blur, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 import { isEditorEmpty } from 'prometheus/utils/ui/editor-empty';
@@ -63,6 +63,27 @@ module('Integration | Component | app-ui/editor', function (hooks) {
 
         assert.dom('[data-app-ui-editor]').hasClass('app-ui-editor-disabled');
         assert.dom('.app-ui-editor-box').hasAttribute('inert');
+    });
+
+    test('it edits in WYSIWYG unless @editType says markdown', async function (assert) {
+        await render(hbs`<AppUi::Editor @value="x" />`);
+        assert.dom('[data-app-ui-editor] .te-ww-mode').exists('WYSIWYG by default');
+
+        await render(hbs`<AppUi::Editor @value="Use _x_ and *y*" @output="markdown" @editType="markdown" />`);
+        assert.dom('[data-app-ui-editor] .te-md-mode').exists('markdown when asked');
+        assert.dom('[data-app-ui-editor] .te-ww-mode').doesNotExist();
+    });
+
+    test('in markdown mode @onChange gets the text exactly as typed', async function (assert) {
+        let prompt = 'Use {{var}}, _x_ and *y*\n\n```\ncode\n```';
+        this.set('changed', null);
+        this.set('onChange', (value) => this.set('changed', value));
+        await render(hbs`<AppUi::Editor @value="" @output="markdown" @editType="markdown" @onChange={{this.onChange}} />`);
+
+        document.querySelector('[data-app-ui-editor] .te-md-container .CodeMirror').CodeMirror.setValue(prompt);
+        await settled();
+
+        assert.strictEqual(this.changed, prompt, 'no WYSIWYG round trip rewrites it');
     });
 
     test('isEditorEmpty strips tags and whitespace', function (assert) {

@@ -287,13 +287,6 @@
 }
 
 .create-issue {
-  .form-group {
-    div[data-field="issue.description"] {
-      > .toast-ui-editor {
-        height: 600px !important;
-      }
-    }
-  }
   [data-form-field="label"] {
     label {
       color: $primaryColor;
@@ -305,14 +298,6 @@
   .select-box{
     input[type="checkbox"]{
       margin-top: 0.8rem;
-    }
-  }
-}
-
-.issue {
-  [data-field-type="wysiwyg"] {
-    > .toast-ui-editor {
-      height: 18rem !important;
     }
   }
 }

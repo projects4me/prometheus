@@ -57,9 +57,6 @@
   }
 }
 
-.wiki-project .toast-ui-editor {
-  height: 35rem;
-}
 .wiki-page-contents {
   min-height: 35rem;
   height: 100%;
@@ -112,13 +109,5 @@
 .wiki-detail {
   .note-editor {
     overflow-wrap: break-word;
-  }
-
-  .form-group {
-    div[data-field="wiki.description"] {
-      > .toast-ui-editor {
-        height: 600px !important;
-      }
-    }
   }
 }
