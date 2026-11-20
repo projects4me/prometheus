@@ -1074,7 +1074,7 @@
           "milestone": "Milestone",
           "milestoneMixed": "Mixed",
           "milestoneDefault": "Claude-v1 (default)",
-          "milestoneInfo": "The milestone all issues of this plan are created in when you approve it",
+          "milestoneCreate": "Create milestone \"{name}\"",
           "createdUnloaded": "Created, but the issue could not be loaded",
           "approve": "Approve v{version}",
           "approveTitle": "Approve plan",

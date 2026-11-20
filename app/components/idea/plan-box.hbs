@@ -42,6 +42,8 @@
         <FormFields::FieldRelate
           @label={{t "views.app.idea.plan.milestone"}}
           @options={{this.milestoneOptions}}
+          @search={{this.searchMilestones}}
+          @searchEnabled={{true}}
           @selected={{this.selectedMilestone}}
           @placeholder={{t this.milestonePlaceholderKey}}
           @searchField="label"
@@ -51,7 +53,6 @@
           @data-field="ideaplan.milestone"
           @aclContext="ideaplan.update"
         />
-        <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.idea.plan.milestoneInfo"}} data-idea-plan-milestone-info></i>
       </div>
     {{/if}}
     {{#if this.body.issues.length}}

@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, findAll, render, settled, waitUntil } from '@ember/test-helpers';
+import { click, fillIn, findAll, render, settled, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 
@@ -265,5 +265,24 @@ module('Integration | Component | idea/plan-box', function (hooks) {
 
         this.set('plans', [{ id: '1', version: 1, status: 'approved', body: two }]);
         assert.dom('[data-idea-plan-milestone]').doesNotExist('an approved plan has no picker');
+    });
+
+    test('the milestone picker offers to create a milestone that does not exist yet', async function (assert) {
+        let body = JSON.stringify({ summary: 'S', issues: [{ key: 'a', milestone: 'M1' }] });
+        this.set('plans', [{ id: '1', version: 1, status: 'proposed', body }]);
+        this.set('milestones', ['M1', 'M2']);
+        this.set('picked', []);
+        this.set('onMilestone', (plan, name) => this.picked.push(name));
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @milestones={{this.milestones}} @onMilestone={{this.onMilestone}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-milestone-info]').doesNotExist('the info icon is gone');
+        await click('[data-idea-plan-milestone] .ember-power-select-trigger');
+        await fillIn('.ember-power-select-search-input', 'M2');
+        assert.dom('.ember-power-select-option').exists({ count: 1 }, 'an existing name offers no create entry');
+        await fillIn('.ember-power-select-search-input', 'Brand new');
+        let option = findAll('.ember-power-select-option').find(el => el.textContent.includes('Create milestone "Brand new"'));
+        assert.ok(option, 'a new name offers a create entry');
+        await click(option);
+        assert.deepEqual(this.picked, ['Brand new']);
     });
 });
