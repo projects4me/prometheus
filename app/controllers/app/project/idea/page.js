@@ -434,7 +434,8 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     get readableProjectIds() {
-        let projects = this.currentUser.user?.projects?.map(project => String(project.id)) ?? [];
+        // user.projects is an async hasMany (a PromiseManyArray, which has no map): read the ids without the proxy
+        let projects = (this.currentUser.user?.hasMany('projects').ids() ?? []).map(id => String(id));
         return [...new Set([...(this.model?.projectId ? [String(this.model.projectId)] : []), ...projects])];
     }
 
