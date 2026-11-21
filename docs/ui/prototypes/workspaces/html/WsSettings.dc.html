@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workspace settings</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="ws" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<a class="pname" href="Main.dc.html">Projects4Me Platform</a>
+<nav class="crumb" aria-label="Breadcrumb"><a href="#">A Prometheus</a><span>&gt;</span><a href="Main.dc.html">Workspace</a><span>&gt;</span><b>Settings</b></nav>
+</div>
+<div class="tabs is-new" style="margin-bottom: 15px"><a class="on" href="WsSettings.dc.html">Projects and members</a><a href="WsEnvironment.dc.html">Environment</a><a href="WsAgents.dc.html">Agents, tools and skills</a><a href="DeleteWorkspace.dc.html">Delete workspace</a></div>
+<div class="row">
+<div class="col-8 stack">
+
+<section class="box box-primary is-new">
+<div class="box-header"><h3 class="box-title">Member Projects</h3><a class="btn btn-primary btn-sm" href="JoinDialog.dc.html" style="color: #fff">+ Add project</a></div>
+<div class="dtbl">
+<div class="dtr"><div class="th" style="width: 30%">Project<span class="sort"></span></div><div class="th" style="width: 18%">Joined<span class="sort"></span></div><div class="th" style="width: 14%">Open issues</div><div class="th" style="width: 20%">Work in flight</div><div class="th" style="width: 18%"></div></div>
+<sc-for list="{{projects}}" as="p" hint-placeholder-count="5">
+<div class="dtr">
+<div class="td"><span class="tag {{p.pc}}">{{p.name}}</span> <span class="small muted">{{p.code}}</span></div>
+<div class="td small">{{p.joined}}</div>
+<div class="td">{{p.open}}</div>
+<div class="td small">{{p.flight}}</div>
+<div class="td" style="text-align: right"><a class="btn btn-default btn-xs" href="LeaveDialog.dc.html">Move…</a></div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section class="box box-warning is-new">
+<div class="box-header"><h3 class="box-title">Members</h3><span class="btn btn-primary btn-sm">+ Invite member</span></div>
+<div class="box-body"><div class="alert alert-info small">Members are shared by every project in the workspace. Adding someone adds them to all 5 projects; removing someone removes them from all 5 and asks what happens to their open issues.</div></div>
+<div class="dtbl">
+<div class="dtr"><div class="th" style="width: 34%">Member<span class="sort"></span></div><div class="th" style="width: 20%">Type</div><div class="th" style="width: 16%">Projects</div><div class="th" style="width: 14%">Open issues</div><div class="th" style="width: 16%"></div></div>
+<sc-for list="{{members}}" as="m" hint-placeholder-count="7">
+<div class="dtr">
+<div class="td"><span class="who"><span class="av av-s {{m.c}} {{m.ag}}">{{m.i}}</span><a href="#">{{m.n}}</a></span></div>
+<div class="td small">{{m.type}}</div>
+<div class="td small">5 of 5</div>
+<div class="td">{{m.open}}</div>
+<div class="td" style="text-align: right"><a class="btn btn-default btn-xs" href="RemoveMember.dc.html">Remove</a></div>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<div class="col-4 stack">
+<section class="box box-primary is-new">
+<div class="box-header"><h3 class="box-title">Workspace Details</h3></div>
+<div class="box-body" style="display: flex; flex-direction: column; gap: 14px; padding: 14px">
+<div><label class="fl" for="wsname">Name</label><input id="wsname" class="field" value="Projects4Me Platform"></div>
+<div><label class="fl" for="wscode">Short code<span class="info-i" title="Shown in the sidebar group header and in links">i</span></label><input id="wscode" class="field" value="pr4m"></div>
+<div><label class="fl" for="wsdesc">Description</label><textarea id="wsdesc" class="field" rows="4">The Projects4Me product: the API, the UI, the realtime relay, the AI service and the shared developer tooling.</textarea></div>
+</div>
+</section>
+<div style="display: flex; gap: 8px"><span class="btn btn-primary">Save</span><span class="btn btn-default">Cancel</span></div>
+
+<section class="box box-info">
+<div class="box-header"><h3 class="box-title">Who Can Manage This</h3></div>
+<div class="box-body small">
+<div class="kv"><span>Projects and members</span><span class="mono">workspace.update</span></div>
+<div class="kv"><span>Environment</span><span class="mono">workspace.environment</span></div>
+<div class="kv"><span>Agents, skills, workflows</span><span class="mono">agent.* in workspace</span></div>
+<div class="kv"><span>Issues, Gantt, everything else</span><span>Project permissions, as today</span></div>
+<div class="kv"><span>Tool servers</span><span class="mono">toolserver.create</span></div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      projects: [
+        { name: 'A Gaia', code: 'agaia', pc: 'p-agaia', joined: '18 Nov 2026', open: 212, flight: '1 Talos run' },
+        { name: 'A Prometheus', code: 'aprom', pc: 'p-aprom', joined: '18 Nov 2026', open: 83, flight: 'none' },
+        { name: 'A Hermes', code: 'ah', pc: 'p-ah', joined: '18 Nov 2026', open: 9, flight: '1 Talos run' },
+        { name: 'A Ares', code: 'aa', pc: 'p-aa', joined: '20 Nov 2026', open: 17, flight: 'none' },
+        { name: 'A Dev Tool', code: 'adt', pc: 'p-adt', joined: '18 Nov 2026', open: 31, flight: 'none' }
+      ],
+      members: [
+        { n: 'Hammad Hassan', i: 'HH', c: 'c1', ag: '', type: 'Person', open: 4 },
+        { n: 'Rana Nouman', i: 'RN', c: 'c3', ag: '', type: 'Person', open: 6 },
+        { n: 'Sana Khan', i: 'SK', c: 'c3', ag: '', type: 'Person · from A Ares', open: 3 },
+        { n: 'Agent Odysseus', i: 'OD', c: 'c2', ag: 'av-agent', type: 'Agent of this workspace', open: 9 },
+        { n: 'Agent Achilles', i: 'AC', c: 'c6', ag: 'av-agent', type: 'Agent of this workspace', open: 5 },
+        { n: 'Agent Nestor', i: 'NE', c: 'c5', ag: 'av-agent', type: 'Agent of this workspace', open: 1 },
+        { n: 'Agent Agamemnon', i: 'AG', c: 'c4', ag: 'av-agent', type: 'Agent of this workspace', open: 0 },
+        { n: 'Hera', i: 'HE', c: 'c7', ag: 'av-agent', type: 'Agent of this workspace', open: 0 }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

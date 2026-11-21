@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workspace overview</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="ws" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<a class="pname" href="Main.dc.html">Projects4Me Platform</a>
+<nav class="crumb" aria-label="Breadcrumb"><a href="#">A Prometheus</a><span>&gt;</span><b>Workspace</b></nav>
+</div>
+<div class="row">
+<div class="col-8 stack">
+
+<section class="box box-primary is-new">
+<div class="box-header"><h3 class="box-title">Projects4Me Platform - (pr4m)</h3><span style="display: flex; gap: 6px"><a class="btn btn-default btn-sm" href="Dashboard.dc.html">Open in Dashboard</a><a class="btn btn-default btn-sm" href="WsSettings.dc.html">Settings</a></span></div>
+<div class="box-body" style="display: flex; gap: 24px; flex-wrap: wrap; padding: 14px">
+<div style="text-align: center; width: 130px"><span class="av av-l c1">HH</span><div class="semi" style="margin-top: 6px">Hammad Hassan</div><div class="small muted">Created the workspace</div></div>
+<div style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 14px">
+<div><h4 style="font-size: 18px; font-weight: 500; margin-bottom: 4px">Workspace description</h4><p>The Projects4Me product: the API, the UI, the realtime relay, the AI service and the shared developer tooling. They share their members, one environment and the same agents.</p></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<div><h4 style="font-size: 18px; font-weight: 500">Projects</h4><div>5</div></div>
+<div><h4 style="font-size: 18px; font-weight: 500">Members</h4><div>7</div></div>
+<div><h4 style="font-size: 18px; font-weight: 500">Cross-project links</h4><div>14 (3 blocking)</div></div>
+<div><h4 style="font-size: 18px; font-weight: 500">Environment</h4><div class="who"><span class="dot dot-on"></span>Talos online</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="box box-info is-new">
+<div class="box-header"><h3 class="box-title">Member Projects</h3><a class="btn btn-default btn-sm" href="JoinDialog.dc.html">+ Add project</a></div>
+<div class="scroll-x">
+<div class="dtbl" style="min-width: 640px">
+<div class="dtr"><div class="th" style="width: 26%">Project<span class="sort"></span></div><div class="th" style="width: 14%">Open issues<span class="sort"></span></div><div class="th" style="width: 16%">Active milestone</div><div class="th" style="width: 24%">Repository</div><div class="th" style="width: 20%">Project Manager</div></div>
+<sc-for list="{{projects}}" as="p" hint-placeholder-count="5">
+<div class="dtr">
+<div class="td"><span class="tag {{p.cls}}">{{p.name}}</span> <span class="small muted">{{p.code}}</span></div>
+<div class="td">{{p.open}}</div>
+<div class="td"><a href="#">{{p.ms}}</a></div>
+<div class="td"><span class="mono">{{p.repo}}</span></div>
+<div class="td"><span class="who"><span class="av av-xs {{p.pmc}}">{{p.pmi}}</span><a href="#">{{p.pm}}</a></span></div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section class="box box-primary">
+<div class="box-header"><h3 class="box-title">Workspace Activities</h3></div>
+<div class="box-body" style="padding: 14px">
+<div class="tl">
+<div class="date">20th Nov. 2026</div>
+<div class="ti"><span class="tic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span><span class="time">10 minutes ago</span><div class="hd"><a href="#">Hammad Hassan</a> added <a href="#">A Ares</a> to the workspace</div><div>5 members were added to A Ares and 1 member was added to the other 4 projects, through workspace Projects4Me Platform.</div></div>
+<div class="ti"><span class="tic" style="background: #B3244F"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M10 6l2-2a4 4 0 0 1 6 6l-2 2M14 18l-2 2a4 4 0 0 1-6-6l2-2"></path></svg></span><span class="time">1 hour ago</span><div class="hd"><a href="#">Agent Nestor</a> linked <a href="#">aprom-4810</a> as blocked by <a href="#">agaia-4801</a></div><div><span class="tag p-aprom">A Prometheus</span> → <span class="tag p-agaia">A Gaia</span></div></div>
+<div class="date">19th Nov. 2026</div>
+<div class="ti"><span class="tic" style="background: #0073b7"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9h12v10H6zM12 5v4M9 13v1M15 13v1"></path></svg></span><span class="time">1 day ago</span><div class="hd"><a href="#">Hammad Hassan</a> bound the runtime <a href="WsEnvironment.dc.html">Talos · hammad-pc</a></div><div>It can now run this workspace's 5 agents on its 6 repositories.</div></div>
+</div>
+</div>
+</section>
+</div>
+
+<div class="col-4 stack">
+<section class="box box-warning">
+<div class="box-header"><h3 class="box-title">Members</h3></div>
+<div class="box-body"><div class="users">
+<sc-for list="{{members}}" as="m" hint-placeholder-count="7">
+<div><span class="av av-ml {{m.c}} {{m.agent}}">{{m.i}}</span><div class="n">{{m.n}}</div></div>
+</sc-for>
+</div></div>
+<div class="box-footer"><a href="WsSettings.dc.html">Manage members</a></div>
+</section>
+
+<section class="box box-info is-new">
+<div class="box-header"><h3 class="box-title">Environment</h3></div>
+<div class="box-body">
+<div class="kv"><span>Runtime</span><span class="who"><span class="dot dot-on"></span>Talos · hammad-pc</span></div>
+<div class="kv"><span>Runs in progress</span><span>2</span></div>
+<div class="kv"><span>Repositories</span><span>6 (5 project, 1 workspace)</span></div>
+<div class="kv"><span>Agents</span><span>5</span></div>
+<div class="kv"><span>Tool servers</span><span>3</span></div>
+<div class="kv"><span>Skills</span><span>9</span></div>
+</div>
+<div class="box-footer" style="display: flex; justify-content: space-between"><a href="WsEnvironment.dc.html">Environment</a><a href="WsAgents.dc.html">Agents, tools and skills</a></div>
+</section>
+
+<section class="box box-info">
+<div class="box-header"><h3 class="box-title">Workspace Milestones</h3></div>
+<div class="box-body">
+<div class="ms ms-amber"><div class="ic"><svg class="i" viewBox="0 0 24 24" style="width: 30px; height: 30px" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path></svg></div><div class="bd"><div class="k">In progress · spans 3 projects</div><div class="t">Workspaces v1 - 14 Issues</div><div class="f"><span>18th Nov. - 18th Dec. 2026</span><span>(5/14) 35%</span></div></div></div>
+<div class="ms ms-blue"><div class="ic"><svg class="i" viewBox="0 0 24 24" style="width: 30px; height: 30px" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path></svg></div><div class="bd"><div class="k">Planned · spans 2 projects</div><div class="t">Repositories in Gaia - 6 Issues</div><div class="f"><span>21st Dec. 2026 - 15th Jan. 2027</span><span>(0/6) 0%</span></div></div></div>
+</div>
+<div class="box-footer"><a href="Gantt.dc.html">Open the Gantt for the whole workspace</a></div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="footer"><span>Copyright © 2026 <b><a href="#">Projects4Me Inc.</a></b> All rights reserved.</span><a href="#">Report Issue</a></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      projects: [
+        { name: 'A Gaia', code: 'agaia', cls: 'p-agaia', open: 212, ms: 'Claude-v1', repo: 'projects4me/gaia', pm: 'Hammad Hassan', pmi: 'HH', pmc: 'c1' },
+        { name: 'A Prometheus', code: 'aprom', cls: 'p-aprom', open: 83, ms: 'aga-editor', repo: 'projects4me/prometheus', pm: 'Hammad Hassan', pmi: 'HH', pmc: 'c1' },
+        { name: 'A Hermes', code: 'ah', cls: 'p-ah', open: 9, ms: 'Claude-v1', repo: 'projects4me/hermes', pm: 'Rana Nouman', pmi: 'RN', pmc: 'c3' },
+        { name: 'A Ares', code: 'aa', cls: 'p-aa', open: 17, ms: 'Claude-v1', repo: 'projects4me/ares', pm: 'Rana Nouman', pmi: 'RN', pmc: 'c3' },
+        { name: 'A Dev Tool', code: 'adt', cls: 'p-adt', open: 31, ms: 'Talos 2', repo: 'projects4me/dev-tools', pm: 'Hammad Hassan', pmi: 'HH', pmc: 'c1' }
+      ],
+      members: [
+        { n: 'Hammad Hassan', i: 'HH', c: 'c1', agent: '' },
+        { n: 'Rana Nouman', i: 'RN', c: 'c3', agent: '' },
+        { n: 'Agent Odysseus', i: 'OD', c: 'c2', agent: 'av-agent' },
+        { n: 'Agent Achilles', i: 'AC', c: 'c6', agent: 'av-agent' },
+        { n: 'Agent Nestor', i: 'NE', c: 'c5', agent: 'av-agent' },
+        { n: 'Agent Agamemnon', i: 'AG', c: 'c4', agent: 'av-agent' },
+        { n: 'Hera', i: 'HE', c: 'c7', agent: 'av-agent' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sidebar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; background: #f9fafc; height: 100%">
+<nav class="sb" aria-label="Main">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+<div class="grp"><span>{{g.name}}<sc-if value="{{g.hasFlag}}" hint-placeholder-val="{{false}}"><span class="newflag">{{g.flag}}</span></sc-if></span><span class="code">{{g.code}}</span></div>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="5">
+<a class="{{it.cls}}" href="{{it.href}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{it.d}}"></path></svg><span>{{it.label}}</span><sc-if value="{{it.isNew}}" hint-placeholder-val="{{false}}"><span class="newflag">NEW</span></sc-if><span class="chev">{{it.chev}}</span></a>
+</sc-for>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["dashboard","projects","p-issues","p-gantt","ws"],"default":"p-issues"},"proj":{"editor":"text","default":""},"showNew":{"editor":"boolean","default":true},"$preview":{"width":200,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = this.props.active ?? 'p-issues';
+    const P = this.props.proj ?? 'APROM';
+    const D = {
+      dash: 'M4 14a8 8 0 0 1 16 0M12 14l4-4M3 18h18',
+      brief: 'M3 8h18v11H3zM8 8V5h8v3',
+      layers: 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',
+      home: 'M3 11l9-7 9 7M5 10v10h14V10',
+      list: 'M4 6h16M4 12h16M4 18h16',
+      book: 'M4 5h7v14H4zM13 5h7v14h-7z',
+      plan: 'M4 6h10M4 12h16M8 18h9',
+      bot: 'M6 9h12v10H6zM12 5v4M9 13v1M15 13v1',
+      flow: 'M5 4h5v5H5zM14 15h5v5h-5zM7 9v4h10v2',
+      gear: 'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2',
+      board: 'M4 4h16v16H4zM10 4v16',
+      cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+      chat: 'M4 5h16v11H9l-5 4z',
+      bulb: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z',
+      dev: 'M8 7l-5 5 5 5M16 7l5 5-5 5'
+    };
+    const mk = (id, label, d, href, o) => {
+      o = o || {};
+      return {
+        label: label, d: d, href: href || '#',
+        cls: 'item' + (id === A ? ' active' : '') + (o.off ? ' off' : ''),
+        isNew: !!o.isNew, chev: o.chev ? '‹' : ''
+      };
+    };
+    const off = P === '';
+    const groups = [
+      { name: 'Home', code: '', hasFlag: true, flag: 'RENAMED', items: [
+        mk('dashboard', 'Dashboard', D.dash, 'Dashboard.dc.html'),
+        mk('projects', 'Projects', D.brief, 'Projects.dc.html', { chev: 1 })
+      ] },
+      { name: 'Project', code: P, hasFlag: false, flag: '', items: [
+        mk('p-issues', 'Issues', D.list, 'Issues.dc.html', { off: off, chev: 1 }),
+        mk('p-board', 'Task Board', D.board, '#', { off: off }),
+        mk('p-gantt', 'Gantt Cal', D.cal, 'Gantt.dc.html', { off: off }),
+        mk('p-threads', 'Threads', D.chat, '#', { off: off }),
+        mk('p-ideas', 'Ideas', D.bulb, '#', { off: off }),
+        mk('ws', 'Workspace', D.layers, 'Main.dc.html', { off: off, isNew: true })
+      ] },
+      { name: 'Admin', code: '', hasFlag: false, flag: '', items: [
+        mk('settings', 'Settings', D.gear, '#'),
+        mk('developer', 'Developer', D.dev, '#')
+      ] }
+    ];
+    return { groups: groups, rootCls: (this.props.showNew ?? true) ? 'shownew' : '' };
+  }
+}
+</script>
+</body>
+</html>

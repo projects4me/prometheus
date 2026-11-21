@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workspace environment</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="ws" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<a class="pname" href="Main.dc.html">Projects4Me Platform</a>
+<nav class="crumb" aria-label="Breadcrumb"><a href="#">A Prometheus</a><span>&gt;</span><a href="Main.dc.html">Workspace</a><span>&gt;</span><a href="WsSettings.dc.html">Settings</a><span>&gt;</span><b>Environment</b></nav>
+</div>
+<div class="tabs is-new" style="margin-bottom: 15px"><a href="WsSettings.dc.html">Projects and members</a><a class="on" href="WsEnvironment.dc.html">Environment</a><a href="WsAgents.dc.html">Agents, tools and skills</a><a href="DeleteWorkspace.dc.html">Delete workspace</a></div>
+
+<div class="row">
+<div class="col-8 stack">
+<section class="box box-primary is-new">
+<div class="box-header"><h3 class="box-title">Repositories</h3><span class="btn btn-primary btn-sm">+ Add repository</span></div>
+<div class="scroll-x"><div class="dtbl" style="min-width: 640px">
+<div class="dtr"><div class="th" style="width: 30%">Repository<span class="sort"></span></div><div class="th" style="width: 22%">Belongs to</div><div class="th" style="width: 14%">Base branch</div><div class="th" style="width: 24%">Push remote</div><div class="th" style="width: 10%"></div></div>
+<sc-for list="{{repos}}" as="r" hint-placeholder-count="6">
+<div class="dtr">
+<div class="td"><span class="mono">{{r.slug}}</span><div class="small muted">{{r.note}}</div></div>
+<div class="td"><span class="tag {{r.pc}}">{{r.owner}}</span></div>
+<div class="td"><span class="mono">{{r.branch}}</span></div>
+<div class="td"><span class="mono">{{r.remote}}</span></div>
+<div class="td" style="text-align: right"><button class="btn-box-tool" aria-label="Edit repository"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"></path></svg></button></div>
+</div>
+</sc-for>
+</div></div>
+<div class="box-footer small muted" style="text-align: left">Gaia keeps the repository, its base branch and the remote's name. Tokens and push keys stay in the runtime's own configuration.</div>
+</section>
+
+<section class="box box-info is-new">
+<div class="box-header"><h3 class="box-title">Runtime</h3><span class="btn btn-default btn-sm">Bind a runtime</span></div>
+<div class="scroll-x"><div class="dtbl" style="min-width: 640px">
+<div class="dtr"><div class="th" style="width: 24%">Runtime</div><div class="th" style="width: 14%">Status</div><div class="th" style="width: 24%">Serves workspaces</div><div class="th" style="width: 14%">Runs</div><div class="th" style="width: 14%">Last seen</div><div class="th" style="width: 10%"></div></div>
+<div class="dtr">
+<div class="td"><b>Talos</b> · hammad-pc<div class="small muted">service client, kind runtime</div></div>
+<div class="td"><span class="who"><span class="dot dot-on"></span>Online</span></div>
+<div class="td"><span class="tag p-ws">pr4m</span> <span class="tag tag-ghost">portal</span></div>
+<div class="td">2 running<div class="small muted">3 test slots</div></div>
+<div class="td small">1 minute ago</div>
+<div class="td" style="text-align: right"><span class="btn btn-default btn-xs">Unbind</span></div>
+</div>
+</div></div>
+<div class="box-footer small muted" style="text-align: left">Runtimes enrol and are approved in Admin > Settings > Services. Binding one here lets it run this workspace's agents on these repositories, and nothing else.</div>
+</section>
+
+<section class="box box-primary">
+<div class="box-header"><h3 class="box-title">Runs in Progress</h3></div>
+<div class="dtbl">
+<div class="dtr"><div class="th" style="width: 34%">Issue</div><div class="th" style="width: 22%">Agent</div><div class="th" style="width: 22%">Worktree</div><div class="th" style="width: 22%">Started</div></div>
+<div class="dtr"><div class="td"><span class="sw p-agaia"></span> <a class="num" href="#">agaia-4801</a> Workspace model</div><div class="td"><span class="who"><span class="av av-xs c2">OD</span>Agent Odysseus</span></div><div class="td mono">.runs/issue-4801</div><div class="td small">42 minutes ago</div></div>
+<div class="dtr"><div class="td"><span class="sw p-ah"></span> <a class="num" href="#">ah-0412</a> Workspace room</div><div class="td"><span class="who"><span class="av av-xs c2">OD</span>Agent Odysseus</span></div><div class="td mono">.runs/issue-412</div><div class="td small">8 minutes ago</div></div>
+</div>
+</section>
+</div>
+
+<div class="col-4 stack">
+<section class="box box-warning is-new">
+<div class="box-header"><h3 class="box-title">Gates</h3></div>
+<div class="box-body">
+<p class="small muted" style="margin-bottom: 6px">A project can't move out, and the workspace can't be deleted, while any of these is open for it.</p>
+<div class="gate"><span class="mk mk-no">2</span><div><b>Runs in progress</b><div class="small muted">Finish or cancel the run first.</div></div></div>
+<div class="gate"><span class="mk mk-no">15</span><div><b>Open issues assigned to this workspace's agents</b><div class="small muted">Reassign them, or let the agents finish.</div></div></div>
+<div class="gate"><span class="mk mk-ok">0</span><div><b>Branches waiting for review</b><div class="small muted">Open PRs from runs in this workspace.</div></div></div>
+</div>
+</section>
+<section class="box box-info is-new">
+<div class="box-header"><h3 class="box-title">Agent Delegation</h3></div>
+<div class="box-body small">
+<div class="kv"><span>Agents this runtime may run</span><span>5 (this workspace only)</span></div>
+<div class="kv"><span>Projects they reach</span><span>the 5 member projects</span></div>
+<div class="kv"><span>Tool servers</span><span>3</span></div>
+</div>
+<div class="box-footer"><a href="WsAgents.dc.html">Agents, tools and skills</a></div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      repos: [
+        { slug: 'projects4me/gaia', note: '', owner: 'A Gaia', pc: 'p-agaia', branch: 'dev', remote: 'odysseus' },
+        { slug: 'projects4me/prometheus', note: '', owner: 'A Prometheus', pc: 'p-aprom', branch: 'dev', remote: 'odysseus' },
+        { slug: 'projects4me/hermes', note: '', owner: 'A Hermes', pc: 'p-ah', branch: 'dev', remote: 'odysseus' },
+        { slug: 'projects4me/ares', note: '', owner: 'A Ares', pc: 'p-aa', branch: 'dev', remote: 'odysseus' },
+        { slug: 'projects4me/dev-tools', note: '', owner: 'A Dev Tool', pc: 'p-adt', branch: 'main', remote: 'odysseus' },
+        { slug: 'projects4me/Pr4M', note: 'Superproject: submodules, CLAUDE.md, skills', owner: 'Workspace', pc: 'p-ws', branch: 'main', remote: 'odysseus' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

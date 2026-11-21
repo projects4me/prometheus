@@ -359,3 +359,14 @@ stacks every documentation tab of the entry, as `Developer::Docs` renders it.
 - tests for the demo like any other component.
 
 The library itself follows this design system: AdminLTE boxes, square edges, Font Awesome 4, no new colours.
+
+## 15. Prototypes
+
+Clickable prototypes of features still being designed live in [`prototypes/<feature>/`](prototypes/), one folder
+each, with a `README.md` listing the screens (PNGs in `screens/`, the prototype's own markup in `html/`), what is new
+and what is still open. Current: [Workspaces](prototypes/workspaces/README.md).
+
+A prototype decides **layout, content and flow**; this document and the existing components decide **how it is
+built**. Prototypes are drawn with their own CSS, so never copy their markup, classes, icons or colours: map each
+part to the page pattern, box and component above. Where a prototype needs something the design system doesn't
+have (a new colour, a new component), treat it as a proposal and ask before building it.

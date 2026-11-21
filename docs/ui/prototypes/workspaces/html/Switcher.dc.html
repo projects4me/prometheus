@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project switcher</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m shownew" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 420px; height: 560px; background: #fff; padding: 12px">
+<div class="switcher" style="width: 340px"><span class="grow"><b>A Prometheus</b> <span class="code">aprom</span></span><span>▴</span></div>
+<div style="width: 340px; border: 1px solid #aaa; border-top: 0; box-shadow: 0 6px 12px rgba(0,0,0,.15)">
+<div style="padding: 8px"><input class="field" placeholder="Search projects" aria-label="Search projects"></div>
+<sc-for list="{{items}}" as="p" hint-placeholder-count="8">
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 7px 10px; {{p.style}}"><span class="sw {{p.pc}}"></span><b>{{p.n}}</b><span class="small muted">{{p.c}}</span><span class="small muted is-new" style="margin-left: auto">{{p.ws}}</span></a>
+</sc-for>
+<div style="padding: 8px 10px; border-top: 1px solid #eee" class="small"><a href="Projects.dc.html">All projects</a></div>
+</div>
+<p class="small muted" style="margin-top: 14px; width: 340px">Unchanged: a flat list of your projects. The only addition is the workspace name in grey on the right, so two projects with similar names can be told apart.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":420,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cur = 'background: #eef0f4; color: #333';
+    const n = 'color: #333';
+    const R = (nm, c, pc, ws, on) => ({ n: nm, c: c, pc: pc, ws: ws, style: on ? cur : n });
+    return {
+      items: [
+        R('A Ares', 'aa', 'p-aa', 'Projects4Me Platform'),
+        R('A Dev Tool', 'adt', 'p-adt', 'Projects4Me Platform'),
+        R('A Gaia', 'agaia', 'p-agaia', 'Projects4Me Platform'),
+        R('A Hermes', 'ah', 'p-ah', 'Projects4Me Platform'),
+        R('A Prometheus', 'aprom', 'p-aprom', 'Projects4Me Platform', true),
+        R('Marketing Site', 'mkt', 'tag-ghost', 'Marketing Site'),
+        R('Portal API', 'papi', 'p-adt', 'Client Portal'),
+        R('Portal Web', 'pweb', 'p-ws', 'Client Portal')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
