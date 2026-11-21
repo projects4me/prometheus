@@ -1,0 +1,58 @@
+<section class="content-header">
+  <h1>
+    {{t (concat "views.app.workspace." this.layoutName ".header")}}
+    <small>{{this.model.name}}</small>
+  </h1>
+  <BreadCrumb/>
+</section>
+
+<section class="content">
+  <div class="create-workspace">
+    <div class="row">
+      <AccessControl @aclContext={{if (eq this.layoutName "edit") "workspace.update" "workspace.create"}}>
+        <div class="col-md-8">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.workspace.form.information"}}</h3>
+            </div>
+            <div class="box-body no-padding">
+              <div class="form-group">
+                <div class="field-group">
+                  <FormFields::FieldText
+                    @label={{t "views.app.workspace.list.name"}}
+                    @value={{this.model.name}}
+                    @data-field="workspace.name"
+                    @validate={{fn this.validateField "workspaceCreate" (hash name="name" value=this.model.name)}}
+                    @message={{this.message.workspaceCreate.name}}
+                    {{autofocus}}
+                  />
+                </div>
+                <div class="field-group">
+                  <FormFields::FieldText
+                    @label={{t "views.app.workspace.list.shortCode"}}
+                    @value={{this.model.shortCode}}
+                    @data-field="workspace.shortCode"
+                    @validate={{fn this.validateField "workspaceCreate" (hash name="shortCode" value=this.model.shortCode)}}
+                    @message={{this.message.workspaceCreate.shortCode}}
+                  />
+                </div>
+                <div class="field-group">
+                  <FormFields::FieldTextArea
+                    @label={{t "views.app.workspace.form.description"}}
+                    @value={{this.model.description}}
+                    @data-field="workspace.description"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "workspaceCreate"}} @aclContext={{if (eq this.layoutName "edit") "workspace.update" "workspace.create"}}>{{t "global.form.save"}}</AppUi::Button>
+          <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+</section>

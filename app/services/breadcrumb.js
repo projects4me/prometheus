@@ -162,6 +162,12 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.workspaces.index'
 		},
+		'app.workspaces.edit': {
+			title: 'views.app.workspace.edit.header',
+			icon: 'pencil',
+			linkable: false,
+			parent: 'app.workspaces.index'
+		},
 		'app.agent.index': {
 			title: 'global.module.plural.agent',
 			icon: 'android',

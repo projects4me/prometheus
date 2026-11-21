@@ -22,6 +22,10 @@ Router.map(function() {
         this.route('create');
         this.route('edit',{path:'/edit/:shortcode'});
     });
+    this.route('workspaces',{path:'workspace'},function(){
+        this.route('create');
+        this.route('edit',{path:'/edit/:shortcode'});
+    });
     this.route('workspace',{ path: "workspace/:shortcode" },function(){});
     this.route('project',{ path: "project/:shortcode" },function(){
         this.route('wiki',function(){
@@ -54,10 +58,6 @@ Router.map(function() {
       this.route('create');
       this.route('page',{path:'/:user_id'});
       this.route('management');
-    });
-    this.route('workspaces',{path:'workspace'},function(){
-        this.route('create');
-        this.route('edit',{path:'/edit/:shortcode'});
     });
     this.route('agent',function(){
       this.route('index',{path:'/'});

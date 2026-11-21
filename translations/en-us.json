@@ -2833,6 +2833,18 @@
         }
       },
       "workspace": {
+        "create": {
+          "header": "Create Workspace"
+        },
+        "edit": {
+          "header": "Edit Workspace"
+        },
+        "form": {
+          "information": "Workspace Information",
+          "description": "Description",
+          "saved": "Workspace <strong>{name}</strong> has been saved successfully",
+          "saveFailed": "The workspace could not be saved"
+        },
         "list": {
           "subtitle": "Groups of projects",
           "name": "Name",
