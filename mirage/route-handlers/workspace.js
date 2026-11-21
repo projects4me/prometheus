@@ -2,7 +2,16 @@ import getRequestData from '../helpers/parse-request';
 import applyQuery from '../helpers/apply-query';
 
 export function register(server) {
-	server.get('/workspace', (schema, request) => applyQuery(schema.workspaces.all(), request));
+	server.get('/workspace', (schema, request) => {
+		let { sort, order } = request.queryParams;
+		let workspaces = applyQuery(schema.workspaces.all(), request);
+		if (!sort) {
+			return workspaces;
+		}
+		let field = sort === 'createdBy.name' ? 'createdUserName' : sort.split('.').pop();
+		let direction = String(order).toLowerCase() === 'desc' ? -1 : 1;
+		return workspaces.sort((a, b) => direction * String(a[field] ?? '').localeCompare(String(b[field] ?? ''), undefined, { numeric: true }));
+	});
 
 	server.get('/workspace/:id', (schema, request) => schema.workspaces.find(request.params.id));
 
