@@ -73,6 +73,11 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.projects.index'
 		},
+		'app.workspace': {
+			title: null, // Dynamic from route
+			icon: 'briefcase',
+			linkable: true
+		},
 		'app.project': {
 			title: null, // Dynamic from route
 			icon: 'briefcase',
