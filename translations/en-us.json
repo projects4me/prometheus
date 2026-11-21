@@ -3060,7 +3060,7 @@
       }
     },
     "nav": {
-      "mainnav": "Workspace",
+      "mainnav": "Home",
       "project": "Project",
       "selectProjectTitle": "Select a project",
       "selectproject": "Select a project..",
@@ -3087,10 +3087,21 @@
           "create": "Create Project",
           "list": "List Projects",
           "import": "Import Projects",
-          "export": "Export Projects"
+          "export": "Export Projects",
+          "all": "All projects",
+          "workspaces": "Workspaces"
         },
         "projects": {
           "label": "Projects"
+        },
+        "workspace": {
+          "label": "Workspace",
+          "overview": "Overview",
+          "agents": "Agents",
+          "workflows": "Workflows",
+          "tools": "Tools",
+          "skills": "Skills",
+          "settings": "Settings"
         },
         "issue": {
           "label": "Issues",

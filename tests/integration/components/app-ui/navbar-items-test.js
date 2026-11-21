@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | app-ui/navbar-items', function (hooks) {
@@ -70,5 +70,71 @@ module('Integration | Component | app-ui/navbar-items', function (hooks) {
 			});
 
 		assert.dom('[data-navigation-module="module2"]').exists();
+	});
+
+	test('it scopes sub-items by workspaceRelated and projectRelated', async function (assert) {
+		this.set('metadata', {
+			Workspace: {
+				label: 'views.nav.menu.workspace.label',
+				icon: 'cubes',
+				route: 'app.workspace',
+				anchorRoute: 'workspace',
+				projectRelated: true,
+				workspaceRelated: true,
+				actions: {
+					section1: {
+						overview: { label: 'views.nav.menu.workspace.overview', route: 'app.workspace', anchorRoute: 'workspace', workspaceRelated: true },
+						agents: { label: 'views.nav.menu.workspace.agents', route: 'app.agent', anchorRoute: 'agent' },
+						issues: { label: 'views.nav.menu.issue.list', route: 'app.project.issue', anchorRoute: 'issue', projectRelated: true }
+					}
+				}
+			}
+		});
+		this.set('trackedProject', { shortCode: 'aprom', workspaceShortCode: 'agw' });
+		this.set('navigate', () => {});
+
+		await render(hbs`
+        <ul class="sidebar-menu">
+            <AppUi::NavbarItems @meta={{this.metadata}} @appPrefix="app" @trackedProject={{this.trackedProject}} @navigate={{this.navigate}} />
+        </ul>
+        `);
+
+		assert.dom('[data-navigation-action="overview"] a').hasAttribute('href', '/app/workspace/agw');
+		assert.dom('[data-navigation-action="agents"] a').hasAttribute('href', '/app/agent');
+		assert.dom('[data-navigation-action="issues"] a').hasAttribute('href', '/app/project/aprom/issue');
+	});
+
+	test('it passes the clicked item to navigate', async function (assert) {
+		let overview = { label: 'views.nav.menu.workspace.overview', route: 'app.workspace', anchorRoute: 'workspace', workspaceRelated: true };
+		this.set('metadata', {
+			Workspace: { label: 'views.nav.menu.workspace.label', icon: 'cubes', route: 'app.workspace', anchorRoute: 'workspace', workspaceRelated: true, actions: { section1: { overview } } }
+		});
+		this.set('trackedProject', { shortCode: 'aprom', workspaceShortCode: 'agw' });
+		this.set('navigate', (item) => assert.step(item.route));
+
+		await render(hbs`
+        <ul class="sidebar-menu">
+            <AppUi::NavbarItems @meta={{this.metadata}} @appPrefix="app" @trackedProject={{this.trackedProject}} @navigate={{this.navigate}} />
+        </ul>
+        `);
+		await click('[data-navigation-action="overview"] a');
+
+		assert.verifySteps(['app.workspace']);
+	});
+
+	test('it disables a workspace item until the workspace is known', async function (assert) {
+		this.set('metadata', {
+			Workspace: { label: 'views.nav.menu.workspace.label', icon: 'cubes', route: 'app.workspace', anchorRoute: 'workspace', projectRelated: true, workspaceRelated: true }
+		});
+		this.set('trackedProject', { shortCode: 'aprom', workspaceShortCode: undefined });
+		this.set('navigate', () => {});
+
+		await render(hbs`
+        <ul class="sidebar-menu">
+            <AppUi::NavbarItems @meta={{this.metadata}} @appPrefix="app" @trackedProject={{this.trackedProject}} @navigate={{this.navigate}} />
+        </ul>
+        `);
+
+		assert.dom('li.nav-disabled[data-navigation-module="Workspace"]').exists();
 	});
 });

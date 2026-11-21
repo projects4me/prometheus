@@ -90,19 +90,20 @@ export default class MetadataMetadata extends EmberObject {
                     projectRelated: false,
                     actions: {
                         section1: {
-                            list: {
-                                label: 'views.nav.menu.project.list',
+                            all: {
+                                label: 'views.nav.menu.project.all',
                                 route: 'app.projects',
                                 className: 'text-teal',
                                 anchorRoute: 'project',
                                 projectRelated: false,
                             },
-                            create: {
-                                label: 'views.nav.menu.project.create',
-                                route: 'app.projects.create',
-                                className: 'text-red',
-                                anchorRoute: 'project/create',
+                            workspaces: {
+                                label: 'views.nav.menu.project.workspaces',
+                                route: 'app.workspaces',
+                                className: 'text-aqua',
+                                anchorRoute: 'workspace',
                                 projectRelated: false,
+                                aclContext: 'workspace.read',
                             }
                         }
                     },
@@ -168,60 +169,66 @@ export default class MetadataMetadata extends EmberObject {
                     anchorRoute: 'gantt',
                     projectRelated: true,
                     order: 4
-                }
-            },
-            adminItems: {
-                Workflows: {
-                    label: 'views.nav.menu.workflow.label',
-                    icon: 'sitemap',
-                    route: 'app.workflow',
-                    anchorRoute: 'workflow',
-                    aclContext: 'workflow.read',
-                    projectRelated: false
                 },
-                Agents: {
-                    label: 'global.module.plural.agent',
-                    icon: 'android',
-                    route: 'app.agent',
-                    anchorRoute: 'agent',
-                    aclContext: 'agent.read',
-                    projectRelated: false,
+                Workspace: {
+                    label: 'views.nav.menu.workspace.label',
+                    icon: 'cubes',
+                    route: 'app.workspace',
+                    anchorRoute: 'workspace',
+                    projectRelated: true,
+                    workspaceRelated: true,
                     actions: {
                         section1: {
-                            list: {
-                                label: 'views.nav.menu.agent.list',
-                                route: 'app.agent',
+                            overview: {
+                                label: 'views.nav.menu.workspace.overview',
+                                route: 'app.workspace',
                                 className: 'text-teal',
-                                anchorRoute: 'agent',
-                                projectRelated: false,
+                                anchorRoute: 'workspace',
+                                workspaceRelated: true,
+                                aclContext: 'workspace.read',
                             },
-                            create: {
-                                label: 'views.nav.menu.agent.create',
-                                route: 'app.agent.create',
-                                className: 'text-red',
-                                anchorRoute: 'agent/create',
-                                projectRelated: false,
-                                aclContext: 'agent.create',
+                            agents: {
+                                label: 'views.nav.menu.workspace.agents',
+                                route: 'app.agent',
+                                className: 'text-aqua',
+                                anchorRoute: 'agent',
+                                aclContext: 'agent.read',
+                            },
+                            workflows: {
+                                label: 'views.nav.menu.workspace.workflows',
+                                route: 'app.workflow',
+                                className: 'text-purple',
+                                anchorRoute: 'workflow',
+                                aclContext: 'workflow.read',
                             },
                             tools: {
-                                label: 'views.nav.menu.agent.tools',
+                                label: 'views.nav.menu.workspace.tools',
                                 route: 'app.agent.tools',
                                 className: 'text-yellow',
                                 anchorRoute: 'agent/tools',
-                                projectRelated: false,
                                 aclContext: 'agent.read',
                             },
                             skills: {
-                                label: 'views.nav.menu.agent.skills',
+                                label: 'views.nav.menu.workspace.skills',
                                 route: 'app.agent.skills',
                                 className: 'text-green',
                                 anchorRoute: 'agent/skills',
-                                projectRelated: false,
                                 aclContext: 'agent.read',
+                            },
+                            settings: {
+                                label: 'views.nav.menu.workspace.settings',
+                                route: 'app.workspaces.edit',
+                                className: 'text-red',
+                                anchorRoute: 'workspace/edit',
+                                workspaceRelated: true,
+                                aclContext: 'workspace.update',
                             }
                         }
-                    }
-                },
+                    },
+                    order: 8
+                }
+            },
+            adminItems: {
                 Settings: {
                     label: 'views.nav.menu.settings.label',
                     icon: 'cogs',

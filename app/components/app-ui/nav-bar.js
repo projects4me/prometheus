@@ -74,26 +74,23 @@ export default class NavBarComponent extends AppComponent {
     }
 
     /**
-     * This function is used in order to handle navigation to our desired route
+     * Navigates to the route of a navigation item. A `workspaceRelated` item gets the workspace short code of the
+     * selected project, a `projectRelated` item the project short code, any other item no parameter.
      *
      * @method navigate
-     * @param {String} route
-     * @param {Object} routeParams
-     * @param {Boolean} projectRelated
-     * @param {String} shortCode
+     * @param {Object} item The item or sub-item metadata
      * @public
      */
-    @action navigate(route, projectRelated, shortCode) {
-        Logger.debug('A transition requested to route ' + route);
-        let routeParams = {};
-        if (projectRelated === true) {
-            routeParams['shortcode'] = shortCode;
+    @action navigate(item) {
+        Logger.debug('A transition requested to route ' + item.route);
+        if (item.workspaceRelated) {
+            this.router.transitionTo(item.route, this.trackedProject.workspaceShortCode);
         }
-        if (Object.keys(routeParams).length > 0) {
-            this.router.transitionTo(route, routeParams);
+        else if (item.projectRelated) {
+            this.router.transitionTo(item.route, { shortcode: this.trackedProject.shortCode });
         }
         else {
-            this.router.transitionTo(route);
+            this.router.transitionTo(item.route);
         }
     }
 
@@ -108,6 +105,8 @@ export default class NavBarComponent extends AppComponent {
         let navigationMeta = MD.create().getViewMeta('Navigation', 'items');
         let sortedNavigationMeta = Object.entries(navigationMeta)
         .filter(([, item]) => this.acl.checkAccess(item.aclContext))
+        .map(([key, item]) => [key, this._withAllowedActions(item)])
+        .filter(([, item]) => item.actions === undefined || Object.keys(item.actions).length > 0)
         .sort((a, b) => a[1].order - b[1].order)
         .reduce((acc, [key, value]) => {
           acc[key] = value;
@@ -115,6 +114,30 @@ export default class NavBarComponent extends AppComponent {
         }, {});
 
         return sortedNavigationMeta;
+    }
+
+    /**
+     * Returns the item with only the sub-items (actions) the user has access to. Sections left empty are dropped.
+     *
+     * @method _withAllowedActions
+     * @param {Object} item
+     * @return {Object}
+     * @private
+     */
+    _withAllowedActions(item) {
+        if (!item.actions) {
+            return item;
+        }
+        let actions = {};
+        for (let [section, menu] of Object.entries(item.actions)) {
+            let allowed = Object.fromEntries(
+                Object.entries(menu).filter(([, action]) => this.acl.checkAccess(action.aclContext))
+            );
+            if (Object.keys(allowed).length > 0) {
+                actions[section] = allowed;
+            }
+        }
+        return { ...item, actions };
     }
 
     /**
