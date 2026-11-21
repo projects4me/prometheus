@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Add a project to the workspace</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 640px; height: 800px">
+<div class="backdrop">
+<div class="modal" role="dialog" aria-labelledby="jt">
+<div class="modal-header"><h3 class="modal-title" id="jt">Add a project to Projects4Me Platform</h3><button class="btn-box-tool" aria-label="Close">✕</button></div>
+<div class="modal-body">
+<div><label class="fl">Project</label><div class="select"><span><span class="sw p-aa"></span> A Ares <span class="small muted">aa</span></span></div><div class="small muted" style="margin-top: 4px">Only projects you can update are listed. A Ares is the only project in its own workspace, which is deleted once it moves.</div></div>
+
+<div>
+<div class="semi" style="margin-bottom: 6px">Members are shared both ways</div>
+<div class="dtbl compact" style="border: 1px solid #eee">
+<div class="dtr"><div class="th" style="width: 40%">Will be added to</div><div class="th" style="width: 60%">Who</div></div>
+<div class="dtr"><div class="td"><span class="tag p-aa">A Ares</span></div><div class="td"><div class="who" style="flex-wrap: wrap; gap: 6px 12px"><span class="who"><span class="av av-xs c1">HH</span>Hammad Hassan</span><span class="who"><span class="av av-xs c2">OD</span>Agent Odysseus</span><span class="who"><span class="av av-xs c6">AC</span>Agent Achilles</span><span class="who"><span class="av av-xs c5">NE</span>Agent Nestor</span><span class="who"><span class="av av-xs c4">AG</span>Agent Agamemnon</span></div></div></div>
+<div class="dtr"><div class="td"><span class="tag p-agaia">A Gaia</span> <span class="tag p-aprom">A Prometheus</span> <span class="tag p-ah">A Hermes</span> <span class="tag p-adt">A Dev Tool</span></div><div class="td"><span class="who"><span class="av av-xs c3">SK</span>Sana Khan</span></div></div>
+</div>
+<div class="small muted" style="margin-top: 4px">For information: the list can't be changed here. Remove people afterwards in Settings.</div>
+</div>
+
+<div>
+<div class="semi" style="margin-bottom: 6px">Environment</div>
+<div class="kv"><span>Repository</span><span class="mono">projects4me/ares</span></div>
+<div class="kv"><span>Runtime</span><span class="who"><span class="dot dot-on"></span>Talos · hammad-pc will start serving A Ares</span></div>
+<div class="kv"><span>Agents</span><span>The 5 agents of this workspace can be assigned A Ares issues</span></div>
+</div>
+
+<div class="alert alert-info small">A Ares joins with its 17 open issues and its wiki, and shows up in the "Whole workspace" scope of the issue list and Gantt.</div>
+</div>
+<div class="modal-footer"><span class="left">Recorded as "added via workspace Projects4Me Platform"</span><span class="btn btn-default">Cancel</span><span class="btn btn-primary">Add project</span></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

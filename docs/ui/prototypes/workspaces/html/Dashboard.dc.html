@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="dashboard" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<h1>Dashboard <small>{{scopeLabel}}</small></h1>
+<div class="is-new" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap"><span class="fl" style="margin: 0 4px 0 0">Workspace</span>
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="3"><button class="{{f.cls}}" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}">{{f.label}}</button></sc-for>
+<span class="small muted mono" style="margin-left: 6px">{{urlHint}}</span></div>
+</div>
+
+<div class="row is-new" style="margin-bottom: 15px">
+<div class="info-box col-3"><div class="ic bg-aqua"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></div><div class="tx"><span>Open issues</span><b>{{t.open}}</b></div></div>
+<div class="info-box col-3"><div class="ic bg-crimson"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M10 6l2-2a4 4 0 0 1 6 6l-2 2M14 18l-2 2a4 4 0 0 1-6-6l2-2"></path></svg></div><div class="tx"><span>Cross-project links</span><b>{{t.links}}</b></div></div>
+<div class="info-box col-3"><div class="ic bg-red"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM6 6l12 12"></path></svg></div><div class="tx"><span>Blocked by another project</span><b>{{t.blocked}}</b></div></div>
+<div class="info-box col-3"><div class="ic bg-green"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2"></path></svg></div><div class="tx"><span>Hours logged this week</span><b>{{t.hours}}</b></div></div>
+</div>
+
+<div class="row">
+<section class="box box-warning col-6 is-new">
+<div class="box-header"><h3 class="box-title">Workload by Person</h3><span class="small muted">open issues, split by project</span></div>
+<div class="box-body">
+<sc-for list="{{workload}}" as="w" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 10px; padding: 6px 0">
+<span class="who" style="width: 170px; flex: none"><span class="av av-xs {{w.c}}">{{w.i}}</span>{{w.n}}</span>
+<div class="wl"><sc-for list="{{w.segs}}" as="s" hint-placeholder-count="3"><span class="{{s.pc}}" style="width: {{s.w}}%" title="{{s.title}}"></span></sc-for></div>
+<span class="small" style="width: 24px; text-align: right">{{w.total}}</span>
+</div>
+</sc-for>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px" class="small"><sc-for list="{{legend}}" as="l" hint-placeholder-count="5"><span class="who"><span class="sw {{l.pc}}"></span>{{l.n}}</span></sc-for></div>
+</div>
+</section>
+
+<section class="box box-danger col-6 is-new">
+<div class="box-header"><h3 class="box-title">Blocked by Another Project</h3></div>
+<sc-if value="{{hasBlocked}}" hint-placeholder-val="{{true}}">
+<div class="dtbl compact">
+<div class="dtr"><div class="th" style="width: 50%">Issue</div><div class="th" style="width: 50%">Waiting on</div></div>
+<sc-for list="{{blocked}}" as="b" hint-placeholder-count="3"><div class="dtr"><div class="td small"><span class="sw {{b.pc}}"></span> <a class="num" href="#">{{b.num}}</a> {{b.s}}</div><div class="td small"><span class="sw {{b.bpc}}"></span> <a class="num" href="#">{{b.bnum}}</a> <span class="label {{b.stc}}">{{b.stl}}</span></div></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{noBlocked}}" hint-placeholder-val="{{false}}"><div class="empty">ⓘ Nothing is blocked by another project</div></sc-if>
+</section>
+
+<section class="box box-info col-12">
+<div class="box-header"><h3 class="box-title">Active Milestones</h3></div>
+<div class="box-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px">
+<sc-for list="{{milestones}}" as="m" hint-placeholder-count="4">
+<div class="ms {{m.cls}}" style="margin: 0"><div class="bd"><div class="k">{{m.k}}</div><div class="t">{{m.t}}</div><div class="f"><span>{{m.d}}</span><span>{{m.p}}</span></div></div></div>
+</sc-for>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const f = (this.state && this.state.f) || 'pr4m';
+    const PN = { 'p-agaia': 'A Gaia', 'p-aprom': 'A Prometheus', 'p-ah': 'A Hermes', 'p-aa': 'A Ares', 'p-adt': 'A Dev Tool', 'p-ws': 'Portal Web', 'p-adt2': 'Portal API' };
+    const W = {
+      pr4m: [
+        ['Agent Odysseus', 'OD', 'c2', [['p-agaia', 5], ['p-ah', 2], ['p-adt', 2]]],
+        ['Rana Nouman', 'RN', 'c3', [['p-aa', 2], ['p-ah', 1], ['p-agaia', 1], ['p-aprom', 1], ['p-adt', 1]]],
+        ['Agent Achilles', 'AC', 'c6', [['p-aprom', 5]]],
+        ['Hammad Hassan', 'HH', 'c1', [['p-agaia', 2], ['p-aprom', 2]]],
+        ['Agent Nestor', 'NE', 'c5', [['p-agaia', 1]]]
+      ],
+      portal: [
+        ['Hammad Hassan', 'HH', 'c1', [['p-ws', 4]]],
+        ['Rana Nouman', 'RN', 'c3', [['p-ws', 1], ['p-adt2', 3]]]
+      ]
+    };
+    W.all = W.pr4m.concat([['Sana Khan', 'SK', 'c3', [['p-ws', 2], ['p-adt2', 2]]]]);
+    const T = { all: { open: 412, links: 16, blocked: 3, hours: 90 }, pr4m: { open: 352, links: 14, blocked: 3, hours: 61 }, portal: { open: 48, links: 2, blocked: 0, hours: 22 } };
+    const blockedAll = [
+      { num: 'aprom-4810', s: 'Workspace link', pc: 'p-aprom', bnum: 'agaia-4801', bpc: 'p-agaia', stc: 'st-in_progress', stl: 'In Progress' },
+      { num: 'aprom-4811', s: 'Scope switch', pc: 'p-aprom', bnum: 'agaia-4801', bpc: 'p-agaia', stc: 'st-in_progress', stl: 'In Progress' },
+      { num: 'adt-4590', s: 'Talos reads repos', pc: 'p-adt', bnum: 'agaia-4820', bpc: 'p-agaia', stc: 'st-new', stl: 'New' }
+    ];
+    const MS = {
+      pr4m: [
+        { cls: 'ms-amber', k: 'Workspace · 3 projects · on track', t: 'Workspaces v1', d: '18 Nov - 18 Dec', p: '35%' },
+        { cls: 'ms-blue', k: 'Workspace · 2 projects · planned', t: 'Repositories in Gaia', d: '21 Dec - 15 Jan', p: '0%' },
+        { cls: 'ms-red', k: 'A Prometheus · at risk', t: 'aga-editor', d: '19 Nov - 19 Dec', p: '40%' },
+        { cls: 'ms-amber', k: 'A Dev Tool · on track', t: 'Talos 2', d: '10 Nov - 10 Dec', p: '60%' }
+      ],
+      portal: [ { cls: 'ms-amber', k: 'Portal Web · on track', t: 'Beta', d: '1 Nov - 20 Dec', p: '55%' } ]
+    };
+    MS.all = MS.pr4m.concat(MS.portal);
+    const rows = W[f];
+    const max = Math.max.apply(null, rows.map((r) => r[3].reduce((a, s) => a + s[1], 0)));
+    const used = {};
+    const workload = rows.map((r) => {
+      const total = r[3].reduce((a, s) => a + s[1], 0);
+      return { n: r[0], i: r[1], c: r[2], total: total, segs: r[3].map((s) => { used[s[0]] = 1; return { pc: s[0] === 'p-adt2' ? 'p-adt' : s[0], w: Math.round(s[1] / max * 100), title: PN[s[0]] + ': ' + s[1] }; }) };
+    });
+    const blocked = f === 'portal' ? [] : blockedAll;
+    const FL = [ { id: 'all', label: 'All' }, { id: 'pr4m', label: 'Projects4Me Platform' }, { id: 'portal', label: 'Client Portal' } ];
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      filters: FL.map((x) => ({ label: x.label, cls: 'chip' + (x.id === f ? ' on' : ''), pressed: x.id === f ? 'true' : 'false', pick: () => this.setState({ f: x.id }) })),
+      scopeLabel: f === 'all' ? 'all projects you can see' : (f === 'pr4m' ? 'Projects4Me Platform' : 'Client Portal'),
+      urlHint: f === 'all' ? '/app/dashboard' : '?workspace=' + f,
+      t: T[f], workload: workload,
+      legend: Object.keys(used).map((k) => ({ pc: k === 'p-adt2' ? 'p-adt' : k, n: PN[k] })),
+      blocked: blocked, hasBlocked: blocked.length > 0, noBlocked: blocked.length === 0,
+      milestones: MS[f]
+    };
+  }
+}
+</script>
+</body>
+</html>

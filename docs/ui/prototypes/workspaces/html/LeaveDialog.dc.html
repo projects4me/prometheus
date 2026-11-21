@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Move a project</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 640px; height: 900px">
+<div class="backdrop">
+<div class="modal" role="dialog" aria-labelledby="lt">
+<div class="modal-header"><h3 class="modal-title" id="lt">Move A Hermes out of Projects4Me Platform</h3><button class="btn-box-tool" aria-label="Close">✕</button></div>
+<div class="modal-body">
+<div class="is-new"><label class="fl">Move to</label><div class="select"><span>A new workspace: <b>A Hermes</b> <span class="small muted">created for it</span></span></div><div class="small muted" style="margin-top: 4px">Or pick another workspace you can update. A project is always in exactly one workspace.</div></div>
+<div class="alert alert-danger small"><b>A Hermes can't move yet.</b> Clear the open gates below; this dialog updates as they clear.</div>
+
+<div>
+<div class="gate"><span class="mk mk-no">1</span><div style="flex: 1"><b>Run in progress</b><div class="small"><span class="sw p-ah"></span> <a href="#">ah-0412</a> Workspace room · Agent Odysseus · started 8 minutes ago</div></div><span class="btn btn-default btn-xs">Cancel run</span></div>
+<div class="gate"><span class="mk mk-no">3</span><div style="flex: 1"><b>Open issues assigned to this workspace's agents</b><div class="small muted">The agents leave A Hermes with the workspace, so these need another assignee.</div></div><span class="btn btn-default btn-xs">Reassign</span></div>
+<div class="gate"><span class="mk mk-ok">0</span><div style="flex: 1"><b>Branches waiting for review</b></div></div>
+</div>
+
+<div>
+<div class="semi" style="margin-bottom: 6px">When it moves</div>
+<div class="kv"><span>Cross-project links removed</span><span class="b">4</span></div>
+<div class="dtbl compact" style="border: 1px solid #eee; margin: 4px 0 8px">
+<div class="dtr"><div class="td small" style="width: 50%"><span class="sw p-ah"></span> <a href="#">ah-0412</a> blocked by</div><div class="td small"><span class="sw p-agaia"></span> <a href="#">agaia-4802</a></div></div>
+<div class="dtr"><div class="td small"><span class="sw p-ah"></span> <a href="#">ah-0398</a> relates to</div><div class="td small"><span class="sw p-aprom"></span> <a href="#">aprom-4730</a></div></div>
+<div class="dtr"><div class="td small"><span class="sw p-ah"></span> <a href="#">ah-0390</a> blocks</div><div class="td small"><span class="sw p-aprom"></span> <a href="#">aprom-4702</a></div></div>
+<div class="dtr"><div class="td small"><span class="sw p-ah"></span> <a href="#">ah-0371</a> relates to</div><div class="td small"><span class="sw p-agaia"></span> <a href="#">agaia-4655</a></div></div>
+</div>
+<div class="kv"><span>People</span><span>Stay members of A Hermes (2 people). <a href="WsSettings.dc.html">Review members</a></span></div>
+<div class="kv"><span>Agents</span><span>5 agents lose access to A Hermes</span></div>
+<div class="kv"><span>Runtime</span><span>Talos stops serving <span class="mono">projects4me/hermes</span>; the new workspace has no runtime yet</span></div>
+</div>
+</div>
+<div class="modal-footer"><span class="btn btn-default">Cancel</span><button class="btn btn-danger" disabled>Move A Hermes</button></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

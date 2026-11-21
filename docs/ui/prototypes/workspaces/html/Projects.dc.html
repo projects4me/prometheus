@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Projects</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="projects" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<h1>Projects <small>all projects you are a member of</small></h1>
+<nav class="crumb" aria-label="Breadcrumb"><a href="Dashboard.dc.html">Dashboard</a><span>&gt;</span><b>Projects</b></nav>
+</div>
+<section class="box box-primary">
+<div class="toolbar">
+<span class="btn btn-primary caret">Saved Searches</span>
+<span class="uline">Search projects</span>
+<span class="btn btn-default">Builder</span><span class="btn btn-primary">Search</span><span class="btn btn-default">Clear</span>
+<a class="btn btn-primary" href="NewProject.dc.html" style="color: #fff">+ Project</a>
+</div>
+<div class="chips is-new">
+<span class="small muted" style="margin-right: 4px">Workspace</span>
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="4"><button class="{{f.cls}}" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}">{{f.label}}</button></sc-for>
+</div>
+<div class="scroll-x"><div class="dtbl" style="min-width: 900px">
+<div class="dtr"><div class="th" style="width: 26%">Project<span class="sort"></span></div><div class="th is-new" style="width: 22%">Workspace<span class="sort"></span></div><div class="th" style="width: 12%">Open issues<span class="sort"></span></div><div class="th" style="width: 16%">Active milestone</div><div class="th" style="width: 24%">Project Manager<span class="sort"></span></div></div>
+<sc-for list="{{rows}}" as="p" hint-placeholder-count="8">
+<div class="dtr">
+<div class="td"><span class="tag {{p.pc}}">{{p.n}}</span> <span class="small muted">{{p.c}}</span></div>
+<div class="td is-new"><a href="Main.dc.html">{{p.ws}}</a><sc-if value="{{p.solo}}" hint-placeholder-val="{{false}}"> <span class="small muted it">only project</span></sc-if></div>
+<div class="td">{{p.open}}</div>
+<div class="td"><a href="#">{{p.ms}}</a></div>
+<div class="td"><span class="who"><span class="av av-xs {{p.pmc}}">{{p.pmi}}</span><a href="#">{{p.pm}}</a></span></div>
+</div>
+</sc-for>
+</div></div>
+<div class="rowbar" style="padding-top: 10px; border-top: 1px solid #f4f4f4"><span class="small muted">Every project has a workspace. A project created on its own gets one with the same name.</span><span>1-{{count}} / {{count}}</span></div>
+</section>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const f = (this.state && this.state.f) || 'all';
+    const HH = ['Hammad Hassan', 'HH', 'c1'], RN = ['Rana Nouman', 'RN', 'c3'], SK = ['Sana Khan', 'SK', 'c3'];
+    const R = (n, c, pc, ws, wid, open, ms, pm, solo) => ({ n: n, c: c, pc: pc, ws: ws, wid: wid, open: open, ms: ms, pm: pm[0], pmi: pm[1], pmc: pm[2], solo: !!solo });
+    const all = [
+      R('A Ares', 'aa', 'p-aa', 'Projects4Me Platform', 'pr4m', 17, 'Claude-v1', RN),
+      R('A Dev Tool', 'adt', 'p-adt', 'Projects4Me Platform', 'pr4m', 31, 'Talos 2', HH),
+      R('A Gaia', 'agaia', 'p-agaia', 'Projects4Me Platform', 'pr4m', 212, 'Claude-v1', HH),
+      R('A Hermes', 'ah', 'p-ah', 'Projects4Me Platform', 'pr4m', 9, 'Claude-v1', RN),
+      R('A Prometheus', 'aprom', 'p-aprom', 'Projects4Me Platform', 'pr4m', 83, 'aga-editor', HH),
+      R('Marketing Site', 'mkt', 'tag-ghost', 'Marketing Site', 'mkt', 6, 'Relaunch', SK, true),
+      R('Portal API', 'papi', 'p-adt', 'Client Portal', 'portal', 21, 'Beta', RN),
+      R('Portal Web', 'pweb', 'p-ws', 'Client Portal', 'portal', 27, 'Beta', HH)
+    ];
+    const FL = [{ id: 'all', label: 'All' }, { id: 'pr4m', label: 'Projects4Me Platform' }, { id: 'portal', label: 'Client Portal' }, { id: 'mkt', label: 'Marketing Site' }];
+    const rows = all.filter((r) => f === 'all' || r.wid === f);
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      filters: FL.map((x) => ({ label: x.label, cls: 'chip' + (x.id === f ? ' on' : ''), pressed: x.id === f ? 'true' : 'false', pick: () => this.setState({ f: x.id }) })),
+      rows: rows, count: rows.length
+    };
+  }
+}
+</script>
+</body>
+</html>

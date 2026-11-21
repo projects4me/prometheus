@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Header</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333">
+<header class="hdr">
+<div class="logo"><span class="mark"></span><span>Projects4Me</span></div>
+<button class="burger btn-box-tool" aria-label="Toggle sidebar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+<a class="switcher" href="Switcher.dc.html" style="color: #fff">
+<span class="grow"><b>{{proj}}</b> <span class="code">{{code}}</span></span>
+<span>▾</span>
+</a>
+<div class="search"><span>Search ...</span><span>▾</span></div>
+<div class="right">
+<span class="btn btn-primary btn-sm caret">New</span>
+<svg class="i bell" viewBox="0 0 24 24" role="img" aria-label="Notifications"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20h4"></path></svg>
+<span class="who"><span class="av av-s c1">HH</span><span>Hammad Hassan</span></span>
+</div>
+</header>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"proj":{"editor":"text","default":"A Prometheus"},"code":{"editor":"text","default":"aprom"},"showNew":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":50}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      proj: this.props.proj ?? 'A Prometheus',
+      code: this.props.code ?? 'aprom',
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

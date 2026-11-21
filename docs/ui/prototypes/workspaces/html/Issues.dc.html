@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project issues</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="p-issues" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<a class="pname" href="#">A Prometheus</a>
+<nav class="crumb" aria-label="Breadcrumb"><a href="Dashboard.dc.html">Dashboard</a><span>&gt;</span><a href="#">A Prometheus</a><span>&gt;</span><b>Issues</b></nav>
+</div>
+
+<section class="box box-primary">
+<div class="toolbar">
+<span class="btn btn-primary caret">Saved Searches</span>
+<label class="uline" style="display: flex; align-items: center">{{searchLabel}}</label>
+<span class="btn btn-default">Builder</span>
+<span class="btn btn-primary">Search</span>
+<span class="btn btn-default">Clear</span>
+</div>
+
+<div class="chips is-new">
+<span class="small muted" style="margin-right: 4px">Scope</span>
+<sc-for list="{{scopes}}" as="s" hint-placeholder-count="2"><button class="{{s.cls}}" onClick="{{s.pick}}" aria-pressed="{{s.pressed}}">{{s.label}}</button></sc-for>
+<sc-if value="{{isWs}}" hint-placeholder-val="{{false}}"><span class="small muted" style="margin-left: 8px">Projects4Me Platform projects you are a member of. Your access in each project still applies.</span></sc-if>
+</div>
+
+<sc-if value="{{isWs}}" hint-placeholder-val="{{false}}">
+<div class="chips is-new" style="padding-top: 0">
+<span class="small muted" style="margin-right: 4px">Projects</span>
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+<button class="{{c.cls}}" onClick="{{c.toggle}}" aria-pressed="{{c.pressed}}"><span class="sw {{c.pc}}"></span>{{c.name}}</button>
+</sc-for>
+<span style="width: 18px"></span>
+<button class="{{crossCls}}" onClick="{{toggleCross}}" aria-pressed="{{crossPressed}}"><span class="{{crossChk}}">{{crossMark}}</span>Cross-project only</button>
+</div>
+</sc-if>
+
+<div class="rowbar">
+<div style="display: flex; gap: 0">
+<button class="iconbtn" aria-label="Select all"><span class="chk"></span></button>
+<button class="iconbtn" aria-label="Export"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg></button>
+<span class="btn btn-default btn-sm caret" style="margin-left: 8px">Group: Milestone</span>
+</div>
+<div>(Selected : 0) 1-{{count}} / {{count}} <button class="iconbtn" aria-label="Previous page" style="width: 24px">‹</button><button class="iconbtn" aria-label="Next page" style="width: 24px">›</button></div>
+</div>
+
+<div class="scroll-x">
+<div class="minw">
+<div class="dtbl">
+<div class="dtr"><div class="th" style="width: 40px"></div><div class="th" style="width: 38%">Issue<span class="sort"></span></div><sc-if value="{{isWs}}" hint-placeholder-val="{{false}}"><div class="th is-new" style="width: 14%">Project<span class="sort"></span></div></sc-if><div class="th" style="width: 16%">Assignee<span class="sort"></span></div><div class="th" style="width: 22%">Links</div><div class="th" style="width: 10%">Updated<span class="sort"></span></div></div>
+</div>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+<div class="grphead"><span>{{g.name}}</span><span class="small muted">{{g.note}}</span><span class="label label-default">{{g.n}}</span></div>
+<div class="dtbl">
+<sc-for list="{{g.rows}}" as="i" hint-placeholder-count="4">
+<div class="dtr">
+<div class="td" style="width: 40px"><span class="chk"></span></div>
+<div class="td" style="width: 38%"><a class="num" href="#">{{i.num}}</a> - {{i.subject}}<div style="margin-top: 3px"><span class="label {{i.stc}}">{{i.stl}}</span></div></div>
+<sc-if value="{{isWs}}" hint-placeholder-val="{{false}}"><div class="td is-new" style="width: 14%"><span class="tag {{i.pc}}">{{i.pn}}</span></div></sc-if>
+<div class="td" style="width: 16%"><sc-if value="{{i.hasA}}" hint-placeholder-val="{{true}}"><span class="who"><span class="av av-xs {{i.ac}}">{{i.ai}}</span><a href="#">{{i.an}}</a></span></sc-if><sc-if value="{{i.noA}}" hint-placeholder-val="{{false}}"><span class="muted it">Unassigned</span></sc-if></div>
+<div class="td" style="width: 22%"><sc-for list="{{i.links}}" as="l" hint-placeholder-count="1"><div class="small" style="display: flex; gap: 5px; align-items: center; margin-bottom: 2px"><span class="muted">{{l.rel}}</span><span class="sw {{l.pc}}"></span><a href="#">{{l.num}}</a></div></sc-for></div>
+<div class="td small muted" style="width: 10%">{{i.upd}}</div>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><div class="empty">No issue matches these filters.</div></sc-if>
+</div>
+</div>
+<div class="rowbar" style="padding-top: 10px; border-top: 1px solid #f4f4f4"><span class="small muted">{{urlHint}}</span><span>(Selected : 0) 1-{{count}} / {{count}}</span></div>
+</section>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const ws = st.scope === 'ws';
+    const off = st.off || {};
+    const cross = !!st.cross;
+    const P = [
+      { code: 'agaia', name: 'A Gaia', pc: 'p-agaia' },
+      { code: 'aprom', name: 'A Prometheus', pc: 'p-aprom' },
+      { code: 'ah', name: 'A Hermes', pc: 'p-ah' },
+      { code: 'aa', name: 'A Ares', pc: 'p-aa' },
+      { code: 'adt', name: 'A Dev Tool', pc: 'p-adt' }
+    ];
+    const pc = {}; P.forEach((p) => { pc[p.code] = p; });
+    const S = { new: 'New', in_progress: 'In Progress', pending: 'Pending', in_review: 'In Review', done: 'Done' };
+    const U = {
+      od: ['Agent Odysseus', 'OD', 'c2'], ac: ['Agent Achilles', 'AC', 'c6'], ne: ['Agent Nestor', 'NE', 'c5'],
+      rn: ['Rana Nouman', 'RN', 'c3'], hh: ['Hammad Hassan', 'HH', 'c1']
+    };
+    const L = (rel, num) => { const code = num.split('-')[0]; return { rel: rel, num: num, code: code, pc: pc[code].pc }; };
+    const raw = [
+      { g: 'Workspaces v1', note: ws ? 'spans A Gaia, A Prometheus, A Hermes' : '', items: [
+        ['agaia-4801', 'Workspace model and projects.workspaceId', 'agaia', 'in_progress', 'od', [L('blocks', 'aprom-4810'), L('blocks', 'aprom-4811')], '2 hours ago'],
+        ['agaia-4802', 'Membership sync across workspace projects', 'agaia', 'new', 'od', [L('blocks', 'ah-0412')], '5 hours ago'],
+        ['aprom-4810', 'Workspace link in the project sidebar', 'aprom', 'pending', 'ac', [L('blocked by', 'agaia-4801')], '1 hour ago'],
+        ['aprom-4811', 'Scope switch on the issue list and Gantt', 'aprom', 'new', 'ac', [L('blocked by', 'agaia-4801')], '1 hour ago'],
+        ['ah-0412', 'Workspace room for live events', 'ah', 'new', 'od', [L('blocked by', 'agaia-4802')], '5 hours ago']
+      ] },
+      { g: 'aga-editor', note: '', items: [
+        ['aprom-4760', 'Editor toolbar for issue descriptions', 'aprom', 'in_progress', 'ac', [], '40 minutes ago'],
+        ['aprom-4761', 'Mention issues inline', 'aprom', 'new', 'hh', [], '1 day ago'],
+        ['aprom-4730', 'Notifications sidebar paging', 'aprom', 'in_review', 'ac', [L('relates to', 'ah-0398')], '3 hours ago']
+      ] },
+      { g: 'Repositories in Gaia', note: ws ? 'spans A Gaia, A Dev Tool' : '', items: [
+        ['agaia-4820', 'Repository model on projects and workspaces', 'agaia', 'new', 'ne', [L('blocks', 'adt-4590')], '1 day ago'],
+        ['adt-4590', 'Talos reads repositories and agents from the workspace', 'adt', 'new', 'od', [L('blocked by', 'agaia-4820')], '1 day ago']
+      ] },
+      { g: 'Claude-v1', note: '', items: [
+        ['aa-0233', 'Model routing per workspace', 'aa', 'in_review', 'rn', [L('relates to', 'agaia-4801')], '3 hours ago'],
+        ['aprom-4752', 'Update the design system screens', 'aprom', 'done', 'ac', [], '6 hours ago']
+      ] }
+    ];
+    let count = 0;
+    const groups = raw.map((g) => {
+      const rows = g.items.filter((it) => {
+        if (!ws) return it[2] === 'aprom';
+        if (off[it[2]]) return false;
+        const isCross = it[5].some((l) => l.code !== it[2]);
+        return cross ? isCross : true;
+      }).map((it) => {
+        const u = U[it[4]];
+        return {
+          num: it[0], subject: it[1], pn: pc[it[2]].name, pc: pc[it[2]].pc,
+          stc: 'st-' + it[3], stl: S[it[3]],
+          hasA: !!u, noA: !u, an: u ? u[0] : '', ai: u ? u[1] : '', ac: u ? u[2] : '',
+          links: it[5], upd: it[6]
+        };
+      });
+      count += rows.length;
+      return { name: g.g, note: g.note, rows: rows, n: rows.length + ' issues' };
+    }).filter((g) => g.rows.length > 0);
+    const SC = [{ id: 'project', label: 'This project' }, { id: 'ws', label: 'Whole workspace · 5 projects' }];
+    const cur = ws ? 'ws' : 'project';
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      isWs: ws,
+      searchLabel: ws ? 'Search issues in 5 projects' : 'Search issues in A Prometheus',
+      urlHint: ws ? '/app/project/aprom/issues?scope=workspace' : '/app/project/aprom/issues',
+      scopes: SC.map((s) => ({ label: s.label, cls: 'chip' + (s.id === cur ? ' on' : ''), pressed: s.id === cur ? 'true' : 'false', pick: () => this.setState({ scope: s.id }) })),
+      chips: P.map((p) => ({
+        name: p.name, pc: p.pc,
+        cls: 'chip' + (off[p.code] ? '' : ' on'),
+        pressed: off[p.code] ? 'false' : 'true',
+        toggle: () => { const n = Object.assign({}, off); n[p.code] = !off[p.code]; this.setState({ off: n }); }
+      })),
+      groups: groups, count: count, empty: count === 0,
+      crossCls: 'chip' + (cross ? ' on' : ''), crossChk: 'chk' + (cross ? ' on' : ''), crossMark: cross ? '✓' : '',
+      crossPressed: cross ? 'true' : 'false',
+      toggleCross: () => this.setState({ cross: !cross })
+    };
+  }
+}
+</script>
+</body>
+</html>

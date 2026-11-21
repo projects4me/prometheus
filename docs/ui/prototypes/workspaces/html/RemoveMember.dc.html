@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Remove a member</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 640px; height: 800px">
+<div class="backdrop">
+<div class="modal" role="dialog" aria-labelledby="rt">
+<div class="modal-header"><h3 class="modal-title" id="rt">Remove Rana Nouman</h3><button class="btn-box-tool" aria-label="Close">✕</button></div>
+<div class="modal-body">
+<div class="who"><span class="av av-m c3">RN</span><div>Rana Nouman will be removed from all 5 projects of Projects4Me Platform.<div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px"><span class="tag p-agaia">A Gaia</span><span class="tag p-aprom">A Prometheus</span><span class="tag p-ah">A Hermes</span><span class="tag p-aa">A Ares</span><span class="tag p-adt">A Dev Tool</span></div></div></div>
+
+<div>
+<div class="semi" style="margin-bottom: 6px">Open issues (6)</div>
+<div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px; flex-wrap: wrap"><span class="small">Set all to</span><div class="select" style="min-width: 200px"><span class="who"><span class="av av-xs c1">HH</span>Hammad Hassan</span></div><span class="btn btn-default btn-sm">Apply</span></div>
+<div class="dtbl compact" style="border: 1px solid #eee">
+<div class="dtr"><div class="th" style="width: 52%">Issue</div><div class="th" style="width: 48%">Reassign to</div></div>
+<sc-for list="{{issues}}" as="i" hint-placeholder-count="6">
+<div class="dtr"><div class="td small"><span class="sw {{i.pc}}"></span> <a class="num" href="#">{{i.num}}</a> {{i.s}}</div><div class="td"><div class="select" style="min-width: 0"><span class="{{i.vcls}}">{{i.v}}</span></div></div></div>
+</sc-for>
+</div>
+</div>
+<div class="small muted">Their time logs, comments and history stay. Agents of the workspace can be picked as assignees.</div>
+</div>
+<div class="modal-footer"><span class="btn btn-default">Cancel</span><span class="btn btn-danger">Remove from 5 projects</span></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = (num, s, pc, v) => ({ num: num, s: s, pc: pc, v: v, vcls: v === 'Leave unassigned' ? 'muted it' : '' });
+    return {
+      issues: [
+        R('aa-0233', 'Embeddings for knowledge pages', 'p-aa', 'Agent Odysseus'),
+        R('aa-0229', 'Model routing config', 'p-aa', 'Hammad Hassan'),
+        R('ah-0398', 'Reconnect backoff', 'p-ah', 'Agent Odysseus'),
+        R('agaia-4777', 'Time log export', 'p-agaia', 'Leave unassigned'),
+        R('aprom-4730', 'Notifications sidebar paging', 'p-aprom', 'Agent Achilles'),
+        R('adt-4561', 'Installer on macOS', 'p-adt', 'Leave unassigned')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

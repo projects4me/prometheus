@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workspace agents</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m {{rootCls}}" style="font-family: 'Source Sans 3', sans-serif; color: #333; min-height: 100%">
+<dc-import name="Header" show-new="{{showNew}}" hint-size="100%,50px"></dc-import>
+<div class="shell">
+<dc-import name="Sidebar" active="ws" show-new="{{showNew}}" hint-size="200px,1000px"></dc-import>
+<main class="content">
+<div class="content-header">
+<a class="pname" href="Main.dc.html">Projects4Me Platform</a>
+<nav class="crumb" aria-label="Breadcrumb"><a href="#">A Prometheus</a><span>&gt;</span><a href="Main.dc.html">Workspace</a><span>&gt;</span><a href="WsSettings.dc.html">Settings</a><span>&gt;</span><b>Agents, tools and skills</b></nav>
+</div>
+
+<div class="tabs is-new" style="margin-bottom: 15px"><a href="WsSettings.dc.html">Projects and members</a><a href="WsEnvironment.dc.html">Environment</a><a class="on" href="WsAgents.dc.html">Agents, tools and skills</a><a href="DeleteWorkspace.dc.html">Delete workspace</a></div>
+<section class="box box-primary">
+<div class="tabs">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4"><button class="{{t.cls}}" onClick="{{t.pick}}" style="background: none; border-left: 0; border-right: 0; border-bottom: 0; font: inherit; cursor: pointer; padding: 10px 15px">{{t.label}}<span class="cnt">{{t.n}}</span></button></sc-for>
+</div>
+<div class="toolbar">
+<span class="btn btn-primary caret">Saved Searches</span>
+<span class="uline">Search</span>
+<span class="btn btn-default">Builder</span><span class="btn btn-primary">Search</span><span class="btn btn-default">Clear</span>
+<span class="btn btn-primary">{{createLabel}}</span>
+</div>
+
+<sc-if value="{{isAgents}}" hint-placeholder-val="{{true}}">
+<div class="scroll-x"><div class="dtbl" style="min-width: 900px">
+<div class="dtr"><div class="th" style="width: 30%">Agent<span class="sort"></span></div><div class="th" style="width: 12%">Sponsor<span class="sort"></span></div><div class="th" style="width: 12%">Models</div><div class="th" style="width: 14%">Tools</div><div class="th" style="width: 12%">Skills</div><div class="th" style="width: 12%">Last active<span class="sort"></span></div><div class="th" style="width: 8%"></div></div>
+<sc-for list="{{agents}}" as="a" hint-placeholder-count="5">
+<div class="dtr">
+<div class="td"><div class="who" style="align-items: flex-start"><span class="av av-m {{a.c}} av-agent">{{a.i}}</span><div><a href="#">{{a.n}}</a> <span class="label label-success">Active</span><div class="small">{{a.purpose}}</div></div></div></div>
+<div class="td small it">{{a.sponsor}}</div>
+<div class="td small">{{a.models}}</div>
+<div class="td small">{{a.tools}}</div>
+<div class="td small">{{a.skills}}</div>
+<div class="td small">{{a.last}}</div>
+<div class="td" style="position: relative; text-align: right"><button class="btn-box-tool" aria-label="Row actions">⋮</button>
+<sc-if value="{{a.menu}}" hint-placeholder-val="{{false}}"><div class="is-new" style="position: absolute; right: 8px; top: 30px; background: #fff; border: 1px solid #ddd; box-shadow: 0 6px 12px rgba(0,0,0,.18); width: 190px; text-align: left; z-index: 2; padding: 4px 0"><a href="#" style="display: block; padding: 6px 12px; color: #333">Edit</a><a href="#" style="display: block; padding: 6px 12px; color: #333">Copy to workspace…</a><a href="#" style="display: block; padding: 6px 12px; color: #333">Disable</a></div></sc-if>
+</div>
+</div>
+</sc-for>
+</div></div>
+<div class="box-footer small muted" style="text-align: left">There is no Projects column any more: an agent belongs to this workspace and works in all of its projects. This list moved here from Admin > Agents.</div>
+</sc-if>
+
+<sc-if value="{{isTools}}" hint-placeholder-val="{{false}}">
+<div class="box-body"><div class="alert alert-warning small">Adding a stdio tool server runs a command on the runtime, so it needs <span class="mono">toolserver.create</span> as well as access to this workspace.</div></div>
+<div class="scroll-x"><div class="dtbl" style="min-width: 800px">
+<div class="dtr"><div class="th" style="width: 22%">Tool server</div><div class="th" style="width: 14%">Transport</div><div class="th" style="width: 28%">Endpoint or command</div><div class="th" style="width: 10%">Tools</div><div class="th" style="width: 26%">Granted to</div></div>
+<sc-for list="{{tools}}" as="t" hint-placeholder-count="3">
+<div class="dtr"><div class="td"><b>{{t.n}}</b></div><div class="td small">{{t.tr}}</div><div class="td mono">{{t.ep}}</div><div class="td">{{t.cnt}}</div><div class="td small">{{t.who}}</div></div>
+</sc-for>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isSkills}}" hint-placeholder-val="{{false}}">
+<div class="scroll-x"><div class="dtbl" style="min-width: 760px">
+<div class="dtr"><div class="th" style="width: 22%">Skill</div><div class="th" style="width: 48%">Description</div><div class="th" style="width: 30%">Used by</div></div>
+<sc-for list="{{skills}}" as="s" hint-placeholder-count="5">
+<div class="dtr"><div class="td"><b>{{s.n}}</b></div><div class="td small">{{s.d}}</div><div class="td small">{{s.who}}</div></div>
+</sc-for>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isFlows}}" hint-placeholder-val="{{false}}">
+<div class="dtbl">
+<div class="dtr"><div class="th" style="width: 34%">Workflow</div><div class="th" style="width: 16%">Status</div><div class="th" style="width: 12%">Version</div><div class="th" style="width: 38%">Agents</div></div>
+<div class="dtr"><div class="td"><b>Issue to PR</b></div><div class="td"><span class="label label-success">Published</span></div><div class="td">4</div><div class="td small">Nestor, Odysseus, Agamemnon</div></div>
+<div class="dtr"><div class="td"><b>Idea to plan</b></div><div class="td"><span class="label label-default">Draft</span></div><div class="td">1</div><div class="td small">Achilles, Nestor</div></div>
+</div>
+</sc-if>
+
+<div class="rowbar" style="padding-top: 10px; border-top: 1px solid #f4f4f4"><span></span><span>(Selected : 0) 1-{{count}} / {{count}}</span></div>
+</section>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showNew":{"editor":"boolean","default":true,"section":"Prototype"},"$preview":{"width":1440,"height":1260}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tab = (this.state && this.state.tab) || 'agents';
+    const agents = [
+      { n: 'Agent Odysseus', i: 'OD', c: 'c2', purpose: 'Implements issues and opens PRs', sponsor: 'Hammad Hassan', models: 'sonnet · opus', tools: 'gaia, github, browser', skills: '6', last: '1 minute ago', menu: true },
+      { n: 'Agent Achilles', i: 'AC', c: 'c6', purpose: 'Turns ideas into designs and plans', sponsor: 'Hammad Hassan', models: 'opus', tools: 'gaia, browser', skills: '3', last: '20 minutes ago', menu: false },
+      { n: 'Agent Nestor', i: 'NE', c: 'c5', purpose: 'Plans ideas into issues', sponsor: 'Rana Nouman', models: 'opus', tools: 'gaia', skills: '2', last: '1 hour ago', menu: false },
+      { n: 'Agent Agamemnon', i: 'AG', c: 'c4', purpose: 'Orders and dispatches the work', sponsor: 'Hammad Hassan', models: 'sonnet', tools: 'gaia, github', skills: '2', last: '3 minutes ago', menu: false },
+      { n: 'Hera', i: 'HE', c: 'c7', purpose: 'Oversees the work', sponsor: 'Autonomous', models: 'sonnet · opus', tools: 'gaia', skills: '1', last: '1 minute ago', menu: false }
+    ];
+    const tools = [
+      { n: 'gaia', tr: 'http', ep: 'https://api.projects4.me/mcp', cnt: 24, who: 'all 5 agents' },
+      { n: 'github', tr: 'stdio', ep: 'odysseus gh', cnt: 8, who: 'Odysseus, Agamemnon' },
+      { n: 'browser', tr: 'stdio', ep: 'playwright-mcp', cnt: 12, who: 'Odysseus, Achilles' }
+    ];
+    const skills = [
+      { n: 'start-issue', d: 'Sync dev, branch, start the timer, read the issue and its dependencies', who: 'Odysseus' },
+      { n: 'ship-issue', d: 'Run the suite, review the diff, commit, push, open the PR and hand off', who: 'Odysseus' },
+      { n: 'address-review', d: 'Answer PR review threads with follow-up commits', who: 'Odysseus' },
+      { n: 'run-tests', d: 'Suite commands, known failures and test conventions per repo', who: 'Odysseus, Agamemnon' },
+      { n: 'p4m-stack', d: 'Local stack, URLs, database, migrations and seeds', who: 'Odysseus, Achilles' }
+    ];
+    const T = [
+      { id: 'agents', label: 'Agents', n: 5, create: '+ Agent' },
+      { id: 'tools', label: 'Tools', n: 3, create: '+ Tool server' },
+      { id: 'skills', label: 'Skills', n: 9, create: '+ Skill' },
+      { id: 'flows', label: 'Workflows', n: 2, create: '+ Workflow' }
+    ];
+    const cur = T.filter((t) => t.id === tab)[0];
+    const counts = { agents: 5, tools: 3, skills: 5, flows: 2 };
+    return {
+      showNew: this.props.showNew ?? true,
+      rootCls: (this.props.showNew ?? true) ? 'shownew' : '',
+      tabs: T.map((t) => ({ label: t.label, n: t.n, cls: t.id === tab ? 'on' : '', pick: () => this.setState({ tab: t.id }) })),
+      createLabel: cur.create,
+      isAgents: tab === 'agents', isTools: tab === 'tools', isSkills: tab === 'skills', isFlows: tab === 'flows',
+      agents: agents, tools: tools, skills: skills, count: counts[tab]
+    };
+  }
+}
+</script>
+</body>
+</html>

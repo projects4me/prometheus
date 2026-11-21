@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New project</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m shownew" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 640px; height: 720px">
+<div class="backdrop">
+<div class="modal" role="dialog" aria-labelledby="nt">
+<div class="modal-header"><h3 class="modal-title" id="nt">New Project</h3><button class="btn-box-tool" aria-label="Close">✕</button></div>
+<div class="modal-body">
+<div><label class="fl" for="pn">Name</label><input id="pn" class="field" value="Mobile App"></div>
+<div><label class="fl" for="pc">Short code</label><input id="pc" class="field" value="mob"></div>
+<div class="is-new">
+<label class="fl">Workspace<span class="info-i" title="Every project belongs to one workspace. Its environment, agents, tools and skills come from there.">i</span></label>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
+<button onClick="{{o.pick}}" aria-pressed="{{o.pressed}}" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; font: inherit; color: inherit; background: {{o.bg}}; border: 1px solid {{o.bd}}; padding: 9px 10px; cursor: pointer">
+<span class="chk {{o.on}}" style="border-radius: 50%; margin-top: 2px">{{o.mark}}</span>
+<span><b>{{o.t}}</b><span class="small muted" style="display: block">{{o.d}}</span></span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{isExisting}}" hint-placeholder-val="{{false}}"><div class="select" style="margin-top: 8px"><span>Projects4Me Platform <span class="small muted">pr4m</span></span></div><div class="small muted" style="margin-top: 4px">Its 8 members are added to Mobile App, and its agents can be assigned Mobile App issues.</div></sc-if>
+</div>
+<div><label class="fl" for="pd">Description</label><textarea id="pd" class="field" rows="3"></textarea></div>
+</div>
+<div class="modal-footer"><span class="btn btn-default">Cancel</span><span class="btn btn-primary">Create project</span></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const v = (this.state && this.state.v) || 'own';
+    const O = [
+      { id: 'own', t: 'Its own workspace (default)', d: 'Creates a workspace called "Mobile App" holding just this project. Move it into another workspace later if you need to.' },
+      { id: 'existing', t: 'An existing workspace', d: 'Join a workspace you can update. The project shares its members, environment and agents.' }
+    ];
+    return {
+      isExisting: v === 'existing',
+      opts: O.map((o) => ({ t: o.t, d: o.d, on: o.id === v ? 'on' : '', mark: o.id === v ? '●' : '', pressed: o.id === v ? 'true' : 'false', bg: o.id === v ? '#f3f8fc' : '#fff', bd: o.id === v ? '#1B7BBA' : '#ddd', pick: () => this.setState({ v: o.id }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

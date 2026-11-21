@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Delete the workspace</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="p4m" style="font-family: 'Source Sans 3', sans-serif; color: #333; width: 640px; height: 860px">
+<div class="backdrop">
+<div class="modal" role="dialog" aria-labelledby="dt">
+<div class="modal-header"><h3 class="modal-title" id="dt">Delete Projects4Me Platform</h3><button class="btn-box-tool" aria-label="Close">✕</button></div>
+<div class="modal-body">
+<div class="alert alert-danger small"><b>The workspace can't be deleted yet.</b> It still owns things that only exist inside it.</div>
+<div>
+<div class="gate"><span class="mk mk-no">2</span><div style="flex: 1"><b>Runs in progress</b><div class="small muted">agaia-4801, ah-0412</div></div></div>
+<div class="gate"><span class="mk mk-no">5</span><div style="flex: 1"><b>Agents</b><div class="small muted">Odysseus, Achilles, Nestor, Agamemnon, Hera. Delete them or copy them to another workspace.</div></div><a class="btn btn-default btn-xs" href="WsAgents.dc.html">Open Agents</a></div>
+<div class="gate"><span class="mk mk-no">14</span><div style="flex: 1"><b>Skills, tool servers and workflows</b><div class="small muted">9 skills, 3 tool servers, 2 workflows</div></div></div>
+<div class="gate"><span class="mk mk-no">2</span><div style="flex: 1"><b>Milestones that span projects</b><div class="small muted">Move each into one project, or delete it.</div></div></div>
+</div>
+<div>
+<div class="semi" style="margin-bottom: 6px">When it is deleted</div>
+<div class="kv"><span>Projects</span><span>Each gets a workspace of its own again</span></div>
+<div class="kv"><span>Cross-project links removed</span><span class="b">14</span></div>
+<div class="kv"><span>Memberships</span><span>Unchanged</span></div>
+<div class="kv"><span>Runtime</span><span>Talos is unbound; repositories stay with their projects</span></div>
+</div>
+<div><label class="fl" for="cf">Type <b>pr4m</b> to confirm</label><input id="cf" class="field" placeholder="pr4m"></div>
+</div>
+<div class="modal-footer"><span class="btn btn-default">Cancel</span><button class="btn btn-danger" disabled>Delete workspace</button></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":860}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
