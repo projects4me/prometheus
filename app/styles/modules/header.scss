@@ -190,6 +190,31 @@
   }
 }
 
+/* Global search options and note: the list renders at the document root, so these are not under .global-search. */
+.global-search-snippet {
+  display: block;
+  color: $mediumColor;
+  font-size: 1.2rem;
+  white-space: normal;
+
+  mark {
+    padding: 0;
+    background-color: $primaryColorLight;
+    color: inherit;
+  }
+}
+
+/* The chosen option fills the trigger: number and subject only. */
+.ember-power-select-selected-item .global-search-snippet {
+  display: none;
+}
+
+.global-search-note {
+  padding: 0.8rem 1.2rem;
+  border-top: 1px solid $mediumColor;
+  color: $mediumColor;
+}
+
 /* Header layout: the navbar is a flex row so the global search sits in the centre without overlapping the
    switcher or the right-hand menu. Below the Bootstrap sm breakpoint the search wraps onto its own full-width row. */
 .main-header .navbar {

@@ -2594,7 +2594,9 @@
           "designButtons": "Design some buttons",
           "twenty": "20",
           "twentyComplete": "20% Complete",
-          "four": "4"
+          "four": "4",
+          "searchWordMatchesOnly": "Matching by meaning is unavailable; showing word matches only.",
+          "searchFailed": "Search failed. Try again."
         }
       },
       "workflow": {

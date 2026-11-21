@@ -1214,9 +1214,6 @@
   "tests/integration/components/app-layouts/application-header-test.js": {
     "no-unused-vars": {
       "count": 1
-    },
-    "qunit/no-negated-ok": {
-      "count": 1
     }
   },
   "tests/integration/components/app-layouts/notifications-sidebar-test.js": {
