@@ -10,20 +10,20 @@
 
         {{!-- The workspace details --}}
         <AccessControl @aclContext="workspace.read">
-          <div class="box box-primary workspace-details">
-            <div class="box-header with-border">
+          <AppUi::Box @variant="primary" class="workspace-details">
+            <:header>
               <h2 class="box-title">
                 <span class="workspace-name">{{this.model.workspace.name}}</span>
                 -
                 <span class="workspace-shortcode">({{this.model.workspace.shortCode}})</span>
               </h2>
-              <div class="box-tools pull-right">
-                <AccessControl @aclContext="workspace.update">
-                  <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="edit" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></LinkTo>
-                </AccessControl>
-              </div>
-            </div>
-            <div class="box-body">
+            </:header>
+            <:tools>
+              <AccessControl @aclContext="workspace.update">
+                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="edit" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></LinkTo>
+              </AccessControl>
+            </:tools>
+            <:body>
               <div class="row project-manager-row">
                 <div class="project-manager-col">
                   <div class="project-manager workspace-creator">
@@ -37,17 +37,17 @@
                   <p class="workspace-description">{{this.model.workspace.description}}</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </:body>
+          </AppUi::Box>
         </AccessControl>
 
         {{!-- The projects of the workspace --}}
         <AccessControl @aclContext="project.read">
-          <div class="box box-info workspace-projects">
-            <div class="box-header with-border">
+          <AppUi::Box @variant="info" @noPadding={{true}} class="workspace-projects">
+            <:header>
               <h3 class="box-title">{{t "views.app.workspace.detail.projects"}}</h3>
-            </div>
-            <div class="box-body no-padding">
+            </:header>
+            <:body>
               {{#if this.model.projects.length}}
                 <ul class="nav nav-stacked">
                   {{#each this.model.projects as |project|}}
@@ -59,8 +59,8 @@
               {{else}}
                 <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noProjects"}} />
               {{/if}}
-            </div>
-          </div>
+            </:body>
+          </AppUi::Box>
         </AccessControl>
 
       </div>
@@ -69,11 +69,11 @@
 
         {{!-- The members of the workspace's projects, read-only --}}
         <AccessControl @aclContext="workspace.read">
-          <div class="box box-warning workspace-members">
-            <div class="box-header with-border box-header-flex box-header-no-content">
+          <AppUi::Box @variant="warning" @noPadding={{true}} class="workspace-members">
+            <:header>
               <h3 class="box-title">{{t "views.app.workspace.detail.members"}}</h3>
-            </div>
-            <div class="box-body no-padding">
+            </:header>
+            <:body>
               <ul class="users-list clearfix">
                 {{#if this.model.members.length}}
                   {{#each this.model.members as |member|}}
@@ -88,8 +88,8 @@
                   <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noMembers"}} />
                 {{/if}}
               </ul>
-            </div>
-          </div>
+            </:body>
+          </AppUi::Box>
         </AccessControl>
 
       </div>
