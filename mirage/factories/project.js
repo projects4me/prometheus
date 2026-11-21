@@ -22,6 +22,7 @@ export default Factory.extend({
     projectManager() {
         return (_.random(1, 10)).toString();
     },
+    workspaceId: null,
     "deleted": "0",
     description() {
         return faker.lorem.sentence();

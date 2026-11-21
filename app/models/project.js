@@ -125,6 +125,26 @@ export default class ProjectModel extends Model {
     @attr('string') status;
 
     /**
+     * Id of the workspace the project belongs to
+     *
+     * @property workspaceId
+     * @type String
+     * @for Project
+     * @private
+     */
+    @attr('string') workspaceId;
+
+    /**
+     * The workspace this project belongs to
+     *
+     * @property workspace
+     * @type Workspace
+     * @for Project
+     * @private
+     */
+    @belongsTo('workspace', { async: true, inverse: 'projects' }) workspace;
+
+    /**
      * Scope of the project
      *
      * @property scope
