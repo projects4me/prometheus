@@ -22,6 +22,13 @@
               <AccessControl @aclContext="workspace.update">
                 <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="edit" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></LinkTo>
               </AccessControl>
+              <AccessControl @aclContext="workspace.delete">
+                {{#if this.hasProjects}}
+                  <button type="button" disabled data-btn="delete" class="btn btn-box-tool disabled" data-toggle="tooltip" title="{{t "views.app.workspace.delete.hasProjects"}}"><i class="fa fa-trash"></i></button>
+                {{else}}
+                  <button type="button" data-btn="delete" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" {{on "click" this.openDelete}}><i class="fa fa-trash"></i></button>
+                {{/if}}
+              </AccessControl>
             </:tools>
             <:body>
               <div class="row project-manager-row">
@@ -95,4 +102,21 @@
       </div>
     </div>
   </div>
+{{/if}}
+
+{{#if this.confirmingDelete}}
+  <AppUi::Modal
+    @title="views.app.workspace.delete.title"
+    @closeLabel="global.form.cancel"
+    @onClose={{this.closeDelete}}
+    @confirmLabel="global.form.delete"
+    @confirm={{this.deleteWorkspace}}
+    @dataSaveBtn="confirm-delete"
+    @containerClass="workspace-delete-modal"
+  >
+    <p>{{t "views.app.workspace.delete.warning" name=this.model.workspace.name}}</p>
+    {{#each this.deleteErrors as |message|}}
+      <div class="alert alert-danger" data-delete-error>{{message}}</div>
+    {{/each}}
+  </AppUi::Modal>
 {{/if}}

@@ -1,3 +1,5 @@
+import { click, currentURL } from '@ember/test-helpers';
+import { Response } from 'miragejs';
 import steps from '../steps';
 
 export default function (assert) {
@@ -8,6 +10,7 @@ export default function (assert) {
                 let workspace = server.create('workspace', {
                     name: `${code} workspace`,
                     shortCode: code,
+                    projectCount: parseInt(count, 10),
                     createdBy: server.schema.users.find(1)
                 });
                 for (let i = 1; i <= parseInt(count, 10); i++) {
@@ -45,6 +48,41 @@ export default function (assert) {
                     user: server.schema.users.find(userId)
                 });
                 assert.ok(true, `User ${userId} is a member of the first project`);
+            }
+        )
+        .given(
+            'Gaia refuses to delete workspace $code with "$message"',
+            async function (code, message) {
+                server.delete('/workspace/:id', () => new Response(422, {}, { status: 'ERROR', messages: [message] }));
+                assert.ok(true, `Gaia refuses to delete workspace ${code}`);
+            }
+        )
+        .when(
+            'User confirms deleting the workspace',
+            async function () {
+                await click('.workspace-details [data-btn="delete"]');
+                await click('.workspace-delete-modal [data-btn="confirm-delete"]');
+            }
+        )
+        .then(
+            'The workspace delete button is disabled',
+            async function () {
+                assert.dom('.workspace-details [data-btn="delete"]').isDisabled('Delete is disabled');
+            }
+        )
+        .then(
+            'Workspace $code is deleted and the workspaces list is shown',
+            async function (code) {
+                assert.notOk(server.schema.workspaces.findBy({ shortCode: code }), `Workspace ${code} is deleted`);
+                assert.ok(/^\/app\/workspace(\?|$)/.test(currentURL()), 'The workspaces list is shown');
+            }
+        )
+        .then(
+            'The workspace delete refusal shows "$message"',
+            async function (message) {
+                assert.dom('[data-delete-error]').hasText(message, 'Gaia message is shown');
+                assert.ok(currentURL().startsWith('/app/workspace/'), 'The page is kept');
+                assert.ok(server.schema.workspaces.first(), 'The workspace is kept');
             }
         )
         .then(

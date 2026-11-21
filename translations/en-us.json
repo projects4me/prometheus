@@ -634,6 +634,12 @@
         }
       },
       "workspace": {
+        "delete": {
+          "title": "Delete workspace",
+          "warning": "Delete the workspace {name}? This cannot be undone.",
+          "hasProjects": "A workspace with projects cannot be deleted. Move or delete its projects first.",
+          "failed": "The workspace could not be deleted."
+        },
         "detail": {
           "shortCode": "Short code",
           "description": "Description",
