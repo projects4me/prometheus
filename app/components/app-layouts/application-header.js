@@ -161,7 +161,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @for ApplicationHeader
      * @public
      */
-    search = task(async (query) => {
+    search = task({ restartable: true }, async (query) => {
         await timeout(500);
         let found = null;
         try {
