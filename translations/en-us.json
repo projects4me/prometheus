@@ -681,6 +681,7 @@
           "type": "Type",
           "duration": "Duration",
           "manager": "Project Manager",
+          "workspace": "Workspace",
           "vision": "Project Vision",
           "estimatedBudget": "Budget Estimated",
           "spentBudget": "Budget Spent",

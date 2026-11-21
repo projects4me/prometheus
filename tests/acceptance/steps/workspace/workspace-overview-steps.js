@@ -57,6 +57,32 @@ export default function (assert) {
                 assert.ok(true, `Gaia refuses to delete workspace ${code}`);
             }
         )
+        .given(
+            'User_$userId selects the first project of workspace $code',
+            async function (userId, code) {
+                let workspace = server.schema.workspaces.findBy({ shortCode: code });
+                let project = server.schema.projects.where({ workspaceId: workspace.id }).models[0];
+                server.create('membership', {
+                    projectId: String(project.id),
+                    userId: String(userId),
+                    user: server.schema.users.find(userId)
+                });
+                window.localStorage.setItem('selectedProject', project.shortCode);
+                assert.ok(true, `User ${userId} selects ${project.shortCode}`);
+            }
+        )
+        .when(
+            'User opens the project workspace link',
+            async function () {
+                await click('[data-test-project-workspace-link]');
+            }
+        )
+        .then(
+            'The project shows workspace $code as a link',
+            async function (code) {
+                assert.dom('.project-details [data-test-project-workspace-link]').hasText(`${code} workspace`, 'The workspace name is a link');
+            }
+        )
         .when(
             'User confirms deleting the workspace',
             async function () {

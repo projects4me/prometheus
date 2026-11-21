@@ -65,7 +65,7 @@ export default class ProjectIndexRoute extends App {
 
         let _projectOptions = {
             query: "(Project.id : " + projectId + ")",
-            rels: 'members,createdBy,memberships,manager',
+            rels: 'members,createdBy,memberships,manager,workspace',
             order: 'ASC',
             limit: -1
         };
