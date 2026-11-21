@@ -109,6 +109,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service translations;
 
     /**
+     * The trackedProject service, told to load the selected project's workspace once the projects are in.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @protected
+     */
+    @service trackedProject;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -158,6 +168,7 @@ export default class AppLoadingAssetsRoute extends Route {
         controller.set('users', model.users);
         controller.set('roles', model.roles);
         controller.set('projects', model.projects);
+        this.trackedProject.loadWorkspace();
 
         this.hermes.connect();
         this.notifications.startLiveSync();
@@ -224,7 +235,7 @@ export default class AppLoadingAssetsRoute extends Route {
         Logger.debug('+Prometheus.Route.App.LoadingAssets::loadProjects()');
 
         let projectOptions = {
-            fields: "Project.id,Project.name,Project.shortCode",
+            fields: "Project.id,Project.name,Project.shortCode,Project.workspaceId",
             sort: 'Project.name',
             order: 'ASC',
             limit: 200
