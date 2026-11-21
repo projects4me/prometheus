@@ -430,6 +430,16 @@ export default class MetadataMetadata extends EmberObject {
                 }
             }
         },
+        Workspace: {
+            search: {
+                module: 'Workspace',
+                textField: 'Workspace.name',
+                fields: {
+                    'Workspace.name': { label: 'views.app.workspace.list.name', type: 'text', aliases: ['name'] },
+                    'Workspace.shortCode': { label: 'views.app.workspace.list.shortCode', type: 'text', aliases: ['code'] }
+                }
+            }
+        },
         Agent: {
             search: {
                 module: 'Agent',

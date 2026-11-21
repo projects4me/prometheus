@@ -177,7 +177,8 @@
         "membership": "Memberships",
         "userrole": "User Roles",
         "agent": "Agents",
-        "workflow": "Workflows"
+        "workflow": "Workflows",
+        "workspace": "Workspaces"
       },
       "project": {
         "relationships": {
@@ -2812,6 +2813,19 @@
           "notEmpty": "is not empty",
           "gt": "is greater than",
           "lt": "is less than"
+        }
+      },
+      "workspace": {
+        "list": {
+          "subtitle": "Groups of projects",
+          "name": "Name",
+          "shortCode": "Short code",
+          "projects": "Projects",
+          "members": "Members",
+          "createdBy": "Created by",
+          "createdOn": "Created on",
+          "create": "New workspace",
+          "noWorkspaces": "No workspaces found"
         }
       },
       "agent": {

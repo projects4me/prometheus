@@ -1,0 +1,59 @@
+<section class="content-header">
+  <h1>
+    {{t "global.module.plural.workspace"}}
+    <small>{{t "views.app.workspace.list.subtitle"}}</small>
+  </h1>
+  <BreadCrumb/>
+</section>
+
+<section class="content">
+  <div class="row module workspaces workspaces-list">
+    <div class="col-md-12">
+      <AccessControl @aclContext="workspace.read">
+        <div class="box box-primary list-view">
+          <AppUi::ListToolbar>
+            <:search>
+              {{#if this.querySchema}}
+                <EzSearch
+                  @schema={{this.querySchema}}
+                  @query={{this.query}}
+                  @onApply={{this.applyQuery}}
+                  @aclContext="workspace.read"
+                />
+              {{/if}}
+            </:search>
+            <:selection>
+              <AccessControl @aclContext="workspace.create">
+                <LinkTo @route="app.workspaces.create" class="btn btn-primary btn-sm" data-test-list-action="create">
+                  <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workspace.list.create"}}
+                </LinkTo>
+              </AccessControl>
+            </:selection>
+            <:pager>
+              <AppUi::Pager @offset={{this.offset}} @limit={{this.pageSize}} @count={{this.model.length}} @hasMore={{if this.model.meta.links.next true false}} @onPageChange={{this.changeOffset}} />
+            </:pager>
+          </AppUi::ListToolbar>
+
+          <div class="box-body no-padding">
+            <AppUi::DataTable @columns={{this.columns}} @rows={{this.model}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
+              <:cell as |workspace column|>
+                {{#if (eq column.key "createdBy")}}
+                  {{workspace.createdUserName}}
+                {{else if (eq column.key "dateCreated")}}
+                  {{#let (format-date date=workspace.dateCreated) as |created|}}{{created}}{{/let}}
+                {{else if (eq column.key "name")}}
+                  <span data-test-workspace-name>{{workspace.name}}</span>
+                {{else}}
+                  {{get workspace column.key}}
+                {{/if}}
+              </:cell>
+              <:empty>
+                <Exceptions::NothingFound @description={{t "views.app.workspace.list.noWorkspaces"}} />
+              </:empty>
+            </AppUi::DataTable>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+</section>

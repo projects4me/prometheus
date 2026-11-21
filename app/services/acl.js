@@ -73,6 +73,8 @@ export default class AclService extends Service {
         { name: 'app.user.create', map: 'user.create' },
         { name: 'app.user.index', map: 'user.read' },
         { name: 'app.user.management', map: 'user.update' },
+        { name: 'app.workspaces.index', map: 'workspace.read' },
+        { name: 'app.workspaces.create', map: 'workspace.create' },
         { name: 'app.agent.index', map: 'agent.read' },
         { name: 'app.agent.create', map: 'agent.create' },
         { name: 'app.agent.tools', map: 'agent.read' },

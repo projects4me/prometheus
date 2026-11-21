@@ -54,6 +54,9 @@ Router.map(function() {
       this.route('page',{path:'/:user_id'});
       this.route('management');
     });
+    this.route('workspaces',{path:'workspace'},function(){
+        this.route('create');
+    });
     this.route('agent',function(){
       this.route('index',{path:'/'});
       this.route('create');
