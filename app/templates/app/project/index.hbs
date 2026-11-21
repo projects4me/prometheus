@@ -41,6 +41,20 @@
               </div>
             </div>
 
+            {{#if this.model.workspace.id}}
+              <div class="row project-workspace-row">
+                <div class="col-xs-12">
+                  <h4>{{t "views.app.project.detail.workspace"}}</h4>
+                  <p class="project-workspace">
+                    <AccessControl @aclContext="workspace.read">
+                      <:default><LinkTo @route="app.workspace" @model={{this.model.workspace.shortCode}} data-test-project-workspace-link>{{this.model.workspace.name}}</LinkTo></:default>
+                      <:fallback><span data-test-project-workspace-name>{{this.model.workspace.name}}</span></:fallback>
+                    </AccessControl>
+                  </p>
+                </div>
+              </div>
+            {{/if}}
+
             <div class="row">
 
               <div class="col-xs-6 col-md-6">
