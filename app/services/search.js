@@ -50,7 +50,9 @@ export default class SearchService extends Service {
 
         let matches = await this.store.query('searchresult', { types: 'issue', q: text, limit });
         let semanticUnavailable = matches.meta?.semantic === 'unavailable';
-        let ids = matches.slice().map((match) => match.recordId);
+        // Read the records now: a later search can update them while the issue query below is awaited
+        let found = matches.slice().map(({ recordId, snippet, pinned }) => ({ recordId, snippet, pinned }));
+        let ids = found.map((match) => match.recordId);
         if (!ids.length) {
             return { results: [], semanticUnavailable };
         }
@@ -63,7 +65,7 @@ export default class SearchService extends Service {
         let byId = new Map(issues.slice().map((issue) => [String(issue.id), issue]));
 
         // Keep the search's ranking; a match the issue query did not return is dropped
-        let results = matches.slice()
+        let results = found
             .filter((match) => byId.has(String(match.recordId)))
             .map((match) => ({
                 issue: byId.get(String(match.recordId)),
