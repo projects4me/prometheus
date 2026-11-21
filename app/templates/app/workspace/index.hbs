@@ -1,0 +1,98 @@
+{{#if this.model.notFound}}
+  <Errors::404/>
+{{else if this.model.failed}}
+  <Errors::500/>
+{{else}}
+  <div class="workspace">
+    <div class="row">
+
+      <div class="col-md-8">
+
+        {{!-- The workspace details --}}
+        <AccessControl @aclContext="workspace.read">
+          <AppUi::Box @variant="primary" class="workspace-details">
+            <:header>
+              <h2 class="box-title">
+                <span class="workspace-name">{{this.model.workspace.name}}</span>
+                -
+                <span class="workspace-shortcode">({{this.model.workspace.shortCode}})</span>
+              </h2>
+            </:header>
+            <:tools>
+              <AccessControl @aclContext="workspace.update">
+                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="edit" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></LinkTo>
+              </AccessControl>
+            </:tools>
+            <:body>
+              <div class="row project-manager-row">
+                <div class="project-manager-col">
+                  <div class="project-manager workspace-creator">
+                    <AppUi::Avatar @user={{this.model.workspace.createdBy}} @size="l" @minSize="m" />
+                    <LinkTo @route="app.user.page" @model={{this.model.workspace.createdBy.id}} class="users-list-name">{{this.model.workspace.createdBy.name}}</LinkTo>
+                    <span class="users-list-date">{{t "views.app.workspace.detail.createdBy"}}</span>
+                  </div>
+                </div>
+                <div class="project-manager-details">
+                  <h4>{{t "views.app.workspace.detail.description"}}</h4>
+                  <p class="workspace-description">{{this.model.workspace.description}}</p>
+                </div>
+              </div>
+            </:body>
+          </AppUi::Box>
+        </AccessControl>
+
+        {{!-- The projects of the workspace --}}
+        <AccessControl @aclContext="project.read">
+          <AppUi::Box @variant="info" @noPadding={{true}} class="workspace-projects">
+            <:header>
+              <h3 class="box-title">{{t "views.app.workspace.detail.projects"}}</h3>
+            </:header>
+            <:body>
+              {{#if this.model.projects.length}}
+                <ul class="nav nav-stacked">
+                  {{#each this.model.projects as |project|}}
+                    <li data-project-id={{project.id}}>
+                      <LinkTo @route="app.project.index" @model={{project.shortCode}}>{{project.name}} <span>({{project.shortCode}})</span></LinkTo>
+                    </li>
+                  {{/each}}
+                </ul>
+              {{else}}
+                <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noProjects"}} />
+              {{/if}}
+            </:body>
+          </AppUi::Box>
+        </AccessControl>
+
+      </div>
+
+      <div class="col-md-4">
+
+        {{!-- The members of the workspace's projects, read-only --}}
+        <AccessControl @aclContext="workspace.read">
+          <AppUi::Box @variant="warning" @noPadding={{true}} class="workspace-members">
+            <:header>
+              <h3 class="box-title">{{t "views.app.workspace.detail.members"}}</h3>
+            </:header>
+            <:body>
+              <ul class="users-list clearfix">
+                {{#if this.model.members.length}}
+                  {{#each this.model.members as |member|}}
+                    <li data-member-id={{member.id}} class="member-item">
+                      <div class="member-avatar-wrap">
+                        <AppUi::Avatar @user={{member}} @size="ml" />
+                      </div>
+                      <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
+                    </li>
+                  {{/each}}
+                {{else}}
+                  <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noMembers"}} />
+                {{/if}}
+              </ul>
+            </:body>
+          </AppUi::Box>
+        </AccessControl>
+
+      </div>
+    </div>
+  </div>
+{{/if}}

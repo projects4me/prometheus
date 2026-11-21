@@ -8,6 +8,11 @@ export function register(server, ctx) {
         let fieldName = ctx.get('requestQuery')?.membership;
         let value = getValueFromQuery(fieldName, query);
 
+        if (!fieldName && query && query.includes('Membership.projectId')) {
+            let projectIds = [...query.matchAll(/Membership\.projectId : (\d+)/g)].map((match) => match[1]);
+            return schema.memberships.where((membership) => projectIds.includes(String(membership.projectId)));
+        }
+
         if (fieldName) {
             memberships = schema.memberships.where({ [fieldName]: value });
         }

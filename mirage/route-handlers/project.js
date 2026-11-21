@@ -7,6 +7,10 @@ export function register(server, ctx) {
         let model = schema.projects.all();
         //check if queryParams have a query object or not
         let projectQuery = request.queryParams.query;
+        if (projectQuery && projectQuery.includes('Project.workspaceId')) {
+            let workspaceId = getValueFromQuery('Project.workspaceId', projectQuery);
+            return schema.projects.where({ workspaceId });
+        }
         if (projectQuery) {
             const field = projectQuery.includes('Project.shortCode') ? 'Project.shortCode' : 
                  projectQuery.includes('Project.id') ? 'Project.id' : null;

@@ -632,6 +632,17 @@
           }
         }
       },
+      "workspace": {
+        "detail": {
+          "shortCode": "Short code",
+          "description": "Description",
+          "createdBy": "Created by",
+          "projects": "Projects",
+          "members": "Members",
+          "noProjects": "This workspace has no projects you can see",
+          "noMembers": "This workspace has no members you can see"
+        }
+      },
       "project": {
         "label": "Project",
         "noproject": "No project selected",

@@ -1,0 +1,34 @@
+@setupApplicationTest
+Feature: Workspace | read-only Overview
+
+  Scenario: Header, projects and members with duplicates removed
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And User 2 is a member of both projects of workspace ENG
+    And User 3 is a member of the first project of workspace ENG
+    When User navigates to app/workspace/ENG
+    Then The workspace header shows ENG
+    And The workspace lists 2 projects
+    And The workspace lists 2 members
+
+  Scenario: An empty workspace
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace EMPTY exists with 0 projects
+    When User navigates to app/workspace/EMPTY
+    Then The workspace header shows EMPTY
+    And The workspace lists 0 projects
+    And The workspace lists 0 members
+
+  Scenario: An unknown workspace code
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    When User navigates to app/workspace/NOPE
+    Then The workspace is not found
