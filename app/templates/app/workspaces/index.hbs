@@ -10,7 +10,8 @@
   <div class="row module workspaces workspaces-list">
     <div class="col-md-12">
       <AccessControl @aclContext="workspace.read">
-        <div class="box box-primary list-view">
+        <AppUi::Box @listView={{true}} @noPadding={{true}}>
+          <:top>
           <AppUi::ListToolbar>
             <:search>
               {{#if this.querySchema}}
@@ -33,8 +34,8 @@
               <AppUi::Pager @offset={{this.offset}} @limit={{this.pageSize}} @count={{this.model.length}} @hasMore={{if this.model.meta.links.next true false}} @onPageChange={{this.changeOffset}} />
             </:pager>
           </AppUi::ListToolbar>
-
-          <div class="box-body no-padding">
+          </:top>
+          <:body>
             <AppUi::DataTable @columns={{this.columns}} @rows={{this.model}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
               <:cell as |workspace column|>
                 {{#if (eq column.key "createdBy")}}
@@ -51,8 +52,8 @@
                 <Exceptions::NothingFound @description={{t "views.app.workspace.list.noWorkspaces"}} />
               </:empty>
             </AppUi::DataTable>
-          </div>
-        </div>
+          </:body>
+        </AppUi::Box>
       </AccessControl>
     </div>
   </div>
