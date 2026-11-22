@@ -20,4 +20,16 @@ module('Integration | Component | developer/demos/data-table', function (hooks) 
 		await click('[data-test-data-table-row] [data-test-data-table-more] button');
 		assert.dom('[data-test-data-table-more] .app-dropdown-content.show').exists();
 	});
+
+	test('the tree switch shows tree rows that load the next level on a caret click', async function (assert) {
+		this.set('entry', { name: 'data-table', label: 'DataTable', status: 'experimental', summary: 's', usedIn: [], doc: 'data-table.md' });
+		await render(hbs`<Developer::Demos::DataTable @entry={{this.entry}} />`);
+		await click('[data-test-demo-tree]');
+		assert.dom('[data-test-data-table-row]').exists({ count: 3 });
+		assert.dom('[data-test-data-table-row="me"]').hasClass('data-table-row--current');
+		await click('[data-test-data-table-row="t1"] [data-test-data-table-toggle]');
+		assert.dom('[data-test-data-table-row="t1a"]').exists();
+		assert.dom('[data-test-data-table-row="t1a"] [data-test-data-table-cell="name"]').hasClass('data-table-depth-2');
+		assert.dom('[data-test-data-table-row="t1"] [data-test-data-table-toggle]').hasAttribute('aria-expanded', 'true');
+	});
 });

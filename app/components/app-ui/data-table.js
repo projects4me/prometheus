@@ -3,9 +3,18 @@
  */
 
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import { action, get } from '@ember/object';
+import { tracked, cached } from '@glimmer/tracking';
 import { groupItems } from 'prometheus/utils/quick-list/group-items';
+import { groupInPlace } from 'prometheus/utils/data-table/group-in-place';
+
+/**
+ * The deepest level that gets its own indent; deeper rows share it.
+ *
+ * @property MAX_DEPTH
+ * @type Number
+ */
+const MAX_DEPTH = 8; // keep in step with the @for loop in app/styles/components/app-ui-data-table.scss
 
 /**
  * A slim list table: one header per column descriptor, one row per record, an optional check button per row and
@@ -25,6 +34,13 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  * shown) read and change that selection, which the page shares with its toolbar and keeps across pages;
  * `@onSelectionChange` is then called with the selected ids. Without it, `@selectedIds`, `@onSelect` and
  * `@onSelectAll` work as before.
+ *
+ * Tree rows: the owner passes rows already flattened and ordered. `@depthKey` names a row's level (1 = top) and
+ * indents the first column by it; `@isExpandable(record)` shows a caret button in the first cell, open when the
+ * id is in `@expandedIds` and a spinner when it is in `@loadingIds`; `@onToggle(record)` reports a caret click.
+ * The owner loads and inserts the child rows; the table holds no data and does no loading. `@currentId` pins one
+ * row (class `data-table-row--current`, no caret, no row actions). In tree mode groups sit where their first row
+ * appears and a row whose `@groupKey` is null renders ungrouped at its position.
  *
  * @class AppUiDataTableComponent
  * @namespace Prometheus.Components
@@ -85,11 +101,89 @@ export default class AppUiDataTableComponent extends Component {
 		if (typeof this.args.groupKey !== 'function') {
 			return [{ plain: true, items: this.rows }];
 		}
-		return groupItems(this.rows, { groupKey: this.args.groupKey, groupLabel: this.args.groupLabel }).map((g) => ({
-			...g,
-			isCollapsed: this.collapsed.includes(g.key),
-		}));
+		let group = this.isTree ? groupInPlace : groupItems;
+		return group(this.rows, { groupKey: this.args.groupKey, groupLabel: this.args.groupLabel }).map((s) =>
+			s.plain ? s : { ...s, isCollapsed: this.collapsed.includes(s.key) },
+		);
 	}
+
+	/**
+	 * Whether the rows form a tree (`@depthKey` or `@isExpandable` given).
+	 *
+	 * @property isTree
+	 * @type Boolean
+	 */
+	get isTree() {
+		return !!this.args.depthKey || typeof this.args.isExpandable === 'function';
+	}
+
+	/**
+	 * The ids of the open tree rows (`@expandedIds`) as strings, cached until the arg changes.
+	 *
+	 * @property expandedIdSet
+	 * @type Set
+	 */
+	@cached
+	get expandedIdSet() {
+		return new Set((this.args.expandedIds || []).map(String));
+	}
+
+	/**
+	 * The ids of the tree rows loading their children (`@loadingIds`) as strings, cached until the arg changes.
+	 *
+	 * @property loadingIdSet
+	 * @type Set
+	 */
+	@cached
+	get loadingIdSet() {
+		return new Set((this.args.loadingIds || []).map(String));
+	}
+
+	/**
+	 * Whether the row is the pinned current row (`@currentId`).
+	 *
+	 * @method isCurrent
+	 * @param {Object} record the record of the row
+	 * @return {Boolean}
+	 */
+	isCurrent = (record) => {
+		let current = this.args.currentId;
+		return (
+			current !== undefined &&
+			current !== null &&
+			String(current) === String(record.id)
+		);
+	};
+
+	/**
+	 * The tree state of a row: its depth and indent class, and whether it has a caret, is open or is loading.
+	 * Null outside tree mode.
+	 *
+	 * @method treeRow
+	 * @param {Object} record the record of the row
+	 * @return {Object|null} {depth, indentClass, expandable, expanded, loading}
+	 */
+	treeRow = (record) => {
+		if (!this.isTree) {
+			return null;
+		}
+		let depth = this.args.depthKey
+			? parseInt(get(record, this.args.depthKey), 10)
+			: 1;
+		depth = depth > 0 ? depth : 1;
+		let id = String(record.id);
+		let expandable =
+			!this.isCurrent(record) &&
+			typeof this.args.isExpandable === 'function' &&
+			!!this.args.isExpandable(record);
+		return {
+			depth,
+			indentClass: `data-table-depth-${Math.min(depth, MAX_DEPTH)}`,
+			expandable,
+			expanded: expandable && this.expandedIdSet.has(id),
+			loading: expandable && this.loadingIdSet.has(id),
+		};
+	};
 
 	isSelected = (record) => {
 		if (this.selection) {
@@ -106,14 +200,14 @@ export default class AppUiDataTableComponent extends Component {
 	 * @type Array
 	 */
 	get columns() {
-		return (this.args.columns || []).map((column) => {
+		return (this.args.columns || []).map((column, index) => {
 			let sortKey = column.sortKey || column.key;
 			let icon = 'fa-sort';
 			let active = !!column.sortable && sortKey === this.args.sort;
 			if (active) {
 				icon = this.args.order === 'desc' ? 'fa-sort-desc' : 'fa-sort-asc';
 			}
-			return { ...column, sortKey, sortIcon: icon, active };
+			return { ...column, sortKey, sortIcon: icon, active, isFirst: index === 0 };
 		});
 	}
 
@@ -148,6 +242,17 @@ export default class AppUiDataTableComponent extends Component {
 			return;
 		}
 		this.args.onSelectAll?.(this.rows, checked);
+	}
+
+	/**
+	 * Reports a caret click on a tree row; the owner loads or removes the child rows.
+	 *
+	 * @method toggleRow
+	 * @param {Object} record the record of the row
+	 */
+	@action
+	toggleRow(record) {
+		this.args.onToggle?.(record);
 	}
 
 	@action

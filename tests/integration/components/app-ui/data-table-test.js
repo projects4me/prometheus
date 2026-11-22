@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setComponentTemplate } from '@ember/component';
 import templateOnly from '@ember/component/template-only';
@@ -197,6 +197,97 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		</AppUi::DataTable>`);
 		assert.dom('[data-test-data-table-row="1"] td.actions .btn-box-tool').exists();
 		assert.dom('[data-test-data-table-row="1"] td.actions [data-test-data-table-more] .app-dropdown-btn').hasAttribute('aria-label');
+	});
+
+	module('tree rows', function (hooks) {
+		hooks.beforeEach(function () {
+			this.toggled = [];
+			this.onToggle = (record) => this.toggled.push(record.id);
+			this.isExpandable = (record) => record.children;
+			this.groupKey = (record) => record.group;
+			this.groupLabel = (key) => key;
+			this.treeRows = [
+				{ id: 'b1', name: 'Blocked by', level: 1, group: 'blocks', children: true },
+				{ id: 'b2', name: 'Child', level: 2, group: 'blocks', children: false },
+				{ id: 'me', name: 'Current', level: 1, group: null, children: true },
+				{ id: 'r1', name: 'Relates', level: 1, group: 'relates', children: true },
+			];
+			this.set('expandedIds', ['b1']);
+			this.set('loadingIds', []);
+		});
+
+		test('it indents by depth and draws the caret states', async function (assert) {
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.treeRows}} @depthKey="level"
+				@isExpandable={{this.isExpandable}} @expandedIds={{this.expandedIds}} @loadingIds={{this.loadingIds}}
+				@onToggle={{this.onToggle}} />`);
+			assert.dom('[data-test-data-table-row="b2"] [data-test-data-table-cell="name"]').hasClass('data-table-depth-2');
+			assert.dom('[data-test-data-table-row="b2"] [data-test-data-table-cell="models"]').doesNotHaveClass('data-table-depth-2');
+			assert.dom('[data-test-data-table-row="b1"] [data-test-data-table-cell="name"]').hasClass('data-table-depth-1');
+			assert.dom('[data-test-data-table-row="b1"] [data-test-data-table-toggle]').hasAttribute('aria-expanded', 'true');
+			assert.dom('[data-test-data-table-row="b1"] [data-test-data-table-toggle] i').hasClass('fa-caret-down');
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle]').hasAttribute('aria-expanded', 'false');
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle] i').hasClass('fa-caret-right');
+			assert.dom('[data-test-data-table-row="b2"] [data-test-data-table-toggle]').doesNotExist('a leaf has no caret');
+			assert.dom('[data-test-data-table-row="b2"] .data-table-toggle-spacer').exists();
+		});
+
+		test('a loading row shows a spinner in place of the caret', async function (assert) {
+			this.set('loadingIds', ['r1']);
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.treeRows}} @depthKey="level"
+				@isExpandable={{this.isExpandable}} @expandedIds={{this.expandedIds}} @loadingIds={{this.loadingIds}} />`);
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle] i').hasClass('fa-spinner').hasClass('fa-spin');
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle] i').doesNotHaveClass('fa-caret-right');
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle]').hasAttribute('aria-busy', 'true');
+			this.set('loadingIds', []);
+			await settled();
+			assert.dom('[data-test-data-table-row="r1"] [data-test-data-table-toggle] i').hasClass('fa-caret-right');
+		});
+
+		test('a caret click reports the record', async function (assert) {
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.treeRows}} @depthKey="level"
+				@isExpandable={{this.isExpandable}} @expandedIds={{this.expandedIds}} @onToggle={{this.onToggle}} />`);
+			await click('[data-test-data-table-row="r1"] [data-test-data-table-toggle]');
+			await click('[data-test-data-table-row="b1"] [data-test-data-table-toggle]');
+			assert.deepEqual(this.toggled, ['r1', 'b1']);
+		});
+
+		test('the current row is pinned: class, no caret and no row actions', async function (assert) {
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.treeRows}} @depthKey="level"
+				@isExpandable={{this.isExpandable}} @currentId="me">
+				<:rowActions><button type="button" class="btn btn-box-tool" data-test-row-action>Edit</button></:rowActions>
+			</AppUi::DataTable>`);
+			assert.dom('[data-test-data-table-row="me"]').hasClass('data-table-row--current');
+			assert.dom('[data-test-data-table-row="b1"]').doesNotHaveClass('data-table-row--current');
+			assert.dom('[data-test-data-table-row="me"] [data-test-data-table-toggle]').doesNotExist();
+			assert.dom('[data-test-data-table-row="me"] [data-test-row-action]').doesNotExist();
+			assert.dom('[data-test-data-table-row="me"] td.actions').exists('the actions cell stays so the columns line up');
+			assert.dom('[data-test-data-table-row="b1"] [data-test-row-action]').exists();
+		});
+
+		test('a row with a null group renders ungrouped between the groups', async function (assert) {
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.treeRows}} @depthKey="level"
+				@isExpandable={{this.isExpandable}} @groupKey={{this.groupKey}} @groupLabel={{this.groupLabel}} @currentId="me" />`);
+			let order = [...this.element.querySelectorAll('tbody > tr')].map((tr) =>
+				tr.hasAttribute('data-test-data-table-group')
+					? `group:${tr.getAttribute('data-test-data-table-group')}`
+					: tr.getAttribute('data-test-data-table-row'),
+			);
+			assert.deepEqual(order, ['group:blocks', 'b1', 'b2', 'me', 'group:relates', 'r1']);
+			await click('[data-test-data-table-group="blocks"] [data-test-data-table-group-toggle]');
+			assert.dom('[data-test-data-table-row="b1"]').doesNotExist();
+			assert.dom('[data-test-data-table-row="me"]').exists();
+		});
+
+		test('without the tree args list tables are unchanged', async function (assert) {
+			this.groupKey = (record) => (record.models === 'opus' ? null : record.models);
+			await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @groupKey={{this.groupKey}} @groupLabel={{this.groupLabel}} />`);
+			assert.dom('[data-test-data-table-toggle]').doesNotExist();
+			assert.dom('.data-table-toggle-spacer').doesNotExist();
+			assert.dom('.data-table-row--current').doesNotExist();
+			assert.dom('[data-test-data-table-row="1"] [data-test-data-table-cell="name"]').hasClass('name-cell');
+			assert.dom('[class*="data-table-depth"]').doesNotExist();
+			assert.dom('tr.data-table-group').exists({ count: 2 }, 'a null key still forms the None group');
+		});
 	});
 });
 
