@@ -166,7 +166,7 @@ export default class ProjectsIndexRoute extends App {
         // Prepare the options
         let options = {
             query: query,
-            rels: 'manager,members',
+            rels: 'manager,members,workspace',
             sort: this.sort,
             order: this.order,
             page: this.page,

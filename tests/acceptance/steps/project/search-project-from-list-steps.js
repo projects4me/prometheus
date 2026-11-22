@@ -37,7 +37,7 @@ export const then = function () {
         {
             "the searched project should be inside list": (assert) => async function () {
                 let projectRow = document.querySelector('div.projects.project table tbody tr');
-                let expectedProjectName = projectRow.querySelector('td.project-name');
+                let expectedProjectName = projectRow.querySelector('td.project-name a');
                 assert.dom(expectedProjectName).hasText(server.schema.projects.find(1).name);
             }
         },
