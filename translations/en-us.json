@@ -2830,7 +2830,8 @@
           "activeMilestone": "Active milestone",
           "repository": "Repository",
           "projectManager": "Project Manager",
-          "noMembers": "This workspace has no members you can see"
+          "noMembers": "This workspace has no members you can see",
+          "manageMembers": "Manage members"
         },
         "create": {
           "header": "Create Workspace"

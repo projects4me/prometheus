@@ -21,7 +21,7 @@ export default function (assert) {
             async function () {
                 membershipRequests = [];
                 server.pretender.handledRequest = (verb, path) => {
-                    if (verb === 'GET' && /\/membership\?/.test(path)) {
+                    if (verb === 'GET' && /\/workspacemember\?/.test(path)) {
                         membershipRequests.push(path);
                     }
                 };
@@ -56,30 +56,27 @@ export default function (assert) {
             }
         )
         .given(
-            'User $userId is a member of both projects of workspace $code',
-            async function (userId, code) {
+            'User $userId is a member of $count projects of workspace $code',
+            async function (userId, count, code) {
                 let workspace = server.schema.workspaces.findBy({ shortCode: code });
-                server.schema.projects.where({ workspaceId: workspace.id }).models.forEach((project) => {
-                    server.create('membership', {
-                        projectId: String(project.id),
-                        userId: String(userId),
-                        user: server.schema.users.find(userId)
-                    });
+                server.create('workspacemember', {
+                    workspaceId: String(workspace.id),
+                    userId: String(userId),
+                    projectCount: parseInt(count, 10),
+                    user: server.schema.users.find(userId)
                 });
-                assert.ok(true, `User ${userId} is a member of both projects`);
+                assert.ok(true, `User ${userId} is a member of ${count} projects`);
             }
         )
         .given(
-            'User $userId is a member of the first project of workspace $code',
-            async function (userId, code) {
+            'Workspace $code has $count more members',
+            async function (code, count) {
                 let workspace = server.schema.workspaces.findBy({ shortCode: code });
-                let project = server.schema.projects.where({ workspaceId: workspace.id }).models[0];
-                server.create('membership', {
-                    projectId: String(project.id),
-                    userId: String(userId),
-                    user: server.schema.users.find(userId)
-                });
-                assert.ok(true, `User ${userId} is a member of the first project`);
+                for (let i = 0; i < parseInt(count, 10); i++) {
+                    let user = server.create('user', { name: `${code} person ${i}` });
+                    server.create('workspacemember', { workspaceId: String(workspace.id), userId: String(user.id), projectCount: 1, user });
+                }
+                assert.ok(true, `${count} more members`);
             }
         )
         .given(
@@ -243,14 +240,25 @@ export default function (assert) {
             }
         )
         .then(
-            'The workspace members were requested once through project.workspaceId, paged, without OR',
+            'The workspace members were requested through workspacemember with a limit of 20 and no OR',
             async function () {
-                let requests = membershipRequests;
-                assert.equal(requests.length, 1, 'One membership request');
-                let params = new URL(requests[0], window.location.origin).searchParams;
-                assert.ok(/project\.workspaceId : /.test(params.get('query')), 'The query filters on project.workspaceId');
+                assert.ok(membershipRequests.length >= 1, 'A workspacemember request');
+                let params = new URL(membershipRequests[0], window.location.origin).searchParams;
+                assert.ok(/Workspacemember\.workspaceId : /.test(params.get('query')), 'The query filters on workspaceId');
                 assert.notOk(/ OR /.test(params.get('query')), 'The query has no OR');
                 assert.equal(params.get('limit'), '20', 'The request is paged');
+            }
+        )
+        .when(
+            'User moves the members pager to the next page',
+            async function () {
+                await click('[data-members-pagination] [data-test-pager-next]');
+            }
+        )
+        .then(
+            'The workspace members box links Manage members to the Settings page of workspace $code',
+            async function (code) {
+                assert.ok(document.querySelector('.workspace-members [data-test-manage-members]').getAttribute('href').endsWith(`/edit/${code}`), 'Manage members opens the Settings page');
             }
         )
         .then(
