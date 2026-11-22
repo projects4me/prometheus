@@ -2864,6 +2864,18 @@
             "invite": "Invite member",
             "empty": "This workspace has no members you can see"
           },
+          "environment": {
+            "runtimeTitle": "Runtime",
+            "repositoriesTitle": "Repositories",
+            "online": "online",
+            "offline": "offline",
+            "name": "Name",
+            "url": "URL",
+            "baseBranch": "Base branch",
+            "project": "Project",
+            "workspace": "Workspace",
+            "empty": "This workspace has no repositories you can see"
+          },
           "agents": {
             "title": "Agents, workflows, tools and skills",
             "tools": "Tools",

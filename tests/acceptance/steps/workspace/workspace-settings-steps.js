@@ -30,6 +30,21 @@ export default function (assert) {
             assert.dom('.workspace-settings .nav-tabs li.active [data-tab="projects"]').exists('Projects tab is active');
             assert.dom('.workspace-details-form').exists('details form is shown');
         })
+        .given('Workspace $code has repositories "$a" on "$ab" and "$b" on "$bb"', async function (code, a, ab, b, bb) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            let project = server.schema.projects.where({ workspaceId: workspace.id }).models[0];
+            server.create('repository', { name: a, url: `git@example.com:${a}.git`, baseBranch: ab, workspaceId: String(workspace.id), projectId: String(project.id) });
+            server.create('repository', { name: b, url: `git@example.com:${b}.git`, baseBranch: bb, workspaceId: String(workspace.id) });
+            assert.ok(true, 'repositories created');
+        })
+        .then('The Environment tab shows runtime "$name" online and $count repositories with base branches', function (name, count) {
+            assert.dom('.workspace-environment-runtime [data-test-environment-runtime]').includesText(name);
+            assert.dom('.workspace-environment-runtime [data-test-environment-dot].text-green').exists();
+            assert.dom('.workspace-environment-repositories [data-repository-id]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-environment-repositories [data-test-repository-branch]').exists({ count: parseInt(count, 10) });
+            let projects = [...document.querySelectorAll('.workspace-environment-repositories [data-test-repository-project]')].map((cell) => cell.textContent.trim());
+            assert.deepEqual(projects, ['ENG project 1', 'Workspace'], 'the project, or Workspace when there is none');
+        })
         .then('The Member Projects table lists $count projects with the four columns', function (count) {
             assert.dom('.workspace-member-projects [data-project-id]').exists({ count: parseInt(count, 10) });
             assert.dom('.workspace-member-projects th').exists({ count: 5 }, 'four data columns and the action column');

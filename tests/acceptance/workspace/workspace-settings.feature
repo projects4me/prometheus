@@ -33,6 +33,14 @@ Feature: Workspace | Settings
     And User saves the workspace details in Settings
     Then Workspace "Platform" with code "ENG" is stored
 
+  Scenario: The Environment tab lists the runtime and the repositories with their base branches
+
+    Given Workspace ENG exists with 1 projects
+    And Workspace ENG has environment facts with runtime "talos-1" online
+    And Workspace ENG has repositories "api" on "main" and "web" on "dev"
+    When User navigates to app/workspace/ENG/settings/environment
+    Then The Environment tab shows runtime "talos-1" online and 2 repositories with base branches
+
   Scenario: The Agents tab links to the existing views
 
     Given Workspace ENG exists with 0 projects
