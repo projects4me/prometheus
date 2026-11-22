@@ -157,8 +157,7 @@ export default class WorkspaceIndexController extends AppController {
     }
 
     /**
-     * Loads the page of members that starts at the offset. Gaia joins the memberships to the workspace through the
-     * project; a user that is a member of several projects is shown once per page.
+     * Loads the page of members that starts at the offset. Gaia's workspacemember has one row per person, so nobody repeats.
      *
      * @method loadMembers
      * @param {Number} offset
@@ -172,28 +171,19 @@ export default class WorkspaceIndexController extends AppController {
         }
         this.isMembersLoading = true;
         try {
-            let memberships = await this.store.query('membership', {
-                query: `((project.workspaceId : ${workspace.id}))`,
-                rels: 'user,project',
-                sort: 'user.name',
-                order: 'ASC',
+            let rows = await this.store.query('workspacemember', {
+                query: `((Workspacemember.workspaceId : ${workspace.id}))`,
+                rels: 'user',
                 limit: this.membersPageSize,
                 page: Math.floor(offset / this.membersPageSize) + 1
             });
-            let users = await Promise.all(memberships.map((membership) => membership.user));
+            let users = await Promise.all(rows.map((row) => row.user));
             if (isDestroying(this) || isDestroyed(this)) {
                 return;
             }
-            let seen = new Set();
-            this.members = users.filter((user) => {
-                if (!user || seen.has(user.id)) {
-                    return false;
-                }
-                seen.add(user.id);
-                return true;
-            });
+            this.members = users.filter(Boolean);
             this.membersOffset = offset;
-            this.hasMoreMembers = memberships.length >= this.membersPageSize;
+            this.hasMoreMembers = rows.length >= this.membersPageSize;
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
         } finally {

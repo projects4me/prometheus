@@ -140,6 +140,9 @@
                   <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noMembers"}} />
                 {{/if}}
               </ul>
+              <div class="box-footer text-center" data-members-manage>
+                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-test-manage-members>{{t "views.app.workspace.detail.manageMembers"}}</LinkTo>
+              </div>
               {{#if this.hasMembersPages}}
                 <div class="box-footer no-padding" data-members-pagination>
                   <AppUi::Pager

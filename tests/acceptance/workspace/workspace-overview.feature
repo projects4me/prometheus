@@ -8,13 +8,14 @@ Feature: Workspace | read-only Overview
     And User_1 is logged in
     And The membership requests are recorded
     And Workspace ENG exists with 2 projects
-    And User 2 is a member of both projects of workspace ENG
-    And User 3 is a member of the first project of workspace ENG
+    And User 2 is a member of 2 projects of workspace ENG
+    And User 3 is a member of 1 projects of workspace ENG
     When User navigates to app/workspace/ENG
     Then The workspace header shows ENG
     And The workspace lists 2 projects
     And The workspace lists 2 members
-    And The workspace members were requested once through project.workspaceId, paged, without OR
+    And The workspace members were requested through workspacemember with a limit of 20 and no OR
+    And The workspace members box links Manage members to the Settings page of workspace ENG
 
   Scenario: The Projects box is paged
 
@@ -33,6 +34,18 @@ Feature: Workspace | read-only Overview
     When User moves the projects pager to the next page
     Then The workspace lists 5 projects
     And The projects pager shows "21-25"
+
+  Scenario: The Members box is paged by person
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace PEOPLE exists with 3 projects
+    And Workspace PEOPLE has 25 more members
+    When User navigates to app/workspace/PEOPLE
+    Then The workspace lists 20 members
+    When User moves the members pager to the next page
+    Then The workspace lists 5 members
 
   Scenario: An empty workspace
 
