@@ -144,6 +144,45 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     }
 
     /**
+     * The project whose Move out dialog is open
+     *
+     * @property movingProject
+     * @type Project
+     */
+    @tracked movingProject = null;
+
+    /**
+     * Opens the Move project out dialog
+     *
+     * @method openMoveOut
+     * @param {Project} project
+     */
+    @action
+    openMoveOut(project) {
+        this.movingProject = project;
+    }
+
+    /**
+     * Closes the Move project out dialog
+     *
+     * @method closeMoveOut
+     */
+    @action
+    closeMoveOut() {
+        this.movingProject = null;
+    }
+
+    /**
+     * Reloads the page after a project moved out.
+     *
+     * @method projectMoved
+     */
+    @action
+    projectMoved() {
+        this.router.refresh();
+    }
+
+    /**
      * Reloads the page after a project joined, so both tables show it.
      *
      * @method projectAdded

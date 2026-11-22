@@ -29,7 +29,7 @@
               {{/if}}
             {{else if (eq column.key "actions")}}
               <AccessControl @aclContext="project.update">
-                <button type="button" class="btn btn-xs btn-default" data-btn="move-project" data-target="dlg-move-project">{{t "views.app.workspace.settings.projects.move"}}</button>
+                <button type="button" class="btn btn-xs btn-default" data-btn="move-project" {{on "click" (fn this.openMoveOut project)}}>{{t "views.app.workspace.settings.projects.move"}}</button>
               </AccessControl>
             {{/if}}
           </:cell>
@@ -124,4 +124,8 @@
 
 {{#if this.addingProject}}
   <Workspace::AddProjectDialog @workspace={{this.model}} @onClose={{this.closeAddProject}} @onAdded={{this.projectAdded}} />
+{{/if}}
+
+{{#if this.movingProject}}
+  <Workspace::MoveProjectOutDialog @workspace={{this.model}} @project={{this.movingProject}} @onClose={{this.closeMoveOut}} @onMoved={{this.projectMoved}} />
 {{/if}}
