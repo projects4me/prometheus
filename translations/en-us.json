@@ -346,6 +346,10 @@
       "hint": "Select rows to act on them",
       "breakdown": "{onPage} on this page, {otherPages} on other pages"
     },
+    "dataTable": {
+      "expand": "Expand",
+      "collapse": "Collapse"
+    },
     "quickList": {
       "moreActions": "More actions",
       "countOfTotal": "{count} of {total}",

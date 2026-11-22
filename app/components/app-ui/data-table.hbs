@@ -46,47 +46,53 @@
           {{/unless}}
           {{#unless section.isCollapsed}}
             {{#each section.items as |record|}}
-              <tr class="{{if (this.isSelected record) "data-table-row--selected"}}" data-test-data-table-row={{record.id}}>
-                {{#if @selectable}}
-                  <td class="select-box">
-                    <button type="button" class="data-table-check" aria-pressed={{if (this.isSelected record) "true" "false"}} aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "click" (fn this.select record)}}>
-                      <i class="fa {{if (this.isSelected record) "fa-check-square" "fa-square-o"}}" aria-hidden="true"></i>
-                    </button>
-                  </td>
-                {{/if}}
-                {{#each this.columns as |column|}}
-                  <td class={{column.class}} data-test-data-table-cell={{column.key}}>
-                    {{#if column.cell}}
-                      {{component column.cell record=record column=column}}
-                    {{else if (has-block "cell")}}
-                      {{yield record column to="cell"}}
-                    {{else}}
-                      {{get record column.key}}
-                    {{/if}}
-                    {{#if column.subKey}}
-                      <div class="data-table-sub text-muted" data-test-data-table-sub={{column.key}}>{{get record column.subKey}}</div>
-                    {{/if}}
-                  </td>
-                {{/each}}
-                {{#if (has-block "rowActions")}}
-                  <td class="actions" data-test-data-table-actions>
-                    {{yield record to="rowActions"}}
-                    {{#if (has-block "moreActions")}}
-                      <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
-                        <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
-                        <:content>{{yield record to="moreActions"}}</:content>
-                      </AppUi::Dropdown>
-                    {{/if}}
-                  </td>
-                {{else if (has-block "moreActions")}}
-                  <td class="actions" data-test-data-table-actions>
-                    <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
-                      <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
-                      <:content>{{yield record to="moreActions"}}</:content>
-                    </AppUi::Dropdown>
-                  </td>
-                {{/if}}
-              </tr>
+              {{#let (this.treeRow record) (this.isCurrent record) as |tree current|}}
+                <tr class="{{if (this.isSelected record) "data-table-row--selected"}} {{if current "data-table-row--current"}}" data-test-data-table-row={{record.id}}>
+                  {{#if @selectable}}
+                    <td class="select-box">
+                      <button type="button" class="data-table-check" aria-pressed={{if (this.isSelected record) "true" "false"}} aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "click" (fn this.select record)}}>
+                        <i class="fa {{if (this.isSelected record) "fa-check-square" "fa-square-o"}}" aria-hidden="true"></i>
+                      </button>
+                    </td>
+                  {{/if}}
+                  {{#each this.columns as |column|}}
+                    <td class="{{column.class}} {{if column.isFirst tree.indentClass}}" data-test-data-table-cell={{column.key}}>
+                      {{#if (and column.isFirst tree)}}
+                        {{#if tree.expandable}}
+                          <button type="button" class="data-table-toggle" aria-expanded={{if tree.expanded "true" "false"}} aria-busy={{if tree.loading "true"}} aria-label={{if tree.expanded (t "components.dataTable.collapse") (t "components.dataTable.expand")}} disabled={{tree.loading}} data-test-data-table-toggle {{on "click" (fn this.toggleRow record)}}>
+                            <i class="fa {{if tree.loading "fa-spinner fa-spin" (if tree.expanded "fa-caret-down" "fa-caret-right")}}" aria-hidden="true"></i>
+                          </button>
+                        {{else}}
+                          <span class="data-table-toggle-spacer" aria-hidden="true"></span>
+                        {{/if}}
+                      {{/if}}
+                      {{#if column.cell}}
+                        {{component column.cell record=record column=column}}
+                      {{else if (has-block "cell")}}
+                        {{yield record column to="cell"}}
+                      {{else}}
+                        {{get record column.key}}
+                      {{/if}}
+                      {{#if column.subKey}}
+                        <div class="data-table-sub text-muted" data-test-data-table-sub={{column.key}}>{{get record column.subKey}}</div>
+                      {{/if}}
+                    </td>
+                  {{/each}}
+                  {{#if (or (has-block "rowActions") (has-block "moreActions"))}}
+                    <td class="actions" data-test-data-table-actions>
+                      {{#unless current}}
+                        {{yield record to="rowActions"}}
+                        {{#if (has-block "moreActions")}}
+                          <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
+                            <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                            <:content>{{yield record to="moreActions"}}</:content>
+                          </AppUi::Dropdown>
+                        {{/if}}
+                      {{/unless}}
+                    </td>
+                  {{/if}}
+                </tr>
+              {{/let}}
             {{/each}}
           {{/unless}}
         {{/each}}

@@ -34,6 +34,51 @@
     background-color: #f9fafc;
   }
 
+  // Tree rows: the pinned current row uses the selected-row background, bold, with a top and bottom border.
+  .table > tbody > tr.data-table-row--current {
+    background-color: #f9fafc;
+    font-weight: bold;
+
+    > td {
+      border-top: 1px solid $borderColor;
+      border-bottom: 1px solid $borderColor;
+    }
+  }
+
+  // The first cell of a tree row is indented 16px per level below the top. The upper bound matches MAX_DEPTH in app/components/app-ui/data-table.js.
+  @for $depth from 2 through 8 {
+    .table > tbody > tr > td.data-table-depth-#{$depth} {
+      padding-left: 8px + ($depth - 1) * 16px;
+    }
+  }
+
+  .data-table-toggle,
+  .data-table-toggle-spacer {
+    display: inline-block;
+    width: 16px;
+    margin-right: 4px;
+    text-align: center;
+    vertical-align: baseline;
+  }
+
+  .data-table-toggle {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: $mediumColor;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: $primaryColor;
+    }
+
+    &[disabled] {
+      cursor: default;
+    }
+  }
+
   .data-table-sort {
     padding: 0 4px;
     color: #999;

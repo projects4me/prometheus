@@ -12,7 +12,12 @@
     "selection": { "type": "object", "required": false, "description": "A Selection (utils/state/selection) shared with the toolbar; the row check buttons and the select-all button (rows shown) toggle through it and it is kept across pages. Replaces selectedIds, onSelect and onSelectAll" },
     "selectedIds": { "type": "array", "required": false, "description": "The ids of the selected rows, kept by the owner so the selection survives paging; makes the row check buttons controlled (when selection is not given)" },
     "groupKey": { "type": "function", "required": false, "description": "(record) => the group key of a record; groups the rows under collapsible headings" },
-    "groupLabel": { "type": "function", "required": false, "description": "(key) => the translated group label" }
+    "groupLabel": { "type": "function", "required": false, "description": "(key) => the translated group label" },
+    "depthKey": { "type": "string", "required": false, "description": "Tree rows: the record field holding the row's level (1 = top); indents the first column" },
+    "isExpandable": { "type": "function", "required": false, "description": "Tree rows: (record) => whether the row shows a caret button" },
+    "expandedIds": { "type": "array", "required": false, "default": [], "description": "Tree rows: the ids of the open rows, kept by the owner" },
+    "loadingIds": { "type": "array", "required": false, "default": [], "description": "Tree rows: the ids of the rows loading their next level, kept by the owner; they show a spinner in place of the caret" },
+    "currentId": { "type": "string", "required": false, "description": "Tree rows: the id of the pinned current row (class data-table-row--current, no caret, no row actions)" }
   },
   "events": {
     "onSelectAll": {
@@ -36,6 +41,10 @@
     "onSelectionChange": {
       "payload": [{ "name": "ids", "type": "array", "description": "The selected ids, as strings, across pages" }],
       "description": "A row box or the select-all box changed the shared selection (with selectable and selection)"
+    },
+    "onToggle": {
+      "payload": [{ "name": "record", "type": "object", "description": "The record of the row" }],
+      "description": "The caret of a tree row was clicked; the owner loads or removes the next level"
     }
   },
   "blocks": {
@@ -83,6 +92,7 @@
   "variants": [
     { "name": "plain", "description": "Record fields by column key", "arguments": ["columns", "rows"] },
     { "name": "list page", "description": "Sorting, selection, hand-built cells and row actions", "arguments": ["columns", "rows", "sort", "order", "selectable", "onSort", "onSelect"], "blocks": ["cell", "rowActions", "empty"] },
-    { "name": "shared selection", "description": "Selection kept across pages and shared with the toolbar", "arguments": ["columns", "rows", "selectable", "selection", "onSelectionChange"] }
+    { "name": "shared selection", "description": "Selection kept across pages and shared with the toolbar", "arguments": ["columns", "rows", "selectable", "selection", "onSelectionChange"] },
+    { "name": "tree", "description": "Flattened tree rows that load their next level on demand, grouped in place, with a pinned current row", "arguments": ["columns", "rows", "depthKey", "isExpandable", "expandedIds", "loadingIds", "currentId", "groupKey", "groupLabel", "onToggle"], "blocks": ["rowActions"] }
   ]
 }

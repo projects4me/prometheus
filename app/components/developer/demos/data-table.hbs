@@ -2,7 +2,24 @@
 <Developer::Entry @onReset={{this.reset}}>
   <:demo as |log|>
     <div data-test-demo-data-table>
-      {{#if this.showActions}}
+      {{#if this.tree}}
+        <AppUi::DataTable
+          @columns={{this.treeColumns}}
+          @rows={{this.treeRows}}
+          @depthKey="level"
+          @isExpandable={{this.isExpandable}}
+          @expandedIds={{this.expandedIds}}
+          @loadingIds={{this.loadingIds}}
+          @currentId="me"
+          @groupKey={{this.treeGroupKey}}
+          @groupLabel={{this.groupLabel}}
+          @onToggle={{fn this.toggleRow log}}
+        >
+          <:rowActions as |record|>
+            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><i class="fa fa-pencil"></i></button>
+          </:rowActions>
+        </AppUi::DataTable>
+      {{else if this.showActions}}
         <AppUi::DataTable
           @columns={{this.columns}}
           @rows={{this.rows}}
@@ -56,6 +73,9 @@
     </div>
     <div class="form-group">
       <label><input type="checkbox" checked={{this.showActions}} {{on "change" (fn this.flip "showActions")}} /> Row actions and more menu</label>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" checked={{this.tree}} data-test-demo-tree {{on "change" (fn this.flip "tree")}} /> Tree rows</label>
     </div>
     <div class="form-group">
       <label><input type="checkbox" checked={{this.empty}} {{on "change" (fn this.flip "empty")}} /> Empty</label>
