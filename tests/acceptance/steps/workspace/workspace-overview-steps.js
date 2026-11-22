@@ -268,6 +268,52 @@ export default function (assert) {
                 assert.dom('.workspace-projects [data-test-pager-range]').includesText(text);
             }
         )
+        .given(
+            'Workspace $code has milestone "$name" spanning $projects projects and $count other milestones',
+            async function (code, name, projects, count) {
+                let workspace = server.schema.workspaces.findBy({ shortCode: code });
+                server.create('workspacemilestone', {
+                    workspaceId: String(workspace.id), name, projectCount: parseInt(projects, 10), status: 'in_progress',
+                    startDate: '2026-01-01', endDate: '2026-03-31', issueCount: 8, doneIssueCount: 2
+                });
+                for (let i = 1; i <= parseInt(count, 10); i++) {
+                    server.create('workspacemilestone', {
+                        workspaceId: String(workspace.id), name: `${name} other ${i}`, projectCount: 1, status: 'planned',
+                        startDate: '2026-04-01', endDate: '2026-06-30', issueCount: 0, doneIssueCount: 0
+                    });
+                }
+                assert.ok(true, `Workspace ${code} has milestones`);
+            }
+        )
+        .when(
+            'User goes to the next page of workspace milestones',
+            async function () {
+                await click('.workspace-milestones [data-test-pager-next]');
+            }
+        )
+        .then(
+            'The Workspace Milestones box lists $count milestones',
+            async function (count) {
+                assert.dom('.workspace-milestones [data-test-workspace-milestone]').exists({ count: parseInt(count, 10) }, `${count} milestones are listed`);
+            }
+        )
+        .then(
+            'The Workspace Milestones box shows "$name" once, "$spans", dates and $done done of $total issues',
+            async function (name, spans, done, total) {
+                let rows = [...document.querySelectorAll('.workspace-milestones [data-test-workspace-milestone]')].filter((row) => row.querySelector('[data-test-milestone-name]').textContent.trim() === name);
+                assert.equal(rows.length, 1, 'The name is listed once');
+                assert.ok(rows[0].querySelector('[data-test-milestone-spans]').textContent.includes(spans), 'It spans the projects');
+                assert.ok(rows[0].querySelector('[data-test-milestone-status]').textContent.includes('In Progress'), 'The status label is shown');
+                assert.ok(rows[0].querySelector('[data-test-milestone-dates]').textContent.includes('2026'), 'The date range is shown');
+                assert.ok(rows[0].querySelector('[data-test-milestone-issues]').textContent.includes(`${done}/${total}`), 'The done and total issues are shown');
+            }
+        )
+        .then(
+            'The Workspace Milestones box shows the empty state',
+            async function () {
+                assert.dom('.workspace-milestones [data-test-empty-state]').exists('the empty state is shown');
+            }
+        )
         .when(
             'User loads more workspace activities',
             async function () {

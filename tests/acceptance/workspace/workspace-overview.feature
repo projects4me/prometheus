@@ -156,3 +156,25 @@ Feature: Workspace | read-only Overview
     And Workspace ENG exists with 2 projects
     When User navigates to app/workspace/ENG
     Then The Workspace Activities box shows the empty state
+
+  Scenario: A milestone used in 3 projects shows once, and the Milestones box is paged
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And Workspace ENG has milestone "Release 1" spanning 3 projects and 5 other milestones
+    When User navigates to app/workspace/ENG
+    Then The Workspace Milestones box lists 5 milestones
+    And The Workspace Milestones box shows "Release 1" once, "spans 3 projects", dates and 2 done of 8 issues
+    When User goes to the next page of workspace milestones
+    Then The Workspace Milestones box lists 1 milestones
+
+  Scenario: A workspace without open milestones shows the empty state
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG
+    Then The Workspace Milestones box shows the empty state

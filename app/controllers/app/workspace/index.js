@@ -345,4 +345,90 @@ export default class WorkspaceIndexController extends AppController {
             }
         }
     }
+
+    /**
+     * The shown page of the workspace's open milestones, one row per milestone name
+     *
+     * @property milestones
+     * @type Workspacemilestone[]
+     */
+    @tracked milestones = [];
+
+    /**
+     * The offset of the first milestone on the shown page, for AppUi::Pager
+     *
+     * @property milestonesOffset
+     * @type Number
+     */
+    @tracked milestonesOffset = 0;
+
+    /**
+     * Whether Gaia may have a page of milestones after the shown one
+     *
+     * @property hasMoreMilestones
+     * @type Boolean
+     */
+    @tracked hasMoreMilestones = false;
+
+    /**
+     * Whether a page of milestones is loading
+     *
+     * @property isMilestonesLoading
+     * @type Boolean
+     */
+    @tracked isMilestonesLoading = false;
+
+    /**
+     * The number of milestones per page
+     *
+     * @property milestonesPageSize
+     * @type Number
+     */
+    milestonesPageSize = 5;
+
+    /**
+     * Whether the milestones need the pager
+     *
+     * @property hasMilestonesPages
+     * @type Boolean
+     */
+    get hasMilestonesPages() {
+        return this.milestonesOffset > 0 || this.hasMoreMilestones;
+    }
+
+    /**
+     * Loads the page of milestones that starts at the offset. Gaia's workspacemilestone has one row per milestone
+     * name, so a name used in several projects shows once.
+     *
+     * @method loadMilestones
+     * @param {Number} offset
+     * @return {Promise}
+     */
+    @action
+    async loadMilestones(offset) {
+        let workspace = this.model?.workspace;
+        if (!workspace) {
+            return;
+        }
+        this.isMilestonesLoading = true;
+        try {
+            let rows = await this.store.query('workspacemilestone', {
+                query: `((Workspacemilestone.workspaceId : ${workspace.id}))`,
+                limit: this.milestonesPageSize,
+                page: Math.floor(offset / this.milestonesPageSize) + 1
+            });
+            if (isDestroying(this) || isDestroyed(this) || this.model?.workspace !== workspace) {
+                return;
+            }
+            this.milestones = rows.slice();
+            this.milestonesOffset = offset;
+            this.hasMoreMilestones = rows.length >= this.milestonesPageSize;
+        } catch (error) {
+            this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
+        } finally {
+            if (!isDestroying(this) && !isDestroyed(this)) {
+                this.isMilestonesLoading = false;
+            }
+        }
+    }
 }

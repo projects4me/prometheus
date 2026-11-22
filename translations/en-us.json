@@ -2910,7 +2910,10 @@
           "agentsLink": "Agents, tools and skills",
           "activities": "Workspace Activities",
           "noActivities": "No activity has been recorded for this workspace yet",
-          "loadMore": "Load more"
+          "loadMore": "Load more",
+          "milestones": "Workspace Milestones",
+          "noMilestones": "No open milestones in this workspace",
+          "spansProjects": "spans {count, plural, one {# project} other {# projects}}"
         },
         "create": {
           "header": "Create Workspace"
