@@ -67,6 +67,22 @@ export default function (assert) {
             }
         )
         .given(
+            'Workspace $code has $count activities',
+            async function (code, count) {
+                let workspace = server.schema.workspaces.findBy({ shortCode: code });
+                for (let i = 1; i <= parseInt(count, 10); i++) {
+                    server.create('activity', {
+                        relatedTo: 'workspace',
+                        relatedId: workspace.id,
+                        type: 'related',
+                        description: `Project ${i} added`,
+                        dateCreated: `2026-01-${String(i).padStart(2, '0')} 10:00:00`
+                    });
+                }
+                assert.ok(true, `Workspace ${code} has ${count} activities`);
+            }
+        )
+        .given(
             'Workspace $code requests are recorded',
             async function (code) {
                 projectRequests = [];
@@ -250,6 +266,24 @@ export default function (assert) {
             'The projects pager shows "$text"',
             async function (text) {
                 assert.dom('.workspace-projects [data-test-pager-range]').includesText(text);
+            }
+        )
+        .when(
+            'User loads more workspace activities',
+            async function () {
+                await click('.workspace-activities [data-test-activities-more] button');
+            }
+        )
+        .then(
+            'The Workspace Activities box lists $count activities',
+            async function (count) {
+                assert.dom('.workspace-activities li[data-activity-block-type]').exists({ count: parseInt(count, 10) }, `${count} activities are listed`);
+            }
+        )
+        .then(
+            'The Workspace Activities box shows the empty state',
+            async function () {
+                assert.dom('.workspace-activities [data-test-empty-state]').exists('the empty state is shown');
             }
         )
         .then(

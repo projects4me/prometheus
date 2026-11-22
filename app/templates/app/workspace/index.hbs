@@ -137,6 +137,31 @@
           </AppUi::Box>
         </AccessControl>
 
+        {{!-- The activities recorded for the workspace --}}
+        <AccessControl @aclContext="workspace.read">
+          <AppUi::Box @variant="primary" class="workspace-activities">
+            <:header>
+              <h3 class="box-title">{{t "views.app.workspace.detail.activities"}}</h3>
+            </:header>
+            <:body>
+              {{#if this.hasActivities}}
+                <AppUi::Timeline @activities={{this.activityGroups}} @dataKey="data" as |key|>
+                  {{date-format key "Do MMM. YYYY"}}
+                </AppUi::Timeline>
+                {{#if this.hasMoreActivities}}
+                  <div class="text-center" data-test-activities-more>
+                    <button type="button" class="btn btn-default btn-sm" disabled={{this.isActivitiesLoading}} {{on "click" this.loadMoreActivities}}>{{t "views.app.workspace.detail.loadMore"}}</button>
+                  </div>
+                {{/if}}
+              {{else if this.isActivitiesLoading}}
+                <AppUi::Loader />
+              {{else}}
+                <AppUi::EmptyState @icon="fa-clock-o" @message={{t "views.app.workspace.detail.noActivities"}} />
+              {{/if}}
+            </:body>
+          </AppUi::Box>
+        </AccessControl>
+
       </div>
 
       <div class="col-md-4">

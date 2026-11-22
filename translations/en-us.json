@@ -2893,7 +2893,10 @@
           "toolServers": "Tool servers",
           "skills": "Skills",
           "environmentLink": "Environment",
-          "agentsLink": "Agents, tools and skills"
+          "agentsLink": "Agents, tools and skills",
+          "activities": "Workspace Activities",
+          "noActivities": "No activity has been recorded for this workspace yet",
+          "loadMore": "Load more"
         },
         "create": {
           "header": "Create Workspace"
