@@ -38,6 +38,14 @@ export default function (assert) {
             assert.dom('.workspace-member-projects [data-btn="move-project"]').exists({ count: parseInt(count, 10) });
             assert.dom('.workspace-member-projects [data-btn="add-project"]').exists();
         })
+        .then('The Members table lists $count person with the sharing callout for $projects projects', function (count, projects) {
+            assert.dom('.workspace-members [data-member-id]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-members [data-members-callout]').includesText(`all ${projects} projects`);
+            assert.dom('.workspace-members [data-test-member-projects]').includesText(`2 of ${projects}`);
+            assert.dom('.workspace-members [data-test-member-type]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-members [data-btn="remove-member"]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-members [data-btn="invite-member"]').exists();
+        })
         .then('The Who Can Manage box lists the workspace permissions', function () {
             let text = document.querySelector('.workspace-who-can-manage').textContent;
             ['workspace.update', 'membership.create', 'membership.delete', 'project.update', 'agent.*'].forEach((permission) => {

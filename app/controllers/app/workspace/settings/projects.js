@@ -21,7 +21,7 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
 
     @service intl;
 
-    queryParams = ['page', 'sort', 'order'];
+    queryParams = ['page', 'sort', 'order', 'memberPage', 'memberOrder'];
 
     @tracked page = 1;
     @tracked sort = 'Project.name';
@@ -44,6 +44,76 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     @tracked hasNextProjects = false;
 
     pageSize = 10;
+
+    @tracked memberPage = 1;
+    @tracked memberOrder = 'asc';
+
+    /**
+     * The shown page of the workspace's members, set by the route
+     *
+     * @property members
+     * @type Workspacemember[]
+     */
+    @tracked members = [];
+
+    /**
+     * Whether Gaia has a page of members after the shown one
+     *
+     * @property hasNextMembers
+     * @type Boolean
+     */
+    @tracked hasNextMembers = false;
+
+    memberPageSize = 20;
+
+    /**
+     * The columns of the Members table
+     *
+     * @property memberColumns
+     * @type Array
+     */
+    get memberColumns() {
+        let t = (key) => this.intl.t(`views.app.workspace.settings.members.${key}`);
+        return [
+            { key: 'member', label: t('member'), sortable: true, sortKey: 'User.name' },
+            { key: 'type', label: t('type') },
+            { key: 'projects', label: t('projects') },
+            { key: 'openIssues', label: t('openIssues') },
+            { key: 'actions', label: '' }
+        ];
+    }
+
+    /**
+     * The offset of the first member on the shown page, for AppUi::Pager
+     *
+     * @property memberOffset
+     * @type Number
+     */
+    get memberOffset() {
+        return (Math.max(1, Number(this.memberPage) || 1) - 1) * this.memberPageSize;
+    }
+
+    /**
+     * Toggles the order of the members, sorted by name, and shows the first page.
+     *
+     * @method sortMembers
+     */
+    @action
+    sortMembers() {
+        this.memberOrder = this.memberOrder === 'asc' ? 'desc' : 'asc';
+        this.memberPage = 1;
+    }
+
+    /**
+     * Shows the page of members that starts at the offset AppUi::Pager asks for.
+     *
+     * @method changeMemberOffset
+     * @param {Number} offset
+     */
+    @action
+    changeMemberOffset(offset) {
+        this.memberPage = Math.floor(offset / this.memberPageSize) + 1;
+    }
 
     /**
      * The columns of the Member Projects table
