@@ -62,6 +62,56 @@ export default function (assert) {
             assert.dom('.workspace-members [data-test-member-projects]').includesText(`${count} of ${total}`);
             assert.dom('.workspace-invite-member-modal').doesNotExist('dialog closed');
         })
+        .given('User $userId has $count open issues in workspace $code', async function (userId, count, code) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            let project = server.schema.projects.where({ workspaceId: workspace.id }).models[0];
+            let open = server.create('issuestatus', { name: 'open', done: '0' });
+            for (let i = 0; i < parseInt(count, 10); i++) {
+                server.create('issue', { subject: `Open ${i}`, projectId: String(project.id), assignee: String(userId), statusId: String(open.id), issuestatus: open });
+            }
+            let finished = server.create('issuestatus', { name: 'finished', done: '1' });
+            server.create('issue', { subject: 'Finished', projectId: String(project.id), assignee: String(userId), statusId: String(finished.id), issuestatus: finished });
+            server.schema.projects.where({ workspaceId: workspace.id }).models.forEach((item) => {
+                server.create('membership', { projectId: String(item.id), userId: String(userId) });
+            });
+            assert.ok(true, `User ${userId} has ${count} open issues`);
+        })
+        .when('User opens the Remove member dialog of "$name"', async function (name) {
+            let row = [...document.querySelectorAll('.workspace-members tbody tr')].find((item) => item.textContent.includes(name));
+            assert.ok(row, `${name} is listed`);
+            await click(row.querySelector('[data-btn="remove-member"]'));
+            await waitUntil(() => document.querySelector('[data-test-remove-summary]'));
+        })
+        .then('The Remove member dialog lists $count open issues', function (count) {
+            assert.dom('[data-test-remove-issue]').exists({ count: parseInt(count, 10) });
+        })
+        .when('User chooses "$name" as the assignee of all issues in the Remove member dialog', async function (name) {
+            await click('.workspace-remove-member-modal .ember-power-select-trigger');
+            let option = [...document.querySelectorAll('.ember-power-select-option')].find((item) => item.textContent.includes(name));
+            assert.ok(option, `option ${name} is listed`);
+            await click(option);
+            await click('.workspace-remove-member-modal [data-btn="apply-set-all"]');
+        })
+        .when('User confirms the Remove member dialog', async function () {
+            await click('.workspace-remove-member-modal [data-btn="confirm-remove-member"]');
+        })
+        .then('The Members table no longer lists "$name"', async function (name) {
+            await waitUntil(() => !document.querySelector('.workspace-remove-member-modal') || document.querySelector('[data-test-remove-error]'));
+            assert.equal(document.querySelector('[data-test-remove-error]')?.textContent.trim() || '', '', 'no error shown');
+            let rows = [...document.querySelectorAll('.workspace-members [data-member-id]')].filter((row) => row.textContent.includes(name));
+            assert.equal(rows.length, 0, `${name} is gone`);
+        })
+        .then('User $userId has no memberships in workspace $code', function (userId, code) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            let projectIds = server.schema.projects.where({ workspaceId: workspace.id }).models.map((item) => String(item.id));
+            let left = server.schema.memberships.where((item) => String(item.userId) === String(userId) && projectIds.includes(String(item.projectId)));
+            assert.equal(left.models.length, 0, 'no memberships left');
+        })
+        .then('The open issues of workspace $code are assigned to User $userId', function (code, userId) {
+            let open = server.schema.issues.where((item) => item.subject.startsWith('Open'));
+            assert.equal(open.models.length, 2);
+            open.models.forEach((issue) => assert.equal(String(issue.assignee), String(userId), 'handed over'));
+        })
         .when('User opens the Move project out dialog of the first project', async function () {
             await click('.workspace-member-projects [data-btn="move-project"]');
         })

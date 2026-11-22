@@ -154,6 +154,45 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     }
 
     /**
+     * The member whose Remove member dialog is open
+     *
+     * @property removingMember
+     * @type Workspacemember
+     */
+    @tracked removingMember = null;
+
+    /**
+     * Opens the Remove member dialog
+     *
+     * @method openRemove
+     * @param {Workspacemember} member
+     */
+    @action
+    openRemove(member) {
+        this.removingMember = member;
+    }
+
+    /**
+     * Closes the Remove member dialog
+     *
+     * @method closeRemove
+     */
+    @action
+    closeRemove() {
+        this.removingMember = null;
+    }
+
+    /**
+     * Reloads the page after a member was removed, so the tables drop them.
+     *
+     * @method memberRemoved
+     */
+    @action
+    memberRemoved() {
+        this.router.refresh();
+    }
+
+    /**
      * Whether the Add project dialog is open
      *
      * @property addingProject

@@ -1,0 +1,70 @@
+<AppUi::Modal
+  @title="views.app.workspace.remove.title"
+  @closeLabel="global.form.cancel"
+  @onClose={{@onClose}}
+  @confirmLabel="views.app.workspace.remove.confirm"
+  @confirm={{this.remove}}
+  @disableSaveBtn={{this.blocked}}
+  @dataSaveBtn="confirm-remove-member"
+  @containerClass="workspace-remove-member-modal"
+>
+  {{#if this.user}}
+    <p data-test-remove-summary>
+      <AppUi::Avatar @user={{this.user}} @size="s" />
+      {{t "views.app.workspace.remove.summary" user=this.user.name count=this.projects.length workspace=@workspace.name}}
+    </p>
+    <p data-test-remove-projects>
+      {{#each this.projects as |project|}}
+        <span class="label label-default">{{project.name}}</span>
+      {{/each}}
+    </p>
+  {{/if}}
+
+  {{#if this.rows.length}}
+    <h4 data-test-remove-open-issues>{{t "views.app.workspace.remove.openIssues" count=this.rows.length}}</h4>
+    <FormFields::FieldRelate
+      @label={{t "views.app.workspace.remove.setAll"}}
+      @options={{this.options}}
+      @selected={{this.setAll}}
+      @searchField="label"
+      @onchange={{this.selectSetAll}}
+      @relateType="relate-simple"
+      @renderInPlace={{true}}
+      @data-field="workspace.remove.setAll"
+    />
+    <button type="button" class="btn btn-default" data-btn="apply-set-all" disabled={{not this.setAll}} {{on "click" this.apply}}>{{t "views.app.workspace.remove.apply"}}</button>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>{{t "views.app.workspace.remove.issue"}}</th>
+          <th>{{t "views.app.workspace.remove.reassignTo"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.rows as |row|}}
+          <tr data-test-remove-issue={{row.issue.id}}>
+            <td>{{row.project.shortCode}}-{{row.issue.issueNumber}} {{row.issue.subject}}</td>
+            <td>
+              <FormFields::FieldRelate
+                @label={{t "views.app.workspace.remove.reassignTo"}}
+                @options={{this.options}}
+                @selected={{row.selected}}
+                @searchField="label"
+                @onchange={{fn this.selectRow row}}
+                @relateType="relate-simple"
+                @renderInPlace={{true}}
+                @data-field={{concat "workspace.remove.issue." row.issue.id}}
+              />
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <p class="text-muted">{{t "views.app.workspace.remove.hint"}}</p>
+  {{/if}}
+
+  {{#each this.errors as |message|}}
+    <div class="alert alert-danger" data-test-remove-error>{{message}}</div>
+  {{/each}}
+</AppUi::Modal>
