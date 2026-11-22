@@ -74,7 +74,7 @@
               <span data-test-member-open-issues>{{member.openIssues}}</span>
             {{else if (eq column.key "actions")}}
               <AccessControl @aclContext="membership.delete">
-                <button type="button" class="btn btn-xs btn-default" data-btn="remove-member" data-target="dlg-remove-member">{{t "views.app.workspace.settings.members.remove"}}</button>
+                <button type="button" class="btn btn-xs btn-default" data-btn="remove-member" {{on "click" (fn this.openRemove member)}}>{{t "views.app.workspace.settings.members.remove"}}</button>
               </AccessControl>
             {{/if}}
           </:cell>
@@ -128,6 +128,10 @@
 
 {{#if this.movingProject}}
   <Workspace::MoveProjectOutDialog @workspace={{this.model}} @project={{this.movingProject}} @onClose={{this.closeMoveOut}} @onMoved={{this.projectMoved}} />
+{{/if}}
+
+{{#if this.removingMember}}
+  <Workspace::RemoveMemberDialog @workspace={{this.model}} @member={{this.removingMember}} @onClose={{this.closeRemove}} @onRemoved={{this.memberRemoved}} />
 {{/if}}
 
 {{#if this.invitingMember}}

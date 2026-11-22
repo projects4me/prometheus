@@ -83,6 +83,21 @@ Feature: Workspace | Settings
     When User confirms the Invite member dialog
     Then The Members table lists "User_1" once with 2 of 2 projects
 
+  Scenario: A member is removed from all the projects and their open issues are handed over
+
+    Given Workspace ENG exists with 2 projects
+    And User 1 is a member of 2 projects of workspace ENG
+    And User 2 is a member of 2 projects of workspace ENG
+    And User 2 has 2 open issues in workspace ENG
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Remove member dialog of "User_2"
+    Then The Remove member dialog lists 2 open issues
+    When User chooses "User_1" as the assignee of all issues in the Remove member dialog
+    And User confirms the Remove member dialog
+    Then The Members table no longer lists "User_2"
+    And User 2 has no memberships in workspace ENG
+    And The open issues of workspace ENG are assigned to User 1
+
   Scenario: A project joins the workspace from the Add project dialog
 
     Given Workspace ENG exists with 1 projects

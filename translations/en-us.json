@@ -2856,6 +2856,20 @@
           "noProject": "This workspace has no project to add members to.",
           "loadFailed": "The people could not be loaded."
         },
+        "remove": {
+          "title": "Remove member",
+          "summary": "{user} will be removed from all {count} projects of {workspace}.",
+          "openIssues": "Open issues ({count})",
+          "setAll": "Set all to",
+          "apply": "Apply",
+          "issue": "Issue",
+          "reassignTo": "Reassign to",
+          "hint": "Their time logs, comments and history stay. Every open issue needs a new assignee.",
+          "confirm": "Remove from workspace",
+          "failed": "{user} could not be removed.",
+          "noMembership": "The member was not found in this workspace.",
+          "loadFailed": "The projects and open issues of the member could not be loaded."
+        },
         "moveOut": {
           "title": "Move project out of this workspace",
           "moveTo": "Move to",

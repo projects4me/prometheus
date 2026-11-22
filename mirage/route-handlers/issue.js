@@ -10,6 +10,11 @@ export function register(server, ctx) {
         // Let the steps assert what the list sent; Mirage still doesn't filter by it.
         ctx.set('lastIssueQuery', issueQuery);
         ctx.set('issueQueries', [...(ctx.get('issueQueries') || []), issueQuery]);
+        let assigneeMatch = !ctx.get('fieldSearched') && (issueQuery || '').match(/Issue\.assignee : (\d+)\) AND \(Issue\.projectId : (\d+)/);
+        if (assigneeMatch) {
+            // The issues a person has in a project, as the Remove member dialog asks for them
+            return paginate(schema.issues.where((issue) => String(issue.assignee) === assigneeMatch[1] && String(issue.projectId) === assigneeMatch[2]), request.queryParams);
+        }
         let field = ctx.get('fieldSearched');
         field = field ? field : 'Issue.issueNumber';
         let value = getValueFromQuery(field, issueQuery);
