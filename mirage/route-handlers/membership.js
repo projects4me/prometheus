@@ -1,5 +1,6 @@
 import getValueFromQuery from '../helpers/get-value-from-query';
 import getRequestData from '../helpers/parse-request';
+import paginate from '../helpers/paginate';
 
 export function register(server, ctx) {
     server.get('/membership', (schema, request) => {
@@ -7,6 +8,13 @@ export function register(server, ctx) {
         let query = request.queryParams.query;
         let fieldName = ctx.get('requestQuery')?.membership;
         let value = getValueFromQuery(fieldName, query);
+
+        let workspaceMatch = !fieldName && query ? query.match(/project\.workspaceId : ([^\s)]+)/) : null;
+        if (workspaceMatch) {
+            let projectIds = schema.projects.where({ workspaceId: workspaceMatch[1] }).models.map((project) => String(project.id));
+            let matching = schema.memberships.where((membership) => projectIds.includes(String(membership.projectId)));
+            return paginate(matching, request.queryParams);
+        }
 
         if (!fieldName && query && query.includes('Membership.projectId')) {
             let projectIds = [...query.matchAll(/Membership\.projectId : (\d+)/g)].map((match) => match[1]);

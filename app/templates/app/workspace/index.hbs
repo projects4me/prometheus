@@ -78,12 +78,12 @@
         <AccessControl @aclContext="workspace.read">
           <AppUi::Box @variant="warning" @noPadding={{true}} class="workspace-members">
             <:header>
-              <h3 class="box-title">{{t "views.app.workspace.detail.members"}}</h3>
+              <h3 class="box-title">{{t "views.app.workspace.detail.members"}} ({{this.model.workspace.memberCount}})</h3>
             </:header>
             <:body>
               <ul class="users-list clearfix">
-                {{#if this.model.members.length}}
-                  {{#each this.model.members as |member|}}
+                {{#if this.members.length}}
+                  {{#each this.members as |member|}}
                     <li data-member-id={{member.id}} class="member-item">
                       <div class="member-avatar-wrap">
                         <AppUi::Avatar @user={{member}} @size="ml" />
@@ -95,6 +95,18 @@
                   <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noMembers"}} />
                 {{/if}}
               </ul>
+              {{#if this.hasMembersPages}}
+                <div class="box-footer no-padding" data-members-pagination>
+                  <AppUi::Pager
+                    @offset={{this.membersOffset}}
+                    @limit={{this.membersPageSize}}
+                    @hasMore={{this.hasMoreMembers}}
+                    @count={{this.members.length}}
+                    @disabled={{this.isMembersLoading}}
+                    @onPageChange={{this.loadMembers}}
+                  />
+                </div>
+              {{/if}}
             </:body>
           </AppUi::Box>
         </AccessControl>
