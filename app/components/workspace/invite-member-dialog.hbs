@@ -1,0 +1,28 @@
+<AppUi::Modal
+  @title="views.app.workspace.invite.title"
+  @closeLabel="global.form.cancel"
+  @onClose={{@onClose}}
+  @confirmLabel="views.app.workspace.invite.confirm"
+  @confirm={{this.invite}}
+  @disableSaveBtn={{not this.selected.length}}
+  @dataSaveBtn="confirm-invite-member"
+  @containerClass="workspace-invite-member-modal"
+>
+  <FormFields::FieldRelateMulti
+    @label={{t "views.app.workspace.invite.people"}}
+    @placeholder={{t "views.app.workspace.invite.placeholder"}}
+    @options={{this.options}}
+    @selected={{this.selected}}
+    @searchField="label"
+    @onchange={{this.selectUsers}}
+    @relateType="relate-user"
+    @renderInPlace={{true}}
+    @closeOnSelect={{false}}
+    @data-field="workspace.invite.people"
+  />
+  <p class="text-muted" data-test-invite-hint>{{t "views.app.workspace.invite.hint" count=@workspace.projectCount}}</p>
+
+  {{#each this.errors as |message|}}
+    <div class="alert alert-danger" data-test-invite-error>{{message}}</div>
+  {{/each}}
+</AppUi::Modal>
