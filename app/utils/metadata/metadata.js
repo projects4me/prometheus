@@ -177,54 +177,6 @@ export default class MetadataMetadata extends EmberObject {
                     anchorRoute: 'workspace',
                     projectRelated: true,
                     workspaceRelated: true,
-                    actions: {
-                        section1: {
-                            overview: {
-                                label: 'views.nav.menu.workspace.overview',
-                                route: 'app.workspace',
-                                className: 'text-teal',
-                                anchorRoute: 'workspace',
-                                workspaceRelated: true,
-                                aclContext: 'workspace.read',
-                            },
-                            agents: {
-                                label: 'views.nav.menu.workspace.agents',
-                                route: 'app.agent',
-                                className: 'text-aqua',
-                                anchorRoute: 'agent',
-                                aclContext: 'agent.read',
-                            },
-                            workflows: {
-                                label: 'views.nav.menu.workspace.workflows',
-                                route: 'app.workflow',
-                                className: 'text-purple',
-                                anchorRoute: 'workflow',
-                                aclContext: 'workflow.read',
-                            },
-                            tools: {
-                                label: 'views.nav.menu.workspace.tools',
-                                route: 'app.agent.tools',
-                                className: 'text-yellow',
-                                anchorRoute: 'agent/tools',
-                                aclContext: 'agent.read',
-                            },
-                            skills: {
-                                label: 'views.nav.menu.workspace.skills',
-                                route: 'app.agent.skills',
-                                className: 'text-green',
-                                anchorRoute: 'agent/skills',
-                                aclContext: 'agent.read',
-                            },
-                            settings: {
-                                label: 'views.nav.menu.workspace.settings',
-                                route: 'app.workspaces.edit',
-                                className: 'text-red',
-                                anchorRoute: 'workspace/edit',
-                                workspaceRelated: true,
-                                aclContext: 'workspace.update',
-                            }
-                        }
-                    },
                     order: 8
                 }
             },

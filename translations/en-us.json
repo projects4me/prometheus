@@ -3094,13 +3094,7 @@
           "label": "Projects"
         },
         "workspace": {
-          "label": "Workspace",
-          "overview": "Overview",
-          "agents": "Agents",
-          "workflows": "Workflows",
-          "tools": "Tools",
-          "skills": "Skills",
-          "settings": "Settings"
+          "label": "Workspace"
         },
         "issue": {
           "label": "Issues",
