@@ -1,8 +1,41 @@
+import { Response } from 'miragejs';
 import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
 import workspaceOverviewSteps from './workspace-overview-steps';
 
 export default function (assert) {
     return workspaceOverviewSteps(assert)
+        .given('Project "$name" exists outside workspace $code', async function (name, code) {
+            let other = server.create('workspace', { name: `${name} workspace`, shortCode: `${name}`.toUpperCase().slice(0, 6) });
+            server.create('project', { name, shortCode: name.toUpperCase().slice(0, 6), workspaceId: other.id });
+            server.create('repository', { name: 'projects4me/loner', projectId: String(server.schema.projects.findBy({ name }).id) });
+            assert.ok(true, `${name} is outside ${code}`);
+        })
+        .given('Gaia refuses to move projects with "$message"', async function (message) {
+            server.patch('/project/:id', () => new Response(422, {}, { status: 'ERROR', messages: [message] }));
+            assert.ok(true, 'Gaia refuses');
+        })
+        .when('User opens the Add project dialog', async function () {
+            await click('[data-btn="add-project"]');
+        })
+        .when('User chooses the project "$name" in the Add project dialog', async function (name) {
+            await click('.workspace-add-project-modal .ember-power-select-trigger');
+            assert.dom('.workspace-add-project-modal').exists('dialog open');
+            let option = [...document.querySelectorAll('.ember-power-select-option')].find((el) => el.textContent.includes(name));
+            assert.ok(option, `option ${name} is listed`);
+            await click(option);
+        })
+        .when('User confirms the Add project dialog', async function () {
+            await click('.workspace-add-project-modal [data-btn="confirm-add-project"]');
+        })
+        .then('The Add project dialog shows the sharing and the environment', function () {
+            assert.dom('[data-test-add-project-sharing]').exists('sharing table');
+            assert.dom('[data-test-sharing-to-project] [data-test-user-chip]').exists('workspace members join the project');
+            assert.dom('[data-test-add-project-repository]').includesText('projects4me/loner');
+            assert.dom('[data-test-add-project-alone]').exists('alone hint');
+        })
+        .then('The Add project dialog shows the error "$message"', function (message) {
+            assert.dom('[data-test-add-project-error]').hasText(message);
+        })
         .when('User visits $path', async function (path) {
             await visit(`/${path}`);
         })

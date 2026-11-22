@@ -6,7 +6,7 @@
       </:header>
       <:tools>
         <AccessControl @aclContext="project.update">
-          <button type="button" class="btn btn-sm btn-primary" data-btn="add-project" data-target="dlg-add-project">{{t "views.app.workspace.settings.projects.add"}}</button>
+          <button type="button" class="btn btn-sm btn-primary" data-btn="add-project" {{on "click" this.openAddProject}}>{{t "views.app.workspace.settings.projects.add"}}</button>
         </AccessControl>
       </:tools>
       <:body>
@@ -121,3 +121,7 @@
     </AppUi::Box>
   </div>
 </div>
+
+{{#if this.addingProject}}
+  <Workspace::AddProjectDialog @workspace={{this.model}} @onClose={{this.closeAddProject}} @onAdded={{this.projectAdded}} />
+{{/if}}

@@ -1,0 +1,85 @@
+<AppUi::Modal
+  @title="views.app.workspace.addProject.title"
+  @closeLabel="global.form.cancel"
+  @onClose={{@onClose}}
+  @confirmLabel="views.app.workspace.addProject.confirm"
+  @confirm={{this.add}}
+  @disableSaveBtn={{not this.project}}
+  @dataSaveBtn="confirm-add-project"
+  @containerClass="workspace-add-project-modal"
+>
+  <FormFields::FieldRelate
+    @label={{t "views.app.workspace.addProject.project"}}
+    @placeholder={{t "views.app.workspace.addProject.placeholder"}}
+    @options={{this.options}}
+    @selected={{this.selected}}
+    @searchField="label"
+    @onchange={{this.selectProject}}
+    @relateType="relate-simple"
+    @renderInPlace={{true}}
+    @data-field="workspace.addProject.project"
+  />
+  <p class="text-muted" data-test-add-project-hint>
+    {{t "views.app.workspace.addProject.hint"}}
+    {{#if this.alone}}
+      <span data-test-add-project-alone>{{t "views.app.workspace.addProject.aloneHint" project=this.project.name}}</span>
+    {{/if}}
+  </p>
+
+  {{#if this.project}}
+    <h4>{{t "views.app.workspace.addProject.sharedBoth"}}</h4>
+    <table class="table table-bordered" data-test-add-project-sharing>
+      <thead>
+        <tr>
+          <th>{{t "views.app.workspace.addProject.willBeAddedTo"}}</th>
+          <th>{{t "views.app.workspace.addProject.who"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-test-sharing-to-project>
+          <td>{{t "views.app.workspace.addProject.toProject" project=this.project.name}}</td>
+          <td>
+            {{#each this.sharing.toProject as |user|}}
+              <AppUi::UserChip @user={{user}} @size="s" />
+            {{else}}
+              <span class="text-muted">{{t "views.app.workspace.addProject.nobody"}}</span>
+            {{/each}}
+          </td>
+        </tr>
+        <tr data-test-sharing-to-others>
+          <td>{{t "views.app.workspace.addProject.toOthers"}}</td>
+          <td>
+            {{#each this.sharing.toOthers as |user|}}
+              <AppUi::UserChip @user={{user}} @size="s" />
+            {{else}}
+              <span class="text-muted">{{t "views.app.workspace.addProject.nobody"}}</span>
+            {{/each}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-muted">{{t "views.app.workspace.addProject.readOnly"}}</p>
+
+    <h4>{{t "views.app.workspace.addProject.environment"}}</h4>
+    <table class="table" data-test-add-project-environment>
+      <tbody>
+        <tr>
+          <td>{{t "views.app.workspace.addProject.repository"}}</td>
+          <td data-test-add-project-repository>
+            {{#if this.repository}}<code>{{this.repository}}</code>{{else}}<span class="text-muted">{{t "views.app.workspace.addProject.noRepository"}}</span>{{/if}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{t "views.app.workspace.addProject.runtime"}}</td>
+          <td data-test-add-project-runtime>
+            {{#if @workspace.runtime.name}}{{@workspace.runtime.name}}{{else}}<span class="text-muted">{{t "views.app.workspace.addProject.noRuntime"}}</span>{{/if}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {{/if}}
+
+  {{#each this.errors as |message|}}
+    <div class="alert alert-danger" data-test-add-project-error>{{message}}</div>
+  {{/each}}
+</AppUi::Modal>

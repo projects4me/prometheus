@@ -72,3 +72,26 @@ Feature: Workspace | Settings
     And User 1 is a member of 2 projects of workspace ENG
     When User navigates to app/workspace/ENG/settings/projects
     Then The Members table lists 1 person with the sharing callout for 2 projects
+
+  Scenario: A project joins the workspace from the Add project dialog
+
+    Given Workspace ENG exists with 1 projects
+    And Project "Loner" exists outside workspace ENG
+    And User 1 is a member of 1 projects of workspace ENG
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Add project dialog
+    And User chooses the project "Loner" in the Add project dialog
+    Then The Add project dialog shows the sharing and the environment
+    When User confirms the Add project dialog
+    Then The Member Projects table lists 2 projects with the four columns
+
+  Scenario: Gaia refusal is shown in the Add project dialog
+
+    Given Workspace ENG exists with 1 projects
+    And Project "Loner" exists outside workspace ENG
+    And Gaia refuses to move projects with "Work is in progress"
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Add project dialog
+    And User chooses the project "Loner" in the Add project dialog
+    And User confirms the Add project dialog
+    Then The Add project dialog shows the error "Work is in progress"

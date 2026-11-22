@@ -116,6 +116,44 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     }
 
     /**
+     * Whether the Add project dialog is open
+     *
+     * @property addingProject
+     * @type Boolean
+     */
+    @tracked addingProject = false;
+
+    /**
+     * Opens the Add project dialog
+     *
+     * @method openAddProject
+     */
+    @action
+    openAddProject() {
+        this.addingProject = true;
+    }
+
+    /**
+     * Closes the Add project dialog
+     *
+     * @method closeAddProject
+     */
+    @action
+    closeAddProject() {
+        this.addingProject = false;
+    }
+
+    /**
+     * Reloads the page after a project joined, so both tables show it.
+     *
+     * @method projectAdded
+     */
+    @action
+    projectAdded() {
+        this.router.refresh();
+    }
+
+    /**
      * The columns of the Member Projects table
      *
      * @property columns
