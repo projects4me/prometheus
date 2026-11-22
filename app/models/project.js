@@ -154,6 +154,24 @@ export default class ProjectModel extends Model {
     @attr('number') openIssueCount;
 
     /**
+     * When the project joined its workspace, computed by Gaia
+     *
+     * @property workspaceJoinedAt
+     * @type String
+     * @for Project
+     */
+    @attr('string') workspaceJoinedAt;
+
+    /**
+     * The number of Talos runs in progress on the project, computed by Gaia
+     *
+     * @property runsInProgress
+     * @type Number
+     * @for Project
+     */
+    @attr('number') runsInProgress;
+
+    /**
      * Id of the active milestone of the project, computed by Gaia, empty without one
      *
      * @property activeMilestoneId

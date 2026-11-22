@@ -1,7 +1,51 @@
 <div class="row">
   <div class="col-md-8">
-    {{!-- The Projects and members tables come in their own issues (set-projects, set-members) --}}
-    <div class="workspace-settings-projects-placeholder" data-placeholder="projects"></div>
+    <AppUi::Box @variant="info" class="workspace-member-projects" @noPadding={{true}}>
+      <:header>
+        <h3 class="box-title">{{t "views.app.workspace.settings.projects.title"}}</h3>
+      </:header>
+      <:tools>
+        <AccessControl @aclContext="project.update">
+          <button type="button" class="btn btn-sm btn-primary" data-btn="add-project" data-target="dlg-add-project">{{t "views.app.workspace.settings.projects.add"}}</button>
+        </AccessControl>
+      </:tools>
+      <:body>
+        <AppUi::DataTable @columns={{this.columns}} @rows={{this.projects}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
+          <:cell as |project column|>
+            {{#if (eq column.key "name")}}
+              <span data-project-id={{project.id}}>
+                <LinkTo @route="app.project.index" @model={{project.shortCode}}>{{project.name}}</LinkTo>
+                <span class="text-muted">({{project.shortCode}})</span>
+              </span>
+            {{else if (eq column.key "workspaceJoinedAt")}}
+              <span data-test-project-joined>{{#let (format-date-time date=project.workspaceJoinedAt humanize=true) as |joined|}}{{joined}}{{/let}}</span>
+            {{else if (eq column.key "openIssueCount")}}
+              <span data-test-project-open-issues>{{project.openIssueCount}}</span>
+            {{else if (eq column.key "runsInProgress")}}
+              {{#if project.runsInProgress}}
+                <span data-test-project-runs>{{t "views.app.workspace.settings.projects.runs" count=project.runsInProgress}}</span>
+              {{else}}
+                <span class="text-muted" data-test-project-runs>{{t "views.app.workspace.settings.projects.none"}}</span>
+              {{/if}}
+            {{else if (eq column.key "actions")}}
+              <AccessControl @aclContext="project.update">
+                <button type="button" class="btn btn-xs btn-default" data-btn="move-project" data-target="dlg-move-project">{{t "views.app.workspace.settings.projects.move"}}</button>
+              </AccessControl>
+            {{/if}}
+          </:cell>
+          <:empty>
+            <Exceptions::NothingFound @description={{t "views.app.workspace.settings.projects.empty"}} />
+          </:empty>
+        </AppUi::DataTable>
+      </:body>
+      <:bottom>
+        {{#if (or (gt this.offset 0) this.hasNextProjects)}}
+          <div class="box-footer no-padding" data-member-projects-pagination>
+            <AppUi::Pager @offset={{this.offset}} @limit={{this.pageSize}} @hasMore={{this.hasNextProjects}} @count={{this.projects.length}} @onPageChange={{this.changeOffset}} />
+          </div>
+        {{/if}}
+      </:bottom>
+    </AppUi::Box>
     <div class="workspace-settings-members-placeholder" data-placeholder="members"></div>
   </div>
 

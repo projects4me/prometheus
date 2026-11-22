@@ -2838,6 +2838,18 @@
             "agents": "Agents",
             "delete": "Delete"
           },
+          "projects": {
+            "title": "Member Projects",
+            "project": "Project",
+            "joined": "Joined",
+            "openIssues": "Open issues",
+            "workInFlight": "Work in flight",
+            "runs": "{count, plural, one {# Talos run} other {# Talos runs}}",
+            "none": "none",
+            "move": "Move…",
+            "add": "Add project",
+            "empty": "This workspace has no projects you can see"
+          },
           "agents": {
             "title": "Agents, workflows, tools and skills",
             "tools": "Tools",
