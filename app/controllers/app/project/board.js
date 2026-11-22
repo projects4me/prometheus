@@ -1092,7 +1092,7 @@ export default class AppProjectBoardController extends ProjectRelated {
             query: `((Issue.issueNumber : ${issueNumber}) AND (Issue.projectId : ${projectId}))`,
             sort: 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
-            rels: 'comments,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,childissues,watchers',
+            rels: 'comments,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,watchers',
             limit: -1,
         };
 

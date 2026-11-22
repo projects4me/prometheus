@@ -32,7 +32,7 @@ export default function (assert) {
 	 * Verifies the issue list content (.list-view) is gone while collapsed.
 	 */
 	.then('User should not see the issue list content', function () {
-		let listView = document.querySelector('.list-view');
+		let listView = document.querySelector('.box-primary.list-view');
 		assert.notOk(listView, 'Issue list content should not be visible when collapsed');
 	})
 
@@ -40,7 +40,7 @@ export default function (assert) {
 	 * Verifies the issue list content (.list-view) is restored after expanding.
 	 */
 	.then('User should see the issue list content', function () {
-		let listView = document.querySelector('.list-view');
+		let listView = document.querySelector('.box-primary.list-view');
 		assert.ok(listView, 'Issue list content should be visible when expanded');
 	});
 }

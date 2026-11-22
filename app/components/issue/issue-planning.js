@@ -517,7 +517,7 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 			await currentIssue.save();
 			await this.router.refresh();
 			this.args.onClose();
-			let issueHierarchyEl = document.querySelector('.issue-hierarchy');
+			let issueHierarchyEl = document.querySelector('.linked-issues');
 			this.args.scrollAndHighlight(issueHierarchyEl, true);
 		}
 	}
