@@ -116,6 +116,44 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     }
 
     /**
+     * Whether the Invite member dialog is open
+     *
+     * @property invitingMember
+     * @type Boolean
+     */
+    @tracked invitingMember = false;
+
+    /**
+     * Opens the Invite member dialog
+     *
+     * @method openInvite
+     */
+    @action
+    openInvite() {
+        this.invitingMember = true;
+    }
+
+    /**
+     * Closes the Invite member dialog
+     *
+     * @method closeInvite
+     */
+    @action
+    closeInvite() {
+        this.invitingMember = false;
+    }
+
+    /**
+     * Reloads the page after people were invited, so the Members table shows them.
+     *
+     * @method memberInvited
+     */
+    @action
+    memberInvited() {
+        this.router.refresh();
+    }
+
+    /**
      * Whether the Add project dialog is open
      *
      * @property addingProject

@@ -2846,6 +2846,16 @@
           "failed": "The project could not be added to the workspace.",
           "loadFailed": "The project's details could not be loaded."
         },
+        "invite": {
+          "title": "Invite member",
+          "people": "People",
+          "placeholder": "Choose people",
+          "hint": "They will be added to all {count} projects of this workspace.",
+          "confirm": "Invite",
+          "failed": "{user} could not be invited.",
+          "noProject": "This workspace has no project to add members to.",
+          "loadFailed": "The people could not be loaded."
+        },
         "moveOut": {
           "title": "Move project out of this workspace",
           "moveTo": "Move to",

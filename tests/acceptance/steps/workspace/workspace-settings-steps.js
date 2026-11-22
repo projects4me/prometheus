@@ -41,6 +41,27 @@ export default function (assert) {
             server.schema.projects.where({ workspaceId: workspace.id }).models[0].update({ runsInProgress: parseInt(count, 10) });
             assert.ok(true, `a project of ${code} has ${count} runs in progress`);
         })
+        .when('User opens the Invite member dialog', async function () {
+            await click('.workspace-members [data-btn="invite-member"]');
+        })
+        .when('User chooses the person "$name" in the Invite member dialog', async function (name) {
+            await click('.workspace-invite-member-modal .ember-power-select-trigger');
+            let option = [...document.querySelectorAll('.ember-power-select-option')].find((item) => item.textContent.includes(name));
+            assert.ok(option, `option ${name} is listed`);
+            await click(option);
+        })
+        .then('The Invite member dialog says they join all $count projects', function (count) {
+            assert.dom('[data-test-invite-hint]').includesText(`all ${count} projects`);
+        })
+        .when('User confirms the Invite member dialog', async function () {
+            await click('.workspace-invite-member-modal [data-btn="confirm-invite-member"]');
+        })
+        .then('The Members table lists "$name" once with $count of $total projects', function (name, count, total) {
+            let rows = [...document.querySelectorAll('.workspace-members [data-member-id]')].filter((row) => row.textContent.includes(name));
+            assert.equal(rows.length, 1, 'listed once');
+            assert.dom('.workspace-members [data-test-member-projects]').includesText(`${count} of ${total}`);
+            assert.dom('.workspace-invite-member-modal').doesNotExist('dialog closed');
+        })
         .when('User opens the Move project out dialog of the first project', async function () {
             await click('.workspace-member-projects [data-btn="move-project"]');
         })

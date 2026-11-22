@@ -52,7 +52,7 @@
       </:header>
       <:tools>
         <AccessControl @aclContext="membership.create">
-          <button type="button" class="btn btn-sm btn-primary" data-btn="invite-member" data-target="dlg-invite-member">{{t "views.app.workspace.settings.members.invite"}}</button>
+          <button type="button" class="btn btn-sm btn-primary" data-btn="invite-member" {{on "click" this.openInvite}}>{{t "views.app.workspace.settings.members.invite"}}</button>
         </AccessControl>
       </:tools>
       <:body>
@@ -128,4 +128,8 @@
 
 {{#if this.movingProject}}
   <Workspace::MoveProjectOutDialog @workspace={{this.model}} @project={{this.movingProject}} @onClose={{this.closeMoveOut}} @onMoved={{this.projectMoved}} />
+{{/if}}
+
+{{#if this.invitingMember}}
+  <Workspace::InviteMemberDialog @workspace={{this.model}} @onClose={{this.closeInvite}} @onInvited={{this.memberInvited}} />
 {{/if}}

@@ -52,6 +52,17 @@ export function register(server, ctx) {
             membership.update({ project, user });
         }
 
+        if (project?.workspaceId && user) {
+            // Gaia's member sync: the person joins every project of the workspace, shown as one Members row
+            let total = schema.projects.where({ workspaceId: project.workspaceId }).models.length;
+            let row = schema.workspacemembers.findBy({ workspaceId: String(project.workspaceId), userId: String(user.id) });
+            if (row) {
+                row.update({ projectCount: total });
+            } else {
+                server.create('workspacemember', { workspaceId: String(project.workspaceId), userId: String(user.id), projectCount: total, user });
+            }
+        }
+
         return membership;
     });
 

@@ -73,6 +73,16 @@ Feature: Workspace | Settings
     When User navigates to app/workspace/ENG/settings/projects
     Then The Members table lists 1 person with the sharing callout for 2 projects
 
+  Scenario: A person invited from the Members box joins all the projects
+
+    Given Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Invite member dialog
+    And User chooses the person "User_1" in the Invite member dialog
+    Then The Invite member dialog says they join all 2 projects
+    When User confirms the Invite member dialog
+    Then The Members table lists "User_1" once with 2 of 2 projects
+
   Scenario: A project joins the workspace from the Add project dialog
 
     Given Workspace ENG exists with 1 projects
