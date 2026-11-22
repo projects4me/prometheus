@@ -72,7 +72,7 @@ module('Integration | Component | nav-bar', function (hooks) {
         assert.dom('[data-navigation-module="Project"] [data-navigation-action="workspaces"] a').hasAttribute('href', /\/workspace$/);
     });
 
-    test('the Workspace item comes last in the Project group and links to the workspace of the project', async function (assert) {
+    test('the Workspace item is one link, last in the Project group, to the workspace Overview of the project', async function (assert) {
         this.owner.register('service:tracked-project', class extends Service {
             shortCode = 'aprom';
             workspaceShortCode = 'agw';
@@ -85,15 +85,9 @@ module('Integration | Component | nav-bar', function (hooks) {
         assert.ok(modules.indexOf('Workspace') > modules.indexOf('Idea'), 'Workspace follows the project items');
         assert.ok(modules.indexOf('Workspace') < modules.indexOf('Settings'), 'Workspace comes before the Admin items');
 
-        let item = (action) => `[data-navigation-module="Workspace"] [data-navigation-action="${action}"] a`;
-        assert.dom('[data-navigation-module="Workspace"] li[data-navigation-action]').exists({ count: 6 });
-        assert.dom(item('overview')).hasAttribute('href', /\/workspace\/agw$/);
-        assert.dom(item('agents')).hasAttribute('href', /\/agent$/);
-        assert.dom(item('workflows')).hasAttribute('href', /\/workflow$/);
-        assert.dom(item('tools')).hasAttribute('href', /\/agent\/tools$/);
-        assert.dom(item('skills')).hasAttribute('href', /\/agent\/skills$/);
-        assert.dom(item('settings')).hasAttribute('href', /\/workspace\/edit\/agw$/);
-        assert.dom(item('settings')).hasText('Settings');
+        assert.dom('[data-navigation-module="Workspace"] li[data-navigation-action]').doesNotExist();
+        assert.dom('[data-navigation-module="Workspace"] ul.treeview-menu').doesNotExist();
+        assert.dom('[data-navigation-module="Workspace"] > a').hasText('Workspace').hasAttribute('href', /\/workspace\/agw$/);
     });
 
     test('the Workspace item is disabled without a project', async function (assert) {
@@ -107,25 +101,6 @@ module('Integration | Component | nav-bar', function (hooks) {
 
         assert.dom('li.nav-disabled[data-navigation-module="Workspace"]').exists();
         assert.dom('[data-navigation-module="Workspace"] a[href]').doesNotExist();
-    });
-
-    test('the Workspace sub-items follow their aclContext', async function (assert) {
-        this.owner.register('service:acl', class extends Service {
-            checkAccess(context) {
-                return context !== 'workspace.update' && context !== 'workflow.read';
-            }
-        });
-        this.owner.register('service:tracked-project', class extends Service {
-            shortCode = 'aprom';
-            workspaceShortCode = 'agw';
-            getProjectId() { return '1'; }
-        });
-
-        await render(hbs`<AppUi::NavBar />`);
-
-        assert.dom('[data-navigation-module="Workspace"] [data-navigation-action="settings"]').doesNotExist();
-        assert.dom('[data-navigation-module="Workspace"] [data-navigation-action="workflows"]').doesNotExist();
-        assert.dom('[data-navigation-module="Workspace"] [data-navigation-action="agents"]').exists();
     });
 
     test('the Admin group shows only Settings and Developer', async function (assert) {
