@@ -6,6 +6,7 @@ import PrometheusListController from "prometheus/controllers/prometheus/list";
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import format from "prometheus/utils/data/format";
+import { workspaceIdOf, withWorkspace } from "prometheus/utils/project/workspace-filter";
 
 /**
  * This controller is used for the project list
@@ -25,6 +26,72 @@ export default class AppProjectsIndexController extends PrometheusListController
      * @type Object
      */
     @tracked querySchema = null;
+
+    /**
+     * The workspaces seen in the listed projects, kept while filtering so the buttons stay.
+     *
+     * @property knownWorkspaces
+     * @type Map
+     */
+    @tracked knownWorkspaces = new Map();
+
+    /**
+     * The id of the workspace the list is filtered by, null for all
+     *
+     * @property activeWorkspaceId
+     * @type String
+     */
+    get activeWorkspaceId() {
+        return workspaceIdOf(this.query);
+    }
+
+    /**
+     * The workspaces to filter by: those of the listed projects, with the ones seen before
+     *
+     * @property workspaceOptions
+     * @type Array
+     */
+    get workspaceOptions() {
+        let known = new Map(this.knownWorkspaces);
+        for (let project of this.model?.slice?.() ?? []) {
+            let workspace = project.belongsTo('workspace').value();
+            if (workspace) {
+                known.set(String(workspace.id), workspace);
+            }
+        }
+        return [...known.values()].sort((a, b) => String(a.name).localeCompare(String(b.name)));
+    }
+
+    /**
+     * Whether there are too many workspaces for buttons
+     *
+     * @property manyWorkspaces
+     * @type Boolean
+     */
+    get manyWorkspaces() {
+        return this.workspaceOptions.length > 5;
+    }
+
+    /**
+     * Filters the list by a workspace, empty for all
+     *
+     * @method filterByWorkspace
+     * @param {String|null} workspaceId
+     */
+    @action filterByWorkspace(workspaceId) {
+        this.knownWorkspaces = new Map(this.workspaceOptions.map(w => [String(w.id), w]));
+        this.applyQuery(withWorkspace(this.query, workspaceId));
+    }
+
+    /**
+     * Filters the list by the workspace chosen in the relate field
+     *
+     * @method selectWorkspace
+     * @param {Workspace|null} workspace
+     */
+    @action selectWorkspace(workspace) {
+        this.filterByWorkspace(workspace ? workspace.id : null);
+    }
 
     /**
      * What the shared ezSearch saved-search actions need for projects.

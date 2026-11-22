@@ -265,6 +265,11 @@ export default class MetadataMetadata extends EmberObject {
                         aliases: ['status'],
                         values: { source: 'translation', key: 'views.app.project.lists.status' }
                     },
+                    'Project.workspace': {
+                        label: 'views.app.project.filter.workspace',
+                        type: 'text',
+                        aliases: ['workspace']
+                    },
                     'manager.name': {
                         label: 'views.app.project.filter.manager',
                         type: 'user',

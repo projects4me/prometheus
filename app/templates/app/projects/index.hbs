@@ -83,12 +83,39 @@
               </div>
               {{!-- /.pull-right --}}
             </div>
+            {{#if this.workspaceOptions.length}}
+              <div class="list-controls project-workspace-filter">
+                <span class="text-muted">{{t "views.app.project.list.workspace"}}</span>
+                {{#if this.manyWorkspaces}}
+                  <FormFields::FieldRelate
+                    @renderInPlace={{true}}
+                    @placeholder={{t "views.app.project.list.workspaceAll"}}
+                    @options={{this.workspaceOptions}}
+                    @selected={{find-by "id" this.activeWorkspaceId this.workspaceOptions}}
+                    @searchField="name"
+                    @onchange={{this.selectWorkspace}}
+                    @relateType="relate-simple"
+                    @data-field="project.workspaceFilter"
+                  />
+                {{else}}
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm {{unless this.activeWorkspaceId "active"}}" data-workspace-filter="all" {{on "click" (fn this.filterByWorkspace null)}}>{{t "views.app.project.list.workspaceAll"}}</button>
+                    {{#each this.workspaceOptions as |workspace|}}
+                      <button type="button" class="btn btn-default btn-sm {{if (eq workspace.id this.activeWorkspaceId) "active"}}" data-workspace-filter={{workspace.id}} {{on "click" (fn this.filterByWorkspace workspace.id)}}>{{workspace.name}}</button>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
             <div class="table-responsive list-view">
               <table class="table table-hover table-striped">
                 <thead>
                   <tr>
                     <th class="select-box"></th>
                     <th data-sort="Project.name">{{t "views.app.project.list.name"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th>{{t "views.app.project.list.workspace"}}</th>
+                    <th>{{t "views.app.project.list.openIssues"}}</th>
+                    <th>{{t "views.app.project.list.activeMilestone"}}</th>
                     <th data-sort="manager.name">{{t "views.app.project.list.manager"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'manager.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     <th data-sort="Project.status">{{t "views.app.project.list.status"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.status')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     <th data-sort="Project.dateModified">{{t "views.app.project.list.date"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.dateModified')}}><i class="fa fa-sort"></i></AppUi::Button></th>
@@ -104,7 +131,15 @@
                           <FormFields::FieldCheckbox @select={{this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
                         </td>
                         
-                        <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
+                        <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo> <small class="text-muted project-code">{{project.shortCode}}</small></td>
+                        <td class="project-workspace">
+                          {{#if project.workspace.id}}
+                            <LinkTo @route="app.workspace" @model={{project.workspace.shortCode}}>{{project.workspace.name}}</LinkTo>
+                            {{#if (eq project.workspace.projectCount 1)}}<em class="text-muted">{{t "views.app.project.list.onlyProject"}}</em>{{/if}}
+                          {{/if}}
+                        </td>
+                        <td class="project-open-issues">{{project.openIssueCount}}</td>
+                        <td class="project-active-milestone">{{project.activeMilestoneName}}</td>
                         <td class="project-manager"><LinkTo @route="app.user.page" @model={{project.manager.id}}>{{project.manager.name}}</LinkTo></td>
                         <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
                         <td class="project-date">{{format-date date=project.dateModified}}</td>
@@ -158,6 +193,8 @@
 
             </div>
           </div>
+
+          <div class="box-footer text-muted project-workspace-note">{{t "views.app.project.list.workspaceNote"}}</div>
 
           {{!-- Modals --}}
           {{#if this.exportDialog}}

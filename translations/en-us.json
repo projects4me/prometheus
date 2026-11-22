@@ -734,7 +734,8 @@
           "type": "Type",
           "status": "Status",
           "shortCode": "Short Code",
-          "manager": "Manager"
+          "manager": "Manager",
+          "workspace": "Workspace"
         },
         "edit": {
           "header": "Edit Project"
@@ -793,6 +794,12 @@
           "type": "Type",
           "manager": "Manager",
           "description": "Description",
+          "workspace": "Workspace",
+          "workspaceAll": "All",
+          "onlyProject": "only project",
+          "openIssues": "Open issues",
+          "activeMilestone": "Active milestone",
+          "workspaceNote": "Every project has a workspace. A project created on its own gets one with the same name.",
           "status": "Status",
           "date": "Date",
           "members": "Members"
