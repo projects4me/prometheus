@@ -1,5 +1,5 @@
 import { Response } from 'miragejs';
-import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
+import { click, currentURL, fillIn, visit, waitUntil } from '@ember/test-helpers';
 import workspaceOverviewSteps from './workspace-overview-steps';
 
 export default function (assert) {
@@ -76,7 +76,8 @@ export default function (assert) {
             assert.dom('.workspace-move-project-modal').exists('dialog stays open');
             assert.dom('[data-test-move-out-error]').hasText(message);
         })
-        .then('The Move project out dialog is closed', function () {
+        .then('The Move project out dialog is closed', async function () {
+            await waitUntil(() => !document.querySelector('.workspace-move-project-modal'), { timeout: 3000 }).catch(() => {});
             assert.dom('.workspace-move-project-modal').doesNotExist();
         })
         .when('User visits $path', async function (path) {
