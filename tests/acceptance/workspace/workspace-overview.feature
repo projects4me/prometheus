@@ -6,6 +6,7 @@ Feature: Workspace | read-only Overview
     Given There is no pre-existing data
     And project scenario is loaded
     And User_1 is logged in
+    And The membership requests are recorded
     And Workspace ENG exists with 2 projects
     And User 2 is a member of both projects of workspace ENG
     And User 3 is a member of the first project of workspace ENG
@@ -13,6 +14,7 @@ Feature: Workspace | read-only Overview
     Then The workspace header shows ENG
     And The workspace lists 2 projects
     And The workspace lists 2 members
+    And The workspace members were requested once through project.workspaceId, paged, without OR
 
   Scenario: An empty workspace
 
