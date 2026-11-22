@@ -51,3 +51,9 @@ Feature: Workspace | Settings
     When User navigates to app/workspace/EMPTY/settings/delete
     And User confirms deleting the workspace in Settings
     Then Workspace EMPTY is deleted and the workspaces list is shown
+
+  Scenario: The Member Projects table lists the projects with four columns
+
+    Given Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    Then The Member Projects table lists 2 projects with the four columns

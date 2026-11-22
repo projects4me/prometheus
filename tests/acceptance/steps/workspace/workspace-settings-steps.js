@@ -30,6 +30,14 @@ export default function (assert) {
             assert.dom('.workspace-settings .nav-tabs li.active [data-tab="projects"]').exists('Projects tab is active');
             assert.dom('.workspace-details-form').exists('details form is shown');
         })
+        .then('The Member Projects table lists $count projects with the four columns', function (count) {
+            assert.dom('.workspace-member-projects [data-project-id]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-member-projects th').exists({ count: 5 }, 'four data columns and the action column');
+            assert.dom('.workspace-member-projects [data-test-project-open-issues]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-member-projects [data-test-project-runs]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-member-projects [data-btn="move-project"]').exists({ count: parseInt(count, 10) });
+            assert.dom('.workspace-member-projects [data-btn="add-project"]').exists();
+        })
         .then('The Who Can Manage box lists the workspace permissions', function () {
             let text = document.querySelector('.workspace-who-can-manage').textContent;
             ['workspace.update', 'membership.create', 'membership.delete', 'project.update', 'agent.*'].forEach((permission) => {
