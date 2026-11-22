@@ -1,4 +1,4 @@
-import { click, currentURL } from '@ember/test-helpers';
+import { click } from '@ember/test-helpers';
 import { Response } from 'miragejs';
 import steps from '../steps';
 
@@ -107,32 +107,33 @@ export default function (assert) {
                 assert.dom('.project-details [data-test-project-workspace-link]').hasText(`${code} workspace`, 'The workspace name is a link');
             }
         )
-        .when(
-            'User confirms deleting the workspace',
-            async function () {
-                await click('.workspace-details [data-btn="delete"]');
-                await click('.workspace-delete-modal [data-btn="confirm-delete"]');
-            }
-        )
         .then(
-            'The workspace delete button is disabled',
-            async function () {
-                assert.dom('.workspace-details [data-btn="delete"]').isDisabled('Delete is disabled');
-            }
-        )
-        .then(
-            'Workspace $code is deleted and the workspaces list is shown',
+            'The workspace page header links to workspace $code',
             async function (code) {
-                assert.notOk(server.schema.workspaces.findBy({ shortCode: code }), `Workspace ${code} is deleted`);
-                assert.ok(/^\/app\/workspace(\?|$)/.test(currentURL()), 'The workspaces list is shown');
+                assert.dom('.content-header h1 small a').exists('The workspace name is the header link');
+                assert.dom('.content-header .breadcrumb').exists('The breadcrumb is shown');
+                assert.dom('.workspace-details .workspace-shortcode').hasText(`(${code})`, 'The header box shows the code');
             }
         )
         .then(
-            'The workspace delete refusal shows "$message"',
-            async function (message) {
-                assert.dom('[data-delete-error]').hasText(message, 'Gaia message is shown');
-                assert.ok(currentURL().startsWith('/app/workspace/'), 'The page is kept');
-                assert.ok(server.schema.workspaces.first(), 'The workspace is kept');
+            'The workspace breadcrumb ends with "$label"',
+            async function (label) {
+                assert.dom('.content-header .breadcrumb li:nth-child(2)').includesText('Workspaces', 'The trail goes through Workspaces');
+                assert.dom('.content-header .breadcrumb li:last-child').includesText(label, 'The trail ends with the workspace');
+            }
+        )
+        .then(
+            'The workspace facts show $count projects',
+            async function (count) {
+                assert.dom('.workspace-details .workspace-project-count').hasText(String(count), 'The projects fact matches');
+                assert.dom('.workspace-details .workspace-member-count').exists('The members fact is shown');
+            }
+        )
+        .then(
+            'The workspace has a Settings button and no delete button',
+            async function () {
+                assert.dom('.workspace-details [data-btn="settings"]').hasText('Settings', 'Settings is translated');
+                assert.dom('[data-btn="delete"]').doesNotExist('Delete moved to Settings');
             }
         )
         .then(

@@ -53,32 +53,14 @@ Feature: Workspace | read-only Overview
     When User navigates to app/workspace/NOPE
     Then The workspace is not found
 
-  Scenario: A workspace with projects can't be deleted
+  Scenario: The page header, facts and no delete tool
 
     Given There is no pre-existing data
     And project scenario is loaded
     And User_1 is logged in
     And Workspace ENG exists with 2 projects
     When User navigates to app/workspace/ENG
-    Then The workspace delete button is disabled
-
-  Scenario: An empty workspace is deleted after confirmation
-
-    Given There is no pre-existing data
-    And project scenario is loaded
-    And User_1 is logged in
-    And Workspace EMPTY exists with 0 projects
-    When User navigates to app/workspace/EMPTY
-    And User confirms deleting the workspace
-    Then Workspace EMPTY is deleted and the workspaces list is shown
-
-  Scenario: Gaia refuses to delete the workspace
-
-    Given There is no pre-existing data
-    And project scenario is loaded
-    And User_1 is logged in
-    And Workspace EMPTY exists with 0 projects
-    And Gaia refuses to delete workspace EMPTY with "The workspace still owns agents"
-    When User navigates to app/workspace/EMPTY
-    And User confirms deleting the workspace
-    Then The workspace delete refusal shows "The workspace still owns agents"
+    Then The workspace page header links to workspace ENG
+    And The workspace breadcrumb ends with "ENG"
+    And The workspace facts show 2 projects
+    And The workspace has a Settings button and no delete button
