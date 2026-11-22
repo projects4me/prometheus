@@ -2866,7 +2866,22 @@
           "repository": "Repository",
           "projectManager": "Project Manager",
           "noMembers": "This workspace has no members you can see",
-          "manageMembers": "Manage members"
+          "manageMembers": "Manage members",
+          "crossProjectLinks": "Cross-project links",
+          "blocking": "({count} blocking)",
+          "environment": "Environment",
+          "runtimeOnline": "{name} online",
+          "runtimeOffline": "{name} offline",
+          "noRuntime": "No runtime bound",
+          "runtime": "Runtime",
+          "runsInProgress": "Runs in progress",
+          "repositories": "Repositories",
+          "repositoriesValue": "{total} ({project} project, {rest} workspace)",
+          "agents": "Agents",
+          "toolServers": "Tool servers",
+          "skills": "Skills",
+          "environmentLink": "Environment",
+          "agentsLink": "Agents, tools and skills"
         },
         "create": {
           "header": "Create Workspace"

@@ -107,6 +107,27 @@ export default class WorkspaceIndexController extends AppController {
     }
 
     /**
+     * The name of the runtime the workspace is bound to, empty when it has none
+     *
+     * @property runtimeName
+     * @type String
+     */
+    get runtimeName() {
+        return this.model?.workspace?.runtime?.get('name') || '';
+    }
+
+    /**
+     * The repositories that belong to the workspace rather than to a project
+     *
+     * @property workspaceRepositoryCount
+     * @type Number
+     */
+    get workspaceRepositoryCount() {
+        let workspace = this.model?.workspace;
+        return Math.max(0, (workspace?.repositoryCount || 0) - (workspace?.projectRepositoryCount || 0));
+    }
+
+    /**
      * The users of the shown page of members
      *
      * @property members
