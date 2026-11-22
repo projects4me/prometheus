@@ -2846,6 +2846,20 @@
           "failed": "The project could not be added to the workspace.",
           "loadFailed": "The project's details could not be loaded."
         },
+        "moveOut": {
+          "title": "Move project out of this workspace",
+          "moveTo": "Move to",
+          "newWorkspace": "A new workspace: {project}",
+          "hint": "A project is always in exactly one workspace.",
+          "runs": "{project} has {count, plural, one {# Talos run} other {# Talos runs}} in progress. Gaia refuses the move while work is in progress.",
+          "whenItMoves": "When it moves",
+          "peopleStay": "People stay members of the project.",
+          "agentsLose": "This workspace's agents lose access to the project.",
+          "runtimeStops": "The runtime stops serving the project's repository.",
+          "confirm": "Move project",
+          "failed": "The project could not be moved.",
+          "loadFailed": "The workspaces could not be loaded."
+        },
         "delete": {
           "title": "Delete workspace",
           "warning": "Delete the workspace {name}? This cannot be undone.",

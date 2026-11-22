@@ -99,14 +99,83 @@ export default class WorkspaceProjectsService extends Service {
      * @return {Promise<String[]>} Gaia's refusal messages, empty when the project joined
      */
     async join(workspace, project) {
-        project.workspaceId = workspace.id;
+        return this.patchWorkspace(project, workspace.id, 'views.app.workspace.addProject.failed');
+    }
+
+    /**
+     * The other workspaces the project can move to, by name. Gaia refuses one the user can't update.
+     *
+     * @method moveTargets
+     * @param {Workspace} workspace the workspace the project leaves
+     * @return {Promise<Workspace[]>}
+     */
+    async moveTargets(workspace) {
+        let workspaces = await this.store.query('workspace', { sort: 'Workspace.name', order: 'asc', limit: 100 });
+        return workspaces.slice().filter((other) => String(other.id) !== String(workspace.id));
+    }
+
+    /**
+     * Moves the project out of its workspace, into the target or, when there is none, into a new workspace that
+     * takes the project's name and code. A new workspace is dropped again when Gaia refuses the move.
+     *
+     * @method moveOut
+     * @param {Project} project
+     * @param {Workspace|null} target null for a new workspace
+     * @return {Promise<String[]>} Gaia's refusal messages, empty when the project moved
+     */
+    async moveOut(project, target) {
+        let created = null;
+        if (!target) {
+            created = this.store.createRecord('workspace', { name: project.name, shortCode: project.shortCode });
+            try {
+                await created.save();
+            } catch (error) {
+                created.unloadRecord();
+                return this.messagesOf(error, 'views.app.workspace.moveOut.failed');
+            }
+            target = created;
+        }
+        let errors = await this.patchWorkspace(project, target.id, 'views.app.workspace.moveOut.failed');
+        if (errors.length && created) {
+            try {
+                await created.destroyRecord();
+            } catch {
+                created.unloadRecord();
+            }
+        }
+        return errors;
+    }
+
+    /**
+     * Saves the project with the workspace.
+     *
+     * @method patchWorkspace
+     * @param {Project} project
+     * @param {String} workspaceId
+     * @param {String} failedKey translation key of the message when Gaia gives none
+     * @return {Promise<String[]>} Gaia's refusal messages, empty when saved
+     */
+    async patchWorkspace(project, workspaceId, failedKey) {
+        project.workspaceId = workspaceId;
         try {
             await project.save();
         } catch (error) {
             project.rollbackAttributes();
-            let messages = (Array.isArray(error?.errors) ? error.errors : []).map((entry) => entry?.detail).filter(Boolean);
-            return messages.length ? messages : [this.intl.t('views.app.workspace.addProject.failed')];
+            return this.messagesOf(error, failedKey);
         }
         return [];
+    }
+
+    /**
+     * Gaia's messages of a failed save.
+     *
+     * @method messagesOf
+     * @param {Error} error
+     * @param {String} failedKey translation key of the message when Gaia gives none
+     * @return {String[]}
+     */
+    messagesOf(error, failedKey) {
+        let messages = (Array.isArray(error?.errors) ? error.errors : []).map((entry) => entry?.detail).filter(Boolean);
+        return messages.length ? messages : [this.intl.t(failedKey)];
     }
 }

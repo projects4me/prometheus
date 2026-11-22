@@ -36,6 +36,28 @@ export default function (assert) {
         .then('The Add project dialog shows the error "$message"', function (message) {
             assert.dom('[data-test-add-project-error]').hasText(message);
         })
+        .given('The first project of workspace $code has $count runs in progress', async function (code, count) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            server.schema.projects.where({ workspaceId: workspace.id }).models[0].update({ runsInProgress: parseInt(count, 10) });
+            assert.ok(true, `a project of ${code} has ${count} runs in progress`);
+        })
+        .when('User opens the Move project out dialog of the first project', async function () {
+            await click('.workspace-member-projects [data-btn="move-project"]');
+        })
+        .when('User confirms the Move project out dialog', async function () {
+            await click('.workspace-move-project-modal [data-btn="confirm-move-project"]');
+        })
+        .then('The Move project out dialog warns of $count runs in progress', function (count) {
+            assert.dom('[data-test-move-out-runs]').includesText(`${count} Talos run`);
+            assert.dom('[data-test-move-out-facts] li').exists({ count: 3 });
+        })
+        .then('The Move project out dialog shows the error "$message"', function (message) {
+            assert.dom('.workspace-move-project-modal').exists('dialog stays open');
+            assert.dom('[data-test-move-out-error]').hasText(message);
+        })
+        .then('The Move project out dialog is closed', function () {
+            assert.dom('.workspace-move-project-modal').doesNotExist();
+        })
         .when('User visits $path', async function (path) {
             await visit(`/${path}`);
         })

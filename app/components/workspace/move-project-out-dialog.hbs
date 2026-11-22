@@ -1,0 +1,38 @@
+<AppUi::Modal
+  @title="views.app.workspace.moveOut.title"
+  @closeLabel="global.form.cancel"
+  @onClose={{@onClose}}
+  @confirmLabel="views.app.workspace.moveOut.confirm"
+  @confirm={{this.move}}
+  @dataSaveBtn="confirm-move-project"
+  @containerClass="workspace-move-project-modal"
+>
+  <FormFields::FieldRelate
+    @label={{t "views.app.workspace.moveOut.moveTo"}}
+    @options={{this.options}}
+    @selected={{this.selected}}
+    @searchField="label"
+    @onchange={{this.selectTarget}}
+    @relateType="relate-simple"
+    @renderInPlace={{true}}
+    @data-field="workspace.moveOut.target"
+  />
+  <p class="text-muted" data-test-move-out-hint>{{t "views.app.workspace.moveOut.hint"}}</p>
+
+  {{#if @project.runsInProgress}}
+    <div class="callout callout-warning" data-test-move-out-runs>
+      {{t "views.app.workspace.moveOut.runs" count=@project.runsInProgress project=@project.name}}
+    </div>
+  {{/if}}
+
+  <h4>{{t "views.app.workspace.moveOut.whenItMoves"}}</h4>
+  <ul data-test-move-out-facts>
+    <li>{{t "views.app.workspace.moveOut.peopleStay"}}</li>
+    <li>{{t "views.app.workspace.moveOut.agentsLose"}}</li>
+    <li>{{t "views.app.workspace.moveOut.runtimeStops"}}</li>
+  </ul>
+
+  {{#each this.errors as |message|}}
+    <div class="alert alert-danger" data-test-move-out-error>{{message}}</div>
+  {{/each}}
+</AppUi::Modal>

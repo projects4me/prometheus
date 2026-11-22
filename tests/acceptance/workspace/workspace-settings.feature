@@ -95,3 +95,23 @@ Feature: Workspace | Settings
     And User chooses the project "Loner" in the Add project dialog
     And User confirms the Add project dialog
     Then The Add project dialog shows the error "Work is in progress"
+
+  Scenario: A project moves out of the workspace to a new workspace
+
+    Given Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Move project out dialog of the first project
+    And User confirms the Move project out dialog
+    Then The Move project out dialog is closed
+    And The Member Projects table lists 1 projects with the four columns
+
+  Scenario: Gaia refuses to move out a project with work in progress
+
+    Given Workspace ENG exists with 1 projects
+    And The first project of workspace ENG has 1 runs in progress
+    And Gaia refuses to move projects with "Work is in progress"
+    When User navigates to app/workspace/ENG/settings/projects
+    And User opens the Move project out dialog of the first project
+    Then The Move project out dialog warns of 1 runs in progress
+    When User confirms the Move project out dialog
+    Then The Move project out dialog shows the error "Work is in progress"
