@@ -9,7 +9,16 @@ export function register(server, ctx) {
         let projectQuery = request.queryParams.query;
         if (projectQuery && projectQuery.includes('Project.workspaceId')) {
             let workspaceId = getValueFromQuery('Project.workspaceId', projectQuery);
-            return schema.projects.where({ workspaceId });
+            let projects = schema.projects.where({ workspaceId });
+            let limit = Number(request.queryParams.limit);
+            if (limit > 0) {
+                // Like Gaia: sorted, one page, and `meta.links.next` while more rows follow
+                let page = Number(request.queryParams.page) || 1;
+                let rows = projects.models.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true }));
+                projects.models = rows.slice((page - 1) * limit, page * limit);
+                projects.meta = { links: rows.length > page * limit ? { next: { href: `/project?page=${page + 1}` } } : {} };
+            }
+            return projects;
         }
         if (projectQuery) {
             const field = projectQuery.includes('Project.shortCode') ? 'Project.shortCode' : 

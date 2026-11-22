@@ -16,18 +16,31 @@ import { objectAt } from 'prometheus/utils/array/object-at';
 export default class WorkspaceIndexRoute extends App {
 
     /**
+     * The number of projects on a page of the Projects box
+     *
+     * @property pageSize
+     * @type Number
+     */
+    pageSize = 10;
+
+    queryParams = {
+        page: { refreshModel: true }
+    };
+
+    /**
      * Loads the workspace, its projects and its members. Resolves to `{ notFound: true }` when no workspace has the
      * short code and to `{ failed: true }` when a query fails. Projects and members cover what the viewer can read.
      *
      * @method model
-     * @param {Object} params
+     * @param {Object} params the query params, `page` is the page of the Projects box
      * @return {Object}
      * @protected
      */
-    async model() {
+    async model(params) {
         let shortCode = this.paramsFor('app.workspace').shortcode;
         let workspace;
         let projects;
+        let hasNextProjects = false;
         let members = [];
         try {
             let workspaces = await this.store.query('workspace', {
@@ -42,8 +55,12 @@ export default class WorkspaceIndexRoute extends App {
 
             projects = await this.store.query('project', {
                 query: `((Project.workspaceId : ${workspace.id}))`,
-                limit: -1
+                sort: 'Project.name',
+                order: 'asc',
+                page: Math.max(1, Number(params?.page) || 1),
+                limit: this.pageSize
             });
+            hasNextProjects = Boolean(projects.meta?.links?.next);
 
             let projectIds = projects.map((project) => project.id);
             if (projectIds.length > 0) {
@@ -60,7 +77,7 @@ export default class WorkspaceIndexRoute extends App {
         }
 
         this.breadcrumb.setTitle('app.workspace', workspace.name);
-        return { workspace, projects: projects.slice(), members };
+        return { workspace, projects: projects.slice(), hasNextProjects, members };
     }
 
     /**

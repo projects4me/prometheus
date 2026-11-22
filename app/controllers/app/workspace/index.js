@@ -20,6 +20,45 @@ export default class WorkspaceIndexController extends AppController {
     @service router;
     @service intl;
 
+    queryParams = ['page'];
+
+    /**
+     * The page of the Projects box
+     *
+     * @property page
+     * @type Number
+     */
+    @tracked page = 1;
+
+    /**
+     * The number of projects on a page, the same as the route's
+     *
+     * @property pageSize
+     * @type Number
+     */
+    pageSize = 10;
+
+    /**
+     * The offset of the first project on the shown page, for AppUi::Pager
+     *
+     * @property offset
+     * @type Number
+     */
+    get offset() {
+        return (Math.max(1, Number(this.page) || 1) - 1) * this.pageSize;
+    }
+
+    /**
+     * Shows the page that starts at the offset AppUi::Pager asks for.
+     *
+     * @method changeOffset
+     * @param {Number} offset
+     */
+    @action
+    changeOffset(offset) {
+        this.page = Math.floor(offset / this.pageSize) + 1;
+    }
+
     /**
      * Whether the delete confirmation is open
      *

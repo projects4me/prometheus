@@ -67,6 +67,19 @@
                 <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noProjects"}} />
               {{/if}}
             </:body>
+            <:bottom>
+              {{#if (or (gt this.offset 0) this.model.hasNextProjects)}}
+                <div class="box-footer no-padding" data-workspace-projects-pagination>
+                  <AppUi::Pager
+                    @offset={{this.offset}}
+                    @limit={{this.pageSize}}
+                    @hasMore={{this.model.hasNextProjects}}
+                    @count={{this.model.projects.length}}
+                    @onPageChange={{this.changeOffset}}
+                  />
+                </div>
+              {{/if}}
+            </:bottom>
           </AppUi::Box>
         </AccessControl>
 
