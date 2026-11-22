@@ -2,6 +2,8 @@ import { click, currentURL } from '@ember/test-helpers';
 import { Response } from 'miragejs';
 import steps from '../steps';
 
+// The requests Mirage handled, recorded by the Given step of the paged Overview
+let projectRequests = [];
 let membershipRequests = [];
 
 export default function (assert) {
@@ -35,6 +37,14 @@ export default function (assert) {
                     });
                 }
                 assert.ok(true, `Workspace ${code} exists with ${count} projects`);
+            }
+        )
+        .given(
+            'Workspace $code requests are recorded',
+            async function (code) {
+                projectRequests = [];
+                server.pretender.handledRequest = (verb, path, request) => projectRequests.push(request);
+                assert.ok(true, `Requests are recorded for ${code}`);
             }
         )
         .given(
@@ -136,6 +146,32 @@ export default function (assert) {
             'The workspace lists $count projects',
             async function (count) {
                 assert.dom('.workspace-projects li[data-project-id]').exists({ count: parseInt(count, 10) }, `${count} projects are listed`);
+            }
+        )
+        .then(
+            'The projects of workspace $code were requested with a limit of $limit',
+            async function (code, limit) {
+                let workspace = server.schema.workspaces.findBy({ shortCode: code });
+                let requests = projectRequests.filter((request) => {
+                    return request.url.includes('/project?') && decodeURIComponent(request.url).includes(`Project.workspaceId : ${workspace.id}`);
+                });
+                assert.ok(requests.length > 0, 'The projects were requested');
+                requests.forEach((request) => {
+                    assert.equal(request.queryParams.limit, limit, 'The request has a finite limit');
+                    assert.equal(request.queryParams.sort, 'Project.name', 'The request is sorted by name');
+                });
+            }
+        )
+        .when(
+            'User moves the projects pager to the next page',
+            async function () {
+                await click('.workspace-projects [data-test-pager-next]');
+            }
+        )
+        .then(
+            'The projects pager shows "$text"',
+            async function (text) {
+                assert.dom('.workspace-projects [data-test-pager-range]').includesText(text);
             }
         )
         .then(

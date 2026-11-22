@@ -16,18 +16,31 @@ import { objectAt } from 'prometheus/utils/array/object-at';
 export default class WorkspaceIndexRoute extends App {
 
     /**
+     * The number of projects on a page of the Projects box
+     *
+     * @property pageSize
+     * @type Number
+     */
+    pageSize = 10;
+
+    queryParams = {
+        page: { refreshModel: true }
+    };
+
+    /**
      * Loads the workspace and its projects (the members are paged by the controller). Resolves to `{ notFound: true }` when no workspace has the
      * short code and to `{ failed: true }` when a query fails. Projects cover what the viewer can read.
      *
      * @method model
-     * @param {Object} params
+     * @param {Object} params the query params, `page` is the page of the Projects box
      * @return {Object}
      * @protected
      */
-    async model() {
+    async model(params) {
         let shortCode = this.paramsFor('app.workspace').shortcode;
         let workspace;
         let projects;
+        let hasNextProjects = false;
         try {
             let workspaces = await this.store.query('workspace', {
                 query: `((Workspace.shortCode : ${shortCode}))`,
@@ -41,15 +54,19 @@ export default class WorkspaceIndexRoute extends App {
 
             projects = await this.store.query('project', {
                 query: `((Project.workspaceId : ${workspace.id}))`,
-                limit: -1
+                sort: 'Project.name',
+                order: 'asc',
+                page: Math.max(1, Number(params?.page) || 1),
+                limit: this.pageSize
             });
+            hasNextProjects = Boolean(projects.meta?.links?.next);
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
             return { failed: true };
         }
 
         this.breadcrumb.setTitle('app.workspace', workspace.name);
-        return { workspace, projects: projects.slice() };
+        return { workspace, projects: projects.slice(), hasNextProjects };
     }
 
     /**

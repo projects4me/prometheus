@@ -16,6 +16,24 @@ Feature: Workspace | read-only Overview
     And The workspace lists 2 members
     And The workspace members were requested once through project.workspaceId, paged, without OR
 
+  Scenario: The Projects box is paged
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace BIG exists with 25 projects
+    And Workspace BIG requests are recorded
+    When User navigates to app/workspace/BIG
+    Then The projects of workspace BIG were requested with a limit of 10
+    And The workspace lists 10 projects
+    And The projects pager shows "1-10"
+    When User moves the projects pager to the next page
+    Then The workspace lists 10 projects
+    And The projects pager shows "11-20"
+    When User moves the projects pager to the next page
+    Then The workspace lists 5 projects
+    And The projects pager shows "21-25"
+
   Scenario: An empty workspace
 
     Given There is no pre-existing data
