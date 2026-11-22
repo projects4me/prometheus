@@ -49,4 +49,14 @@ export default class RepositoryModel extends Model {
      * @for Repository
      */
     @attr('string') projectId;
+
+    /**
+     * The branch the agents start from and open their pull requests against
+     *
+     * @property baseBranch
+     * @type String
+     * @for Repository
+     */
+    @attr('string') baseBranch;
+
 }

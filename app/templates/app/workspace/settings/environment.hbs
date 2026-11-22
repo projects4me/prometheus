@@ -1,2 +1,40 @@
-{{!-- The Environment tab comes in its own issue (set-environment) --}}
-<div class="workspace-settings-environment-placeholder" data-placeholder="environment"></div>
+<AppUi::Box @variant="info" class="workspace-environment-runtime">
+  <:header>
+    <h3 class="box-title">{{t "views.app.workspace.settings.environment.runtimeTitle"}}</h3>
+  </:header>
+  <:body>
+    <p data-test-environment-runtime>
+      {{#if this.runtimeName}}
+        <i class="fa fa-circle {{if this.model.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot aria-hidden="true"></i>
+        <strong>{{this.runtimeName}}</strong>
+        <span class="text-muted">({{this.runtimeKind}}, {{if this.model.runtimeOnline (t "views.app.workspace.settings.environment.online") (t "views.app.workspace.settings.environment.offline")}})</span>
+      {{else}}
+        {{t "views.app.workspace.detail.noRuntime"}}
+      {{/if}}
+    </p>
+  </:body>
+</AppUi::Box>
+
+<AppUi::Box @variant="warning" class="workspace-environment-repositories" @noPadding={{true}}>
+  <:header>
+    <h3 class="box-title">{{t "views.app.workspace.settings.environment.repositoriesTitle"}}</h3>
+  </:header>
+  <:body>
+    <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}}>
+      <:cell as |repository column|>
+        {{#if (eq column.key "name")}}
+          <span data-repository-id={{repository.id}}>{{repository.name}}</span>
+        {{else if (eq column.key "url")}}
+          <span data-test-repository-url>{{repository.url}}</span>
+        {{else if (eq column.key "baseBranch")}}
+          <code data-test-repository-branch>{{repository.baseBranch}}</code>
+        {{else if (eq column.key "project")}}
+          <span data-test-repository-project>{{repository.project}}</span>
+        {{/if}}
+      </:cell>
+      <:empty>
+        <Exceptions::NothingFound @description={{t "views.app.workspace.settings.environment.empty"}} />
+      </:empty>
+    </AppUi::DataTable>
+  </:body>
+</AppUi::Box>
