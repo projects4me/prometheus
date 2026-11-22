@@ -135,3 +135,24 @@ Feature: Workspace | read-only Overview
     When User navigates to app/workspace/ENG
     Then The workspace header shows "No runtime bound"
 
+
+  Scenario: Adding a project to the workspace shows up in the Workspace Activities timeline
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And Workspace ENG has 12 activities
+    When User navigates to app/workspace/ENG
+    Then The Workspace Activities box lists 10 activities
+    When User loads more workspace activities
+    Then The Workspace Activities box lists 12 activities
+
+  Scenario: A workspace without activities shows the empty state
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG
+    Then The Workspace Activities box shows the empty state

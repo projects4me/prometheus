@@ -213,4 +213,136 @@ export default class WorkspaceIndexController extends AppController {
             }
         }
     }
+
+    /**
+     * The activities of the workspace loaded so far, grouped by the date they were created on
+     *
+     * @property activityGroups
+     * @type Object
+     */
+    @tracked activityGroups = {};
+
+    /**
+     * Whether Gaia may have more activities than the loaded pages
+     *
+     * @property hasMoreActivities
+     * @type Boolean
+     */
+    @tracked hasMoreActivities = false;
+
+    /**
+     * Whether a page of activities is loading
+     *
+     * @property isActivitiesLoading
+     * @type Boolean
+     */
+    @tracked isActivitiesLoading = false;
+
+    /**
+     * The number of activities per page
+     *
+     * @property activitiesPageSize
+     * @type Number
+     */
+    activitiesPageSize = 10;
+
+    /**
+     * The activities loaded so far, newest first
+     *
+     * @property activities
+     * @type Activity[]
+     * @private
+     */
+    activities = [];
+
+    /**
+     * The last page of activities loaded
+     *
+     * @property activitiesPage
+     * @type Number
+     * @private
+     */
+    activitiesPage = 0;
+
+    /**
+     * Whether the workspace has any activity to show
+     *
+     * @property hasActivities
+     * @type Boolean
+     */
+    get hasActivities() {
+        return Object.keys(this.activityGroups).length > 0;
+    }
+
+    /**
+     * Groups the activities by the date they were created on, like the project Overview does.
+     *
+     * @method groupActivities
+     * @param {Activity[]} activities
+     * @return {Object}
+     * @protected
+     */
+    groupActivities(activities) {
+        let groups = {};
+        activities.forEach((activity) => {
+            let dateCreated = activity.get('dateCreated').substring(0, 10);
+            groups[dateCreated] = groups[dateCreated] || { dateCreated, data: [] };
+            groups[dateCreated].data.push(activity);
+        });
+        return groups;
+    }
+
+    /**
+     * Loads the first page of the workspace's activities, dropping what an earlier workspace left.
+     *
+     * @method resetActivities
+     * @return {Promise}
+     */
+    @action
+    resetActivities() {
+        this.activities = [];
+        this.activitiesPage = 0;
+        this.activityGroups = {};
+        this.hasMoreActivities = false;
+        this.isActivitiesLoading = false;
+        return this.loadMoreActivities();
+    }
+
+    /**
+     * Loads the next page of activities (newest first) and adds it to the timeline.
+     *
+     * @method loadMoreActivities
+     * @return {Promise}
+     */
+    @action
+    async loadMoreActivities() {
+        let workspace = this.model?.workspace;
+        if (!workspace || this.isActivitiesLoading) {
+            return;
+        }
+        this.isActivitiesLoading = true;
+        try {
+            let rows = await this.store.query('activity', {
+                query: `((Activity.relatedTo : workspace) AND (Activity.relatedId : ${workspace.id}))`,
+                sort: 'Activity.dateCreated',
+                order: 'DESC',
+                limit: this.activitiesPageSize,
+                page: this.activitiesPage + 1
+            });
+            if (isDestroying(this) || isDestroyed(this) || this.model?.workspace !== workspace) {
+                // the controller moved to another workspace while this page was loading
+                return;
+            }
+            this.activitiesPage += 1;
+            this.activities = [...this.activities, ...rows.slice()];
+            this.activityGroups = this.groupActivities(this.activities);
+            this.hasMoreActivities = rows.length >= this.activitiesPageSize;
+        } catch (error) {
+            this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
+        } finally {
+            if (!isDestroying(this) && !isDestroyed(this) && this.model?.workspace === workspace) {
+                this.isActivitiesLoading = false;
+            }
+        }
+    }
 }
