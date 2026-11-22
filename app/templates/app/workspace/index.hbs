@@ -3,6 +3,14 @@
 {{else if this.model.failed}}
   <Errors::500/>
 {{else}}
+  <section class="content-header">
+    <h1>
+      <small><LinkTo @route="app.workspace" @model={{this.model.workspace.shortCode}}>{{this.model.workspace.name}}</LinkTo></small>
+    </h1>
+    <BreadCrumb/>
+  </section>
+
+  <section class="content">
   <div class="workspace">
     <div class="row">
 
@@ -20,14 +28,7 @@
             </:header>
             <:tools>
               <AccessControl @aclContext="workspace.update">
-                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="edit" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></LinkTo>
-              </AccessControl>
-              <AccessControl @aclContext="workspace.delete">
-                {{#if this.hasProjects}}
-                  <button type="button" disabled data-btn="delete" class="btn btn-box-tool disabled" data-toggle="tooltip" title="{{t "views.app.workspace.delete.hasProjects"}}"><i class="fa fa-trash"></i></button>
-                {{else}}
-                  <button type="button" data-btn="delete" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" {{on "click" this.openDelete}}><i class="fa fa-trash"></i></button>
-                {{/if}}
+                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="settings" class="btn btn-default btn-sm">{{t "views.app.workspace.detail.settings"}}</LinkTo>
               </AccessControl>
             </:tools>
             <:body>
@@ -42,6 +43,16 @@
                 <div class="project-manager-details">
                   <h4>{{t "views.app.workspace.detail.description"}}</h4>
                   <p class="workspace-description">{{this.model.workspace.description}}</p>
+                </div>
+              </div>
+              <div class="row workspace-facts">
+                <div class="col-xs-6">
+                  <h4>{{t "views.app.workspace.detail.projects"}}</h4>
+                  <p class="workspace-project-count">{{this.model.workspace.projectCount}}</p>
+                </div>
+                <div class="col-xs-6">
+                  <h4>{{t "views.app.workspace.detail.members"}}</h4>
+                  <p class="workspace-member-count">{{this.model.workspace.memberCount}}</p>
                 </div>
               </div>
             </:body>
@@ -127,21 +138,5 @@
       </div>
     </div>
   </div>
-{{/if}}
-
-{{#if this.confirmingDelete}}
-  <AppUi::Modal
-    @title="views.app.workspace.delete.title"
-    @closeLabel="global.form.cancel"
-    @onClose={{this.closeDelete}}
-    @confirmLabel="global.form.delete"
-    @confirm={{this.deleteWorkspace}}
-    @dataSaveBtn="confirm-delete"
-    @containerClass="workspace-delete-modal"
-  >
-    <p>{{t "views.app.workspace.delete.warning" name=this.model.workspace.name}}</p>
-    {{#each this.deleteErrors as |message|}}
-      <div class="alert alert-danger" data-delete-error>{{message}}</div>
-    {{/each}}
-  </AppUi::Modal>
+  </section>
 {{/if}}

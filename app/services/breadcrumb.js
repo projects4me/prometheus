@@ -453,6 +453,18 @@ export default class BreadCrumbService extends Service {
 	}
 
 	/**
+	 * Set the parent route of a given route, for pages whose trail depends on context
+	 *
+	 * @method setParent
+	 * @param {String} route - Route name
+	 * @param {String} parent - Parent route name
+	 * @public
+	 */
+	setParent(route, parent) {
+		this.routeMetadata[route].parent = parent;
+	}
+
+	/**
 	 * Set the icon for a given route
 	 *
 	 * @method setIcon

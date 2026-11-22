@@ -9,7 +9,7 @@ import { isDestroying, isDestroyed } from '@ember/destroyable';
 import AppController from 'prometheus/controllers/app';
 
 /**
- * The controller of the workspace Overview: exposes the route's model and deletes an empty workspace after confirmation.
+ * The controller of the workspace Overview: exposes the route's model.
  *
  * @class WorkspaceIndexController
  * @namespace Prometheus.Controllers
@@ -17,8 +17,6 @@ import AppController from 'prometheus/controllers/app';
  * @extends AppController
  */
 export default class WorkspaceIndexController extends AppController {
-    @service router;
-    @service intl;
     @service store;
     @service errorManager;
 
@@ -60,22 +58,6 @@ export default class WorkspaceIndexController extends AppController {
     changeOffset(offset) {
         this.page = Math.floor(offset / this.pageSize) + 1;
     }
-
-    /**
-     * Whether the delete confirmation is open
-     *
-     * @property confirmingDelete
-     * @type Boolean
-     */
-    @tracked confirmingDelete = false;
-
-    /**
-     * The messages of Gaia's refusal to delete the workspace, empty when there is none
-     *
-     * @property deleteErrors
-     * @type String[]
-     */
-    @tracked deleteErrors = [];
 
     /**
      * The users of the shown page of members
@@ -125,69 +107,6 @@ export default class WorkspaceIndexController extends AppController {
      */
     get hasMembersPages() {
         return this.membersOffset > 0 || this.hasMoreMembers;
-    }
-
-    /**
-     * Whether the workspace has projects, which blocks deleting it
-     *
-     * @property hasProjects
-     * @type Boolean
-     */
-    get hasProjects() {
-        return (this.model.workspace?.projectCount ?? 0) > 0;
-    }
-
-    /**
-     * Opens the delete confirmation
-     *
-     * @method openDelete
-     */
-    @action
-    openDelete() {
-        if (this.hasProjects) {
-            return;
-        }
-        this.deleteErrors = [];
-        this.confirmingDelete = true;
-    }
-
-    /**
-     * Closes the delete confirmation
-     *
-     * @method closeDelete
-     */
-    @action
-    closeDelete() {
-        this.confirmingDelete = false;
-    }
-
-    /**
-     * Deletes the workspace and goes to the workspaces list. When Gaia refuses, its messages are shown in the
-     * confirmation, which stays open.
-     *
-     * @method deleteWorkspace
-     * @return {Promise<Boolean>} whether it was deleted, which closes the confirmation
-     */
-    @action
-    async deleteWorkspace() {
-        let workspace = this.model.workspace;
-        try {
-            await workspace.destroyRecord();
-        } catch (error) {
-            workspace.rollbackAttributes();
-            if (isDestroying(this) || isDestroyed(this)) {
-                return false;
-            }
-            let messages = (Array.isArray(error?.errors) ? error.errors : []).map((entry) => entry?.detail).filter(Boolean);
-            this.deleteErrors = messages.length ? messages : [this.intl.t('views.app.workspace.delete.failed')];
-            return false;
-        }
-        if (isDestroying(this) || isDestroyed(this)) {
-            return true;
-        }
-        this.confirmingDelete = false;
-        this.router.transitionTo('app.workspaces');
-        return true;
     }
 
     /**

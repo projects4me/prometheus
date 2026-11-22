@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { service } from '@ember/service';
 import App from 'prometheus/routes/app';
 import { objectAt } from 'prometheus/utils/array/object-at';
 
@@ -14,6 +15,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  */
 export default class WorkspaceIndexRoute extends App {
+    @service trackedProject;
 
     /**
      * The number of projects on a page of the Projects box
@@ -65,7 +67,14 @@ export default class WorkspaceIndexRoute extends App {
             return { failed: true };
         }
 
-        this.breadcrumb.setTitle('app.workspace', workspace.name);
+        // The selected project's workspace: Projects > project > Workspace, otherwise Workspaces > name
+        if (this.trackedProject.workspaceShortCode === workspace.shortCode?.toLowerCase()) {
+            this.breadcrumb.setParent('app.workspace', 'app.project');
+            this.breadcrumb.setTitle('app.workspace', 'views.app.workspace.detail.breadcrumb');
+        } else {
+            this.breadcrumb.setParent('app.workspace', 'app.workspaces.index');
+            this.breadcrumb.setTitle('app.workspace', workspace.name);
+        }
         return { workspace, projects: projects.slice(), hasNextProjects };
     }
 
