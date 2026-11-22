@@ -4,9 +4,22 @@ import steps from '../steps';
 
 // The requests Mirage handled, recorded by the Given step of the paged Overview
 let projectRequests = [];
+let membershipRequests = [];
 
 export default function (assert) {
     return steps(assert)
+        .given(
+            'The membership requests are recorded',
+            async function () {
+                membershipRequests = [];
+                server.pretender.handledRequest = (verb, path) => {
+                    if (verb === 'GET' && /\/membership\?/.test(path)) {
+                        membershipRequests.push(path);
+                    }
+                };
+                assert.ok(true, 'membership requests are recorded');
+            }
+        )
         .given(
             'Workspace $code exists with $count projects',
             async function (code, count) {
@@ -165,6 +178,17 @@ export default function (assert) {
             'The workspace lists $count members',
             async function (count) {
                 assert.dom('.workspace-members li[data-member-id]').exists({ count: parseInt(count, 10) }, `${count} members are listed`);
+            }
+        )
+        .then(
+            'The workspace members were requested once through project.workspaceId, paged, without OR',
+            async function () {
+                let requests = membershipRequests;
+                assert.equal(requests.length, 1, 'One membership request');
+                let params = new URL(requests[0], window.location.origin).searchParams;
+                assert.ok(/project\.workspaceId : /.test(params.get('query')), 'The query filters on project.workspaceId');
+                assert.notOk(/ OR /.test(params.get('query')), 'The query has no OR');
+                assert.equal(params.get('limit'), '20', 'The request is paged');
             }
         )
         .then(
