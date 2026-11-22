@@ -64,3 +64,28 @@ Feature: Workspace | read-only Overview
     And The workspace breadcrumb ends with "ENG"
     And The workspace facts show 2 projects
     And The workspace has a Settings button and no delete button
+
+  Scenario: The Projects table shows the five columns
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And Project 1 of workspace ENG has 7 open issues, milestone "Sprint 1", repository "eng-repo" and manager User 1
+    And Workspace ENG requests are recorded
+    When User navigates to app/workspace/ENG
+    Then Project 1 of workspace ENG shows 7 open issues, milestone "Sprint 1", repository "eng-repo" and a manager
+    And Project 2 of workspace ENG shows no milestone, no repository and no manager
+    And The repositories of workspace ENG were requested once with a limit of 100 and no OR
+
+  Scenario: The repositories follow the page
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace BIG exists with 12 projects
+    And Project 11 of workspace BIG has 0 open issues, milestone "Sprint 2", repository "big-repo-11" and manager User 1
+    When User navigates to app/workspace/BIG
+    Then Project 11 of workspace BIG is not listed
+    When User moves the projects pager to the next page
+    Then Project 11 of workspace BIG shows 0 open issues, milestone "Sprint 2", repository "big-repo-11" and a manager

@@ -25,6 +25,7 @@ import * as Savedsearch from './route-handlers/savedsearch';
 import * as Systemnotification from './route-handlers/systemnotification';
 import * as Systemnotificationrecipient from './route-handlers/systemnotificationrecipient';
 import * as Tag from './route-handlers/tag';
+import * as Repository from './route-handlers/repository';
 import * as Workspace from './route-handlers/workspace';
 import * as Tagged from './route-handlers/tagged';
 import * as Timelog from './route-handlers/timelog';
@@ -97,6 +98,7 @@ function routes() {
     Systemnotification.register(this, ctx);
     Systemnotificationrecipient.register(this, ctx);
     Tag.register(this, ctx);
+    Repository.register(this, ctx);
     Workspace.register(this, ctx);
     Tagged.register(this, ctx);
     Timelog.register(this, ctx);

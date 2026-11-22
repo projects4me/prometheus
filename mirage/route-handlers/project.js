@@ -14,7 +14,9 @@ export function register(server, ctx) {
             if (limit > 0) {
                 // Like Gaia: sorted, one page, and `meta.links.next` while more rows follow
                 let page = Number(request.queryParams.page) || 1;
-                let rows = projects.models.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true }));
+                let field = (request.queryParams.sort || 'Project.name').split('.').pop();
+                let direction = String(request.queryParams.order).toLowerCase() === 'desc' ? -1 : 1;
+                let rows = projects.models.slice().sort((a, b) => direction * String(a[field] ?? '').localeCompare(String(b[field] ?? ''), undefined, { numeric: true }));
                 projects.models = rows.slice((page - 1) * limit, page * limit);
                 projects.meta = { links: rows.length > page * limit ? { next: { href: `/project?page=${page + 1}` } } : {} };
             }

@@ -26,7 +26,9 @@ export default class WorkspaceIndexRoute extends App {
     pageSize = 10;
 
     queryParams = {
-        page: { refreshModel: true }
+        page: { refreshModel: true },
+        sort: { refreshModel: true },
+        order: { refreshModel: true }
     };
 
     /**
@@ -42,6 +44,7 @@ export default class WorkspaceIndexRoute extends App {
         let shortCode = this.paramsFor('app.workspace').shortcode;
         let workspace;
         let projects;
+        let repositoryNames = {};
         let hasNextProjects = false;
         try {
             let workspaces = await this.store.query('workspace', {
@@ -56,12 +59,14 @@ export default class WorkspaceIndexRoute extends App {
 
             projects = await this.store.query('project', {
                 query: `((Project.workspaceId : ${workspace.id}))`,
-                sort: 'Project.name',
-                order: 'asc',
+                rels: 'manager',
+                sort: params?.sort || 'Project.name',
+                order: params?.order || 'asc',
                 page: Math.max(1, Number(params?.page) || 1),
                 limit: this.pageSize
             });
             hasNextProjects = Boolean(projects.meta?.links?.next);
+            repositoryNames = await this.loadRepositoryNames(projects);
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
             return { failed: true };
@@ -75,7 +80,36 @@ export default class WorkspaceIndexRoute extends App {
             this.breadcrumb.setParent('app.workspace', 'app.workspaces.index');
             this.breadcrumb.setTitle('app.workspace', workspace.name);
         }
-        return { workspace, projects: projects.slice(), hasNextProjects };
+        return { workspace, projects: projects.slice(), repositoryNames, hasNextProjects };
+    }
+
+    /**
+     * Loads the repositories of the shown projects with one query and maps each project id to the name of its
+     * first repository. A project without a repository of its own has no entry.
+     *
+     * @method loadRepositoryNames
+     * @param {Project[]} projects the projects of the shown page
+     * @return {Object} the repository name by project id
+     * @protected
+     */
+    async loadRepositoryNames(projects) {
+        let names = {};
+        let ids = projects.map((project) => project.id);
+        if (ids.length === 0) {
+            return names;
+        }
+        let repositories = await this.store.query('repository', {
+            query: `((Repository.projectId CONTAINS ${ids.join(',')}))`,
+            sort: 'Repository.name',
+            order: 'asc',
+            limit: 100
+        });
+        repositories.forEach((repository) => {
+            if (!(repository.projectId in names)) {
+                names[repository.projectId] = repository.name;
+            }
+        });
+        return names;
     }
 
     /**

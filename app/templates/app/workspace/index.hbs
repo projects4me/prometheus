@@ -66,17 +66,38 @@
               <h3 class="box-title">{{t "views.app.workspace.detail.projects"}}</h3>
             </:header>
             <:body>
-              {{#if this.model.projects.length}}
-                <ul class="nav nav-stacked">
-                  {{#each this.model.projects as |project|}}
-                    <li data-project-id={{project.id}}>
-                      <LinkTo @route="app.project.index" @model={{project.shortCode}}>{{project.name}} <span>({{project.shortCode}})</span></LinkTo>
-                    </li>
-                  {{/each}}
-                </ul>
-              {{else}}
-                <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noProjects"}} />
-              {{/if}}
+              <AppUi::DataTable @columns={{this.columns}} @rows={{this.model.projects}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
+                <:cell as |project column|>
+                  {{#if (eq column.key "name")}}
+                    <span data-project-id={{project.id}}>
+                      <LinkTo @route="app.project.index" @model={{project.shortCode}} data-test-project-name>{{project.name}}</LinkTo>
+                      <span class="text-muted">({{project.shortCode}})</span>
+                    </span>
+                  {{else if (eq column.key "openIssueCount")}}
+                    <span data-test-project-open-issues>{{project.openIssueCount}}</span>
+                  {{else if (eq column.key "activeMilestoneName")}}
+                    {{#if project.activeMilestoneName}}
+                      <LinkTo @route="app.project.board" @model={{project.shortCode}} data-test-project-milestone>{{project.activeMilestoneName}}</LinkTo>
+                    {{else}}
+                      <span data-test-project-milestone>&ndash;</span>
+                    {{/if}}
+                  {{else if (eq column.key "repository")}}
+                    <span data-test-project-repository>{{or (get this.model.repositoryNames project.id) "–"}}</span>
+                  {{else if (eq column.key "manager")}}
+                    {{#if project.manager.id}}
+                      <span data-test-project-manager>
+                        <AppUi::Avatar @user={{project.manager}} @size="s" />
+                        <LinkTo @route="app.user.page" @model={{project.manager.id}}>{{project.manager.name}}</LinkTo>
+                      </span>
+                    {{else}}
+                      <span data-test-project-manager>&ndash;</span>
+                    {{/if}}
+                  {{/if}}
+                </:cell>
+                <:empty>
+                  <Exceptions::NothingFound @description={{t "views.app.workspace.detail.noProjects"}} />
+                </:empty>
+              </AppUi::DataTable>
             </:body>
             <:bottom>
               {{#if (or (gt this.offset 0) this.model.hasNextProjects)}}

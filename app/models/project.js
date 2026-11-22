@@ -145,6 +145,33 @@ export default class ProjectModel extends Model {
     @belongsTo('workspace', { async: true, inverse: 'projects' }) workspace;
 
     /**
+     * The number of open issues of the project, computed by Gaia
+     *
+     * @property openIssueCount
+     * @type Number
+     * @for Project
+     */
+    @attr('number') openIssueCount;
+
+    /**
+     * Id of the active milestone of the project, computed by Gaia, empty without one
+     *
+     * @property activeMilestoneId
+     * @type String
+     * @for Project
+     */
+    @attr('string') activeMilestoneId;
+
+    /**
+     * Name of the active milestone of the project, computed by Gaia, empty without one
+     *
+     * @property activeMilestoneName
+     * @type String
+     * @for Project
+     */
+    @attr('string') activeMilestoneName;
+
+    /**
      * Scope of the project
      *
      * @property scope

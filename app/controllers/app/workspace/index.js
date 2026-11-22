@@ -20,7 +20,7 @@ export default class WorkspaceIndexController extends AppController {
     @service store;
     @service errorManager;
 
-    queryParams = ['page'];
+    queryParams = ['page', 'sort', 'order'];
 
     /**
      * The page of the Projects box
@@ -29,6 +29,53 @@ export default class WorkspaceIndexController extends AppController {
      * @type Number
      */
     @tracked page = 1;
+
+    /**
+     * The sort field of the Projects box
+     *
+     * @property sort
+     * @type String
+     */
+    @tracked sort = 'Project.name';
+
+    /**
+     * The sort order of the Projects box
+     *
+     * @property order
+     * @type String
+     */
+    @tracked order = 'asc';
+
+    @service intl;
+
+    /**
+     * The columns of the Projects table
+     *
+     * @property columns
+     * @type Array
+     */
+    get columns() {
+        return [
+            { key: 'name', label: this.intl.t('views.app.workspace.detail.projectColumn') },
+            { key: 'openIssueCount', label: this.intl.t('views.app.workspace.detail.openIssues'), sortable: true, sortKey: 'Project.openIssueCount' },
+            { key: 'activeMilestoneName', label: this.intl.t('views.app.workspace.detail.activeMilestone') },
+            { key: 'repository', label: this.intl.t('views.app.workspace.detail.repository') },
+            { key: 'manager', label: this.intl.t('views.app.workspace.detail.projectManager') }
+        ];
+    }
+
+    /**
+     * Sorts the projects on the field (toggling the order when it is already the sort) and shows the first page.
+     *
+     * @method sortData
+     * @param {String} field
+     */
+    @action
+    sortData(field) {
+        this.order = field === this.sort && this.order === 'asc' ? 'desc' : 'asc';
+        this.sort = field;
+        this.page = 1;
+    }
 
     /**
      * The number of projects on a page, the same as the route's
