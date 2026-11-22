@@ -2824,6 +2824,34 @@
         }
       },
       "workspace": {
+        "delete": {
+          "title": "Delete workspace",
+          "warning": "Delete the workspace {name}? This cannot be undone.",
+          "hasProjects": "A workspace with projects cannot be deleted. Move or delete its projects first.",
+          "failed": "The workspace could not be deleted."
+        },
+        "settings": {
+          "title": "Settings",
+          "tabs": {
+            "projects": "Projects",
+            "environment": "Environment",
+            "agents": "Agents",
+            "delete": "Delete"
+          },
+          "agents": {
+            "title": "Agents, workflows, tools and skills",
+            "tools": "Tools",
+            "skills": "Skills"
+          },
+          "whoCanManage": {
+            "title": "Who Can Manage This",
+            "workspace": "edit the workspace details",
+            "members": "add and remove members",
+            "projects": "change the projects",
+            "agents": "manage the agents",
+            "other": "Everything else follows the project permissions as today"
+          }
+        },
         "detail": {
           "description": "Description",
           "createdBy": "Created the workspace",

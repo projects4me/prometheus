@@ -5,14 +5,15 @@
 import AppWorkspacesCreateController from 'prometheus/controllers/app/workspaces/create';
 
 /**
- * The controller of the workspace edit form. The create controller is reused, so Ember finds it on reload.
+ * The controller of the Projects tab of the workspace Settings, it saves the workspace details. The create
+ * controller's validations and Gaia error handling are reused.
  *
- * @class AppWorkspacesEditController
+ * @class WorkspaceSettingsProjectsController
  * @namespace Prometheus.Controllers
- * @module App.Workspaces
+ * @module App.Workspace
  * @extends AppWorkspacesCreateController
  */
-export default class AppWorkspacesEditController extends AppWorkspacesCreateController {
+export default class WorkspaceSettingsProjectsController extends AppWorkspacesCreateController {
     layoutName = 'edit';
 
     /**

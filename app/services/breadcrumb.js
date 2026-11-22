@@ -78,6 +78,36 @@ export default class BreadCrumbService extends Service {
 			icon: 'briefcase',
 			linkable: true
 		},
+		'app.workspace.settings': {
+			title: 'views.app.workspace.settings.title',
+			icon: 'cogs',
+			linkable: true,
+			parent: 'app.workspace'
+		},
+		'app.workspace.settings.projects': {
+			title: 'views.app.workspace.settings.title',
+			icon: 'cogs',
+			linkable: false,
+			parent: 'app.workspace'
+		},
+		'app.workspace.settings.environment': {
+			title: 'views.app.workspace.settings.title',
+			icon: 'cogs',
+			linkable: false,
+			parent: 'app.workspace'
+		},
+		'app.workspace.settings.agents': {
+			title: 'views.app.workspace.settings.title',
+			icon: 'cogs',
+			linkable: false,
+			parent: 'app.workspace'
+		},
+		'app.workspace.settings.delete': {
+			title: 'views.app.workspace.settings.title',
+			icon: 'cogs',
+			linkable: false,
+			parent: 'app.workspace'
+		},
 		'app.project': {
 			title: null, // Dynamic from route
 			icon: 'briefcase',
@@ -356,6 +386,17 @@ export default class BreadCrumbService extends Service {
 
 		if (currentRoute) {
 			const routeInfo = currentRoute;
+
+			// Workspace routes carry the workspace short code
+			if (routeName.startsWith('app.workspace') && !routeName.startsWith('app.workspaces')) {
+				let info = routeInfo;
+				while (info && info.params?.shortcode === undefined) {
+					info = info.parent;
+				}
+				if (info) {
+					params.push(info.params.shortcode);
+				}
+			}
 
 			// Handle project routes - always include shortcode for project-related routes
 			if (

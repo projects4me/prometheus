@@ -1,0 +1,51 @@
+import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
+import workspaceOverviewSteps from './workspace-overview-steps';
+
+export default function (assert) {
+    return workspaceOverviewSteps(assert)
+        .when('User visits $path', async function (path) {
+            await visit(`/${path}`);
+        })
+        .when('User renames the workspace in Settings to "$name"', async function (name) {
+            await fillIn('[data-field="workspace.name"] input', name);
+        })
+        .when('User confirms deleting the workspace in Settings', async function () {
+            await click('.workspace-settings-delete [data-btn="delete"]');
+            await click('.workspace-delete-modal [data-btn="confirm-delete"]');
+        })
+        .when('User saves the workspace details in Settings', async function () {
+            await click('[data-btn="save"]');
+        })
+        .then('Workspace "$name" with code "$code" is stored', function (name, code) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            assert.ok(workspace, 'workspace exists');
+            assert.equal(workspace.name, name, 'name stored');
+        })
+        .then('The workspace settings show the tabs "$tabs"',function (tabs) {
+            let shown = [...document.querySelectorAll('.workspace-settings [data-tab]')].map((tab) => tab.dataset.tab);
+            assert.deepEqual(shown, tabs.split(', '), 'the four tabs are shown');
+        })
+        .then('The workspace settings Projects tab is open', function () {
+            assert.dom('.workspace-settings [data-tab="projects"]').exists();
+            assert.dom('.workspace-settings .nav-tabs li.active [data-tab="projects"]').exists('Projects tab is active');
+            assert.dom('.workspace-details-form').exists('details form is shown');
+        })
+        .then('The Who Can Manage box lists the workspace permissions', function () {
+            let text = document.querySelector('.workspace-who-can-manage').textContent;
+            ['workspace.update', 'membership.create', 'membership.delete', 'project.update', 'agent.*'].forEach((permission) => {
+                assert.ok(text.includes(permission), permission);
+            });
+        })
+        .then('The Agents tab links to agents, workflows, tools and skills', function () {
+            ['agents', 'workflows', 'tools', 'skills'].forEach((name) => {
+                assert.dom(`[data-agents-link="${name}"]`).exists(name);
+            });
+        })
+        .then('Workspace $code is deleted and the workspaces list is shown', function (code) {
+            assert.notOk(server.schema.workspaces.findBy({ shortCode: code }), `Workspace ${code} is deleted`);
+            assert.ok(/^\/app\/workspace(\?|$)/.test(currentURL()), 'The workspaces list is shown');
+        })
+        .then('The workspace settings delete button is disabled', function () {
+            assert.dom('.workspace-settings-delete [data-btn="delete"]').isDisabled('Delete is disabled');
+        });
+}

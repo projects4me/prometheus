@@ -1,0 +1,42 @@
+<div class="create-workspace" ...attributes>
+  <AppUi::Box @variant="primary" class="workspace-details-form">
+    <:header>
+      <h3 class="box-title">{{t "views.app.workspace.form.information"}}</h3>
+    </:header>
+    <:body>
+      <div class="form-group">
+        <div class="field-group">
+          <FormFields::FieldText
+            @label={{t "views.app.workspace.list.name"}}
+            @value={{@model.name}}
+            @data-field="workspace.name"
+            @validate={{fn @validateField "workspaceCreate" (hash name="name" value=@model.name)}}
+            @message={{@message.workspaceCreate.name}}
+            {{autofocus}}
+          />
+        </div>
+        <div class="field-group">
+          <FormFields::FieldText
+            @label={{t "views.app.workspace.list.shortCode"}}
+            @value={{@model.shortCode}}
+            @data-field="workspace.shortCode"
+            @validate={{fn @validateField "workspaceCreate" (hash name="shortCode" value=@model.shortCode)}}
+            @message={{@message.workspaceCreate.shortCode}}
+          />
+        </div>
+        <div class="field-group">
+          <FormFields::FieldTextArea
+            @label={{t "views.app.workspace.form.description"}}
+            @value={{@model.description}}
+            @data-field="workspace.description"
+          />
+        </div>
+      </div>
+    </:body>
+  </AppUi::Box>
+
+  <div class="workspace-details-form-actions">
+    <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{@onSave}} @aclContext={{@aclContext}}>{{t "global.form.save"}}</AppUi::Button>
+    <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{@onCancel}}>{{t "global.form.cancel"}}</AppUi::Button>
+  </div>
+</div>
