@@ -259,6 +259,53 @@
           </AppUi::Box>
         </AccessControl>
 
+
+        {{!-- The open milestones of the workspace, grouped by name across its projects --}}
+        <AccessControl @aclContext="workspace.read">
+          <AppUi::Box @variant="success" class="workspace-milestones">
+            <:header>
+              <h3 class="box-title">{{t "views.app.workspace.detail.milestones"}}</h3>
+            </:header>
+            <:body>
+              {{#each this.milestones as |milestone|}}
+                <div class="info-box {{if (eq milestone.status "in_progress") "bg-yellow" "bg-gray"}}" data-milestone-id={{milestone.id}} data-test-workspace-milestone>
+                  <span class="info-box-icon"><i class="fa {{if (eq milestone.status "in_progress") "fa-bullseye" "fa-clock-o"}}"></i></span>
+                  <div class="info-box-content" data-milestone-status={{milestone.status}}>
+                    <span class="info-box-text" data-test-milestone-status>{{t (concat "views.app.milestone.lists.status." milestone.status)}}</span>
+                    <span class="info-box-number" data-test-milestone-name>{{milestone.name}}</span>
+                    <span class="progress-description" data-test-milestone-spans>{{t "views.app.workspace.detail.spansProjects" count=milestone.projectCount}}</span>
+                    <div class="progress">
+                      <div class="progress-bar" style={{progress-width milestone.progress}}></div>
+                    </div>
+                    <span class="progress-description">
+                      <span data-test-milestone-dates>{{date-format milestone.startDate 'Do MMM. YYYY'}} - {{date-format milestone.endDate 'Do MMM. YYYY'}}</span>
+                      <span class="pull-right" data-test-milestone-issues>({{milestone.doneIssueCount}}/{{milestone.issueCount}} {{t "global.module.plural.issue"}})</span>
+                    </span>
+                  </div>
+                </div>
+              {{else}}
+                {{#unless this.isMilestonesLoading}}
+                  <AppUi::EmptyState @icon="fa-flag" @message={{t "views.app.workspace.detail.noMilestones"}} />
+                {{/unless}}
+              {{/each}}
+            </:body>
+            <:bottom>
+              {{#if this.hasMilestonesPages}}
+                <div class="box-footer no-padding" data-workspace-milestones-pagination>
+                  <AppUi::Pager
+                    @offset={{this.milestonesOffset}}
+                    @limit={{this.milestonesPageSize}}
+                    @hasMore={{this.hasMoreMilestones}}
+                    @count={{this.milestones.length}}
+                    @disabled={{this.isMilestonesLoading}}
+                    @onPageChange={{this.loadMilestones}}
+                  />
+                </div>
+              {{/if}}
+            </:bottom>
+          </AppUi::Box>
+        </AccessControl>
+
       </div>
     </div>
   </div>

@@ -28,6 +28,7 @@ import * as Tag from './route-handlers/tag';
 import * as Repository from './route-handlers/repository';
 import * as Workspace from './route-handlers/workspace';
 import * as Workspacemember from './route-handlers/workspacemember';
+import * as Workspacemilestone from './route-handlers/workspacemilestone';
 import * as Tagged from './route-handlers/tagged';
 import * as Timelog from './route-handlers/timelog';
 import * as Token from './route-handlers/token';
@@ -102,6 +103,7 @@ function routes() {
     Repository.register(this, ctx);
     Workspace.register(this, ctx);
     Workspacemember.register(this, ctx);
+    Workspacemilestone.register(this, ctx);
     Tagged.register(this, ctx);
     Timelog.register(this, ctx);
     Token.register(this, ctx);

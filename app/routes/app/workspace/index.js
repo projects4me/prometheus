@@ -120,6 +120,7 @@ export default class WorkspaceIndexRoute extends App {
         if (model.workspace) {
             controller.loadMembers(0);
             controller.resetActivities();
+            controller.loadMilestones(0);
         }
     }
 }
