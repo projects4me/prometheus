@@ -46,7 +46,51 @@
         {{/if}}
       </:bottom>
     </AppUi::Box>
-    <div class="workspace-settings-members-placeholder" data-placeholder="members"></div>
+    <AppUi::Box @variant="warning" class="workspace-members" @noPadding={{true}}>
+      <:header>
+        <h3 class="box-title">{{t "views.app.workspace.settings.members.title"}}</h3>
+      </:header>
+      <:tools>
+        <AccessControl @aclContext="membership.create">
+          <button type="button" class="btn btn-sm btn-primary" data-btn="invite-member" data-target="dlg-invite-member">{{t "views.app.workspace.settings.members.invite"}}</button>
+        </AccessControl>
+      </:tools>
+      <:body>
+        <div class="callout callout-info" data-members-callout>
+          {{t "views.app.workspace.settings.members.sharing" count=this.model.projectCount}}
+        </div>
+        <AppUi::DataTable @columns={{this.memberColumns}} @rows={{this.members}} @sort="User.name" @order={{this.memberOrder}} @onSort={{this.sortMembers}}>
+          <:cell as |member column|>
+            {{#if (eq column.key "member")}}
+              <span data-member-id={{member.user.id}}>
+                <AppUi::Avatar @user={{member.user}} @size="s" />
+                <LinkTo @route="app.user.page" @model={{member.user.id}}>{{member.user.name}}</LinkTo>
+              </span>
+            {{else if (eq column.key "type")}}
+              <span data-test-member-type>{{if (eq member.type "agent") (t "views.app.workspace.settings.members.agent") (t "views.app.workspace.settings.members.person")}}</span>
+            {{else if (eq column.key "projects")}}
+              <span data-test-member-projects>{{t "views.app.workspace.settings.members.projectsOf" count=member.projectCount total=this.model.projectCount}}</span>
+            {{else if (eq column.key "openIssues")}}
+              <span data-test-member-open-issues>{{member.openIssues}}</span>
+            {{else if (eq column.key "actions")}}
+              <AccessControl @aclContext="membership.delete">
+                <button type="button" class="btn btn-xs btn-default" data-btn="remove-member" data-target="dlg-remove-member">{{t "views.app.workspace.settings.members.remove"}}</button>
+              </AccessControl>
+            {{/if}}
+          </:cell>
+          <:empty>
+            <Exceptions::NothingFound @description={{t "views.app.workspace.settings.members.empty"}} />
+          </:empty>
+        </AppUi::DataTable>
+      </:body>
+      <:bottom>
+        {{#if (or (gt this.memberOffset 0) this.hasNextMembers)}}
+          <div class="box-footer no-padding" data-members-pagination>
+            <AppUi::Pager @offset={{this.memberOffset}} @limit={{this.memberPageSize}} @hasMore={{this.hasNextMembers}} @count={{this.members.length}} @onPageChange={{this.changeMemberOffset}} />
+          </div>
+        {{/if}}
+      </:bottom>
+    </AppUi::Box>
   </div>
 
   <div class="col-md-4">

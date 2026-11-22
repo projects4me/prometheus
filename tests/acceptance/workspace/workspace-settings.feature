@@ -57,3 +57,10 @@ Feature: Workspace | Settings
     Given Workspace ENG exists with 2 projects
     When User navigates to app/workspace/ENG/settings/projects
     Then The Member Projects table lists 2 projects with the four columns
+
+  Scenario: The Members table lists each person once with the sharing callout
+
+    Given Workspace ENG exists with 2 projects
+    And User 1 is a member of 2 projects of workspace ENG
+    When User navigates to app/workspace/ENG/settings/projects
+    Then The Members table lists 1 person with the sharing callout for 2 projects

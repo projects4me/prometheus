@@ -2850,6 +2850,20 @@
             "add": "Add project",
             "empty": "This workspace has no projects you can see"
           },
+          "members": {
+            "title": "Members",
+            "sharing": "Members are shared by every project in the workspace. Adding someone adds them to all {count} projects; removing someone removes them from all {count} and asks what happens to their open issues.",
+            "member": "Member",
+            "type": "Type",
+            "projects": "Projects",
+            "projectsOf": "{count} of {total}",
+            "openIssues": "Open issues",
+            "person": "Person",
+            "agent": "Agent of this workspace",
+            "remove": "Remove",
+            "invite": "Invite member",
+            "empty": "This workspace has no members you can see"
+          },
           "agents": {
             "title": "Agents, workflows, tools and skills",
             "tools": "Tools",
