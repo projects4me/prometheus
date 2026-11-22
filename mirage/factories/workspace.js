@@ -17,6 +17,15 @@ export default Factory.extend({
     },
     projectCount: 0,
     memberCount: 0,
+    crossProjectLinkCount: 0,
+    crossProjectBlockingCount: 0,
+    runtimeOnline: false,
+    runsInProgress: 0,
+    repositoryCount: 0,
+    projectRepositoryCount: 0,
+    agentCount: 0,
+    toolserverCount: 0,
+    skillCount: 0,
     dateCreated() {
         return date.createdDate(20, 30);
     },

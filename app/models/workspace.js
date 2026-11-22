@@ -64,6 +64,96 @@ export default class WorkspaceModel extends Model {
     @attr('number') memberCount;
 
     /**
+     * The cross-project issue links of the workspace (read only, computed by Gaia)
+     *
+     * @property crossProjectLinkCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') crossProjectLinkCount;
+
+    /**
+     * The cross-project links that block (read only, computed by Gaia)
+     *
+     * @property crossProjectBlockingCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') crossProjectBlockingCount;
+
+    /**
+     * The whether the bound runtime was used in the last 5 minutes (read only, computed by Gaia)
+     *
+     * @property runtimeOnline
+     * @type Boolean
+     * @for Workspace
+     * @private
+     */
+    @attr('boolean') runtimeOnline;
+
+    /**
+     * The runs in progress over the projects (read only, computed by Gaia)
+     *
+     * @property runsInProgress
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') runsInProgress;
+
+    /**
+     * The repositories of the workspace (read only, computed by Gaia)
+     *
+     * @property repositoryCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') repositoryCount;
+
+    /**
+     * The repositories that belong to a project (read only, computed by Gaia)
+     *
+     * @property projectRepositoryCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') projectRepositoryCount;
+
+    /**
+     * The agents of the workspace (read only, computed by Gaia)
+     *
+     * @property agentCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') agentCount;
+
+    /**
+     * The tool servers of the workspace (read only, computed by Gaia)
+     *
+     * @property toolserverCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') toolserverCount;
+
+    /**
+     * The skills of the workspace (read only, computed by Gaia)
+     *
+     * @property skillCount
+     * @type Number
+     * @for Workspace
+     * @private
+     */
+    @attr('number') skillCount;
+
+    /**
      * Id of the user who created the workspace
      *
      * @property createdUser
@@ -112,6 +202,16 @@ export default class WorkspaceModel extends Model {
      * @private
      */
     @belongsTo('user', { async: true, inverse: null }) createdBy;
+
+    /**
+     * The runtime (service client) the workspace is bound to
+     *
+     * @property runtime
+     * @type Serviceclient
+     * @for Workspace
+     * @private
+     */
+    @belongsTo('serviceclient', { async: true, inverse: null }) runtime;
 
     /**
      * The projects of this workspace

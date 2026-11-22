@@ -50,7 +50,7 @@ export default class WorkspaceIndexRoute extends App {
         try {
             let workspaces = await this.store.query('workspace', {
                 query: `((Workspace.shortCode : ${shortCode}))`,
-                rels: 'createdBy',
+                rels: 'createdBy,runtime',
                 limit: 1
             });
             workspace = objectAt(workspaces, 0);

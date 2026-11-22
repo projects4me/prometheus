@@ -54,6 +54,28 @@
                   <h4>{{t "views.app.workspace.detail.members"}}</h4>
                   <p class="workspace-member-count">{{this.model.workspace.memberCount}}</p>
                 </div>
+                <div class="col-xs-6">
+                  <h4>{{t "views.app.workspace.detail.crossProjectLinks"}}</h4>
+                  <p class="workspace-cross-project-links">
+                    <span data-test-cross-project-links>{{this.model.workspace.crossProjectLinkCount}}</span>
+                    <span class="text-muted" data-test-cross-project-blocking>{{t "views.app.workspace.detail.blocking" count=this.model.workspace.crossProjectBlockingCount}}</span>
+                  </p>
+                </div>
+                <div class="col-xs-6">
+                  <h4>{{t "views.app.workspace.detail.environment"}}</h4>
+                  <p class="workspace-environment-fact" data-test-environment-fact>
+                    {{#if this.runtimeName}}
+                      <i class="fa fa-circle {{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot aria-hidden="true"></i>
+                      {{#if this.model.workspace.runtimeOnline}}
+                        {{t "views.app.workspace.detail.runtimeOnline" name=this.runtimeName}}
+                      {{else}}
+                        {{t "views.app.workspace.detail.runtimeOffline" name=this.runtimeName}}
+                      {{/if}}
+                    {{else}}
+                      {{t "views.app.workspace.detail.noRuntime"}}
+                    {{/if}}
+                  </p>
+                </div>
               </div>
             </:body>
           </AppUi::Box>
@@ -156,6 +178,59 @@
                 </div>
               {{/if}}
             </:body>
+          </AppUi::Box>
+        </AccessControl>
+
+        {{!-- The environment of the workspace: its runtime and what runs in it --}}
+        <AccessControl @aclContext="workspace.read">
+          <AppUi::Box @variant="info" @noPadding={{true}} class="workspace-environment">
+            <:header>
+              <h3 class="box-title">{{t "views.app.workspace.detail.environment"}}</h3>
+            </:header>
+            <:body>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.runtime"}}</td>
+                    <td class="text-right" data-test-env-runtime>
+                      {{#if this.runtimeName}}
+                        <i class="fa fa-circle {{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-env-dot aria-hidden="true"></i>
+                        {{this.runtimeName}}
+                      {{else}}
+                        {{t "views.app.workspace.detail.noRuntime"}}
+                      {{/if}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.runsInProgress"}}</td>
+                    <td class="text-right" data-test-env-runs>{{this.model.workspace.runsInProgress}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.repositories"}}</td>
+                    <td class="text-right" data-test-env-repositories>{{t "views.app.workspace.detail.repositoriesValue" total=this.model.workspace.repositoryCount project=this.model.workspace.projectRepositoryCount rest=this.workspaceRepositoryCount}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.agents"}}</td>
+                    <td class="text-right" data-test-env-agents>{{this.model.workspace.agentCount}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.toolServers"}}</td>
+                    <td class="text-right" data-test-env-toolservers>{{this.model.workspace.toolserverCount}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{t "views.app.workspace.detail.skills"}}</td>
+                    <td class="text-right" data-test-env-skills>{{this.model.workspace.skillCount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </:body>
+            <:bottom>
+              <div class="box-footer text-center" data-test-env-links>
+                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-test-env-link-environment>{{t "views.app.workspace.detail.environmentLink"}}</LinkTo>
+                |
+                <LinkTo @route="app.agent" data-test-env-link-agents>{{t "views.app.workspace.detail.agentsLink"}}</LinkTo>
+              </div>
+            </:bottom>
           </AppUi::Box>
         </AccessControl>
 

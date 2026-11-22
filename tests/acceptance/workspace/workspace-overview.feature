@@ -102,3 +102,36 @@ Feature: Workspace | read-only Overview
     Then Project 11 of workspace BIG is not listed
     When User moves the projects pager to the next page
     Then Project 11 of workspace BIG shows 0 open issues, milestone "Sprint 2", repository "big-repo-11" and a manager
+
+  Scenario: The Environment box and header facts show Gaia's values for an online runtime
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And Workspace ENG has environment facts with runtime "Talos" online
+    When User navigates to app/workspace/ENG
+    Then The workspace header shows 14 cross-project links, 3 blocking, and "Talos online" with a green dot
+    And The Environment box shows runtime "Talos" with a green dot, 2 runs, "5 (3 project, 2 workspace)" repositories, 4 agents, 6 tool servers and 7 skills
+    And The Environment box links Agents to the agents list
+
+  Scenario: The status dot is grey when the runtime is offline
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    And Workspace ENG has environment facts with runtime "Talos" offline
+    When User navigates to app/workspace/ENG
+    Then The workspace header shows "Talos offline" with a grey dot
+    And The Environment box shows runtime "Talos" with a grey dot
+
+  Scenario: A workspace without a runtime
+
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+    And Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG
+    Then The workspace header shows "No runtime bound"
+

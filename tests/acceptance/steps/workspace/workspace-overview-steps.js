@@ -48,6 +48,25 @@ export default function (assert) {
             }
         )
         .given(
+            'Workspace $code has environment facts with runtime "$name" $state',
+            async function (code, name, state) {
+                let runtime = server.create('serviceclient', { name });
+                server.schema.workspaces.findBy({ shortCode: code }).update({
+                    runtime,
+                    runtimeOnline: state === 'online',
+                    crossProjectLinkCount: 14,
+                    crossProjectBlockingCount: 3,
+                    runsInProgress: 2,
+                    repositoryCount: 5,
+                    projectRepositoryCount: 3,
+                    agentCount: 4,
+                    toolserverCount: 6,
+                    skillCount: 7
+                });
+                assert.ok(true, `Workspace ${code} has runtime ${name} ${state}`);
+            }
+        )
+        .given(
             'Workspace $code requests are recorded',
             async function (code) {
                 projectRequests = [];
@@ -265,6 +284,56 @@ export default function (assert) {
             'The workspace is not found',
             async function () {
                 assert.dom('.workspace-details').doesNotExist('The not-found state replaces the page');
+            }
+        )
+        .then(
+            'The workspace header shows $links cross-project links, $blocking blocking, and "$text" with a green dot',
+            async function (links, blocking, text) {
+                assert.dom('[data-test-cross-project-links]').hasText(links, 'The link count is shown');
+                assert.dom('[data-test-cross-project-blocking]').hasText(`(${blocking} blocking)`, 'The blocking count is shown');
+                assert.dom('[data-test-environment-fact]').includesText(text, 'The runtime status is shown');
+                assert.dom('[data-test-environment-dot]').hasClass('text-green', 'The dot is green');
+            }
+        )
+        .then(
+            'The workspace header shows "$text" with a grey dot',
+            async function (text) {
+                assert.dom('[data-test-environment-fact]').includesText(text, 'The runtime status is shown');
+                assert.dom('[data-test-environment-dot]').hasClass('text-muted', 'The dot is grey');
+            }
+        )
+        .then(
+            'The workspace header shows "No runtime bound"',
+            async function () {
+                assert.dom('[data-test-environment-fact]').includesText('No runtime bound', 'No runtime is shown');
+                assert.dom('[data-test-environment-dot]').doesNotExist('There is no dot');
+                assert.dom('[data-test-env-runtime]').includesText('No runtime bound', 'The box shows no runtime');
+            }
+        )
+        .then(
+            'The Environment box shows runtime "$name" with a green dot, $runs runs, "$repos" repositories, $agents agents, $tools tool servers and $skills skills',
+            async function (name, runs, repos, agents, tools, skills) {
+                assert.dom('[data-test-env-runtime]').includesText(name, 'The runtime name is shown');
+                assert.dom('[data-test-env-dot]').hasClass('text-green', 'The dot is green');
+                assert.dom('[data-test-env-runs]').hasText(runs, 'Runs in progress');
+                assert.dom('[data-test-env-repositories]').hasText(repos, 'Repositories');
+                assert.dom('[data-test-env-agents]').hasText(agents, 'Agents');
+                assert.dom('[data-test-env-toolservers]').hasText(tools, 'Tool servers');
+                assert.dom('[data-test-env-skills]').hasText(skills, 'Skills');
+            }
+        )
+        .then(
+            'The Environment box shows runtime "$name" with a grey dot',
+            async function (name) {
+                assert.dom('[data-test-env-runtime]').includesText(name, 'The runtime name is shown');
+                assert.dom('[data-test-env-dot]').hasClass('text-muted', 'The dot is grey');
+            }
+        )
+        .then(
+            'The Environment box links Agents to the agents list',
+            async function () {
+                assert.dom('[data-test-env-link-agents]').hasAttribute('href', /\/agent$/, 'Agents link goes to the agents list');
+                assert.dom('[data-test-env-link-environment]').exists('The Environment link is shown');
             }
         );
 }
