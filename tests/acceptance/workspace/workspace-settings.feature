@@ -1,0 +1,53 @@
+@setupApplicationTest
+Feature: Workspace | Settings
+
+  Background:
+    Given There is no pre-existing data
+    And project scenario is loaded
+    And User_1 is logged in
+
+  Scenario: Settings opens on the Projects tab with four tabs
+
+    Given Workspace ENG exists with 0 projects
+    When User visits app/workspace/ENG/settings
+    Then The workspace settings show the tabs "projects, environment, agents, delete"
+    And The workspace settings Projects tab is open
+
+  Scenario: The Who Can Manage box lists the permissions
+
+    Given Workspace ENG exists with 0 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    Then The Who Can Manage box lists the workspace permissions
+
+  Scenario: The old edit link lands on Settings
+
+    Given Workspace ENG exists with 0 projects
+    When User visits app/workspace/edit/ENG
+    Then User should be in app/workspace/ENG/settings/projects page
+
+  Scenario: The details are saved from Settings
+
+    Given Workspace ENG exists with 0 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    And User renames the workspace in Settings to "Platform"
+    And User saves the workspace details in Settings
+    Then Workspace "Platform" with code "ENG" is stored
+
+  Scenario: The Agents tab links to the existing views
+
+    Given Workspace ENG exists with 0 projects
+    When User navigates to app/workspace/ENG/settings/agents
+    Then The Agents tab links to agents, workflows, tools and skills
+
+  Scenario: A workspace with projects can't be deleted
+
+    Given Workspace ENG exists with 2 projects
+    When User navigates to app/workspace/ENG/settings/delete
+    Then The workspace settings delete button is disabled
+
+  Scenario: An empty workspace is deleted after confirmation
+
+    Given Workspace EMPTY exists with 0 projects
+    When User navigates to app/workspace/EMPTY/settings/delete
+    And User confirms deleting the workspace in Settings
+    Then Workspace EMPTY is deleted and the workspaces list is shown

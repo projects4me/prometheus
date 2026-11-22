@@ -17,7 +17,7 @@ Feature: Workspaces | create and edit
   Scenario: User edits a workspace
 
     Given Workspace "Engineering" with code "ENG" exists
-    When User navigates to app/workspace/edit/ENG
+    When User navigates to app/workspace/ENG/settings/projects
     And User fills the workspace form with name "Platform", code "ENG" and description "Platform team"
     And User clicks on the workspace save button
     Then Workspace "Platform" with code "ENG" is stored

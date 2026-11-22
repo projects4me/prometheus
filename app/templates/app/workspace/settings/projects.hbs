@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-8">
+    {{!-- The Projects and members tables come in their own issues (set-projects, set-members) --}}
+    <div class="workspace-settings-projects-placeholder" data-placeholder="projects"></div>
+    <div class="workspace-settings-members-placeholder" data-placeholder="members"></div>
+  </div>
+
+  <div class="col-md-4">
+    <AccessControl @aclContext="workspace.update">
+      <Workspace::DetailsForm
+        @model={{this.model}}
+        @message={{this.message}}
+        @validateField={{this.validateField}}
+        @aclContext="workspace.update"
+        @onSave={{fn this.save "workspaceCreate"}}
+        @onCancel={{this.cancel}}
+      />
+    </AccessControl>
+
+    <AppUi::Box @variant="info" class="workspace-who-can-manage">
+      <:header>
+        <h3 class="box-title">{{t "views.app.workspace.settings.whoCanManage.title"}}</h3>
+      </:header>
+      <:body>
+        <ul class="list-unstyled">
+          <li data-permission="workspace.update"><code>workspace.update</code> {{t "views.app.workspace.settings.whoCanManage.workspace"}}</li>
+          <li data-permission="membership"><code>membership.create</code>, <code>membership.delete</code> {{t "views.app.workspace.settings.whoCanManage.members"}}</li>
+          <li data-permission="project.update"><code>project.update</code> {{t "views.app.workspace.settings.whoCanManage.projects"}}</li>
+          <li data-permission="agent"><code>agent.*</code> {{t "views.app.workspace.settings.whoCanManage.agents"}}</li>
+          <li data-permission="other">{{t "views.app.workspace.settings.whoCanManage.other"}}</li>
+        </ul>
+      </:body>
+    </AppUi::Box>
+  </div>
+</div>

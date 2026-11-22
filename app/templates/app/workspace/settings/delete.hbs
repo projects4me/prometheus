@@ -1,0 +1,33 @@
+<AccessControl @aclContext="workspace.delete">
+  <AppUi::Box @variant="danger" class="workspace-settings-delete">
+    <:header>
+      <h3 class="box-title">{{t "views.app.workspace.delete.title"}}</h3>
+    </:header>
+    <:body>
+      {{#if this.hasProjects}}
+        <p class="text-muted" data-delete-blocked>{{t "views.app.workspace.delete.hasProjects"}}</p>
+        <button type="button" disabled data-btn="delete" class="btn btn-danger disabled">{{t "global.form.delete"}}</button>
+      {{else}}
+        <p>{{t "views.app.workspace.delete.warning" name=this.model.name}}</p>
+        <button type="button" data-btn="delete" class="btn btn-danger" {{on "click" this.openDelete}}>{{t "global.form.delete"}}</button>
+      {{/if}}
+    </:body>
+  </AppUi::Box>
+</AccessControl>
+
+{{#if this.confirmingDelete}}
+  <AppUi::Modal
+    @title="views.app.workspace.delete.title"
+    @closeLabel="global.form.cancel"
+    @onClose={{this.closeDelete}}
+    @confirmLabel="global.form.delete"
+    @confirm={{this.deleteWorkspace}}
+    @dataSaveBtn="confirm-delete"
+    @containerClass="workspace-delete-modal"
+  >
+    <p>{{t "views.app.workspace.delete.warning" name=this.model.name}}</p>
+    {{#each this.deleteErrors as |message|}}
+      <div class="alert alert-danger" data-delete-error>{{message}}</div>
+    {{/each}}
+  </AppUi::Modal>
+{{/if}}

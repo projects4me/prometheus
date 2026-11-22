@@ -5,6 +5,7 @@
 import { service } from '@ember/service';
 import App from 'prometheus/routes/app';
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { setWorkspaceBreadcrumb } from 'prometheus/utils/workspace/breadcrumb';
 
 /**
  * The read-only workspace Overview route
@@ -72,14 +73,7 @@ export default class WorkspaceIndexRoute extends App {
             return { failed: true };
         }
 
-        // The selected project's workspace: Projects > project > Workspace, otherwise Workspaces > name
-        if (this.trackedProject.workspaceShortCode === workspace.shortCode?.toLowerCase()) {
-            this.breadcrumb.setParent('app.workspace', 'app.project');
-            this.breadcrumb.setTitle('app.workspace', 'views.app.workspace.detail.breadcrumb');
-        } else {
-            this.breadcrumb.setParent('app.workspace', 'app.workspaces.index');
-            this.breadcrumb.setTitle('app.workspace', workspace.name);
-        }
+        setWorkspaceBreadcrumb(this.breadcrumb, this.trackedProject, workspace);
         return { workspace, projects: projects.slice(), repositoryNames, hasNextProjects };
     }
 

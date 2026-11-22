@@ -1,0 +1,39 @@
+{{#if this.model.notFound}}
+  <Errors::404/>
+{{else if this.model.failed}}
+  <Errors::500/>
+{{else}}
+  <section class="content-header">
+    <h1>
+      {{t "views.app.workspace.settings.title"}}
+      <small>{{this.model.workspace.name}}</small>
+    </h1>
+    <BreadCrumb/>
+  </section>
+
+  <section class="content">
+    <div class="workspace-settings">
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class={{if (is-active-route "app.workspace.settings.projects") "active"}} role="presentation">
+            <LinkTo @route="app.workspace.settings.projects" data-tab="projects">{{t "views.app.workspace.settings.tabs.projects"}}</LinkTo>
+          </li>
+          <li class={{if (is-active-route "app.workspace.settings.environment") "active"}} role="presentation">
+            <LinkTo @route="app.workspace.settings.environment" data-tab="environment">{{t "views.app.workspace.settings.tabs.environment"}}</LinkTo>
+          </li>
+          <li class={{if (is-active-route "app.workspace.settings.agents") "active"}} role="presentation">
+            <LinkTo @route="app.workspace.settings.agents" data-tab="agents">{{t "views.app.workspace.settings.tabs.agents"}}</LinkTo>
+          </li>
+          <li class={{if (is-active-route "app.workspace.settings.delete") "active"}} role="presentation">
+            <LinkTo @route="app.workspace.settings.delete" data-tab="delete">{{t "views.app.workspace.settings.tabs.delete"}}</LinkTo>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" role="tabpanel">
+            {{outlet}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{{/if}}

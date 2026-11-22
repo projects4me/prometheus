@@ -28,7 +28,7 @@
             </:header>
             <:tools>
               <AccessControl @aclContext="workspace.update">
-                <LinkTo @route="app.workspaces.edit" @model={{this.model.workspace.shortCode}} data-btn="settings" class="btn btn-default btn-sm">{{t "views.app.workspace.detail.settings"}}</LinkTo>
+                <LinkTo @route="app.workspace.settings" @model={{this.model.workspace.shortCode}} data-btn="settings" class="btn btn-default btn-sm">{{t "views.app.workspace.detail.settings"}}</LinkTo>
               </AccessControl>
             </:tools>
             <:body>

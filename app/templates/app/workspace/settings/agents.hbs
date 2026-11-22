@@ -1,0 +1,17 @@
+<AppUi::Box @variant="info" class="workspace-settings-agents" @noPadding={{true}}>
+  <:header>
+    <h3 class="box-title">{{t "views.app.workspace.settings.agents.title"}}</h3>
+  </:header>
+  <:body>
+    <ul class="nav nav-stacked">
+      {{#each this.links as |link|}}
+        <li data-agents-link={{link.name}}>
+          <LinkTo @route={{link.route}}>
+            {{t link.label}}
+            <span class="pull-right badge bg-blue" data-count>{{link.display}}</span>
+          </LinkTo>
+        </li>
+      {{/each}}
+    </ul>
+  </:body>
+</AppUi::Box>
