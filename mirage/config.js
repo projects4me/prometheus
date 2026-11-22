@@ -42,6 +42,7 @@ import * as Systemsetting from './route-handlers/systemsetting';
 import * as Setting from './route-handlers/setting';
 import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
+import * as Issuelink from './route-handlers/issuelink';
 import * as Agent from './route-handlers/agent';
 import * as AgentCatalog from './route-handlers/agent-catalog';
 import * as Agentcredential from './route-handlers/agentcredential';
@@ -117,6 +118,7 @@ function routes() {
     Setting.register(this, ctx);
     Issueplanning.register(this, ctx);
     Issuewatcher.register(this, ctx);
+    Issuelink.register(this, ctx);
     Agent.register(this);
     AgentCatalog.register(this);
     Agentcredential.register(this);
