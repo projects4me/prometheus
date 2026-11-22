@@ -87,6 +87,11 @@
             <:header>
               <h3 class="box-title">{{t "views.app.workspace.detail.projects"}}</h3>
             </:header>
+            <:tools>
+              <AccessControl @aclContext="project.update">
+                <button type="button" class="btn btn-sm btn-primary" data-btn="add-project" {{on "click" this.openAddProject}}>{{t "views.app.workspace.settings.projects.add"}}</button>
+              </AccessControl>
+            </:tools>
             <:body>
               <AppUi::DataTable @columns={{this.columns}} @rows={{this.model.projects}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
                 <:cell as |project column|>
@@ -310,4 +315,8 @@
     </div>
   </div>
   </section>
+{{/if}}
+
+{{#if this.addingProject}}
+  <Workspace::AddProjectDialog @workspace={{this.model.workspace}} @onClose={{this.closeAddProject}} @onAdded={{this.projectAdded}} />
 {{/if}}

@@ -2824,6 +2824,28 @@
         }
       },
       "workspace": {
+        "addProject": {
+          "title": "Add project to this workspace",
+          "project": "Project",
+          "placeholder": "Choose a project",
+          "hint": "Projects you cannot update are refused when you add them.",
+          "aloneHint": "{project} is the only project in its own workspace, which is left empty once it moves.",
+          "sharedBoth": "Members are shared both ways",
+          "willBeAddedTo": "Will be added to",
+          "who": "Who",
+          "toProject": "{project}",
+          "toOthers": "The other projects of this workspace",
+          "nobody": "Nobody",
+          "readOnly": "For information: the list can't be changed here. Remove people afterwards in Settings.",
+          "environment": "Environment",
+          "repository": "Repository",
+          "noRepository": "The project has no repository",
+          "runtime": "Runtime",
+          "noRuntime": "This workspace has no runtime",
+          "confirm": "Add project",
+          "failed": "The project could not be added to the workspace.",
+          "loadFailed": "The project's details could not be loaded."
+        },
         "delete": {
           "title": "Delete workspace",
           "warning": "Delete the workspace {name}? This cannot be undone.",
