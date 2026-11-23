@@ -30,6 +30,20 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @tracked previewedFile = null;
 
     /**
+     * Bumped when the issue's links change, so the blocked by label reloads
+     *
+     * @property linksVersion
+     * @type Number
+     * @private
+     */
+    @tracked linksVersion = 0;
+
+    @action
+    linksChanged() {
+        this.linksVersion++;
+    }
+
+    /**
      * The element that opened the preview, it gets the focus back when the preview closes
      *
      * @property previewTrigger

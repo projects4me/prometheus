@@ -674,3 +674,13 @@
     }
   }
 }
+
+.blocked-by-label {
+	margin-left: 8px;
+	font-weight: normal;
+
+	a {
+		color: inherit;
+		text-decoration: underline;
+	}
+}
