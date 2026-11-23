@@ -62,6 +62,9 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         this.set('noop', () => {});
         this.set('statusClass', {});
 
+        // The real observer reports lanes in view asynchronously and would override the tapped chip
+        let RealObserver = window.IntersectionObserver;
+        window.IntersectionObserver = undefined;
         await render(hbs`
             <div class="board">
                 <AppUi::TaskBoard::Milestones
@@ -87,6 +90,7 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.ok(chips[2].classList.contains('is-active'), 'tapped chip is highlighted');
         assert.strictEqual(scrolls.length, 1, 'the board is asked to scroll once');
         assert.strictEqual(typeof scrolls[0].left, 'number', 'to the position of the lane');
+        window.IntersectionObserver = RealObserver;
     });
 
     test('phone dropdown lists the milestones and switching shows that milestone', async function (assert) {
