@@ -9,6 +9,7 @@ The content is the block. Extra attributes, such as a `data-test-*` selector, go
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
 | @variant | String | default | The colour: default, primary, info, success, warning or danger |
+| @fill | String | tint | `tint` is the default look. `solid` fills the tag with the colour; the text is white or dark, whichever has the higher contrast. Other values are `tint` |
 | @colorKey | String | none | Without a `@variant`, the palette colour (primary, info, success, warning, danger) is picked from a hash of this text, so the same text always has the same colour |
 | @onRemove | Function | none | Shows a small remove button inside the tag and calls this when it is clicked |
 
