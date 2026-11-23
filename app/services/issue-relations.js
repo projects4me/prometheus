@@ -21,6 +21,20 @@ const RELATIONS = {
 };
 
 /**
+ * How a relation chosen in the Link issue modal is stored. `type` is the issuelink type, `swap` puts the other issue
+ * on the source side; parent/child relations are not links, they set `Issue.parentId`.
+ */
+const LINK_KINDS = {
+	blocks: { type: 'blocks', swap: false },
+	blockedBy: { type: 'blocks', swap: true },
+	relates: { type: 'relates', swap: false },
+	splitsInto: { type: 'splits', swap: false },
+	splitFrom: { type: 'splits', swap: true },
+	parentOf: { parent: 'self' },
+	childOf: { parent: 'other' }
+};
+
+/**
  * Loads the relations of an issue for the issue detail page: the direct ones first and, on demand, one more level
  * in the same direction. Application layer: components ask this service and never query the store for links.
  *
@@ -61,6 +75,78 @@ export default class IssueRelationsService extends Service {
 			return [];
 		}
 		return this._rows(row.issue, row.relation, row.depth + 1, row.issue, row.path);
+	}
+
+	/**
+	 * Links the issue to another one. `relation` is one of blocks, blockedBy, relates, splitsInto, splitFrom,
+	 * parentOf, childOf. Typed links create an Issuelink; parent/child set the child's `parentId`. A failed save
+	 * is rolled back and the error (Gaia's 422) is rethrown.
+	 *
+	 * @method link
+	 * @param {Issue} issue
+	 * @param {String} relation
+	 * @param {Issue} other
+	 * @return {Promise}
+	 */
+	async link(issue, relation, other) {
+		let kind = LINK_KINDS[relation];
+		if (!kind) {
+			throw new Error(`Unknown relation ${relation}`);
+		}
+		if (kind.parent) {
+			let [child, parent] = kind.parent === 'self' ? [other, issue] : [issue, other];
+			return this._setParent(child, parent);
+		}
+		let [source, target] = kind.swap ? [other, issue] : [issue, other];
+		let record = this.store.createRecord('issuelink', {
+			type: kind.type,
+			sourceIssueId: String(source.id),
+			targetIssueId: String(target.id),
+			projectId: String(source.projectId),
+			targetProjectId: String(target.projectId)
+		});
+		try {
+			return await record.save();
+		} catch (error) {
+			record.unloadRecord();
+			throw error;
+		}
+	}
+
+	/**
+	 * Removes a direct row: deletes its Issuelink, or clears `parentId` for a parent or child row.
+	 *
+	 * @method unlink
+	 * @param {Issue} issue the page's issue
+	 * @param {Object} row a depth-1 row from load()
+	 * @return {Promise}
+	 */
+	async unlink(issue, row) {
+		if (row.link) {
+			return row.link.destroyRecord();
+		}
+		if (row.relation === 'parent') {
+			return this._setParent(issue, null);
+		}
+		if (row.relation === 'children') {
+			return this._setParent(row.issue, null);
+		}
+		throw new Error(`Cannot unlink ${row.relation}`);
+	}
+
+	/**
+	 * @method _setParent
+	 * @private
+	 */
+	async _setParent(child, parent) {
+		child.parentId = parent ? String(parent.id) : null;
+		child.parentissue = parent;
+		try {
+			return await child.save();
+		} catch (error) {
+			child.rollbackAttributes();
+			throw error;
+		}
 	}
 
 	/**
