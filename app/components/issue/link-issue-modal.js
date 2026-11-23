@@ -7,6 +7,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { isDestroying, isDestroyed } from '@ember/destroyable';
+import { relsForQuery } from 'prometheus/utils/query/rels';
 import Selection from 'prometheus/utils/state/selection';
 
 /** The relations the modal offers, in display order (translation keys under linkModal.relations). */
@@ -16,6 +17,9 @@ const RELATIONS = ['blocks', 'blockedBy', 'relates', 'splitsInto', 'splitFrom', 
 const DEFAULT_RELATION = 'relates';
 
 const PAGE_SIZE = 10;
+
+/** Relations always requested: the assignee is shown, the project scopes the workspace filter. */
+const ALWAYS_RELS = ['assignedTo', 'project'];
 
 /**
  * The Link issues modal of the Linked issues box: search the issues of the workspace with EzSearchCompact, tick the
@@ -41,6 +45,7 @@ export default class IssueLinkIssueModalComponent extends Component {
 	@tracked schema = null;
 	@tracked results = [];
 	@tracked total = null;
+	@tracked hasMore = false;
 	@tracked isSearching = true;
 	@tracked searchFailed = false;
 	/** The rows of the To link table: `{ issue, relation, error }`. */
@@ -82,40 +87,29 @@ export default class IssueLinkIssueModalComponent extends Component {
 	}
 
 	/**
-	 * The muted "N of M issues in the workspace" line.
+	 * The muted "N issues" line, or "Showing 10. Refine the search to see others." when more match.
 	 *
 	 * @property countLine
 	 * @type String
 	 */
 	get countLine() {
-		return this.total === null ? '' : this.intl.t('views.app.issue.detail.linkedIssues.linkModal.count', { shown: this.results.length, total: this.total });
+		return this.total === null ? '' : this.intl.t(this.hasMore ? 'views.app.issue.detail.linkedIssues.linkModal.refine' : 'views.app.issue.detail.linkedIssues.linkModal.count', { shown: this.results.length });
 	}
 
 	/**
-	 * Limits the search to the projects of the workspace, without this issue and the issues already linked to it.
+	 * Limits the search to the workspace of the issue's project (or the project itself when it has none), without this
+	 * issue and the issues already linked to it.
 	 *
 	 * @property baseQuery
 	 * @type String
 	 */
 	get baseQuery() {
-		let projects = this.projectIds().map((id) => `(Issue.projectId : ${id})`).join(' OR ');
-		let excluded = [String(this.args.issue.id), ...this.linkedIds].map((id) => ` AND (Issue.id !: ${id})`).join('');
-		return `((${projects})${excluded})`;
-	}
-
-	/**
-	 * Ids of the projects of the workspace of the issue's project (at least the issue's own project).
-	 *
-	 * @method projectIds
-	 * @return {String[]}
-	 */
-	projectIds() {
-		let projectId = String(this.args.issue.projectId);
-		let project = this.store.peekRecord('project', projectId);
-		let ids = project?.workspaceId
-			? this.store.peekAll('project').filter((other) => other.workspaceId === project.workspaceId).map((other) => String(other.id))
-			: [];
-		return ids.includes(projectId) ? ids : [projectId, ...ids];
+		let issue = this.args.issue;
+		let project = this.store.peekRecord('project', String(issue.projectId));
+		let scope = project?.workspaceId ? `(project.workspaceId : ${project.workspaceId})` : `(Issue.projectId : ${issue.projectId})`;
+		let ids = [String(issue.id), ...this.linkedIds];
+		let excluded = ids.length > 1 ? `(Issue.id !CONTAINS ${ids.map((id) => `'${id}'`).join(',')})` : `(Issue.id !: ${ids[0]})`;
+		return `(${scope} AND ${excluded})`;
 	}
 
 	/**
@@ -171,15 +165,16 @@ export default class IssueLinkIssueModalComponent extends Component {
 		this.isSearching = true;
 		this.searchFailed = false;
 		try {
-			let [issues, all] = await Promise.all([
-				this.store.query('issue', { query, rels: 'assignedTo', limit: PAGE_SIZE, sort: 'Issue.dateModified', order: 'DESC' }),
-				this.store.query('issue', { query, rels: 'none', fields: 'Issue.id', limit: -1 }).catch(() => null)
-			]);
+			let rels = relsForQuery(this.schema, query, ALWAYS_RELS);
+			// One row more than the page tells whether others match; Gaia's meta.count is the page count, not a total
+			let issues = await this.store.query('issue', { query, rels, limit: PAGE_SIZE + 1, sort: 'Issue.dateModified', order: 'DESC' });
 			if (this.gone || id !== this.searchId) {
 				return;
 			}
-			this.results = issues.slice();
-			this.total = all ? all.length : this.results.length;
+			let rows = issues.slice();
+			this.hasMore = rows.length > PAGE_SIZE;
+			this.results = rows.slice(0, PAGE_SIZE);
+			this.total = this.results.length;
 		} catch {
 			if (this.gone || id !== this.searchId) {
 				return;
