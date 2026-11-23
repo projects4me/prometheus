@@ -109,13 +109,20 @@
     .lane-status-bar {
       display: flex;
       overflow-x: auto;
-      border-bottom: 1px solid $backgroundColor;
+      border: 1px solid $lightColor;
+      border-left: 0;
+      border-right: 0;
     }
 
     .lane-status-chip {
       flex: 0 0 auto;
-      padding: 0.5rem 1rem;
-      border: 1px solid $backgroundColor;
+      display: flex;
+      align-items: center;
+      min-height: 4.4rem;
+      padding: 1rem 1.4rem;
+      border: 1px solid $lightColor;
+      border-top: 0;
+      border-bottom: 0;
       background: transparent;
       border-radius: 0;
       white-space: nowrap;
