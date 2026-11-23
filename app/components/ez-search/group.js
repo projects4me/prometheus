@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { add, remove, setConjunction, condition, group } from 'prometheus/utils/query/ast';
+import { add, addBlankCondition, remove, setConjunction, group } from 'prometheus/utils/query/ast';
 
 /**
  * One group of the builder: the AND/OR switch, its conditions and nested groups. Edits go through the
@@ -35,7 +35,7 @@ export default class EzSearchGroupComponent extends Component {
      */
     @action
     addCondition() {
-        this.emit(add(this.args.tree, this.args.group.id, condition('', '', null)));
+        this.emit(addBlankCondition(this.args.tree, this.args.group.id));
     }
 
     @action

@@ -75,7 +75,18 @@ module('Integration | Component | ez-search-compact', function (hooks) {
     }
 
     for (const full of [false, true]) {
-        test(`a focused saved item is highlighted (${full ? 'EzSearch' : 'EzSearchCompact'})`, async function (assert) {
+        test('the filter modal opens with one blank row; Search without filling it applies nothing', async function (assert) {
+        await show();
+        await click('[data-ez-builder-toggle]');
+        assert.dom('[data-ez-condition]').exists({ count: 1 });
+        assert.dom('[data-ez-incomplete]').doesNotExist();
+        assert.dom('[data-ez-draft-query]').hasText('');
+        await click('.modal-footer .btn-primary');
+        assert.deepEqual(this.applied, []);
+        assert.dom('[data-ez-filter-count]').doesNotExist();
+    });
+
+    test(`a focused saved item is highlighted (${full ? 'EzSearch' : 'EzSearchCompact'})`, async function (assert) {
             await show(full);
             await click('.app-dropdown-btn');
             const item = this.element.querySelector('[data-ez-saved-item]');

@@ -133,7 +133,7 @@ module('Integration | Component | ez-search', function (hooks) {
         await click('[data-ez-search-clear]');
 
         assert.dom(INPUT).hasValue('');
-        assert.dom('[data-ez-condition]').doesNotExist();
+        assert.dom('[data-ez-condition]').exists({ count: 1 });
         assert.strictEqual(this.applied.length, 1);
         assert.ok(this.applied[0].includes('Issue.projectId'));
         assert.notOk(this.applied[0].includes('Issue.status'));
@@ -190,6 +190,21 @@ module('Integration | Component | ez-search', function (hooks) {
         assert.dom('[data-ez-save]').exists();
         await click('[data-ez-save]');
         assert.deepEqual(saved, ['((Issue.status : done))']);
+    });
+
+    test('an empty builder opens with one blank row that is ignored until it is filled in', async function (assert) {
+        await show();
+        await click('[data-ez-builder-toggle]');
+        assert.dom('[data-ez-condition]').exists({ count: 1 });
+        assert.dom('[data-ez-incomplete]').doesNotExist();
+        assert.dom('[data-ez-error]').doesNotExist();
+        assert.dom('.ez-search-chip, [data-ez-chip]').doesNotExist();
+        await click('[data-ez-search-apply]');
+        assert.deepEqual(this.applied, []);
+        assert.dom('[data-ez-error]').doesNotExist();
+
+        await click('[data-ez-search-clear]');
+        assert.dom('[data-ez-condition]').exists({ count: 1 });
     });
 
     test('@activeSavedSearchId marks the search and loads its query', async function (assert) {
