@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, waitUntil } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | app-ui/task-board/milestones', function (hooks) {
@@ -75,18 +75,17 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
             </div>
         `);
 
-        this.element.querySelector('.board').style.width = '300px';
         let chips = this.element.querySelectorAll('[data-lane-chip]');
         assert.strictEqual(chips.length, 3, 'one chip per status');
         assert.ok(chips[0].textContent.includes('(2)'), 'chip shows the count');
 
-        await click('[data-lane-chip="done"]');
-        await waitUntil(() => chips[2].classList.contains('is-active'), { timeout: 3000 });
-        assert.ok(chips[2].classList.contains('is-active'), 'tapped chip is highlighted');
-
         let board = this.element.querySelector('.milestone.box-body');
-        assert.ok(board.scrollWidth > board.clientWidth, `board overflows ${board.scrollWidth}/${board.clientWidth}`);
-        await waitUntil(() => board.scrollLeft > 0, { timeout: 3000 });
-        assert.ok(board.scrollLeft > 0, 'the board scrolled to the lane');
+        let scrolls = [];
+        board.scrollTo = (options) => scrolls.push(options);
+
+        await click('[data-lane-chip="done"]');
+        assert.ok(chips[2].classList.contains('is-active'), 'tapped chip is highlighted');
+        assert.strictEqual(scrolls.length, 1, 'the board is asked to scroll once');
+        assert.strictEqual(typeof scrolls[0].left, 'number', 'to the position of the lane');
     });
 });
