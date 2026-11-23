@@ -739,5 +739,9 @@
 
 	.link-issue-row-relation {
 		flex: 0 0 200px;
+
+		.form-field {
+			margin: 0;
+		}
 	}
 }
