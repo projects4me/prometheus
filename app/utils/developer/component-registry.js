@@ -102,11 +102,12 @@ export const ENTRIES = [
         label: 'Select',
         group: 'Forms',
         status: 'stable',
-        summary: 'AppUi::Select, the single and multiple searchable select every relate field, the header search and the project switcher render.',
+        summary: 'AppUi::Select, the single and multiple searchable select every relate field, the header search and the project switcher render. Inside an AppUi::Modal it draws its list in the dialog.',
         usedIn: [
             { label: 'Global search' },
             { label: 'Sidebar project switcher' },
-            { label: 'Form fields relate and multi-select' }
+            { label: 'Form fields relate and multi-select' },
+            { label: 'ezSearch builder Field, Operator and value lists' }
         ],
         demo: 'developer/demos/select',
         doc: 'select.md',

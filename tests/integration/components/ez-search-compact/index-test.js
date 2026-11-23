@@ -8,6 +8,7 @@ import { render, click, fillIn, focus, blur, waitUntil, settled } from '@ember/t
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 import { issueQuerySchema } from '../../../helpers/query-schema';
+import { chooseOption, chooseOptionAt, openSelect, selectOptions } from 'prometheus/tests/helpers/select';
 
 const INPUT = '[data-field="ez-search-input"] input, input[data-field="ez-search-input"]';
 const DONE = '((Issue.status : done))';
@@ -225,5 +226,27 @@ module('Integration | Component | ez-search-compact', function (hooks) {
 
         assert.strictEqual(this.applied.length, 1);
         assert.dom(INPUT).hasValue('');
+    });
+    test('the modal builder opens the Field and Operator lists inside the dialog and picks from them', async function (assert) {
+        this.query = DONE;
+        await show();
+        await click('[data-ez-builder-toggle]');
+        const FIELD = 'dialog.app-modal [data-ez-condition] [data-field="ez-search.condition.field"]';
+        const OPERATOR = 'dialog.app-modal [data-ez-condition] [data-field="ez-search.condition.operator"]';
+
+        await openSelect(FIELD);
+        let fields = selectOptions();
+        assert.ok(fields.length > 0, 'the field list opens');
+        assert.ok(fields.every((option) => option.closest('dialog.app-modal[open]')), 'the field list is inside the dialog');
+        await chooseOption(FIELD, 'Subject');
+        assert.dom(FIELD).includesText('Subject');
+
+        await openSelect(OPERATOR);
+        let operators = selectOptions();
+        assert.ok(operators.length > 1, 'the operator list opens');
+        assert.ok(operators.every((option) => option.closest('dialog.app-modal[open]')), 'the operator list is inside the dialog');
+        let second = operators[1].textContent.trim();
+        await chooseOptionAt(OPERATOR, 1);
+        assert.dom(OPERATOR).includesText(second);
     });
 });

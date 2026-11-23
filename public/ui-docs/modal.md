@@ -68,7 +68,7 @@ The default block is the modal body.
 Everything outside an open modal dialog is inert: it shows under the dialog and cannot be clicked. Two things render into `body` and are handled differently:
 
 - **Messenger.** The modal moves Messenger's message list into the topmost open dialog when it opens and back to `body` when the last one closes, so an error posted while a confirm fails shows above the modal and its buttons work. Nothing is needed at the call site. The dialog's own subtree is the only part of the page a modal dialog leaves interactive, so this is used instead of showing the list as a `popover` outside the dialog.
-- **PowerSelect / ember-basic-dropdown.** Their options list renders into the body wormhole by default, which is inert under the modal. Inside `AppUi::Modal` pass `@renderInPlace={{true}}`: to `FormFields::FieldRelate`, `FormFields::FieldRelateMulti` and `FormFields::FieldMultiSelect` (they forward it), or to a `PowerSelect` directly. The list then renders next to its field inside the dialog, which scrolls when the list is taller than the window. Moving the wormhole into the dialog is not an option: ember-basic-dropdown positions wormholed content against `body`, which is wrong inside the fixed, scrolling dialog.
+- **AppUi::Select / ember-basic-dropdown.** Their options list renders into the body wormhole by default, which is inert under the modal. `AppUi::Select` (and so `FormFields::FieldRelate`, `FieldRelateMulti` and `FieldMultiSelect`) detects the open dialog its trigger sits in and draws the list inside it, positioned against the fixed, scrolling dialog (`utils/ui/dialog-dropdown.js`); no argument is needed. `@renderInPlace={{true}}` still works and renders the list next to its field. See `select.md`.
 
 ## Do and Avoid
 
@@ -77,7 +77,7 @@ Everything outside an open modal dialog is inert: it shows under the dialog and 
 - Keep `{{#if}}` around the modal and clear the flag in `@onClose`.
 - Pass a translation key as `@title`, it is translated with `t`.
 - Return a Promise from `@confirm` for saves that take time, so the buttons are locked while it runs.
-- Pass `@renderInPlace={{true}}` to every select inside the modal.
+- Use `AppUi::Select` or the FormFields selects inside the modal; they draw their list in the dialog by themselves.
 
 ### Avoid
 

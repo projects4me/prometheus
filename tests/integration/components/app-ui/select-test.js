@@ -4,9 +4,10 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, waitFor } from '@ember/test-helpers';
+import AclStub from '../../stub-services/acl-stub';
 import { hbs } from 'ember-cli-htmlbars';
-import { chooseOption, noMatchesSelector, openSelect, optionsSelector, selectedOptionsSelector, triggerSelector, typeInSelectSearch } from 'prometheus/tests/helpers/select';
+import { chooseOption, noMatchesSelector, openSelect, optionsSelector, selectOptions, selectedOptionsSelector, triggerSelector, typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 const OPTIONS = [
 	{ value: 'a', label: 'Alpha' },
@@ -108,5 +109,78 @@ module('Integration | Component | app-ui/select', function (hooks) {
 			</AppUi::Select></div>
 		`);
 		assert.dom('[data-test-select]').hasAttribute('aria-disabled', 'true');
+	});
+	test('inside an open AppUi::Modal the list is drawn in the dialog and can be picked', async function (assert) {
+		this.owner.register('service:acl', AclStub);
+		this.set('options', OPTIONS);
+		this.set('selected', null);
+		this.set('change', (option) => this.set('selected', option));
+		this.set('noop', () => {});
+		await render(hbs`
+			<AppUi::Modal @title="global.form.close" @closeLabel="global.form.close" @onClose={{this.noop}}>
+				<div data-test-wrap><AppUi::Select
+					@options={{this.options}}
+					@selected={{this.selected}}
+					@onChange={{this.change}}
+					data-test-select
+					as |option|
+				>
+					<span data-option={{option.value}}>{{option.label}}</span>
+				</AppUi::Select></div>
+			</AppUi::Modal>
+		`);
+		await waitFor('dialog.app-modal[open]');
+
+		await openSelect('[data-test-wrap]');
+		let options = selectOptions();
+		assert.strictEqual(options.length, 2);
+		assert.ok(options.every((option) => option.closest('dialog.app-modal[open]')), 'the list is inside the open dialog');
+		let rect = options[0].getBoundingClientRect();
+		assert.ok(rect.width > 0, 'the options have a width');
+		assert.ok(rect.height > 0, 'the options have a height');
+
+		await chooseOption('[data-test-wrap]', 'Beta');
+		assert.strictEqual(this.selected.value, 'b');
+		assert.dom('[data-test-select] [data-option="b"]').exists();
+	});
+
+	test('outside a dialog the list is drawn at the document root, as before', async function (assert) {
+		this.set('options', OPTIONS);
+		this.set('change', () => {});
+		await render(hbs`
+			<div data-test-wrap><AppUi::Select @options={{this.options}} @onChange={{this.change}} as |option|>
+				{{option.label}}
+			</AppUi::Select></div>
+		`);
+
+		await openSelect('[data-test-wrap]');
+		let options = selectOptions();
+		assert.strictEqual(options.length, 2);
+		assert.notOk(options[0].closest('dialog'), 'not in a dialog');
+		assert.notOk(options[0].closest('[data-test-wrap]'), 'not next to the trigger');
+	});
+
+	test("the caller's onOpen still runs and can keep the list closed inside a dialog", async function (assert) {
+		this.owner.register('service:acl', AclStub);
+		this.set('options', OPTIONS);
+		this.set('change', () => {});
+		this.set('noop', () => {});
+		this.opened = 0;
+		this.set('onOpen', () => {
+			this.opened++;
+			return false;
+		});
+		await render(hbs`
+			<AppUi::Modal @title="global.form.close" @closeLabel="global.form.close" @onClose={{this.noop}}>
+				<div data-test-wrap><AppUi::Select @options={{this.options}} @onChange={{this.change}} @onOpen={{this.onOpen}} as |option|>
+					{{option.label}}
+				</AppUi::Select></div>
+			</AppUi::Modal>
+		`);
+		await waitFor('dialog.app-modal[open]');
+
+		await openSelect('[data-test-wrap]');
+		assert.strictEqual(this.opened, 1);
+		assert.strictEqual(selectOptions().length, 0);
 	});
 });
