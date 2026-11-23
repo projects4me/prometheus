@@ -1,6 +1,11 @@
 <div class="box box-info linked-issues" data-test-linked-issues {{on-insert this.load}} {{on-update @issue.id this.load}}>
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.issue.detail.linkedIssues.title"}}</h3>
+    <div class="box-tools pull-right">
+      <AccessControl @aclContext="issue.update">
+        <button type="button" class="btn btn-box-tool" title={{t "views.app.issue.detail.linkedIssues.link"}} data-test-linked-issues-link {{on "click" this.openLink}}><i class="fa fa-link" aria-hidden="true"></i> {{t "views.app.issue.detail.linkedIssues.link"}}</button>
+      </AccessControl>
+    </div>
   </div>
 
   <div class="box-body no-padding">
@@ -54,7 +59,32 @@
             {{date-format record.issue.endDate "D MMM 'YY"}}
           {{/if}}
         </:cell>
+        <:rowActions as |record|>
+          {{#if (eq record.depth 1)}}
+            <AccessControl @aclContext="issue.update">
+              <button type="button" class="btn btn-box-tool" title={{t "views.app.issue.detail.linkedIssues.unlink"}} data-test-linked-issue-unlink={{record.issue.id}} {{on "click" (fn this.askUnlink record)}}><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
+            </AccessControl>
+          {{/if}}
+        </:rowActions>
       </AppUi::DataTable>
     {{/if}}
   </div>
 </div>
+
+{{#if this.showLink}}
+  <Issue::LinkIssueModal @issue={{@issue}} @onLinked={{this.changed}} @onClose={{this.closeLink}} />
+{{/if}}
+
+{{#if this.unlinking}}
+  <AppUi::Modal
+    @title="views.app.issue.detail.linkedIssues.unlinkModal.title"
+    @closeLabel="global.form.cancel"
+    @confirmLabel="views.app.issue.detail.linkedIssues.unlinkModal.confirm"
+    @confirm={{this.confirmUnlink}}
+    @onClose={{this.closeUnlink}}
+    data-test-unlink-modal
+  >
+    <p>{{t "views.app.issue.detail.linkedIssues.unlinkModal.message" issue=(this.code this.unlinking.issue)}}</p>
+    {{#if this.unlinkError}}<span class="error text-red" data-test-unlink-error>{{this.unlinkError}}</span>{{/if}}
+  </AppUi::Modal>
+{{/if}}

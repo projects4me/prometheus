@@ -1,0 +1,41 @@
+<AppUi::Modal
+  @title="views.app.issue.detail.linkedIssues.linkModal.title"
+  @closeLabel="global.form.cancel"
+  @confirmLabel="views.app.issue.detail.linkedIssues.linkModal.save"
+  @confirm={{this.save}}
+  @disableSaveBtn={{this.cannotSave}}
+  @onClose={{@onClose}}
+  @containerClass="link-issue-modal"
+  data-test-link-issue-modal
+>
+  <div class="form-group">
+    <FormFields::FieldRelate
+      @label={{t "views.app.issue.detail.linkedIssues.linkModal.relation"}}
+      @options={{this.relationOptions}}
+      @selected={{this.relation}}
+      @searchField="label"
+      @onchange={{this.setRelation}}
+      @renderInPlace={{true}}
+      @relateType="relate-simple"
+      @data-field="linkIssue.relation"
+    />
+    <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.issue.detail.linkedIssues.linkModal.relationInfo"}} data-test-link-issue-info="relation"></i>
+  </div>
+  <div class="form-group">
+    <FormFields::FieldRelate
+      @placeholder={{t "views.app.issue.detail.linkedIssues.linkModal.issuePlaceholder"}}
+      @label={{t "views.app.issue.detail.linkedIssues.linkModal.issue"}}
+      @search={{perform this.issueSearch}}
+      @searchEnabled={{true}}
+      @selected={{this.selectedIssue}}
+      @onchange={{this.setIssue}}
+      @renderInPlace={{true}}
+      @relateType="relate-issue"
+      @data-field="linkIssue.issue"
+    />
+    <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.issue.detail.linkedIssues.linkModal.issueInfo"}} data-test-link-issue-info="issue"></i>
+    {{#if this.errorMessage}}
+      <span class="error text-red" data-test-link-issue-error>{{this.errorMessage}}</span>
+    {{/if}}
+  </div>
+</AppUi::Modal>

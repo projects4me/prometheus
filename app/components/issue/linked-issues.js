@@ -49,6 +49,9 @@ export default class IssueLinkedIssuesComponent extends Component {
 	@tracked loadingIds = [];
 	@tracked isLoading = true;
 	@tracked loadFailed = false;
+	@tracked showLink = false;
+	@tracked unlinking = null;
+	@tracked unlinkError = null;
 
 	/**
 	 * The table columns.
@@ -108,6 +111,58 @@ export default class IssueLinkedIssuesComponent extends Component {
 			this.loadFailed = true;
 		}
 		this.isLoading = false;
+	}
+
+	@action
+	openLink() {
+		this.showLink = true;
+	}
+
+	@action
+	closeLink() {
+		this.showLink = false;
+	}
+
+	@action
+	askUnlink(record) {
+		this.unlinkError = null;
+		this.unlinking = record;
+	}
+
+	@action
+	closeUnlink() {
+		this.unlinking = null;
+	}
+
+	/**
+	 * Unlinks the asked row; resolves false (modal stays open) when it fails.
+	 *
+	 * @method confirmUnlink
+	 * @return {Promise<Boolean>}
+	 */
+	@action
+	async confirmUnlink() {
+		try {
+			await this.issueRelations.unlink(this.args.issue, this.unlinking.source);
+		} catch {
+			if (!isDestroying(this) && !isDestroyed(this)) {
+				this.unlinkError = this.intl.t('views.app.issue.detail.linkedIssues.unlinkModal.failed');
+			}
+			return false;
+		}
+		this.changed();
+		return true;
+	}
+
+	/**
+	 * After a link or unlink: reloads the first level and tells the page.
+	 *
+	 * @method changed
+	 */
+	@action
+	changed() {
+		this.load();
+		this.args.onChange?.();
 	}
 
 	/**

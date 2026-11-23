@@ -1264,6 +1264,25 @@
           "conversation": "Thread",
           "linkedIssues": {
             "title": "Linked issues",
+            "link": "Link issue",
+            "unlink": "Unlink",
+            "linkModal": {
+              "title": "Link issue",
+              "save": "Link",
+              "relation": "Relation",
+              "relationInfo": "How this issue relates to the issue you pick.",
+              "issue": "Issue",
+              "issuePlaceholder": "Search by number or subject",
+              "issueInfo": "Issues of this project and of the other projects of the workspace.",
+              "failed": "The issue could not be linked",
+              "relations": { "blocks": "blocks", "blockedBy": "is blocked by", "relates": "relates to", "splitsInto": "splits into", "splitFrom": "is split from", "parentOf": "is parent of", "childOf": "is child of" }
+            },
+            "unlinkModal": {
+              "title": "Unlink issue",
+              "message": "Remove the link to {issue}?",
+              "confirm": "Unlink",
+              "failed": "The link could not be removed"
+            },
             "thisIssue": "this issue",
             "empty": "No linked issues",
             "loadFailed": "The linked issues could not be loaded",

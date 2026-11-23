@@ -5,6 +5,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
+import { Response } from 'miragejs';
 
 module('Unit | Service | issue-relations', function (hooks) {
     setupTest(hooks);
@@ -138,5 +139,55 @@ module('Unit | Service | issue-relations', function (hooks) {
         let next = await this.service.loadNext(row);
         assert.deepEqual(this.ids(next), [third.id], 'main is skipped, it is where the path started');
         assert.deepEqual(await this.service.loadNext(next[0]), [], 'third has no blockers');
+    });
+
+    test('link creates an issuelink for the chosen direction', async function (assert) {
+        let main = await this.open(this.issue());
+        let other = await this.open(this.issue());
+        await this.service.link(main, 'blockedBy', other);
+        let links = this.server.schema.issuelinks.all().models;
+        assert.strictEqual(links.length, 1);
+        assert.strictEqual(links[0].type, 'blocks');
+        assert.strictEqual(String(links[0].sourceIssueId), String(other.id), 'the other issue blocks');
+        assert.strictEqual(String(links[0].targetIssueId), String(main.id));
+    });
+
+    test('link sets parentId for parent and child relations', async function (assert) {
+        let main = await this.open(this.issue());
+        let other = await this.open(this.issue());
+        await this.service.link(main, 'parentOf', other);
+        assert.strictEqual(String(this.server.schema.issues.find(other.id).parentId), String(main.id));
+        let third = await this.open(this.issue());
+        await this.service.link(main, 'childOf', third);
+        assert.strictEqual(String(this.server.schema.issues.find(main.id).parentId), String(third.id));
+    });
+
+    test('link rethrows the 422 and keeps no record', async function (assert) {
+        this.server.post('/issuelink', () => new Response(422, {}, { status: 'ERROR', messages: ['cycle'] }));
+        let main = await this.open(this.issue());
+        let other = await this.open(this.issue());
+        try {
+            await this.service.link(main, 'blocks', other);
+            assert.ok(false, 'should fail');
+        } catch (error) {
+            assert.strictEqual(error.errors[0].detail, 'cycle');
+        }
+        assert.strictEqual(this.store.peekAll('issuelink').length, 0);
+    });
+
+    test('unlink deletes the link or clears parentId', async function (assert) {
+        this.server.delete('/issuelink/:id', (schema, request) => {
+            schema.issuelinks.find(request.params.id).destroy();
+            return new Response(200, {}, { data: null });
+        });
+        let main = this.issue();
+        let other = this.issue();
+        let child = this.issue({ parentId: main.id });
+        this.link('blocks', main, other);
+        let groups = await this.service.load(await this.open(main));
+        await this.service.unlink(await this.open(main), groups.blocks[0]);
+        assert.strictEqual(this.server.schema.issuelinks.all().length, 0);
+        await this.service.unlink(await this.open(main), groups.children[0]);
+        assert.strictEqual(this.server.schema.issues.find(child.id).parentId, null);
     });
 });
