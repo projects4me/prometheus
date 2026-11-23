@@ -1,0 +1,60 @@
+<div class="box box-info linked-issues" data-test-linked-issues {{on-insert this.load}} {{on-update @issue.id this.load}}>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.issue.detail.linkedIssues.title"}}</h3>
+  </div>
+
+  <div class="box-body no-padding">
+    {{#if this.isLoading}}
+      <div class="text-center linked-issues-loading" data-test-linked-issues-loading>
+        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+      </div>
+    {{else if this.loadFailed}}
+      <Exceptions::NothingFound @description={{t "views.app.issue.detail.linkedIssues.loadFailed"}} />
+    {{else if this.isEmpty}}
+      <div data-test-linked-issues-empty><Exceptions::NothingFound @description={{t "views.app.issue.detail.linkedIssues.empty"}} /></div>
+    {{else}}
+      <AppUi::DataTable
+        @columns={{this.columns}}
+        @rows={{this.rows}}
+        @depthKey="depth"
+        @currentId={{this.currentId}}
+        @expandedIds={{this.expandedIds}}
+        @loadingIds={{this.loadingIds}}
+        @isExpandable={{this.isExpandable}}
+        @onToggle={{this.toggle}}
+        @groupKey={{this.groupKey}}
+        @groupLabel={{this.groupLabel}}
+      >
+        <:groupHeading as |section|>
+          <i class="fa {{this.groupIcon section.key}}" aria-hidden="true"></i> {{section.label}}
+        </:groupHeading>
+        <:cell as |record column|>
+          {{#if (eq column.key "issue")}}
+            <span class="linked-issue-subject" data-test-linked-issue={{record.issue.id}}>
+              <AppUi::PriorityIcon @priority={{record.issue.priority}} />
+              {{#if record.isCurrent}}
+                <strong>#{{record.issue.issueNumber}} - {{record.issue.subject}}</strong>
+                <small class="text-muted" data-test-linked-issue-current>{{t "views.app.issue.detail.linkedIssues.thisIssue"}}</small>
+              {{else}}
+                <LinkTo @route="app.project.issue.page" @models={{array (lowercase record.issue.projectShortcode) record.issue.issueNumber}}>{{this.label record.issue}}</LinkTo>
+                - {{record.issue.subject}}
+              {{/if}}
+            </span>
+            {{#if record.sub}}
+              <div class="text-muted small" data-test-linked-issue-sub>{{record.sub}}</div>
+            {{/if}}
+            {{#if record.error}}
+              <div class="text-danger small" data-test-linked-issue-error>{{t "views.app.issue.detail.linkedIssues.loadNextFailed"}}</div>
+            {{/if}}
+          {{else if (eq column.key "status")}}
+            <span class="badge {{record.issue.status}}" style={{status-style record.issue.status}}>{{status-label record.issue.status}}</span>
+          {{else if (eq column.key "assignee")}}
+            {{#if record.issue.assignedTo.name}}{{record.issue.assignedTo.name}}{{else}}{{t "views.app.issue.detail.linkedIssues.unassigned"}}{{/if}}
+          {{else}}
+            {{date-format record.issue.endDate "D MMM 'YY"}}
+          {{/if}}
+        </:cell>
+      </AppUi::DataTable>
+    {{/if}}
+  </div>
+</div>

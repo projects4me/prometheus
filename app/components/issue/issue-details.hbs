@@ -192,6 +192,10 @@
       </AccessControl>
       {{!-- /.end project details --}}
 
+      <AccessControl @aclContext="issue.read">
+        <Issue::LinkedIssues @issue={{this.issue}} />
+      </AccessControl>
+
       {{!-- This div contains the issue conversations and milestones --}}
       <div class="row">
 
@@ -611,58 +615,6 @@
         </div>
       </AccessControl>
 
-      <AccessControl @aclContext="issue.read">
-        <div class="box box-info issue-hierarchy">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
-          </div>
-
-          <div class="box-body no-padding">
-            <ul class="issue-overview clearfix {{unless this.issue.childissues.length 'no-child-issues'}}">
-              {{#if this.issue.childissues.length}}
-                <li class="current-issue" data-field="issue.parentissue">
-                  <div class="issue-block">
-                    <div class="priority"><AppUi::PriorityIcon @priority={{this.issue.priority}}/></div>
-                    <div class="data-block">
-                      <span class="subject">
-                        <LinkTo
-                          @route="app.project.issue.page"
-                          @models={{array this.issue.projectShortcode this.issue.issueNumber}}
-                        >#{{this.issue.issueNumber}}</LinkTo> - {{this.issue.subject}}
-                      </span>
-                      <span class="description">{{translate-comment this.issue.description}}</span>
-                      <span class="badge {{this.issue.status}}" style={{status-style this.issue.status}}>{{status-label this.issue.status}}</span>
-                    </div>
-                  </div>
-                </li>
-              {{/if}}
-              {{#if this.issue.childissues.length}}
-                {{#each this.issue.childissues as |child|}}
-                  <li class="child-issue" data-child-issue-id={{child.id}}>
-                    <div class="issue-block">
-                      <div class="priority"><AppUi::PriorityIcon @priority={{child.priority}}/></div>
-                      <div class="data-block">
-                        <span class="subject">
-                          <LinkTo
-                            @route="app.project.issue.page"
-                            @models={{array child.projectShortcode child.issueNumber}}
-                          >#{{child.issueNumber}}</LinkTo> - {{child.subject}}
-                        </span>
-                        <span class="description">{{translate-comment child.description}}</span>
-                        <span class="badge {{child.status}}" style={{status-style child.status}}>{{status-label child.status}}</span>
-                      </div>
-                    </div>
-                  </li>
-                {{/each}}
-              {{else}}
-                <Exceptions::NothingFound
-                  @description={{t "views.app.issue.detail.childissues.noentry"}}
-                />
-              {{/if}}
-            </ul>
-          </div>
-        </div>
-      </AccessControl>
       {{!-- Project Summary --}}
 
     </div>

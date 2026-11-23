@@ -1262,7 +1262,17 @@
           "parent": "Parent",
           "files": "Files",
           "conversation": "Thread",
-          "hierarchy": "Issue Hierarchy",
+          "linkedIssues": {
+            "title": "Linked issues",
+            "thisIssue": "this issue",
+            "empty": "No linked issues",
+            "loadFailed": "The linked issues could not be loaded",
+            "loadNextFailed": "Could not load the next level, try again",
+            "unassigned": "Unassigned",
+            "columns": { "issue": "Issue", "status": "Status", "assignee": "Assignee", "endDate": "End date" },
+            "groups": { "parent": "Parent", "blockedBy": "Blocked by", "splitFrom": "Split from", "children": "Children", "splitInto": "Split into", "blocks": "Blocks", "relates": "Relates to" },
+            "sub": { "parent": "parent of {issue}", "blockedBy": "blocks {issue}", "splitFrom": "split into {issue}", "children": "child of {issue}", "splitInto": "split from {issue}", "blocks": "blocked by {issue}" }
+          },
           "estimates": "Estimates",
           "selectfile": "select a file to upload",
           "issueactivities": "Issue Activities",
@@ -1279,9 +1289,6 @@
             "download": "Download",
             "uploadfailed": "Failed to upload file",
             "uploadFailedSize": "File size is too large, please upload a file smaller than {size}MB"
-          },
-          "childissues": {
-            "noentry": "No child issue found for this issue"
           },
           "timelogs": "Time Logs",
           "estimate": {
