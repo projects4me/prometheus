@@ -38,7 +38,7 @@ module('Integration | Component | issue/blocked-by-label', function (hooks) {
 	test('one blocker, a cross-project one by its code', async function (assert) {
 		this.blockers = [issue(4836, 'p2', 'AGAIA')];
 		await render(hbs`<Issue::BlockedByLabel @issue={{this.issue}} @refreshKey={{this.version}} />`);
-		assert.dom('[data-test-blocked-by].label-danger .fa-ban').exists();
+		assert.dom('[data-test-blocked-by].app-ui-tag-danger .fa-ban').exists();
 		assert.strictEqual(text(), 'Blocked by agaia-4836');
 		assert.dom('[data-test-blocked-by-link]').exists({ count: 1 });
 	});

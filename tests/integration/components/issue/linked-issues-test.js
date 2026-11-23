@@ -9,7 +9,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
 const ISSUES = {
-	1: { id: '1', issueNumber: 1, projectId: 'p1', projectShortcode: 'APROM', subject: 'Main', status: 'new', priority: 'medium' },
+	1: { id: '1', issueNumber: 1, projectId: 'p1', projectShortcode: 'APROM', subject: 'Main', status: 'new', priority: 'medium', assignedTo: { id: 'u1', name: 'Ann Lee' } },
 	2: { id: '2', issueNumber: 2, projectId: 'p1', projectShortcode: 'APROM', subject: 'Parent issue', status: 'new', priority: 'medium' },
 	3: { id: '3', issueNumber: 3, projectId: 'p1', projectShortcode: 'APROM', subject: 'Child issue', status: 'new', priority: 'medium' },
 	4: { id: '4', issueNumber: 4836, projectId: 'p2', projectShortcode: 'AGAIA', subject: 'Blocker', status: 'new', priority: 'high', endDate: '2026-10-13' },
@@ -76,11 +76,15 @@ module('Integration | Component | issue/linked-issues', function (hooks) {
 		);
 		assert.deepEqual(order, ['parent', 'row', 'blockedBy', 'row', 'current', 'children', 'row', 'relates', 'row']);
 		assert.dom('[data-test-data-table-group="children"] [data-test-data-table-group-count]').hasText('1');
-		assert.dom('[data-test-linked-issue-current]').hasText('this issue');
-		assert.dom('[data-test-data-table-row="1"] a').doesNotExist('the current row is not a link');
-		assert.dom('[data-test-data-table-group="parent"] .fa-arrow-up').exists();
-		assert.dom('[data-test-data-table-group="children"] .fa-arrow-down').exists();
-		assert.dom('[data-test-data-table-group="relates"] .fa-arrows-h').exists();
+				assert.dom('[data-test-data-table-row="1"] a').doesNotExist('the current row is not a link');
+		assert.dom('[data-test-data-table-group] .fa-arrow-up, [data-test-data-table-group] .fa-arrow-down, [data-test-data-table-group] .fa-arrows-h').doesNotExist('no direction icons');
+		assert.dom('[data-test-data-table-header]').doesNotExist('no header row');
+		assert.dom('thead').doesNotExist();
+		assert.dom('[data-test-data-table-cell="endDate"]').doesNotExist();
+		assert.dom('[data-test-linked-issue-current]').hasText('(this issue)');
+		assert.dom('[data-test-data-table-row="1"] [data-test-linked-issue-assignee] [data-test-avatar][data-size="xs"]').exists();
+		assert.dom('[data-test-data-table-row="1"] [data-test-linked-issue-assignee]').containsText('Ann Lee');
+		assert.dom('[data-test-data-table-row="1"] [data-test-data-table-more]').doesNotExist('the current row has no menu');
 	});
 
 	test('a cross-project issue shows code-number, an issue of the project #number', async function (assert) {
@@ -100,12 +104,33 @@ module('Integration | Component | issue/linked-issues', function (hooks) {
 
 		assert.deepEqual(this.nextCalls, ['4']);
 		assert.dom('[data-test-linked-issue="5"]').exists();
-		assert.dom('[data-test-data-table-row="blockedBy:1>4>5"] [data-test-linked-issue-sub]').hasText('blocks agaia-4836');
+		assert.dom('[data-test-data-table-row="blockedBy:1>4>5"] [data-test-linked-issue-sub]').doesNotExist('no sub line');
+		assert.dom('[data-test-data-table-row="blockedBy:1>4>5"] [data-test-linked-issue-guide]').exists({ count: 1 }, 'level 2 has a guide line');
+		assert.dom('[data-test-data-table-row="blockedBy:1>4>5"] [data-test-data-table-more]').doesNotExist('deeper rows have no menu');
 		assert.dom('[data-test-data-table-row="blockedBy:1>4>5"] td').hasClass('data-table-depth-2');
 
 		await click('[data-test-data-table-row="blockedBy:1>4"] [data-test-data-table-toggle]');
 		assert.dom('[data-test-linked-issue="5"]').doesNotExist('collapsing removes the rows under it');
 		assert.dom('[data-test-data-table-row="blockedBy:1>4"] [data-test-data-table-toggle]').hasAttribute('aria-expanded', 'false');
+	});
+
+	test('Unlink in the menu confirms and reloads without the row', async function (assert) {
+		this.groups = { ...EMPTY, children: [row('children', 3)] };
+		this.unlinked = [];
+		let service = this.owner.lookup('service:issue-relations');
+		service.unlink = async (issue, source) => {
+			this.unlinked.push(source.issue.id);
+			this.groups = { ...EMPTY };
+		};
+		await render(hbs`<Issue::LinkedIssues @issue={{this.issue}} />`);
+
+		await click('[data-test-data-table-row="children:1>3"] [data-test-data-table-more] button');
+		await click('[data-test-linked-issue-unlink="3"]');
+		assert.dom('[data-test-unlink-modal]').exists();
+		await click('[data-btn="save"]');
+
+		assert.deepEqual(this.unlinked, ['3']);
+		assert.dom('[data-test-data-table-row="children:1>3"]').doesNotExist();
 	});
 
 	test('a row with nothing more loses its caret', async function (assert) {

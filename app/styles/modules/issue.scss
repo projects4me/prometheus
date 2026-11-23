@@ -684,3 +684,28 @@
 		text-decoration: underline;
 	}
 }
+
+.linked-issues {
+	.table > tbody > tr.data-table-row--current > td {
+		border: 0;
+	}
+
+	// One 2px guide line per level below the first, replacing the padding indent.
+	.table > tbody > tr > td[class*="data-table-depth-"] {
+		padding-left: 8px;
+	}
+
+	.linked-issue-guide {
+		display: inline-block;
+		width: 16px;
+		height: 1.5em;
+		margin-left: 4px;
+		vertical-align: middle;
+		border-left: 2px solid #ddd;
+	}
+
+	.linked-issue-assignee .app-ui-avatar {
+		margin-right: 4px;
+		vertical-align: middle;
+	}
+}

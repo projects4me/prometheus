@@ -35,6 +35,8 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 | @expandedIds | Array | [] | Tree rows: ids of the open rows, kept by the owner |
 | @loadingIds | Array | [] | Tree rows: ids of the rows loading their next level, kept by the owner; they show a spinner |
 | @currentId | String | | Tree rows: the id of the pinned current row |
+| @hideHeader | Boolean | false | Leaves out the header row |
+| @hasMoreActions | Function | | (record) => whether the row shows the moreActions menu |
 | @onToggle | Function | | Tree rows: a caret was clicked; called with the record |
 | @onSort | Function | none | Called with the sort key of the column clicked |
 | @onSelect | Function | none | Called with the row's id and whether it is now checked |

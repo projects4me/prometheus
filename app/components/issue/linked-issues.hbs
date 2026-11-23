@@ -29,43 +29,38 @@
         @onToggle={{this.toggle}}
         @groupKey={{this.groupKey}}
         @groupLabel={{this.groupLabel}}
+        @hideHeader={{true}}
+        @hasMoreActions={{this.hasUnlink}}
       >
-        <:groupHeading as |section|>
-          <i class="fa {{this.groupIcon section.key}}" aria-hidden="true"></i> {{section.label}}
-        </:groupHeading>
         <:cell as |record column|>
           {{#if (eq column.key "issue")}}
             <span class="linked-issue-subject" data-test-linked-issue={{record.issue.id}}>
-              <AppUi::PriorityIcon @priority={{record.issue.priority}} />
+              {{#each record.guides}}<span class="linked-issue-guide" data-test-linked-issue-guide aria-hidden="true"></span>{{/each}}
               {{#if record.isCurrent}}
-                <strong>#{{record.issue.issueNumber}} - {{record.issue.subject}}</strong>
-                <small class="text-muted" data-test-linked-issue-current>{{t "views.app.issue.detail.linkedIssues.thisIssue"}}</small>
+                #{{record.issue.issueNumber}} {{record.issue.subject}}
+                <small class="text-muted" data-test-linked-issue-current>({{t "views.app.issue.detail.linkedIssues.thisIssue"}})</small>
               {{else}}
                 <LinkTo @route="app.project.issue.page" @models={{array (lowercase record.issue.projectShortcode) record.issue.issueNumber}}>{{this.label record.issue}}</LinkTo>
-                - {{record.issue.subject}}
+                {{record.issue.subject}}
               {{/if}}
             </span>
-            {{#if record.sub}}
-              <div class="text-muted small" data-test-linked-issue-sub>{{record.sub}}</div>
-            {{/if}}
             {{#if record.error}}
               <div class="text-danger small" data-test-linked-issue-error>{{t "views.app.issue.detail.linkedIssues.loadNextFailed"}}</div>
             {{/if}}
           {{else if (eq column.key "status")}}
-            <span class="badge {{record.issue.status}}" style={{status-style record.issue.status}}>{{status-label record.issue.status}}</span>
-          {{else if (eq column.key "assignee")}}
-            {{#if record.issue.assignedTo.name}}{{record.issue.assignedTo.name}}{{else}}{{t "views.app.issue.detail.linkedIssues.unassigned"}}{{/if}}
+            <AppUi::StatusLabel @status={{record.issue.status}} />
           {{else}}
-            {{date-format record.issue.endDate "D MMM 'YY"}}
+            <span class="linked-issue-assignee" data-test-linked-issue-assignee>
+              <AppUi::Avatar @user={{record.issue.assignedTo}} @size="xs" />
+              {{record.issue.assignedTo.name}}
+            </span>
           {{/if}}
         </:cell>
-        <:rowActions as |record|>
-          {{#if (eq record.depth 1)}}
-            <AccessControl @aclContext="issue.update">
-              <button type="button" class="btn btn-box-tool" title={{t "views.app.issue.detail.linkedIssues.unlink"}} data-test-linked-issue-unlink={{record.issue.id}} {{on "click" (fn this.askUnlink record)}}><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
-            </AccessControl>
-          {{/if}}
-        </:rowActions>
+        <:moreActions as |record|>
+          <AccessControl @aclContext="issue.update">
+            <button type="button" data-test-linked-issue-unlink={{record.issue.id}} {{on "click" (fn this.askUnlink record)}}><span>{{t "views.app.issue.detail.linkedIssues.unlink"}}</span></button>
+          </AccessControl>
+        </:moreActions>
       </AppUi::DataTable>
     {{/if}}
   </div>

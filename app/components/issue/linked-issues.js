@@ -8,19 +8,8 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { isDestroying, isDestroyed } from '@ember/destroyable';
 
-/**
- * The relation groups in chain order: what is above the issue, then (the issue itself), then what is below and
- * the undirected relations. `icon` is the group heading icon, `sub` the translation of the muted sub line.
- */
-const CHAIN = [
-	{ key: 'parent', icon: 'fa-arrow-up' },
-	{ key: 'blockedBy', icon: 'fa-arrow-up' },
-	{ key: 'splitFrom', icon: 'fa-arrow-up' },
-	{ key: 'children', icon: 'fa-arrow-down' },
-	{ key: 'splitInto', icon: 'fa-arrow-down' },
-	{ key: 'blocks', icon: 'fa-arrow-down' },
-	{ key: 'relates', icon: 'fa-arrows-h' },
-];
+/** The relation groups in chain order: what is above the issue, then (the issue itself), then what is below and the undirected relations. */
+const CHAIN = ['parent', 'blockedBy', 'splitFrom', 'children', 'splitInto', 'blocks', 'relates'];
 
 /** Groups shown above the current issue row. */
 const ABOVE = 3;
@@ -65,7 +54,6 @@ export default class IssueLinkedIssuesComponent extends Component {
 			{ key: 'issue', label: t('issue') },
 			{ key: 'status', label: t('status') },
 			{ key: 'assignee', label: t('assignee') },
-			{ key: 'endDate', label: t('endDate') },
 		];
 	}
 
@@ -97,7 +85,7 @@ export default class IssueLinkedIssuesComponent extends Component {
 				return;
 			}
 			let toRows = (names) => names.flatMap((name) => (groups[name] || []).map((row) => this._record(row)));
-			let names = CHAIN.map((group) => group.key);
+			let names = CHAIN;
 			this.rows = [
 				...toRows(names.slice(0, ABOVE)),
 				{ id: this.currentId, issue, depth: 1, relation: null, isCurrent: true },
@@ -192,11 +180,13 @@ export default class IssueLinkedIssuesComponent extends Component {
 	groupLabel = (key) => this.intl.t(`views.app.issue.detail.linkedIssues.groups.${key}`);
 
 	/**
-	 * @method groupIcon
-	 * @param {String} key a relation name
-	 * @return {String} the Font Awesome class of the group heading
+	 * Whether the row has the Unlink menu: only the direct relations (level 1), not the current row or deeper ones.
+	 *
+	 * @method hasUnlink
+	 * @param {Object} record
+	 * @return {Boolean}
 	 */
-	groupIcon = (key) => CHAIN.find((group) => group.key === key)?.icon;
+	hasUnlink = (record) => !record.isCurrent && record.depth === 1;
 
 	/**
 	 * A row has a caret when it is directional and the last load did not find anything more.
@@ -276,16 +266,13 @@ export default class IssueLinkedIssuesComponent extends Component {
 	 * @private
 	 */
 	_record(row) {
-		let sub = row.via
-			? this.intl.t(`views.app.issue.detail.linkedIssues.sub.${row.relation}`, { issue: this.code(row.via) })
-			: null;
 		return {
 			id: `${row.relation}:${row.path.join('>')}`,
 			issue: row.issue,
 			source: row,
 			relation: row.relation,
 			depth: row.depth,
-			sub,
+			guides: Array.from({ length: Math.max(row.depth - 1, 0) }),
 			error: false,
 			exhausted: false,
 			isCurrent: false,

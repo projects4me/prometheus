@@ -42,6 +42,9 @@ const MAX_DEPTH = 8; // keep in step with the @for loop in app/styles/components
  * row (class `data-table-row--current`, no caret, no row actions). In tree mode groups sit where their first row
  * appears and a row whose `@groupKey` is null renders ungrouped at its position.
  *
+ * `@hideHeader` leaves out the header row; `@hasMoreActions(record)` hides the more-actions menu of rows it
+ * returns false for.
+ *
  * @class AppUiDataTableComponent
  * @namespace Prometheus.Components
  * @extends Glimmer.Component
@@ -184,6 +187,15 @@ export default class AppUiDataTableComponent extends Component {
 			loading: expandable && this.loadingIdSet.has(id),
 		};
 	};
+
+	/**
+	 * Whether the row shows the more-actions menu: always, unless `@hasMoreActions(record)` says otherwise.
+	 *
+	 * @method hasMore
+	 * @param {Object} record the record of the row
+	 * @return {Boolean}
+	 */
+	hasMore = (record) => typeof this.args.hasMoreActions !== 'function' || !!this.args.hasMoreActions(record);
 
 	isSelected = (record) => {
 		if (this.selection) {
