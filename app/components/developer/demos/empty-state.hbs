@@ -14,8 +14,8 @@
     </div>
   </:demo>
   <:controls>
-    <div class="checkbox"><label><input type="checkbox" data-control-icon checked={{this.customIcon}} {{on "change" (fn this.toggle "customIcon")}}> Custom icon</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-action checked={{this.withAction}} {{on "change" (fn this.toggle "withAction")}}> Action</label></div>
+    <FormFields::FieldCheckbox @label="Custom icon" @checked={{this.customIcon}} @select={{fn this.toggle "customIcon"}} data-control-icon />
+    <FormFields::FieldCheckbox @label="Action" @checked={{this.withAction}} @select={{fn this.toggle "withAction"}} data-control-action />
   </:controls>
   <:docs>
     <Developer::Docs @doc="app-ui-empty-state.md" />

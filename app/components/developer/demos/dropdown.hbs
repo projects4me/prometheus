@@ -38,12 +38,8 @@
         {{/each}}
       </div>
     </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-scoped checked={{this.scoped}} {{on "change" this.setScoped}}> Scoped left alignment (as in ezSearch)</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-many checked={{this.many}} {{on "change" this.setMany}}> Many items (scroll)</label>
-    </div>
+    <FormFields::FieldCheckbox @label="Scoped left alignment (as in ezSearch)" @checked={{this.scoped}} @select={{this.setScoped}} data-control-scoped />
+    <FormFields::FieldCheckbox @label="Many items (scroll)" @checked={{this.many}} @select={{this.setMany}} data-control-many />
   </:controls>
   <:docs>
     <Developer::Docs @doc="dropdown.md" />
