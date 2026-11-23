@@ -195,7 +195,7 @@
 .global-search-dropdown {
   .global-search-snippet {
     display: block;
-    color: $mediumColor;
+    color: lighten($darkColor, 20%);
     font-size: 1.2rem;
     white-space: normal;
 
@@ -203,6 +203,17 @@
       padding: 0;
       background-color: $primaryColorLight;
       color: inherit;
+      font-weight: 600;
+    }
+  }
+
+  /* The highlighted option is blue with white text: the snippet follows it, and the match keeps a light band. */
+  .ember-power-select-option[aria-current="true"] .global-search-snippet,
+  .ember-power-select-option:hover .global-search-snippet {
+    color: inherit;
+
+    mark {
+      background-color: rgba($backgroundColor, 0.3);
     }
   }
 
