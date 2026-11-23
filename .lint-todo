@@ -330,7 +330,6 @@ add|ember-template-lint|no-invalid-interactive|29|25|29|25|ff76ac307136535636a6d
 add|ember-template-lint|no-invalid-interactive|30|25|30|25|c86573277f54fb1eca377576aa3a750cfd6d2bf8|1794614400000|||app/templates/app/agent/page.hbs
 add|ember-template-lint|no-curly-component-invocation|107|28|107|28|9b55c989698f5a07f1d5509f71dc518bf1548413|1794614400000|||app/templates/app/agent/index.hbs
 add|ember-template-lint|require-input-label|146|60|146|60|4c77df1c59e357552d247011dcb55a4e45bdb647|1794614400000|||app/templates/app/agent/tools.hbs
-add|ember-template-lint|no-duplicate-attributes|78|14|78|14|bf98bdb9bb2aa4fba04c5d5dba675d5420fd23ba|1794614400000|||app/templates/app/project/board.hbs
 add|ember-template-lint|no-curly-component-invocation|62|130|62|130|e9f7f30895bcb42a4578dea4e5fcbd330da20d92|1794614400000|||app/templates/app/project/conversation.hbs
 add|ember-template-lint|no-curly-component-invocation|71|104|71|104|b8d5b3a5e2fcda2dec68a9a7a8fa94a00472a10e|1794614400000|||app/templates/app/project/idea.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
