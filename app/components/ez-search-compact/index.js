@@ -68,7 +68,7 @@ export default class EzSearchCompactComponent extends EzSearchBase {
 
     @action
     openFilter() {
-        this.draft = this.tree;
+        this.draft = this.withBlankRow(this.tree);
         this.filterOpen = true;
     }
 

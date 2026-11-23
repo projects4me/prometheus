@@ -65,7 +65,10 @@ export default class EzSearchConditionComponent extends Component {
     }
 
     get isIncomplete() {
-        return !isComplete(this.args.condition);
+        let { field } = this.args.condition;
+
+        // A row with no field is a blank row waiting to be filled in, not an unfinished one.
+        return typeof field === 'string' && field.trim() !== '' && !isComplete(this.args.condition);
     }
 
     /**

@@ -9,6 +9,7 @@ import { service } from '@ember/service';
 import { parse } from 'prometheus/utils/query/parse';
 import { serialize } from 'prometheus/utils/query/serializer';
 import { compose } from 'prometheus/utils/query/composer';
+import { addBlankCondition, group, isGroup } from 'prometheus/utils/query/ast';
 
 /**
  * The state and actions shared by every EzSearch layout (the toolbar, the compact variant). A layout extends
@@ -177,10 +178,24 @@ export default class EzSearchBase extends Component {
     load(query) {
         let { tree, errors } = parse(query || '', this.args.schema);
 
-        this.tree = tree;
+        this.tree = this.builderOpen ? this.withBlankRow(tree) : tree;
         this.storedErrors = errors;
         this.barErrors = [];
         this.loadId = ++this.loadCount;
+    }
+
+    /**
+     * The tree with one blank condition in its root group when that group has no children, so an open
+     * builder never shows only the group header. A blank row is left out of the query.
+     *
+     * @method withBlankRow
+     * @param {Object|null} tree
+     * @return {Object}
+     */
+    withBlankRow(tree) {
+        let root = isGroup(tree) ? tree : group('AND', []);
+
+        return root.children.length === 0 ? addBlankCondition(root, root.id) : tree;
     }
 
     @action
@@ -203,6 +218,10 @@ export default class EzSearchBase extends Component {
     @action
     toggleBuilder() {
         this.builderOpen = !this.builderOpen;
+
+        if (this.builderOpen) {
+            this.tree = this.withBlankRow(this.tree);
+        }
     }
 
     @action
