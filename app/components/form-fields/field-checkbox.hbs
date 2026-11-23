@@ -1,8 +1,25 @@
 <AccessControl @aclContext={{@aclContext}}>
-  <Input 
-    @type="checkbox"
-    {{on "input" @select}}
-    data-select={{@data-select}}
-    @checked={{@checked}}
-  />
+  {{#if @label}}
+    <div class="checkbox checkbox-primary">
+      <input
+        type="checkbox"
+        id={{this.inputId}}
+        {{on "input" this.onSelect}}
+        data-select={{@data-select}}
+        checked={{@checked}}
+        disabled={{@disabled}}
+        ...attributes
+      />
+      <label for={{this.inputId}}>{{@label}}</label>
+    </div>
+  {{else}}
+    <input
+      type="checkbox"
+      {{on "input" this.onSelect}}
+      data-select={{@data-select}}
+      checked={{@checked}}
+      disabled={{@disabled}}
+      ...attributes
+    />
+  {{/if}}
 </AccessControl>
