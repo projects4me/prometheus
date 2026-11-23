@@ -74,6 +74,33 @@
     padding: 0rem;
   }
 
+  .milestone-select-row {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .milestone-select-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+
+      .milestone-select {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .milestone-mark-complete-button {
+        flex: 0 0 auto;
+        padding: 0.8rem 1rem;
+      }
+    }
+
+    .milestone-tabs {
+      display: none;
+    }
+  }
+
   .lane-status-bar {
     display: none;
   }

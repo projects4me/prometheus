@@ -1,5 +1,34 @@
 <div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded milestones=@milestones}}>
   <div class="nav-tabs-custom">
+    {{!-- Phones: the tabs are replaced by one milestone dropdown with the Complete button beside it --}}
+    <div class="milestone-select-row" data-milestone-select-row>
+      <AppUi::Select
+        class="milestone-select"
+        @options={{@milestones}}
+        @selected={{this.selectedMilestone}}
+        @onChange={{this.selectMilestoneFromDropdown}}
+        @searchEnabled={{false}}
+        as |milestone|
+      >
+        {{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}} ({{milestone.issues.length}})
+      </AppUi::Select>
+      <AppUi::DottedAddButton
+        @onClick={{this.showCreateMilestoneDialog}}
+        @title={{t "views.app.board.milestone.create"}}
+        @data-add="milestone-create-mobile"
+        @aclContext="project.create"
+      />
+      {{#if (not-eq this.selectedMilestone.milestoneType "backlog")}}
+        <AppUi::Button
+          class="milestone-mark-complete-button milestone-mark-complete-mobile"
+          @onClick={{this.toggleMarkMilestoneAsComplete}}
+          title={{t "views.app.board.milestone.markComplete.confirm"}}
+        >
+          <i class="fa fa-check"></i>
+          {{t "views.app.board.milestone.markComplete.short"}}
+        </AppUi::Button>
+      {{/if}}
+    </div>
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
         <li class="milestone-tab {{if (eq index 0) "active" ""}} not-draggable" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
