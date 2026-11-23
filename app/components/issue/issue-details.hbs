@@ -105,7 +105,7 @@
                 </div>
 
                 {{!-- Close issue button --}}
-                {{#if @quickView}}
+                {{#if (and @quickView (not @hideCloseButton))}}
                   <AppUi::Button 
                     data-btn="close" 
                     type="button" 

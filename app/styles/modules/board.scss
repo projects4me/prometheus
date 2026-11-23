@@ -758,3 +758,21 @@
     border-radius: 50%;
   }
 }
+
+// Quick view in AppUi::Modal on phones: the global bottom sheet does the layout; keep the issue
+// details inside it from overflowing sideways.
+.board-quick-view-modal {
+  .modal-body {
+    overflow-x: hidden;
+  }
+
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  [class*="col-md-"] {
+    float: none;
+    width: 100%;
+  }
+}

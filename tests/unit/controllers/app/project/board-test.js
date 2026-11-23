@@ -91,4 +91,27 @@ module("Unit | Controller | app/project/board", function (hooks) {
     assert.strictEqual(backlog.issues.length, 0);
     assert.deepEqual(notified, ["error"]);
   });
+
+  test("the quick view opens as a modal on phones and resets on close", async function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    controller.isPhoneViewport = () => true;
+    controller.loadIssueDetails = async () => {};
+
+    await controller.selectIssue({ id: "1" });
+    assert.true(controller.quickViewAsModal);
+    assert.strictEqual(controller.boardColumnClass, "board-column col-md-12");
+
+    controller.closeIssueDetails();
+    assert.false(controller.quickViewAsModal);
+  });
+
+  test("the quick view stays a side panel on desktop", async function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    controller.isPhoneViewport = () => false;
+    controller.loadIssueDetails = async () => {};
+
+    await controller.selectIssue({ id: "1" });
+    assert.false(controller.quickViewAsModal);
+    assert.strictEqual(controller.boardColumnClass, "board-column col-md-8");
+  });
 });
