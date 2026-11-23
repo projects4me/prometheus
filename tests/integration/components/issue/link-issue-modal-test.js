@@ -41,8 +41,8 @@ module('Integration | Component | issue/link-issue-modal', function (hooks) {
 			class extends Service {
 				async query(model, options) {
 					test.queries.push(options);
-					if (options.limit === -1) {
-						return ISSUES;
+					if (test.manyResults) {
+						return Array.from({ length: 11 }, (_, index) => issue(100 + index, `Many ${index}`));
 					}
 					let match = (options.query.match(/Issue\.subject CONTAINS ([^)]+)\)/) || [])[1];
 					return ISSUES.filter((item) => !match || item.subject.toLowerCase().includes(match.toLowerCase().replace(/['"]/g, '')));
@@ -105,19 +105,49 @@ module('Integration | Component | issue/link-issue-modal', function (hooks) {
 
 	test('the first search shows the most recent issues of the workspace, without this and the linked ones', async function (assert) {
 		await show();
-		let first = this.queries.find((options) => options.limit === 10);
+		let first = this.queries.find((options) => options.limit === 11);
 		assert.strictEqual(first.sort, 'Issue.dateModified');
 		assert.strictEqual(first.order, 'DESC');
-		assert.strictEqual(first.rels, 'assignedTo');
-		assert.ok(first.query.includes('(Issue.projectId : p1)'), 'workspace project 1');
-		assert.ok(first.query.includes('(Issue.projectId : p2)'), 'workspace project 2');
-		assert.notOk(first.query.includes('p3'), 'other workspaces are left out');
-		assert.ok(first.query.includes('(Issue.id !: 1)'), 'this issue is left out');
-		assert.ok(first.query.includes('(Issue.id !: 9)'), 'the linked issue is left out');
+		assert.strictEqual(first.rels, 'assignedTo,project');
+		assert.strictEqual(first.query, "((project.workspaceId : w1) AND (Issue.id !CONTAINS '1','9'))", 'workspace condition and one exclusion condition');
 		assert.dom('[data-test-data-table-row]').exists({ count: 3 });
 		assert.dom('[data-test-link-issue-result="4"]').containsText('agaia-4');
 		assert.dom('[data-test-link-issue-result="2"]').containsText('#2');
-		assert.dom('[data-test-link-issue-count]').hasText('3 of 3 issues in the workspace');
+		assert.dom('[data-test-link-issue-count]').hasText('3 issues');
+	});
+
+	test('one excluded id uses !: and a project without a workspace uses its project id', async function (assert) {
+		this.owner.lookup('service:store').peekRecord = () => ({ id: 'p1', workspaceId: null });
+		this.owner.register(
+			'service:issue-relations',
+			class extends Service {
+				async load() {
+					return {};
+				}
+			}
+		);
+		await show();
+		let first = this.queries.find((options) => options.limit === 11);
+		assert.strictEqual(first.query, '((Issue.projectId : p1) AND (Issue.id !: 1))');
+	});
+
+	test('a milestone or assignee search sends its relation in rels, and no request uses limit -1', async function (assert) {
+		await show();
+		this.queries = [];
+		await focus(INPUT);
+		await fillIn(INPUT, 'milestone: v0.1.1');
+		await blur(INPUT);
+		await click('[data-ez-search-apply]');
+		let search = this.queries.find((options) => options.limit === 11);
+		assert.strictEqual(search.rels, 'assignedTo,project,issuemilestone');
+		assert.notOk(this.queries.some((options) => options.limit === -1), 'no unbounded request');
+	});
+
+	test('the refine line shows with 11 results and only 10 rows', async function (assert) {
+		this.manyResults = true;
+		await show();
+		assert.dom('[data-test-data-table-row]').exists({ count: 10 });
+		assert.dom('[data-test-link-issue-count]').hasText('Showing 10. Refine the search to see others.');
 	});
 
 	test('a search applies the base query', async function (assert) {
@@ -127,9 +157,9 @@ module('Integration | Component | issue/link-issue-modal', function (hooks) {
 		await fillIn(INPUT, 'Third');
 		await blur(INPUT);
 		await click('[data-ez-search-apply]');
-		let search = this.queries.find((options) => options.limit === 10);
-		assert.ok(search.query.includes('(Issue.projectId : p1)'), 'base query kept');
-		assert.ok(search.query.includes('(Issue.id !: 1)'), 'this issue stays left out');
+		let search = this.queries.find((options) => options.limit === 11);
+		assert.ok(search.query.includes('(project.workspaceId : w1)'), 'base query kept');
+		assert.ok(search.query.includes("(Issue.id !CONTAINS '1','9')"), 'this issue stays left out');
 		assert.ok(search.query.includes('Third'), 'with the typed text');
 		assert.dom('[data-test-data-table-row]').exists({ count: 1 });
 	});

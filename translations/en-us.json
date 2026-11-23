@@ -1270,7 +1270,8 @@
             "linkModal": {
               "title": "Link issues to #{number}",
               "save": "Link {count, plural, one {# issue} other {# issues}}",
-              "count": "{shown} of {total} issues in the workspace",
+              "count": "{shown, plural, one {# issue} other {# issues}}",
+              "refine": "Showing {shown}. Refine the search to see others.",
               "toLink": "To link",
               "noRows": "Tick issues above to link them",
               "remove": "Remove",

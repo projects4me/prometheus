@@ -20,9 +20,15 @@ export function register(server, ctx) {
             // The linked-issues box reads the assignees of a level of issues by id
             return schema.issues.where((issue) => idOrList.includes(String(issue.id)));
         }
-        let scopedProjects = [...(issueQuery || '').matchAll(/\(Issue\.projectId : (\d+)\)/g)].map((found) => found[1]);
-        let excludedIds = [...(issueQuery || '').matchAll(/\(Issue\.id !: (\d+)\)/g)].map((found) => found[1]);
-        if (scopedProjects.length && excludedIds.length) {
+        let workspaceMatch = (issueQuery || '').match(/\(project\.workspaceId : ([^)\s]+)\)/);
+        let scopedProjects = workspaceMatch
+            ? schema.projects.where({ workspaceId: workspaceMatch[1] }).models.map((project) => String(project.id))
+            : [...(issueQuery || '').matchAll(/\(Issue\.projectId : (\d+)\)/g)].map((found) => found[1]);
+        let excludedList = (issueQuery || '').match(/\(Issue\.id !CONTAINS ([^)]+)\)/);
+        let excludedIds = excludedList
+            ? [...excludedList[1].matchAll(/'([^']*)'/g)].map((found) => found[1])
+            : [...(issueQuery || '').matchAll(/\(Issue\.id !: (\d+)\)/g)].map((found) => found[1]);
+        if ((scopedProjects.length || workspaceMatch) && excludedIds.length) {
             // The Link issues modal searches the issues of a workspace's projects without the issues it excludes
             let text = ((issueQuery || '').match(/Issue\.subject CONTAINS ([^)]+)\)/) || [])[1];
             let found = schema.issues
