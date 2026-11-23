@@ -199,6 +199,19 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		assert.dom('[data-test-data-table-row="1"] td.actions [data-test-data-table-more] .app-dropdown-btn').hasAttribute('aria-label');
 	});
 
+	test('the actions header and cells stay table cells', async function (assert) {
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}}>
+			<:rowActions as |record|><button type="button">Edit {{record.id}}</button></:rowActions>
+		</AppUi::DataTable>`);
+		assert.strictEqual(getComputedStyle(this.element.querySelector('th.actions')).display, 'table-cell');
+		assert.strictEqual(getComputedStyle(this.element.querySelector('td.actions')).display, 'table-cell');
+
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} />`);
+		for (const cell of this.element.querySelectorAll('th.actions, td.actions')) {
+			assert.strictEqual(getComputedStyle(cell).display, 'table-cell');
+		}
+	});
+
 	module('tree rows', function (hooks) {
 		hooks.beforeEach(function () {
 			this.toggled = [];
