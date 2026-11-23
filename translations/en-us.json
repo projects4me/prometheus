@@ -1288,7 +1288,8 @@
             "thisIssue": "this issue",
             "empty": "No linked issues",
             "loadFailed": "The linked issues could not be loaded",
-            "loadNextFailed": "Could not load the next level, try again",
+            "loadNextFailed": "Could not load the next level, try again",
+
             "columns": { "issue": "Issue", "status": "Status", "assignee": "Assignee" },
             "groups": { "parent": "Parent", "blockedBy": "Blocked by", "splitFrom": "Split from", "children": "Children", "splitInto": "Split into", "blocks": "Blocks", "relates": "Relates to" }
           },
@@ -1818,7 +1819,9 @@
           "milestone": "Milestone",
           "current": "Current",
           "pickAssignee": "Select assignee",
-          "pickMilestone": "Select milestone"
+          "pickMilestone": "Select milestone",
+          "failed": "Could not move <strong>#{number}</strong>. Please try again.",
+          "action": "Move"
         },
         "quickView": "Quick View",
         "hours": "h",

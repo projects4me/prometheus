@@ -56,11 +56,16 @@
               {{#if (eq issue.status status.name)}}
                 <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
                   <div class="flex-row flex-ai-c issue-card-meta flex-jc-sb">
-                    <span class="issue-number">#{{issue.issueNumber}}</span>
-                    <span class="issue-priority badge priority-{{issue.priority}}">
-                      <AppUi::PriorityIcon @priority={{issue.priority}} />
-                      {{t (concat "views.app.issue.lists.priority." issue.priority)}}
-                    </span>
+                    <div class="flex-row flex-ai-c issue-card-meta-left">
+                      <span class="issue-number">#{{issue.issueNumber}}</span>
+                      <span class="issue-priority badge priority-{{issue.priority}}">
+                        <AppUi::PriorityIcon @priority={{issue.priority}} />
+                        {{t (concat "views.app.issue.lists.priority." issue.priority)}}
+                      </span>
+                    </div>
+                    <button type="button" class="btn btn-box-tool issue-card-move" data-issue-move data-test-issue-move title={{t "views.app.board.move.action"}} aria-label={{t "views.app.board.move.action"}} {{on "click" (fn this.openMoveIssue issue)}}>
+                      <i class="fa fa-arrows" aria-hidden="true"></i>
+                    </button>
                   </div>
 
                   {{!-- Issue card subject --}}
@@ -267,4 +272,15 @@
       />
     </div>
   </AppUi::Modal>
+{{/if}}
+
+{{#if this.movingIssue}}
+  <AppUi::TaskBoard::MoveIssue
+    @issue={{this.movingIssue}}
+    @statuses={{@statuses}}
+    @members={{@members}}
+    @milestones={{@milestones}}
+    @onSave={{this.saveMoveIssue}}
+    @onClose={{this.closeMoveIssue}}
+  />
 {{/if}}

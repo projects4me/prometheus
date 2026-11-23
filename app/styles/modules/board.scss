@@ -271,6 +271,15 @@
 
     .issue-card-meta {
       gap: 0.8rem;
+
+      .issue-card-meta-left {
+        gap: 0.8rem;
+      }
+
+      .issue-card-move {
+        font-size: 1.8rem;
+      }
+
       margin-bottom: 1rem;
 
       .issue-number {
