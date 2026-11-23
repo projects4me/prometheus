@@ -1,0 +1,20 @@
+{
+  "name": "FieldCheckbox",
+  "component": "form-fields/field-checkbox",
+  "doc": "form-fields.md",
+  "description": "A checkbox. With @label it renders the awesome-bootstrap checkbox with a label that toggles it; without, the bare input.",
+  "arguments": {
+    "label": { "type": "string", "required": false, "description": "Renders the labelled awesome-bootstrap checkbox (checkbox checkbox-primary)" },
+    "checked": { "type": "boolean", "required": false, "description": "Whether the box is checked" },
+    "disabled": { "type": "boolean", "required": false, "description": "Disables the input" },
+    "select": { "type": "function", "required": false, "description": "Called with the input event" },
+    "data-select": { "type": "string", "required": false, "description": "Test anchor set on the input" },
+    "aclContext": { "type": "string", "required": false, "description": "Field-level ACL context" }
+  },
+  "events": {},
+  "blocks": {},
+  "variants": [
+    { "name": "bare", "description": "The input only", "arguments": ["checked", "select"], "blocks": [] },
+    { "name": "labelled", "description": "Input with a label", "arguments": ["label", "checked", "select", "disabled"], "blocks": [] }
+  ]
+}
