@@ -114,6 +114,48 @@
     .curr-lane {
       border-color: $backgroundColor !important;
     }
+
+    .lane-header {
+      gap: 0.5rem;
+    }
+
+    .lane-title {
+      flex: 1;
+    }
+
+    @media (max-width: 767px) {
+      .lane-collapse-toggle {
+        display: none;
+      }
+    }
+
+    &.lane-collapsed {
+      width: 4.5rem;
+      flex: 0 0 4.5rem;
+
+      .lane-header {
+        flex-direction: column;
+        height: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0.5rem 0;
+      }
+
+      .lane-title {
+        flex: 0 1 auto;
+        writing-mode: vertical-rl;
+        white-space: nowrap;
+        order: 2;
+      }
+
+      .lane-collapse-toggle {
+        order: 1;
+      }
+
+      > .box-body {
+        display: none;
+      }
+    }
   }
 
   .box-header {
