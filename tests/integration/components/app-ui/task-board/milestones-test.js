@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | app-ui/task-board/milestones', function (hooks) {
@@ -50,5 +50,43 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.ok(['anywhere', 'break-word'].includes(style.overflowWrap) || style.wordBreak === 'break-word',
             'long tokens are allowed to break');
         assert.strictEqual(style.overflow, 'hidden', 'subject overflow is hidden');
+    });
+
+    test('status bar chips show counts and scroll to their lane', async function (assert) {
+        let issue = (id, status) => ({
+            id, issueNumber: id, subject: `Issue ${id}`, status, priority: 'medium',
+            issuetype: { name: 'Bug', get() { return null; } }, dateModified: '2026-01-01'
+        });
+        this.set('milestone', { id: 1, issues: [issue(1, 'open'), issue(2, 'open'), issue(3, 'done')] });
+        this.set('statuses', [{ id: 1, name: 'open' }, { id: 2, name: 'inprogress' }, { id: 3, name: 'done' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <div class="board">
+                <AppUi::TaskBoard::Milestones
+                    @milestone={{this.milestone}}
+                    @statuses={{this.statuses}}
+                    @statusClass={{this.statusClass}}
+                    @selectIssue={{this.noop}}
+                    @getMilestoneProgress={{this.noop}}
+                    @getCompletedIssuesCount={{this.noop}}
+                />
+            </div>
+        `);
+
+        this.element.querySelector('.board').style.width = '300px';
+        let chips = this.element.querySelectorAll('[data-lane-chip]');
+        assert.strictEqual(chips.length, 3, 'one chip per status');
+        assert.ok(chips[0].textContent.includes('(2)'), 'chip shows the count');
+
+        await click('[data-lane-chip="done"]');
+        await waitUntil(() => chips[2].classList.contains('is-active'), { timeout: 3000 });
+        assert.ok(chips[2].classList.contains('is-active'), 'tapped chip is highlighted');
+
+        let board = this.element.querySelector('.milestone.box-body');
+        assert.ok(board.scrollWidth > board.clientWidth, `board overflows ${board.scrollWidth}/${board.clientWidth}`);
+        await waitUntil(() => board.scrollLeft > 0, { timeout: 3000 });
+        assert.ok(board.scrollLeft > 0, 'the board scrolled to the lane');
     });
 });

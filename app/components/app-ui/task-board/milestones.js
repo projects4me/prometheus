@@ -193,6 +193,44 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 */
 	@tracked collapsedLanes = [];
 
+	/**
+	 * Name of the lane in view on phones, highlighted in the status bar
+	 *
+	 * @property activeLane
+	 * @type String
+	 * @protected
+	 */
+	@tracked activeLane = null;
+
+	/**
+	 * Marks the lane the board scrolled to
+	 *
+	 * @method setActiveLane
+	 * @param {String} statusName
+	 * @public
+	 */
+	@action setActiveLane(statusName) {
+		if (this.isDestroying || this.isDestroyed) return;
+		this.activeLane = statusName;
+	}
+
+	/**
+	 * Scrolls the lane of the status into view (status bar chip tap)
+	 *
+	 * @method scrollToLane
+	 * @param {String} statusName
+	 * @param {Event} event
+	 * @public
+	 */
+	@action scrollToLane(statusName, event) {
+		const board = event.currentTarget.closest('.milestone.box').querySelector('.milestone.box-body');
+		const lane = Array.from(board.children).find((el) => el.getAttribute('data-lane-name') === statusName);
+		if (!lane) return;
+		this.activeLane = statusName;
+		const left = board.scrollLeft + lane.getBoundingClientRect().left - board.getBoundingClientRect().left;
+		board.scrollTo({ left, behavior: 'smooth' });
+	}
+
 	get collapsedLanesKey() {
 		return `board-collapsed-lanes:${this.trackedProject.getProjectId()}`;
 	}
