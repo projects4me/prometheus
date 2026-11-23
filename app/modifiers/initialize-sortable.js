@@ -31,6 +31,15 @@ const FALLBACK_TOLERANCE = 5;
 const TOUCH_DRAG_DELAY = 150;
 
 /**
+ * Media query for phones (below Bootstrap's 768px breakpoint); card dragging is off there.
+ *
+ * @property PHONE_MEDIA_QUERY
+ * @type {String}
+ * @final
+ */
+const PHONE_MEDIA_QUERY = '(max-width: 767.98px)';
+
+/**
  * This modifier is called on the initialization of taskboard component and SortableJS
  * is attached to every items inside that taskboard in order to make it draggable.
  *
@@ -71,7 +80,14 @@ export default class InitializeSortable extends Modifier {
      */
     constructor(owner, args) {
         super(owner, args);
-        registerDestructor(this, () => this._teardown());
+        this._onViewportChange = () => this._applyDisabled();
+        this._watchViewport();
+        registerDestructor(this, () => {
+            if (this.phoneQuery) {
+                this.phoneQuery.removeEventListener('change', this._onViewportChange);
+            }
+            this._teardown();
+        });
     }
 
     /**
@@ -176,7 +192,50 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get disableSortable() {
-        return this.named.disableSortable;
+        return this.isPhone || !!this.named.disableSortable;
+    }
+
+    /**
+     * Whether the viewport is below the phone breakpoint, where dragging cards fights with
+     * scrolling the lanes (the Move icon on the card covers moving issues there).
+     *
+     * @method get
+     * @return boolean
+     * @public
+     */
+    get isPhone() {
+        return !!(this.phoneQuery && this.phoneQuery.matches);
+    }
+
+    /**
+     * Starts watching the phone breakpoint and keeps the Sortable instances in step with it.
+     *
+     * @method _watchViewport
+     * @private
+     */
+    _watchViewport() {
+        if (typeof window === 'undefined' || !window.matchMedia) {
+            return;
+        }
+        this.phoneQuery = window.matchMedia(PHONE_MEDIA_QUERY);
+        this.phoneQuery.addEventListener('change', this._onViewportChange);
+    }
+
+    /**
+     * Turns dragging on or off on every lane and milestone tab when the viewport crosses the breakpoint.
+     *
+     * @method _applyDisabled
+     * @private
+     */
+    _applyDisabled() {
+        let disabled = this.disableSortable;
+        let targets = document.querySelectorAll('.lane.box-body, [data-milestone-tab]');
+        targets.forEach((el) => {
+            let instance = Sortable.get(el);
+            if (instance) {
+                instance.option('disabled', disabled);
+            }
+        });
     }
 
     /**
