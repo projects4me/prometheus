@@ -21,10 +21,18 @@ In a form, use the FormFields fields, not `AppUi::Select`: they add the label, v
 | `@allowClear` | boolean | `false` | Shows a clear button on a single select |
 | `@disabled` | boolean | `false` | Disables the select |
 | `@closeOnSelect` | boolean | `true` | Closes the list after a choice (set `false` for multiple) |
-| `@renderInPlace` | boolean | `false` | Renders the list next to the trigger instead of at the document root. Required inside `AppUi::Modal`, whose dialog sits in the top layer |
-| `@dropdownClass` | string | none | Class added to the dropdown content element, which holds the options and `@afterOptionsComponent`. The list renders at the document root, so use it to scope styles for the options |
+| `@renderInPlace` | boolean | `false` | Renders the list next to the trigger instead of at the document root (or the dialog, see below). Not needed inside `AppUi::Modal` any more |
+| `@dropdownClass` | string | none | Class added to the dropdown content element, which holds the options and `@afterOptionsComponent`. The list renders at the document root (or in the open dialog), so use it to scope styles for the options |
 | `@afterOptionsComponent` | component | none | Rendered below the option list, e.g. a footer link. It receives `@select` (`@select.actions.close()` closes the list) |
 | `...attributes` | HTML attributes | none | Applied to the trigger, e.g. `class` or `data-test-*` hooks |
+
+## Inside a dialog
+
+`AppUi::Modal` is a native `<dialog>` opened with `showModal()`: the browser draws it in the top layer and makes everything outside it inert, so a list drawn at the document root would sit under the dialog and could not be clicked, whatever its z-index.
+
+When the list opens, `AppUi::Select` looks for the open `<dialog>` its trigger sits in. If there is one, the list is drawn inside that dialog (ember-basic-dropdown's `destinationElement`) and positioned against it (`utils/ui/dialog-dropdown.js`): below the trigger, or above it when there is no room below, and right-aligned when it would overflow on the right. The dialog is the scrolling layer over the viewport, so the list scrolls with the dialog's content and is not clipped by the modal box. It keeps the `.ember-basic-dropdown-content` look. Outside a dialog nothing changes.
+
+Callers pass nothing for this: the FormFields relate and multi-select fields and the ezSearch builder's Field, Operator and value lists all get it through `AppUi::Select`. `@renderInPlace={{true}}` still wins when it is set.
 
 ## Blocks
 
@@ -47,7 +55,7 @@ In a form, use the FormFields fields, not `AppUi::Select`: they add the label, v
 ### Do
 
 - Use `FormFields::FieldRelate` (`@relateType="relate-simple"` and friends) for form inputs.
-- Set `@renderInPlace={{true}}` inside a modal.
+- Let the select find the dialog by itself inside `AppUi::Modal`; no argument is needed.
 - Add an argument to `AppUi::Select` when a caller needs a new power-select feature, and document it here.
 
 ### Avoid
