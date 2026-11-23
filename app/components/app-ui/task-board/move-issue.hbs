@@ -8,7 +8,7 @@
         <li>
           <button type="button" class="board-move-row {{if row.isCurrent "is-current"}} {{if row.isSelected "is-selected"}}" data-test-move-status={{row.status.name}} aria-pressed={{if row.isSelected "true" "false"}} {{on "click" (fn this.selectStatus row.id)}}>
             <span class="board-move-dot {{row.status.name}}"></span>
-            <span class="board-move-name">{{row.status.name}}</span>
+            <span class="board-move-name">{{status-label row.status.name}}</span>
             {{#if row.isCurrent}}<span class="board-move-current" data-test-move-current>{{t "views.app.board.move.current"}}</span>{{/if}}
             {{#if row.isSelected}}<i class="fa fa-check" aria-hidden="true"></i>{{/if}}
           </button>
