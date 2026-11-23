@@ -190,29 +190,38 @@
   }
 }
 
-/* Global search options and note: the list renders at the document root, so these are not under .global-search. */
-.global-search-snippet {
-  display: block;
-  color: $mediumColor;
-  font-size: 1.2rem;
-  white-space: normal;
+/* Global search options and note: the list renders at the document root, outside .global-search, so its
+   rules are scoped under the dropdown's own class. */
+.global-search-dropdown {
+  .global-search-snippet {
+    display: block;
+    color: lighten($darkColor, 20%);
+    font-size: 1.2rem;
+    white-space: normal;
 
-  mark {
-    padding: 0;
-    background-color: $primaryColorLight;
-    color: inherit;
+    mark {
+      padding: 0;
+      background-color: $primaryColorLight;
+      color: inherit;
+      font-weight: 600;
+    }
   }
-}
 
-/* The chosen option fills the trigger: number and subject only. */
-.ember-power-select-selected-item .global-search-snippet {
-  display: none;
-}
+  /* The highlighted option is blue with white text: the snippet follows it, and the match keeps a light band. */
+  .ember-power-select-option[aria-current="true"] .global-search-snippet,
+  .ember-power-select-option:hover .global-search-snippet {
+    color: inherit;
 
-.global-search-note {
-  padding: 0.8rem 1.2rem;
-  border-top: 1px solid $mediumColor;
-  color: $mediumColor;
+    mark {
+      background-color: rgba($backgroundColor, 0.3);
+    }
+  }
+
+  .global-search-note {
+    padding: 0.8rem 1.2rem;
+    border-top: 1px solid $mediumColor;
+    color: $mediumColor;
+  }
 }
 
 /* Header layout: the navbar is a flex row so the global search sits in the centre without overlapping the
@@ -260,6 +269,11 @@
     .ember-power-select-selected-item {
       width: auto;
       max-width: 100%;
+
+      /* The chosen option fills the trigger: number and subject only. */
+      .global-search-snippet {
+        display: none;
+      }
     }
   }
 }

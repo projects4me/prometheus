@@ -75,6 +75,24 @@ module('Integration | Component | app-ui/select', function (hooks) {
 		assert.dom(selectedOptionsSelector('[data-test-wrap]')).exists({ count: 2 });
 	});
 
+	test('it puts dropdownClass on the option list', async function (assert) {
+		this.set('options', OPTIONS);
+		this.set('noop', () => {});
+		await render(hbs`
+			<div data-test-wrap><AppUi::Select
+				@options={{this.options}}
+				@onChange={{this.noop}}
+				@dropdownClass="test-dropdown"
+				as |option|
+			>
+				<span data-option={{option.value}}>{{option.label}}</span>
+			</AppUi::Select></div>
+		`);
+
+		await openSelect('[data-test-wrap]');
+		assert.dom('.test-dropdown [data-option]').exists({ count: 2 }, 'the options render inside the classed dropdown');
+	});
+
 	test('it is disabled when asked', async function (assert) {
 		this.set('options', OPTIONS);
 		this.set('noop', () => {});
