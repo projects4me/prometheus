@@ -28,7 +28,7 @@
           @format="YYYY-MM-DD" @singleDatePicker={{true}} @showDropdowns={{true}} @autoApply={{true}}
           @validate={{fn this.validate log}} @message={{this.message}} @update={{fn this.onDate log}} />
       {{else if (eq this.field "FieldCheckbox")}}
-        <FormFields::FieldCheckbox @checked={{this.checked}} @select={{fn this.onCheck log}} data-select="demo-checkbox" />
+        <FormFields::FieldCheckbox @label="Checkbox label" @disabled={{this.disabled}} @checked={{this.checked}} @select={{fn this.onCheck log}} data-select="demo-checkbox" />
       {{else if (eq this.field "FieldSwitch")}}
         <FormFields::FieldSwitch @checkedValue={{this.checked}} @callBack={{fn this.onCheck log}} />
       {{else if (eq this.field "FieldUpload")}}

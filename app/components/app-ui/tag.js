@@ -9,7 +9,8 @@ const VARIANTS = ['default', 'primary', 'info', 'success', 'warning', 'danger'];
 const PALETTE = ['primary', 'info', 'success', 'warning', 'danger'];
 
 /**
- * A tag in the Task Board look: border and text in the variant colour on a tint of it. The variant is given, or
+ * A tag in the Task Board look: border and text in the variant colour on a tint of it, or with @fill="solid" filled
+ * with the variant colour and a white or dark text, whichever contrasts more. The variant is given, or
  * picked from the palette by a hash of @colorKey so the same text always gets the same colour. With @onRemove it
  * shows a remove button. The text element carries its full text as the title, for text cut short by the maximum width.
  *
@@ -33,6 +34,16 @@ export default class AppUiTagComponent extends Component {
             return PALETTE[hash(String(colorKey)) % PALETTE.length];
         }
         return 'default';
+    }
+
+    /**
+     * Whether the tag is filled solid: @fill is "solid". Any other value is the tint look.
+     *
+     * @property solid
+     * @type Boolean
+     */
+    get solid() {
+        return this.args.fill === 'solid';
     }
 
     /**

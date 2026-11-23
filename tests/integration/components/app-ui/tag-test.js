@@ -40,6 +40,20 @@ module('Integration | Component | app-ui/tag', function (hooks) {
         assert.dom('[data-test-c]').hasClass('app-ui-tag-danger');
     });
 
+    test('fill solid adds the solid class, anything else is tint', async function (assert) {
+        await render(hbs`
+            <AppUi::Tag @variant="danger" @fill="solid" data-test-a>a</AppUi::Tag>
+            <AppUi::Tag @colorKey="x" @fill="solid" data-test-b>b</AppUi::Tag>
+            <AppUi::Tag @variant="danger" @fill="bogus" data-test-c>c</AppUi::Tag>
+            <AppUi::Tag @variant="danger" data-test-d>d</AppUi::Tag>
+        `);
+
+        assert.dom('[data-test-a]').hasClass('app-ui-tag-solid').hasClass('app-ui-tag-danger');
+        assert.dom('[data-test-b]').hasClass('app-ui-tag-solid');
+        assert.dom('[data-test-c]').doesNotHaveClass('app-ui-tag-solid');
+        assert.dom('[data-test-d]').doesNotHaveClass('app-ui-tag-solid');
+    });
+
     test('onRemove shows a labelled button and is called on click', async function (assert) {
         let removed = 0;
         this.remove = () => removed++;

@@ -60,8 +60,6 @@ add|ember-template-lint|no-nested-interactive|30|10|30|10|76bb27f04af873a974180e
 add|ember-template-lint|no-passed-in-event-handlers|14|4|14|4|e78b9791930dcbe2b9d6de25d3e1b671c06640ae|1794614400000|||app/components/ez-search/search-bar.hbs
 add|ember-template-lint|no-pointer-down-event-binding|30|27|30|27|a158be60fde14211f6abfbac329c94fa5a3b4a46|1794614400000|||app/components/ez-search/search-bar.hbs
 add|ember-template-lint|require-presentational-children|30|10|30|10|76bb27f04af873a974180e3e7a3d3ba17e46af3b|1794614400000|||app/components/ez-search/search-bar.hbs
-add|ember-template-lint|no-builtin-form-components|2|2|2|2|cbbfeb4f5b6120c8bc17d080b7de581c82f974bb|1794614400000|||app/components/form-fields/field-checkbox.hbs
-add|ember-template-lint|require-input-label|2|2|2|2|cbbfeb4f5b6120c8bc17d080b7de581c82f974bb|1794614400000|||app/components/form-fields/field-checkbox.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|2|96|2|96|6e4b652ecf6082e3320e0b76bef8d699633fac4f|1794614400000|||app/components/ez-search-compact/index.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|43|37|43|37|1ec5b84954d6a2ce8eb6055dfbca6fe47f73cf62|1794614400000|||app/components/ez-search-compact/index.hbs
 add|ember-template-lint|no-invalid-aria-attributes|19|6|19|6|d361ac8b220061d93be98a35615dac912a097409|1794614400000|||app/components/form-fields/field-date.hbs

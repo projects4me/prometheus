@@ -1,4 +1,4 @@
-<span class="app-ui-tag app-ui-tag-{{this.variant}}" ...attributes>
+<span class="app-ui-tag app-ui-tag-{{this.variant}}{{if this.solid " app-ui-tag-solid"}}" ...attributes>
   <span class="app-ui-tag-text" data-app-ui-tag-text {{text-as-title @colorKey @variant}}>{{yield}}</span>
   {{#if @onRemove}}
     <button type="button" class="app-ui-tag-remove" aria-label={{t "global.form.remove"}} data-app-ui-tag-remove {{on "click" this.remove}}><i class="fa fa-times" aria-hidden="true"></i></button>

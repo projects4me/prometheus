@@ -124,11 +124,6 @@
       "count": 1
     }
   },
-  "app/components/form-fields/field-checkbox.js": {
-    "ember/no-empty-glimmer-component-classes": {
-      "count": 1
-    }
-  },
   "app/components/form-fields/field-search.js": {
     "ember/no-runloop": {
       "count": 1

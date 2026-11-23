@@ -5,6 +5,7 @@
   "description": "A tag in the Task Board look: border and text in the variant colour on a tint of it, optionally removable.",
   "arguments": {
     "variant": { "type": "string", "required": false, "default": "default", "description": "The colour: default, primary, info, success, warning or danger" },
+    "fill": { "type": "string", "required": false, "default": "tint", "description": "tint (border and text on a tint) or solid (filled with the colour, white or dark text by contrast); other values are tint" },
     "colorKey": { "type": "string", "required": false, "description": "Text to pick the palette colour from, used when there is no @variant; the same text always gets the same colour" }
   },
   "events": {

@@ -15,7 +15,7 @@ Shared by the fields that extend the base field: `@data-field` (the field's test
 | FieldRelateMulti: same as FieldRelate | mixed | none | Several related records; `@onchange` gets the selected list |
 | FieldMultiSelect: `@options`, `@selected`, `@searchEnabled`, `@closeOnSelect`, `@onchange` | mixed | none | Several plain values |
 | FieldDate: `@value`, `@format`, `@singleDatePicker`, `@update` | mixed | none | Date picker; `@update` gets the formatted date |
-| FieldCheckbox: `@checked`, `@select` | mixed | none | Checkbox; `@select` gets the input event |
+| FieldCheckbox: `@checked`, `@select`, `@label`, `@disabled` | mixed | none | Checkbox; `@select` gets the input event. With `@label` it renders the awesome-bootstrap checkbox (`checkbox checkbox-primary`) with a label that toggles it; without, the bare input. Extra attributes reach the input |
 | FieldSwitch: `@checkedValue`, `@callBack`, `@size` | mixed | `md` | Switch; size is `sm`, `md` or `lg` |
 | FieldUpload: `@label`, `@uploadFile` | mixed | none | Drop zone; `@uploadFile` gets each added file |
 | FieldSearch: `@value`, `@placeholder`, `@onInput` | mixed | none | Debounced search box; `@onInput` gets the text |
