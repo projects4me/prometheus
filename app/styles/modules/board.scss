@@ -50,8 +50,9 @@
 
       // Below md the search goes under the tabs at full width
       @media (max-width: 767px) {
+        // The milestone dropdown replaces the tabs on phones
         .milestone-tabs {
-          width: 100%;
+          display: none;
         }
 
         .milestone-filters {
