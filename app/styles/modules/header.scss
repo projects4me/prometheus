@@ -122,8 +122,8 @@
     flex: 1 1 0;
     min-width: 0;
     overflow: hidden;
-    padding-left: 1rem;
-    padding-right: 0.6rem;
+    padding-left: 0;
+    padding-right: 0;
 
     .ember-power-select-trigger {
       display: flex;
@@ -224,12 +224,16 @@
   }
 }
 
+$headerSectionGap: 1rem; // between sidebar toggle, project switcher, search and the right-hand menu
+$headerItemGap: 1rem; // between New, notifications and the user menu
+$headerIconGap: 0.5rem; // between an icon/avatar and its label
+
 /* Header layout: the navbar is a flex row so the global search sits in the centre without overlapping the
    switcher or the right-hand menu. Below the Bootstrap sm breakpoint the search wraps onto its own full-width row. */
 .main-header .navbar {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: $headerSectionGap;
 
   .sidebar-toggle {
     float: none;
@@ -242,7 +246,7 @@
     .nav.navbar-nav {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: $headerItemGap;
       float: none;
       margin: 0;
 
@@ -253,8 +257,7 @@
 
         > a,
         > button {
-          padding-top: 0;
-          padding-bottom: 0;
+          padding: 0;
         }
       }
     }
@@ -286,7 +289,7 @@
       order: 3;
       flex: 0 0 100%;
       margin: 0;
-      padding: 0 1rem 1rem;
+      padding: 0 0 1rem;
     }
 
   }
@@ -318,7 +321,6 @@
 .navbar .header-user-avatar-wrap {
   float: left;
   margin-top: -2px;
-  margin-right: 10px;
 
   .header-user-avatar {
     float: none;
@@ -329,6 +331,7 @@
 .navbar-nav > .user-menu > .dropdown-toggle {
   display: flex;
   align-items: center;
+  gap: $headerIconGap;
 }
 
 .user-header > .header-menu-avatar-wrap {
