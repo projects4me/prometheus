@@ -9,7 +9,8 @@ import { setupMirage } from 'ember-cli-mirage/test-support';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 import AclStub from '../../stub-services/acl-stub';
-import { openSelect, typeInSelectSearch } from 'prometheus/tests/helpers/select';
+import { openSelect, typeInSelectSearch, noMatchesSelector } from 'prometheus/tests/helpers/select';
+import { Response } from 'miragejs';
 
 module('Integration | Component | application-header', function (hooks) {
     setupRenderingTest(hooks);
@@ -95,15 +96,27 @@ module('Integration | Component | application-header search task', function (hoo
         this.owner.register('service:current-user', CurrentUserStub);
     });
 
-    test('typing twice within the debounce sends one search request for the second query', async function (assert) {
-        const queries = [];
-        this.server.get('/issue', (schema, request) => {
-            queries.push(request.queryParams.query || '');
+    function serveSearch(server, { semantic = 'ok', snippet = null } = {}) {
+        const searches = [];
+        const project = server.create('project', { shortCode: 'aprom' });
+        server.create('issue', { id: '1', subject: 'alpha one', issueNumber: 1, projectId: project.id });
+        server.create('issue', { id: '2', subject: 'beta two', issueNumber: 2, projectId: project.id });
+        server.get('/search', (schema, request) => {
+            searches.push(request.queryParams);
             return {
-                data: [{ id: '1', type: 'issue', attributes: { subject: 'beta two', issueNumber: 2, status: 'new' } }],
-                meta: { count: 1 }
+                data: ['2', '1'].map((id) => ({
+                    type: 'searchresult',
+                    id: `issue:${id}`,
+                    attributes: { module: 'issue', recordId: id, title: null, snippet, score: 1, matchedBy: ['fts'], pinned: false }
+                })),
+                meta: { query: request.queryParams.q, types: ['issue'], semantic }
             };
         });
+        return searches;
+    }
+
+    test('typing twice within the debounce sends one search request for the second query', async function (assert) {
+        const searches = serveSearch(this.server);
 
         await render(hbs`<AppLayouts::ApplicationHeader />`);
         await openSelect('.global-search');
@@ -112,10 +125,58 @@ module('Integration | Component | application-header search task', function (hoo
         await Promise.all([first, second]);
         await settled();
 
-        const searches = queries.filter((q) => q.includes('CONTAINS'));
         assert.strictEqual(searches.length, 1, 'exactly one search request');
-        assert.ok(searches[0].includes('beta'), 'the request is for the second query');
-        assert.ok(!searches[0].includes('alp'), 'the first query was cancelled');
+        assert.deepEqual({ ...searches[0] }, { types: 'issue', q: 'beta', limit: '10' }, 'the request is for the second query');
+    });
+
+    test('a one-character query sends no search request', async function (assert) {
+        const searches = serveSearch(this.server);
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('a');
+        await settled();
+
+        assert.strictEqual(searches.length, 0, 'Gaia refuses queries under 2 characters');
+    });
+
+    test('options follow the search ranking and show the snippet matches as text', async function (assert) {
+        serveSearch(this.server, { snippet: '&lt;b&gt;the <mark>beta</mark> page&lt;/b&gt;' });
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('beta');
+        await settled();
+
+        const options = [...document.querySelectorAll('[data-test-global-search-option]')];
+        assert.deepEqual(options.map((o) => o.dataset.testGlobalSearchOption), ['2', '1'], 'ranked as the search answered');
+        const snippet = document.querySelector('[data-test-global-search-snippet]');
+        assert.strictEqual(snippet.textContent.trim(), 'the beta page', 'record tags are dropped');
+        assert.strictEqual(snippet.querySelector('mark').textContent, 'beta', 'the match is marked');
+        assert.dom('[data-test-global-search-snippet] b').doesNotExist('record HTML is never rendered');
+        assert.dom('[data-test-global-search-note]').doesNotExist('no note while semantic matching works');
+    });
+
+    test('says when matching by meaning is unavailable', async function (assert) {
+        serveSearch(this.server, { semantic: 'unavailable' });
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('beta');
+        await settled();
+
+        assert.dom('[data-test-global-search-note]').hasText('Matching by meaning is unavailable; showing word matches only.');
+    });
+
+    test('a failed search says so instead of no results', async function (assert) {
+        this.server.get('/search', () => new Response(500, {}, { error: 'down' }));
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('beta');
+        await settled();
+
+        assert.dom(noMatchesSelector()).hasText('Search failed. Try again.');
     });
 });
 

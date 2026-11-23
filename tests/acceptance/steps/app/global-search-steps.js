@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { currentURL } from '@ember/test-helpers';
+import { currentURL, findAll } from '@ember/test-helpers';
 import { chooseOption, openSelect, searchSelect } from 'prometheus/tests/helpers/select';
 
 export const given = function () {
@@ -18,6 +18,12 @@ export const given = function () {
 
                 ctx.set('currentProject', project);
                 assert.ok(true, `there are ${issuesCount} issues in the application`);
+            }
+        },
+        {
+            "the search cannot match by meaning": (assert, ctx) => async function () {
+                ctx.set('searchSemanticUnavailable', true);
+                assert.ok(true, 'the search reports semantic matching as unavailable');
             }
         }
     ];
@@ -54,6 +60,20 @@ export const then = function () {
             "User is navigated to Issue $issueNumber detail view": (assert, ctx) => async function (issueNumber) {
                 let shortCode = ctx.get('currentProject').shortCode;
                 assert.equal(currentURL(), `/app/project/${shortCode}/issue/${issueNumber}`, `user is navigated to detail view of Issue # ${issueNumber}`);
+            }
+        },
+        {
+            "the global search lists $subject only": (assert, ctx) => async function (subject) {
+                let options = findAll('[data-test-global-search-option]').map((el) => el.textContent.replace(/\s+/g, ' ').trim());
+                assert.equal(options.length, 1, 'one issue matches');
+                assert.ok(options[0].endsWith(`- ${subject}`), `the option is ${subject}`);
+                let search = (ctx.get('searchRequests') || []).at(-1);
+                assert.equal(search?.q, subject, 'the header asked the search API');
+            }
+        },
+        {
+            "the global search says only word matches are shown": (assert) => async function () {
+                assert.dom('[data-test-global-search-note]').exists('the note is shown under the options');
             }
         }
     ];

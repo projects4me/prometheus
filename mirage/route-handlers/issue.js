@@ -23,7 +23,12 @@ export function register(server, ctx) {
          * First IF will work for global search where user searched an issue using field "subject"
          * instead of issueNumber. e.g "Issue.subject CONTAINS VALUE".
          */
-        if (isNaN(value) && value !== undefined && field == 'Issue.issueSubject') {
+        let idList = (issueQuery || '').match(/Issue\.id CONTAINS ([^)]+)/);
+        if (idList) {
+            // The global search reads its matched issues by id
+            let ids = [...idList[1].matchAll(/'([^']*)'/g)].map((found) => found[1]);
+            model = schema.issues.where((issue) => ids.includes(String(issue.id)));
+        } else if (isNaN(value) && value !== undefined && field == 'Issue.issueSubject') {
             model = schema.issues.where({subject: value});
         } else if(value) {
             pushObjectInModel(model, schema.issues.find(value));

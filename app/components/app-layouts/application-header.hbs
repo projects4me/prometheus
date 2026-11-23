@@ -18,9 +18,20 @@
       @placeholder={{t "global.form.searchPlaceholder"}}
       @searchEnabled={{true}}
       @search={{perform this.search}}
+      @noMatchesMessage={{if this.searchFailed (t "views.app.application.header.searchFailed")}}
+      @afterOptionsComponent={{if this.semanticUnavailable (component "app-layouts/global-search-note")}}
       @onChange={{this.itemSelected}} as |issue|>
-      <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-    </AppUi::Select> 
+      <span data-test-global-search-option={{issue.number}}>
+        <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+      </span>
+      {{#if issue.snippet.length}}
+        <span class="global-search-snippet" data-test-global-search-snippet>
+          {{~#each issue.snippet as |part|~}}
+            {{~#if part.match}}<mark>{{part.text}}</mark>{{else}}{{part.text}}{{/if~}}
+          {{~/each~}}
+        </span>
+      {{/if}}
+    </AppUi::Select>
   </div>
 
   {{!-- Navbar Right Menu --}}

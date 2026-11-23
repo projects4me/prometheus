@@ -3,8 +3,6 @@
  */
 
 import { service } from '@ember/service';
-import RSVP from 'rsvp';
-import format from "prometheus/utils/data/format";
 import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
 import AppComponent from '../app';
@@ -21,14 +19,14 @@ import { tracked } from '@glimmer/tracking';
 export default class ApplicationHeaderComponent extends AppComponent {
 
     /**
-     * We are using the store service to retrieve data for global search
+     * Ranked issue search used by the global search
      *
-     * @property store
+     * @property issueSearch
      * @type Service
      * @for ApplicationHeader
      * @private
      */
-    @service store;
+    @service('search') issueSearch;
     
     /**
      * The notifications service
@@ -80,14 +78,24 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @service('sign-in-control') signInControl;
     
     /**
-     * We are using the store service to retrieve data for global search
+     * True when the last global search ran without matching by meaning (Ares could not embed the query)
      *
-     * @property page
-     * @type Integer
+     * @property semanticUnavailable
+     * @type Boolean
      * @for ApplicationHeader
-     * @private
+     * @public
      */
-    page = 0;
+    @tracked semanticUnavailable = false;
+
+    /**
+     * True when the last global search failed; the dropdown says so instead of "no results"
+     *
+     * @property searchFailed
+     * @type Boolean
+     * @for ApplicationHeader
+     * @public
+     */
+    @tracked searchFailed = false;
 
     /**
      * This function is called when the component is initialized
@@ -145,43 +153,37 @@ export default class ApplicationHeaderComponent extends AppComponent {
     }
 
     /**
-     * This function loads the search data
-     *
-     * @param query
-     * @return {RSVP.Promise|Test.Promise|*}
-     */
-    loadSearchData(query) {
-        let _self = this;
-        let options = {
-            query: '((Issue.issueNumber CONTAINS ' + query + ') OR (Issue.subject CONTAINS ' + query + ') OR (Issue.description CONTAINS ' + query + '))',
-            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype',
-            limit: 5,
-            page: this.page,
-        };
-        return new RSVP.Promise((resolve) => {
-            resolve(_self.store.query('issue', options));
-        });
-    }
-
-    /**
-     * This is the task that is used to perform the search.
+     * This is the task that is used to perform the search. Each option carries what the dropdown shows and what
+     * opening the issue needs: number and project.
      *
      * @property search
      * @type task
      * @for ApplicationHeader
      * @public
      */
-    search = task(async (query) => {
+    search = task({ restartable: true }, async (query) => {
         await timeout(500);
-        let map = {
-            id: 'id',
-            name: 'subject',
-            number: 'issueNumber',
-            status: 'status',
-            project: 'project'
-        };
-        const data = await this.loadSearchData(query);
-        return (new format(this)).getSelectList(data, map);
+        let found = null;
+        try {
+            found = await this.issueSearch.issues(query);
+        } catch {
+            // Shown as the dropdown's message below
+        }
+        if (this.isDestroying || this.isDestroyed) {
+            return [];
+        }
+        this.searchFailed = found === null;
+        this.semanticUnavailable = found?.semanticUnavailable ?? false;
+        const results = found?.results ?? [];
+        return results.map(({ issue, snippet, pinned }) => ({
+            id: issue.id,
+            name: issue.subject,
+            number: issue.issueNumber,
+            status: issue.status,
+            project: issue.project,
+            snippet,
+            pinned
+        }));
     });
 
     /**
