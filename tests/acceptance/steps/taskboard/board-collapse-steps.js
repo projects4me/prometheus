@@ -42,5 +42,42 @@ export default function (assert) {
 	.then('User should see the task board content', function () {
 		let boardContainer = document.querySelector('.board-container');
 		assert.ok(boardContainer, 'Task board content should be visible when expanded');
+	})
+
+	/**
+	 * Clicks the collapse or expand button of a status lane.
+	 */
+	.when('User toggles the $status lane', async function (status) {
+		let toggle = document.querySelector(`[data-lane-toggle="${status}"]`);
+		assert.ok(toggle, `Toggle of the ${status} lane should exist`);
+		await click(toggle);
+	})
+
+	/**
+	 * Verifies the lane is collapsed: marked, narrow and without visible cards.
+	 */
+	.then('The $status lane should be collapsed', function (status) {
+		let lane = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane');
+		assert.ok(lane.classList.contains('lane-collapsed'), `${status} lane should be collapsed`);
+		assert.notOk(lane.querySelector(':scope > .box-body').offsetParent, 'Cards of a collapsed lane are hidden');
+		assert.ok(lane.querySelector('.fa-angle-right'), 'Collapsed lane shows the expand button');
+	})
+
+	/**
+	 * Verifies the lane is expanded again.
+	 */
+	.then('The $status lane should be expanded', function (status) {
+		let lane = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane');
+		assert.notOk(lane.classList.contains('lane-collapsed'), `${status} lane should be expanded`);
+		assert.ok(lane.querySelector('.fa-angle-left'), 'Expanded lane shows the collapse button');
+	})
+
+	/**
+	 * Verifies the collapsed lanes are stored per project in localStorage.
+	 */
+	.then('The $status lane should be remembered as collapsed', function (status) {
+		let keys = Object.keys(window.localStorage).filter((key) => key.startsWith('board-collapsed-lanes:'));
+		assert.equal(keys.length, 1, 'One entry per project is stored');
+		assert.ok(JSON.parse(window.localStorage.getItem(keys[0])).includes(status), `${status} is in the stored list`);
 	});
 }

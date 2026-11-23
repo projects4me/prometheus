@@ -135,6 +135,48 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 */
 	constructor() {
 		super(...arguments);
+		this.collapsedLanes = this.loadCollapsedLanes();
+	}
+
+	/**
+	 * Names of the status lanes the user collapsed, remembered per project
+	 *
+	 * @property collapsedLanes
+	 * @type Array
+	 * @protected
+	 */
+	@tracked collapsedLanes = [];
+
+	get collapsedLanesKey() {
+		return `board-collapsed-lanes:${this.trackedProject.getProjectId()}`;
+	}
+
+	loadCollapsedLanes() {
+		try {
+			const saved = JSON.parse(window.localStorage.getItem(this.collapsedLanesKey));
+			return Array.isArray(saved) ? saved : [];
+		} catch {
+			return [];
+		}
+	}
+
+	/**
+	 * Collapses the lane of the status, or expands it when collapsed, and remembers the choice
+	 *
+	 * @method toggleLane
+	 * @param {String} statusName
+	 * @public
+	 */
+	@action toggleLane(statusName) {
+		const names = this.collapsedLanes.includes(statusName)
+			? this.collapsedLanes.filter((name) => name !== statusName)
+			: [...this.collapsedLanes, statusName];
+		this.collapsedLanes = names;
+		try {
+			window.localStorage.setItem(this.collapsedLanesKey, JSON.stringify(names));
+		} catch {
+			// storage unavailable: the state stays for this session only
+		}
 	}
 
 	/**

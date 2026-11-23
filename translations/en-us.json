@@ -1808,6 +1808,8 @@
         "taskBoard": "Task Board",
         "collapseBoard": "Collapse board",
         "expandBoard": "Expand board",
+        "collapseLane": "Collapse lane",
+        "expandLane": "Expand lane",
         "backlog": "Backlog",
         "move": {
           "title": "Move #{number}",

@@ -59,3 +59,11 @@ Feature: Board collapse functionality | Taskboard
     And User clicks the panel divider handle
     When User clicks the panel divider handle to expand
     Then The issue details panel should be in default width mode
+
+  Scenario: A status lane collapses and expands
+
+    When User toggles the new lane
+    Then The new lane should be collapsed
+    And The new lane should be remembered as collapsed
+    When User toggles the new lane
+    Then The new lane should be expanded
