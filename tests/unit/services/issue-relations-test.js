@@ -190,4 +190,57 @@ module('Unit | Service | issue-relations', function (hooks) {
         await this.service.unlink(await this.open(main), groups.children[0]);
         assert.strictEqual(this.server.schema.issues.find(child.id).parentId, null);
     });
+    module('openBlockers', function (hooks) {
+        hooks.beforeEach(function () {
+            this.server.get('/issuestatus', (schema, request) => {
+                let projectId = /Issuestatus\.projectId : (\w+)/.exec(request.queryParams.query)[1];
+                this.statusQueries = (this.statusQueries || 0) + 1;
+                return schema.issuestatuses.where((status) => String(status.projectId) === projectId);
+            });
+            this.p1 = this.server.create('project').id;
+            this.p2 = this.server.create('project').id;
+            this.inProject = async (mirageIssue, projectId) => {
+                let record = await this.open(mirageIssue);
+                this.store.push({ data: { type: 'issue', id: record.id, attributes: { projectId: String(projectId) } } });
+            };
+            this.status = (projectId, name, done) => this.server.create('issuestatus', { projectId, name, done });
+        });
+
+        test('a blocker in a done status is excluded', async function (assert) {
+            let main = this.issue({ projectId: this.p1 });
+            let open = this.issue({ projectId: this.p1, status: 'new' });
+            let done = this.issue({ projectId: this.p1, status: 'closed' });
+            this.status(this.p1, 'new', '0');
+            this.status(this.p1, 'closed', '1');
+            await this.inProject(main, this.p1);
+            await this.inProject(open, this.p1);
+            await this.inProject(done, this.p1);
+            this.link('blocks', open, main);
+            this.link('blocks', done, main);
+            this.link('blocks', main, this.issue({ projectId: this.p1, status: 'new' }));
+
+            let blockers = await this.service.openBlockers(await this.open(main));
+
+            assert.deepEqual(blockers.map((issue) => issue.id), [open.id]);
+        });
+
+        test('a blocker of another project is judged by its own project statuses, loaded once per project', async function (assert) {
+            let main = this.issue({ projectId: this.p1 });
+            let a = this.issue({ projectId: this.p2, status: 'shipped' });
+            let b = this.issue({ projectId: this.p2, status: 'review' });
+            this.status(this.p1, 'shipped', '0');
+            this.status(this.p2, 'shipped', '1');
+            this.status(this.p2, 'review', '0');
+            await this.inProject(main, this.p1);
+            await this.inProject(a, this.p2);
+            await this.inProject(b, this.p2);
+            this.link('blocks', a, main);
+            this.link('blocks', b, main);
+
+            let blockers = await this.service.openBlockers(await this.open(main));
+
+            assert.deepEqual(blockers.map((issue) => issue.id), [b.id], 'shipped is done in p2 even though it is not in p1');
+            assert.strictEqual(this.statusQueries, 1, 'one status query for the one other project');
+        });
+    });
 });

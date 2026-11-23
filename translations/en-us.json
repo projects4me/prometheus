@@ -1263,6 +1263,7 @@
           "files": "Files",
           "conversation": "Thread",
           "linkedIssues": {
+            "blockedBy": "Blocked by",
             "title": "Linked issues",
             "link": "Link issue",
             "unlink": "Unlink",

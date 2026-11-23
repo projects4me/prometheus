@@ -78,6 +78,29 @@ export default class IssueRelationsService extends Service {
 	}
 
 	/**
+	 * The open blockers of an issue: the source issues of its `blocks` links whose status is not a done status of
+	 * the source issue's own project. The statuses of each project are loaded once per call.
+	 *
+	 * @method openBlockers
+	 * @param {Issue} issue
+	 * @return {Promise<Issue[]>}
+	 */
+	async openBlockers(issue) {
+		let links = await this._links('target', issue, 'blocks');
+		let blockers = (await Promise.all(links.map((link) => link.sourceIssue))).filter(Boolean);
+		let projectIds = [...new Set(blockers.map((blocker) => String(blocker.projectId)))];
+		let doneByProject = new Map(
+			await Promise.all(
+				projectIds.map(async (projectId) => {
+					let statuses = await this.store.query('issuestatus', { query: `(Issuestatus.projectId : ${projectId})`, limit: 100 });
+					return [projectId, new Set(statuses.slice().filter((status) => String(status.done) === '1').map((status) => status.name))];
+				})
+			)
+		);
+		return blockers.filter((blocker) => !doneByProject.get(String(blocker.projectId)).has(blocker.status));
+	}
+
+	/**
 	 * Links the issue to another one. `relation` is one of blocks, blockedBy, relates, splitsInto, splitFrom,
 	 * parentOf, childOf. Typed links create an Issuelink; parent/child set the child's `parentId`. A failed save
 	 * is rolled back and the error (Gaia's 422) is rethrown.

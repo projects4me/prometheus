@@ -33,6 +33,7 @@
                   </ul>
                 </div>
               </span>
+              <Issue::BlockedByLabel @issue={{this.issue}} @refreshKey={{this.linksVersion}} />
             </h2>
             {{else}}
             <h4 class="box-title issue-title">
@@ -193,7 +194,7 @@
       {{!-- /.end project details --}}
 
       <AccessControl @aclContext="issue.read">
-        <Issue::LinkedIssues @issue={{this.issue}} />
+        <Issue::LinkedIssues @issue={{this.issue}} @onChange={{this.linksChanged}} />
       </AccessControl>
 
       {{!-- This div contains the issue conversations and milestones --}}
