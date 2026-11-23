@@ -1,9 +1,9 @@
 <span class="blocked-by-wrapper" {{on-insert this.load}} {{on-update @issue.id this.load}} {{on-update @refreshKey this.load}}>
   {{#if (and (not this.isLoading) this.blockers.length)}}
-    <span class="label label-danger blocked-by-label" data-test-blocked-by>
+    <AppUi::Tag @variant="danger" class="blocked-by-label" data-test-blocked-by>
       <i class="fa fa-ban" aria-hidden="true"></i>
       {{t "views.app.issue.detail.linkedIssues.blockedBy"}}
       {{#each this.shown as |item index|}}{{if index ", "}}<LinkTo @route="app.project.issue.page" @models={{array (lowercase item.issue.projectShortcode) item.issue.issueNumber}} data-test-blocked-by-link>{{item.text}}</LinkTo>{{/each}}{{#if this.more}} +{{this.more}}{{/if}}
-    </span>
+    </AppUi::Tag>
   {{/if}}
 </span>

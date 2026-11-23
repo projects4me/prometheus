@@ -3,7 +3,11 @@
  */
 
 import Component from '@glimmer/component';
+import { get } from '@ember/object';
 import { isDefaultProfilePicture } from 'prometheus/models/user';
+
+/** Read through get() because the user may be a belongsTo proxy (e.g. issue.assignedTo). */
+const PICTURE = 'profilePicture';
 
 /**
  * The avatar of an agent: the picture of its user when it has one, the robot otherwise.
@@ -14,7 +18,8 @@ import { isDefaultProfilePicture } from 'prometheus/models/user';
  */
 export default class AgentAvatarComponent extends Component {
     get picture() {
-        let picture = this.args.user?.profilePicture;
+        let user = this.args.user;
+        let picture = user ? get(user, PICTURE) : undefined;
 
         return isDefaultProfilePicture(picture) ? null : picture;
     }
