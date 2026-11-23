@@ -47,14 +47,13 @@ export default class SearchService extends Service {
      * @method issues
      * @param {String} query the text the user typed
      * @param {Number} limit the most results to return
-     * @return {Promise<Object>} `{ results: [{ issue, snippet, pinned }], semanticUnavailable }`, where snippet is
-     *     the text parts of Gaia's snippet (see snippetParts); results are empty
-     *     for a query shorter than MIN_QUERY_LENGTH, which Gaia would refuse
+     * @return {Promise<Array>} `[{ issue, snippet, pinned }]`, where snippet is the text parts of Gaia's snippet
+     *     (see snippetParts); empty for a query shorter than MIN_QUERY_LENGTH, which Gaia would refuse
      */
     async issues(query, limit = 10) {
         let text = String(query ?? '').trim();
         if (text.length < SearchService.MIN_QUERY_LENGTH) {
-            return { results: [], semanticUnavailable: false };
+            return [];
         }
 
         let params = new URLSearchParams({ types: 'issue', q: text, limit });
@@ -66,11 +65,10 @@ export default class SearchService extends Service {
             throw new Error(`Search failed: ${response.status}`);
         }
         let body = await waitForPromise(response.json());
-        let semanticUnavailable = body.meta?.semantic === 'unavailable';
         let found = (body.data ?? []).map(({ attributes }) => attributes);
         let ids = found.map((match) => match.recordId);
         if (!ids.length) {
-            return { results: [], semanticUnavailable };
+            return [];
         }
 
         let issues = await this.store.query('issue', {
@@ -81,13 +79,12 @@ export default class SearchService extends Service {
         let byId = new Map(issues.slice().map((issue) => [String(issue.id), issue]));
 
         // Keep the search's ranking; a match the issue query did not return is dropped
-        let results = found
+        return found
             .filter((match) => byId.has(String(match.recordId)))
             .map((match) => ({
                 issue: byId.get(String(match.recordId)),
                 snippet: snippetParts(match.snippet),
                 pinned: match.pinned
             }));
-        return { results, semanticUnavailable };
     }
 }

@@ -14,7 +14,7 @@ module('Unit | Service | search', function (hooks) {
         window.fetch = realFetch;
     });
 
-    function stubStore(context, { matches, meta = { semantic: 'ok' }, issues = [] }) {
+    function stubStore(context, { matches, issues = [] }) {
         const calls = [];
         context.owner.register('service:session', class extends Service {
             data = { authenticated: { access_token: 'tok' } };
@@ -30,7 +30,7 @@ module('Unit | Service | search', function (hooks) {
             fetches.push({ url: String(url), options });
             return Promise.resolve(new Response(JSON.stringify({
                 data: matches.map((attributes) => ({ type: 'searchresult', id: `issue:${attributes.recordId}`, attributes })),
-                meta
+                meta: { semantic: 'ok' }
             })));
         };
         calls.fetches = fetches;
@@ -40,7 +40,7 @@ module('Unit | Service | search', function (hooks) {
     test('a query shorter than 2 characters sends no request', async function (assert) {
         const calls = stubStore(this, { matches: [] });
         const found = await this.owner.lookup('service:search').issues(' a ');
-        assert.deepEqual(found, { results: [], semanticUnavailable: false });
+        assert.deepEqual(found, []);
         assert.strictEqual(calls.fetches.length, 0, 'Gaia would refuse it');
     });
 
@@ -63,17 +63,16 @@ module('Unit | Service | search', function (hooks) {
         assert.strictEqual(calls[0].model, 'issue');
         assert.strictEqual(calls[0].params.query, "(Issue.id CONTAINS 'b','a','gone')");
         assert.strictEqual(calls[0].params.rels, 'project');
-        assert.deepEqual(found.results.map((r) => r.issue.id), ['b', 'a'], 'ranked order; the unread id is dropped');
-        assert.deepEqual(found.results[0].snippet, [{ text: 'two', match: true }]);
-        assert.true(found.results[0].pinned);
-        assert.false(found.semanticUnavailable);
+        assert.deepEqual(found.map((r) => r.issue.id), ['b', 'a'], 'ranked order; the unread id is dropped');
+        assert.deepEqual(found[0].snippet, [{ text: 'two', match: true }]);
+        assert.true(found[0].pinned);
     });
 
-    test('reports semantic matching as unavailable', async function (assert) {
-        stubStore(this, { matches: [], meta: { semantic: 'unavailable' } });
+    test('a search with no matches skips the issue query', async function (assert) {
+        const calls = stubStore(this, { matches: [] });
         const found = await this.owner.lookup('service:search').issues('login');
-        assert.true(found.semanticUnavailable);
-        assert.deepEqual(found.results, []);
+        assert.deepEqual(found, []);
+        assert.strictEqual(calls.length, 0, 'no issue query');
     });
 
     test('a failed search rejects', async function (assert) {

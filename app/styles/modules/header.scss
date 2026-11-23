@@ -190,7 +190,7 @@
   }
 }
 
-/* Global search options and note: the list renders at the document root, outside .global-search, so its
+/* Global search options: the list renders at the document root, outside .global-search, so its
    rules are scoped under the dropdown's own class. */
 .global-search-dropdown {
   .global-search-snippet {
@@ -215,12 +215,6 @@
     mark {
       background-color: rgba($backgroundColor, 0.3);
     }
-  }
-
-  .global-search-note {
-    padding: 0.8rem 1.2rem;
-    border-top: 1px solid $mediumColor;
-    color: $mediumColor;
   }
 }
 

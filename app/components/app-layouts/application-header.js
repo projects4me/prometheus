@@ -78,16 +78,6 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @service('sign-in-control') signInControl;
     
     /**
-     * True when the last global search ran without matching by meaning (Ares could not embed the query)
-     *
-     * @property semanticUnavailable
-     * @type Boolean
-     * @for ApplicationHeader
-     * @public
-     */
-    @tracked semanticUnavailable = false;
-
-    /**
      * True when the last global search failed; the dropdown says so instead of "no results"
      *
      * @property searchFailed
@@ -173,9 +163,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
             return [];
         }
         this.searchFailed = found === null;
-        this.semanticUnavailable = found?.semanticUnavailable ?? false;
-        const results = found?.results ?? [];
-        return results.map(({ issue, snippet, pinned }) => ({
+        return (found ?? []).map(({ issue, snippet, pinned }) => ({
             id: issue.id,
             name: issue.subject,
             number: issue.issueNumber,

@@ -167,10 +167,9 @@ module('Integration | Component | application-header search task', function (hoo
         assert.strictEqual(snippet.querySelector('mark').textContent, 'beta', 'the match is marked');
         assert.dom('[data-test-global-search-snippet] b').doesNotExist('record HTML is never rendered');
         assert.dom('.global-search-dropdown [data-test-global-search-snippet]').exists('the options sit in the scoped dropdown');
-        assert.dom('[data-test-global-search-note]').doesNotExist('no note while semantic matching works');
     });
 
-    test('says when matching by meaning is unavailable', async function (assert) {
+    test('lists the word matches without a note when matching by meaning is unavailable', async function (assert) {
         serveSearch(this.server, { semantic: 'unavailable' });
 
         await render(hbs`<AppLayouts::ApplicationHeader />`);
@@ -178,8 +177,9 @@ module('Integration | Component | application-header search task', function (hoo
         await typeInSelectSearch('beta');
         await settled();
 
-        assert.dom('[data-test-global-search-note]').hasText('Matching by meaning is unavailable; showing word matches only.');
-        assert.dom('.global-search-dropdown [data-test-global-search-note]').exists('the note sits in the scoped dropdown');
+        assert.dom('[data-test-global-search-option]').exists({ count: 2 }, 'the results are listed');
+        assert.dom('[data-test-global-search-note]').doesNotExist('no note element');
+        assert.dom('.global-search-dropdown').doesNotIncludeText('word matches', 'no note about matching by meaning');
     });
 
     test('a failed search says so instead of no results', async function (assert) {
