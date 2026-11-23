@@ -15,6 +15,11 @@ export function register(server, ctx) {
             // The issues a person has in a project, as the Remove member dialog asks for them
             return paginate(schema.issues.where((issue) => String(issue.assignee) === assigneeMatch[1] && String(issue.projectId) === assigneeMatch[2]), request.queryParams);
         }
+        let idOrList = [...(issueQuery || '').matchAll(/\(Issue\.id : (\d+)\)/g)].map((found) => found[1]);
+        if (request.queryParams.rels === 'assignedTo' && idOrList.length) {
+            // The linked-issues box reads the assignees of a level of issues by id
+            return schema.issues.where((issue) => idOrList.includes(String(issue.id)));
+        }
         let field = ctx.get('fieldSearched');
         field = field ? field : 'Issue.issueNumber';
         let value = getValueFromQuery(field, issueQuery);

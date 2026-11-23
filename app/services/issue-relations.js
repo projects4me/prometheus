@@ -59,6 +59,7 @@ export default class IssueRelationsService extends Service {
 	async load(issue) {
 		let names = [...Object.keys(RELATIONS), 'relates'];
 		let groups = await Promise.all(names.map((relation) => this._rows(issue, relation, 1, null, [String(issue.id)])));
+		await this._loadAssignees(groups.flat());
 		return Object.fromEntries(names.map((relation, index) => [relation, groups[index]]));
 	}
 
@@ -74,7 +75,27 @@ export default class IssueRelationsService extends Service {
 		if (row.relation === 'relates') {
 			return [];
 		}
-		return this._rows(row.issue, row.relation, row.depth + 1, row.issue, row.path);
+		let rows = await this._rows(row.issue, row.relation, row.depth + 1, row.issue, row.path);
+		await this._loadAssignees(rows);
+		return rows;
+	}
+
+	/**
+	 * Loads the assignees of the issues of a level of rows in one query. Issues without an assignee and issues whose
+	 * assignee is already loaded are left out.
+	 *
+	 * @method _loadAssignees
+	 * @private
+	 */
+	async _loadAssignees(rows) {
+		let issues = [...new Map(rows.map(({ issue }) => [String(issue.id), issue])).values()].filter(
+			(issue) => issue.assignee && !issue.belongsTo('assignedTo').value()
+		);
+		if (!issues.length) {
+			return;
+		}
+		let query = issues.map((issue) => `(Issue.id : ${issue.id})`).join(' OR ');
+		await this.store.query('issue', { query: `(${query})`, rels: 'assignedTo', limit: issues.length });
 	}
 
 	/**

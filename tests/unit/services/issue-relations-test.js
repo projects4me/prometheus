@@ -6,16 +6,25 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { Response } from 'miragejs';
+import Context from '../../../mirage/yadda-context/context';
 
 module('Unit | Service | issue-relations', function (hooks) {
     setupTest(hooks);
     setupMirage(hooks);
 
     hooks.beforeEach(function () {
+        // Acceptance steps leave custom callbacks in the shared Mirage context; the handlers below must not see them
+        new Context().clear();
         this.service = this.owner.lookup('service:issue-relations');
         this.store = this.owner.lookup('service:store');
         // Mirage's list handler does not filter issues; answer the children query the way Gaia does
+        this.assigneeQueries = [];
         this.server.get('/issue', (schema, request) => {
+            if (request.queryParams.rels === 'assignedTo') {
+                this.assigneeQueries.push(request.queryParams.query);
+                let ids = [...request.queryParams.query.matchAll(/Issue\.id : (\w+)/g)].map((found) => found[1]);
+                return schema.issues.where((issue) => ids.includes(String(issue.id)));
+            }
             let parentId = /Issue\.parentId : (\w+)/.exec(request.queryParams.query)[1];
             return schema.issues.where((issue) => String(issue.parentId) === parentId);
         });
@@ -26,6 +35,38 @@ module('Unit | Service | issue-relations', function (hooks) {
         this.link = (type, source, target) => this.server.create('issuelink', { type, sourceIssueId: source.id, targetIssueId: target.id });
         this.open = (mirageIssue) => this.store.findRecord('issue', mirageIssue.id);
         this.ids = (rows) => rows.map((row) => row.issue.id).sort();
+    });
+
+    test('load resolves the assignee of every row with one assignee query per level', async function (assert) {
+        let user = (name) => this.server.create('user', { name });
+        let withAssignee = (attrs = {}) => {
+            let assignedTo = user('Someone');
+            return this.issue({ assignee: assignedTo.id, assignedTo, ...attrs });
+        };
+        let main = this.issue();
+        let parent = withAssignee();
+        main.update({ parentId: parent.id, parentissue: parent });
+        let child = withAssignee({ parentId: main.id });
+        let blocker = withAssignee();
+        let blocked = withAssignee();
+        let blockedBlocked = withAssignee();
+        this.link('blocks', blocker, main);
+        this.link('blocks', main, blocked);
+        this.link('blocks', blocked, blockedBlocked);
+
+        let groups = await this.service.load(await this.open(main));
+        let rows = [...groups.parent, ...groups.children, ...groups.blockedBy, ...groups.blocks];
+        assert.strictEqual(rows.length, 4);
+        for (let row of rows) {
+            assert.ok(row.issue.belongsTo('assignedTo').value(), `${row.relation} row has its assignee loaded`);
+        }
+        assert.strictEqual(this.assigneeQueries.length, 1, 'one assignee query for the whole level');
+
+        let [next] = await this.service.loadNext(groups.blocks[0]);
+        assert.strictEqual(next.issue.id, blockedBlocked.id);
+        assert.ok(next.issue.belongsTo('assignedTo').value(), 'next-level row has its assignee loaded');
+        assert.strictEqual(this.assigneeQueries.length, 2, 'one more query for the next level');
+        assert.ok(child);
     });
 
     test('load returns empty groups for an issue without relations', async function (assert) {
