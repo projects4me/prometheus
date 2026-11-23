@@ -26,10 +26,18 @@
     </div>
   </div>
 
-  <div class="milestone box-body" data-field-milestone-id={{if this.milestone.id this.milestone.id "backlog"}}>
+  <div class="lane-status-bar" data-lane-status-bar aria-label={{t "views.app.board.laneStatusBar"}}>
+    {{#each @statuses as |status|}}
+      <button type="button" class="lane-status-chip {{if (eq status.name this.activeLane) "is-active"}}" data-lane-chip={{status.name}} {{on "click" (fn this.scrollToLane status.name)}}>
+        {{status-label status.name}} <span class="lane-status-chip-count">({{call (fn this.getIssuesCountForStatus status.name)}})</span>
+      </button>
+    {{/each}}
+  </div>
+
+  <div class="milestone box-body" data-field-milestone-id={{if this.milestone.id this.milestone.id "backlog"}} {{observe-active-lane this.setActiveLane}}>
     {{#each @statuses as |status|}}
       {{#let (includes status.name this.collapsedLanes) as |collapsed|}}
-      <div class="lane {{if collapsed "lane-collapsed"}}">
+      <div class="lane {{if collapsed "lane-collapsed"}}" data-lane-name={{status.name}}>
         
         <div class="box-header with-border box {{get-prop @statusClass status.name}}" style={{if status.color (status-style status.name "border-top-color")}} data-field-status="{{status.name}}">
           <div class="flex-row flex-jc-sb flex-ai-c lane-header">

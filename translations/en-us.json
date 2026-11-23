@@ -1811,6 +1811,7 @@
         "expandBoard": "Expand board",
         "collapseLane": "Collapse lane",
         "expandLane": "Expand lane",
+        "laneStatusBar": "Jump to lane",
         "backlog": "Backlog",
         "move": {
           "title": "Move #{number}",

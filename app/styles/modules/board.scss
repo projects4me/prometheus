@@ -74,6 +74,37 @@
     padding: 0rem;
   }
 
+  .lane-status-bar {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .lane-status-bar {
+      display: flex;
+      overflow-x: auto;
+      border-bottom: 1px solid $backgroundColor;
+    }
+
+    .lane-status-chip {
+      flex: 0 0 auto;
+      padding: 0.5rem 1rem;
+      border: 1px solid $backgroundColor;
+      background: transparent;
+      border-radius: 0;
+      white-space: nowrap;
+
+      &.is-active {
+        border-color: $primaryColor;
+        color: $primaryColor;
+        font-weight: bold;
+      }
+    }
+
+    .milestone.box-body {
+      scroll-snap-type: x mandatory;
+    }
+  }
+
   .lane {
     height: inherit;
     width: 28rem;
@@ -156,6 +187,34 @@
 
       > .box-body {
         display: none;
+      }
+    }
+
+    // Phones: one lane in view, the next peeks in; the status bar replaces the headers
+    @media (max-width: 767px) {
+      &[data-lane-name] {
+        margin-right: 0;
+        flex: 0 0 90%;
+        width: 90%;
+        scroll-snap-align: start;
+      }
+
+      > .lane {
+        width: auto;
+        margin-right: 0;
+      }
+
+      > .box-header {
+        display: none;
+      }
+
+      &.lane-collapsed {
+        width: 90%;
+        flex: 0 0 90%;
+
+        > .box-body {
+          display: block;
+        }
       }
     }
   }
