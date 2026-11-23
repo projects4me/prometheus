@@ -77,6 +77,64 @@ body:has(dialog.app-modal[open]) {
   overflow: hidden;
 }
 
+// Phones: the modal is a sheet fixed to the bottom, about 80% of the screen high. The header and
+// footer stay put and only the body scrolls. A modal opened from another one is a later top-layer
+// dialog, so it stacks above the first with its own backdrop.
+@media (max-width: 767px) {
+  dialog.app-modal {
+    overflow: hidden;
+
+    .modal-dialog {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-width: none;
+      height: 80vh;
+      height: 80dvh;
+      margin: 0;
+      transform: translate(0, 100%);
+    }
+
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-radius: 0;
+    }
+
+    .modal-header,
+    .modal-footer {
+      flex: 0 0 auto;
+    }
+
+    .modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 5px;
+
+      .btn {
+        flex: 1 1 0;
+        float: none;
+        margin: 0;
+      }
+    }
+  }
+
+  @starting-style {
+    dialog.app-modal[open] .modal-dialog {
+      transform: translate(0, 100%);
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   dialog.app-modal,
   dialog.app-modal .modal-dialog,

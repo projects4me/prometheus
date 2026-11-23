@@ -45,6 +45,10 @@ It opens as soon as it is rendered. Keep the `{{#if this.showX}}` around it and 
 
 The dialog keeps Bootstrap's inner markup: `dialog.app-modal > .modal-dialog > .modal-content.box.box-primary > .modal-header / .modal-body / .modal-footer`, the header close icon and the `data-btn` hooks (`cancel`, `save` or `@dataSaveBtn`, `left`). The dialog does not carry Bootstrap's `.modal` class, which Bootstrap 3 hides. In acceptance steps use `MODAL`, `OPEN_MODAL` and `inModal()` from `tests/acceptance/steps/common-steps/modal-steps.js`.
 
+### Phones
+
+Below 768px (the design system's phone breakpoint) every modal is a sheet fixed to the bottom of the screen: full width, 80% of the screen high, no side margins and square edges. The header and footer stay in view, only `.modal-body` scrolls, and the footer buttons share the width. A modal opened from another one stacks above it with its own backdrop; closing it returns to the first. Desktop is unchanged, and `prefers-reduced-motion` still turns the slide off.
+
 ### Closing
 
 - Esc goes through the dialog's `cancel` event and the same close path as Cancel; it is ignored while busy.
