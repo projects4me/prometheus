@@ -91,6 +91,16 @@ module('Integration | Component | ez-search/panel', function (hooks) {
         assert.ok(isGroup(withGroup.children[0]));
     });
 
+    test('the add buttons sit in the group footer, + Condition as the primary action', async function (assert) {
+        this.tree = group('AND', [], 'g1');
+        await show(this);
+
+        assert.dom('.ez-search-group-header [data-ez-add-condition]').doesNotExist();
+        assert.dom('.ez-search-group-footer [data-ez-add-condition]').hasClass('btn-primary');
+        assert.dom('.ez-search-group-footer [data-ez-add-group]').hasClass('btn-default');
+        assert.dom('.ez-search-group-header [data-ez-conjunction]').exists({ count: 2 });
+    });
+
     test('removing a condition and a group', async function (assert) {
         await show(this);
         await click('[data-ez-condition="c1"] [data-ez-remove-condition]');

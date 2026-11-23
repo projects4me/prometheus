@@ -31,6 +31,16 @@
     }
   }
 
+  .ez-search-group-footer {
+    border-top: 1px solid $borderColor;
+    margin-top: 8px;
+    padding-top: 8px;
+
+    .btn {
+      border-radius: 0;
+    }
+  }
+
   .ez-search-group .ez-search-group {
     margin-left: 20px;
     margin-bottom: 0;

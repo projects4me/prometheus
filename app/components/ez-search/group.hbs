@@ -10,12 +10,6 @@
         >{{conjunction}}</button>
       {{/each}}
     </div>
-    <button type="button" class="btn btn-default btn-xs" data-ez-add-condition {{on "click" this.addCondition}}>
-      <i class="fa fa-plus"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.condition"}}</span>
-    </button>
-    <button type="button" class="btn btn-default btn-xs" data-ez-add-group {{on "click" this.addGroup}}>
-      <i class="fa fa-sitemap"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.group"}}</span>
-    </button>
     {{#unless @isRoot}}
       <button type="button" class="btn btn-box-tool pull-right" data-ez-remove-group title={{t "components.ezSearch.panel.removeGroup"}} {{on "click" this.removeGroup}}>
         <i class="fa fa-times"></i>
@@ -42,5 +36,13 @@
         />
       {{/if}}
     {{/each}}
+  </div>
+  <div class="ez-search-group-footer">
+      <button type="button" class="btn btn-primary btn-xs" data-ez-add-condition {{on "click" this.addCondition}}>
+        <i class="fa fa-plus"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.condition"}}</span>
+      </button>
+      <button type="button" class="btn btn-default btn-xs" data-ez-add-group {{on "click" this.addGroup}}>
+        <i class="fa fa-sitemap"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.group"}}</span>
+      </button>
   </div>
 </div>
