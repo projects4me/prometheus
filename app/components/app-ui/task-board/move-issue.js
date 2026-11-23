@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The Move modal of a board card: change the status, assignee and milestone of an issue from full-width
@@ -113,7 +114,7 @@ export default class AppUiTaskBoardMoveIssueComponent extends Component {
     get assigneeMember() {
         let id = this.selectedAssigneeId;
 
-        return (this.args.members ?? []).find((member) => String(member.id) === String(id)) ?? null;
+        return toArray(this.args.members).find((member) => String(member.id) === String(id)) ?? null;
     }
 
     get selectedMilestoneId() {
@@ -172,7 +173,7 @@ export default class AppUiTaskBoardMoveIssueComponent extends Component {
      */
     get pickerRows() {
         let isAssignee = this.picker === 'assignee';
-        let items = (isAssignee ? this.args.members : this.args.milestones) ?? [];
+        let items = toArray(isAssignee ? this.args.members : this.args.milestones);
         let term = this.query.trim().toLowerCase();
         let selected = isAssignee ? String(this.selectedAssigneeId ?? '') : this.selectedMilestoneId;
 
