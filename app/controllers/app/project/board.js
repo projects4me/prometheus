@@ -529,12 +529,7 @@ export default class AppProjectBoardController extends ProjectRelated {
             return;
         }
 
-        if (milestone && milestone !== targetMilestone) {
-            removeRecord(milestone.issues, issue);
-        }
-        if (!targetMilestone.issues.includes(issue)) {
-            pushRecords(targetMilestone.issues, [issue]);
-        }
+        this.moveIssueBetweenMilestones(issue, milestone, targetMilestone);
 
         issue.set('status', status);
         issue.set('milestoneId', laneMilestoneId);
@@ -543,6 +538,71 @@ export default class AppProjectBoardController extends ProjectRelated {
             _self.postUpdateProcessing(issueId, elTo, elFrom);
         });
         Logger.debug("-AppProjectBoardController::updateIssue");
+    }
+
+    /**
+     * Moves an issue from one milestone's issue list to another's. Lists only; the issue is not saved.
+     *
+     * @method moveIssueBetweenMilestones
+     * @param {Object} issue The issue to move
+     * @param {Object|null} fromMilestone The milestone the issue is listed in
+     * @param {Object} targetMilestone The milestone to list it in
+     * @private
+     */
+    moveIssueBetweenMilestones(issue, fromMilestone, targetMilestone) {
+        if (fromMilestone && fromMilestone !== targetMilestone) {
+            removeRecord(fromMilestone.issues, issue);
+        }
+        if (!targetMilestone.issues.includes(issue)) {
+            pushRecords(targetMilestone.issues, [issue]);
+        }
+    }
+
+    /**
+     * Applies the Move modal's changes to an issue and saves it once. Resolving closes the modal; a failed
+     * save rolls the issue and the milestone lists back and keeps the modal open.
+     *
+     * @method moveIssue
+     * @param {Object} issue The issue being moved
+     * @param {Object} changes Only the changed fields: statusId and status, assignee, milestoneId
+     * @returns {Promise<Boolean>} false when the save failed
+     * @public
+     */
+    @action async moveIssue(issue, changes) {
+        Logger.debug("AppProjectBoardController::moveIssue");
+        let fromMilestone = this.findMilestoneById(issue.milestoneId);
+        let targetMilestone = fromMilestone;
+
+        if ('milestoneId' in changes) {
+            let milestoneId = changes.milestoneId || null;
+            targetMilestone = this.findMilestoneById(milestoneId);
+            if (!targetMilestone) {
+                Logger.error('AppProjectBoardController::moveIssue - missing target milestone');
+                return false;
+            }
+            this.moveIssueBetweenMilestones(issue, fromMilestone, targetMilestone);
+            issue.set('milestoneId', milestoneId);
+        }
+        if ('statusId' in changes) {
+            issue.set('status', changes.status);
+            issue.set('statusId', changes.statusId);
+        }
+        if ('assignee' in changes) {
+            issue.set('assignee', changes.assignee);
+        }
+
+        try {
+            await issue.save();
+        } catch {
+            issue.rollbackAttributes();
+            if (targetMilestone && targetMilestone !== fromMilestone) {
+                this.moveIssueBetweenMilestones(issue, targetMilestone, fromMilestone);
+            }
+            this.notify('error', this.intl.t('views.app.board.move.failed', { number: issue.issueNumber, htmlSafe: true }));
+            return false;
+        }
+        this.notify('success', this.intl.t('views.app.issue.updated', { issueNumber: issue.issueNumber, name: issue.subject, htmlSafe: true }));
+        return true;
     }
 
     /**

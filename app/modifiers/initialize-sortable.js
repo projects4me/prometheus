@@ -686,7 +686,7 @@ export default class InitializeSortable extends Modifier {
             delayOnTouchOnly: true,
             touchStartThreshold: FALLBACK_TOLERANCE,
             animation: _self.animationSpeed,
-            filter: '[data-issue-assignee-dropdown]',
+            filter: '[data-issue-assignee-dropdown], [data-issue-move]',
             preventOnFilter: false,
             dragClass: _self.dragClass,
             chosenClass: _self.chosenClass,

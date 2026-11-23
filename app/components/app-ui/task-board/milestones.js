@@ -24,6 +24,52 @@ const TIME_LEFT_HIDDEN_STATUSES = ['done', 'deferred', 'wont_fix'];
  */
 export default class TaskBoardMilestonesComponent extends AppComponent {
 	/**
+	 * The issue whose Move modal is open, or null
+	 *
+	 * @property movingIssue
+	 * @type Object
+	 * @private
+	 */
+	@tracked movingIssue = null;
+
+	/**
+	 * Opens the Move modal for an issue
+	 *
+	 * @method openMoveIssue
+	 * @param {Object} issue
+	 * @public
+	 */
+	@action openMoveIssue(issue) {
+		this.movingIssue = issue;
+	}
+
+	/**
+	 * Closes the Move modal
+	 *
+	 * @method closeMoveIssue
+	 * @public
+	 */
+	@action closeMoveIssue() {
+		this.movingIssue = null;
+	}
+
+	/**
+	 * Hands the Move modal's changes to the board; the modal stays open when the save fails
+	 *
+	 * @method saveMoveIssue
+	 * @param {Object} changes Only the changed fields
+	 * @returns {Promise<Boolean>}
+	 * @public
+	 */
+	@action async saveMoveIssue(changes) {
+		let saved = await this.args.moveIssue(this.movingIssue, changes);
+		if (saved && !this.isDestroying && !this.isDestroyed) {
+			this.movingIssue = null;
+		}
+		return saved;
+	}
+
+	/**
 	 * This flag is used to show or hide the modal dialog box
 	 * for adding issues
 	 *
