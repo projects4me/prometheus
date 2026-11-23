@@ -17,7 +17,9 @@
     "isExpandable": { "type": "function", "required": false, "description": "Tree rows: (record) => whether the row shows a caret button" },
     "expandedIds": { "type": "array", "required": false, "default": [], "description": "Tree rows: the ids of the open rows, kept by the owner" },
     "loadingIds": { "type": "array", "required": false, "default": [], "description": "Tree rows: the ids of the rows loading their next level, kept by the owner; they show a spinner in place of the caret" },
-    "currentId": { "type": "string", "required": false, "description": "Tree rows: the id of the pinned current row (class data-table-row--current, no caret, no row actions)" }
+    "currentId": { "type": "string", "required": false, "description": "Tree rows: the id of the pinned current row (class data-table-row--current, no caret, no row actions)" },
+    "hideHeader": { "type": "boolean", "required": false, "default": false, "description": "Leaves out the header row" },
+    "hasMoreActions": { "type": "function", "required": false, "description": "(record) => whether the row shows the moreActions menu; without it every row does" }
   },
   "events": {
     "onSelectAll": {

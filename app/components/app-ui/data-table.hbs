@@ -1,5 +1,6 @@
 <div class="table-responsive list-view app-ui-data-table" data-test-data-table ...attributes>
   <table class="table table-hover">
+    {{#unless @hideHeader}}
     <thead>
       <tr>
         {{#if @selectable}}
@@ -24,6 +25,7 @@
         {{/if}}
       </tr>
     </thead>
+    {{/unless}}
     <tbody>
       {{#if this.rows.length}}
         {{#each this.sections as |section|}}
@@ -82,7 +84,7 @@
                     <td class="actions" data-test-data-table-actions>
                       {{#unless current}}
                         {{yield record to="rowActions"}}
-                        {{#if (has-block "moreActions")}}
+                        {{#if (and (has-block "moreActions") (this.hasMore record))}}
                           <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
                             <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
                             <:content>{{yield record to="moreActions"}}</:content>

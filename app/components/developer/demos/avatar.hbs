@@ -9,9 +9,7 @@
           {{/each}}
         </select>
       </label>
-      <label>
-        <input type="checkbox" data-demo-avatar-fails checked={{this.imageFails}} {{on "change" this.toggleImageFails}}> Image fails
-      </label>
+      <FormFields::FieldCheckbox @label="Image fails" @checked={{this.imageFails}} @select={{this.toggleImageFails}} data-demo-avatar-fails />
     </div>
     <table class="table table-condensed" data-demo-avatar>
       <thead>

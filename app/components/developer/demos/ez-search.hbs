@@ -55,9 +55,7 @@
       <label>@query</label>
       <Developer::StateSwitch @states={{this.presets}} @value={{this.preset}} @onChange={{this.setPreset}} />
     </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-ez-demo-base checked={{this.useBase}} {{on "change" this.toggleBase}} /> @baseQuery</label>
-    </div>
+    <FormFields::FieldCheckbox @label="&#64;baseQuery" @checked={{this.useBase}} @select={{this.toggleBase}} data-ez-demo-base />
     <div class="form-group" data-ez-demo-active>
       <label>@activeSavedSearchId</label>
       <Developer::StateSwitch @states={{this.activeOptions}} @value={{this.activeKey}} @onChange={{this.setActive}} />

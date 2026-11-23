@@ -76,9 +76,7 @@
         {{/each}}
       </select>
     </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-empty checked={{this.empty}} {{on "change" this.toggleEmpty}}> Empty</label>
-    </div>
+    <FormFields::FieldCheckbox @label="Empty" @checked={{this.empty}} @select={{this.toggleEmpty}} data-control-empty />
   </:controls>
   <:docs>
     <Developer::Docs @doc={{@entry.doc}} />
