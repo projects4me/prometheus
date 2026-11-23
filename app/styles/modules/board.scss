@@ -117,10 +117,12 @@
 
     .lane-header {
       gap: 0.5rem;
+      height: 100%;
     }
 
     .lane-title {
       flex: 1;
+      line-height: 1;
     }
 
     @media (max-width: 767px) {
