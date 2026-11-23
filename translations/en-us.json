@@ -1807,6 +1807,7 @@
       },
       "board": {
         "taskBoard": "Task Board",
+        "quickView": "Issue details",
         "collapseBoard": "Collapse board",
         "expandBoard": "Expand board",
         "collapseLane": "Collapse lane",

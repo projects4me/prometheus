@@ -466,6 +466,26 @@ export default class AppProjectBoardController extends ProjectRelated {
     @tracked isBoardCollapsed = false;
 
     /**
+     * True when the quick view was opened on a phone (viewport below 768px) and so shows in
+     * AppUi::Modal instead of the side panel. Set in selectIssue, reset in closeIssueDetails.
+     *
+     * @property quickViewAsModal
+     * @type Boolean
+     * @default false
+     */
+    @tracked quickViewAsModal = false;
+
+    /**
+     * Whether the viewport is below the 768px desktop breakpoint. The single place for this check.
+     *
+     * @method isPhoneViewport
+     * @return {Boolean}
+     */
+    isPhoneViewport() {
+        return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    /**
      * The project data loaded for the selected issue
      *
      * @property projectData
@@ -1079,6 +1099,7 @@ export default class AppProjectBoardController extends ProjectRelated {
      */
     @action async selectIssue(issue) {
         Logger.debug("AppProjectBoardController::selectIssue");
+        this.quickViewAsModal = this.isPhoneViewport();
         this.selectedIssue = issue;
         this.isLoadingIssueDetails = true;
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -1099,6 +1120,7 @@ export default class AppProjectBoardController extends ProjectRelated {
         this.selectedIssueDetails = null;
         this.isLoadingIssueDetails = false;
         this.isBoardCollapsed = false;
+        this.quickViewAsModal = false;
         Logger.debug("-AppProjectBoardController::closeIssueDetails");
     }
 
@@ -1110,7 +1132,17 @@ export default class AppProjectBoardController extends ProjectRelated {
      * @for Board
      */
     get boardColumnClass() {
-        return `board-column col-md-${this.selectedIssue ? '8' : '12'}`;
+        return `board-column col-md-${this.selectedIssue && !this.quickViewAsModal ? '8' : '12'}`;
+    }
+
+    /**
+     * Whether the board panel is shown: hidden only when the side panel has collapsed it.
+     *
+     * @property showBoard
+     * @type Boolean
+     */
+    get showBoard() {
+        return !(this.selectedIssue && this.isBoardCollapsed && !this.quickViewAsModal);
     }
 
     /**
