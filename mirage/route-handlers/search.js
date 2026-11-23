@@ -1,7 +1,7 @@
 /**
  * Answers Gaia's ranked search (`GET /search?types=issue&q=...&limit=n`) for issues: an issue whose number equals
  * the query is pinned first, then the issues whose subject or description contains it, case-insensitively. Gaia's
- * semantic matching is not modelled; set `searchSemanticUnavailable` in the context to report it as unavailable.
+ * semantic matching is not modelled.
  * Every request's query params are logged in the context as `searchRequests`.
  */
 export function register(server, ctx) {
@@ -40,7 +40,7 @@ export function register(server, ctx) {
 			meta: {
 				query: params.q,
 				types: String(params.types || '').split(','),
-				semantic: ctx.get('searchSemanticUnavailable') ? 'unavailable' : 'ok'
+				semantic: 'ok'
 			}
 		};
 	});

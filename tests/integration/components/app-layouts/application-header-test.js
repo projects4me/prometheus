@@ -140,6 +140,18 @@ module('Integration | Component | application-header search task', function (hoo
         assert.strictEqual(searches.length, 0, 'Gaia refuses queries under 2 characters');
     });
 
+    test('settled() waits for a slow search response', async function (assert) {
+        serveSearch(this.server);
+        this.server.timing = 200;
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('beta');
+        await settled();
+
+        assert.dom('[data-test-global-search-option]').exists({ count: 2 }, 'the results are there once settled');
+    });
+
     test('options follow the search ranking and show the snippet matches as text', async function (assert) {
         serveSearch(this.server, { snippet: '&lt;b&gt;the <mark>beta</mark> page&lt;/b&gt;' });
 
@@ -154,10 +166,10 @@ module('Integration | Component | application-header search task', function (hoo
         assert.strictEqual(snippet.textContent.trim(), 'the beta page', 'record tags are dropped');
         assert.strictEqual(snippet.querySelector('mark').textContent, 'beta', 'the match is marked');
         assert.dom('[data-test-global-search-snippet] b').doesNotExist('record HTML is never rendered');
-        assert.dom('[data-test-global-search-note]').doesNotExist('no note while semantic matching works');
+        assert.dom('.global-search-dropdown [data-test-global-search-snippet]').exists('the options sit in the scoped dropdown');
     });
 
-    test('says when matching by meaning is unavailable', async function (assert) {
+    test('lists the word matches without a note when matching by meaning is unavailable', async function (assert) {
         serveSearch(this.server, { semantic: 'unavailable' });
 
         await render(hbs`<AppLayouts::ApplicationHeader />`);
@@ -165,11 +177,25 @@ module('Integration | Component | application-header search task', function (hoo
         await typeInSelectSearch('beta');
         await settled();
 
-        assert.dom('[data-test-global-search-note]').hasText('Matching by meaning is unavailable; showing word matches only.');
+        assert.dom('[data-test-global-search-option]').exists({ count: 2 }, 'the results are listed');
+        assert.dom('[data-test-global-search-note]').doesNotExist('no note element');
+        assert.dom('.global-search-dropdown').doesNotIncludeText('word matches', 'no note about matching by meaning');
     });
 
     test('a failed search says so instead of no results', async function (assert) {
         this.server.get('/search', () => new Response(500, {}, { error: 'down' }));
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await openSelect('.global-search');
+        await typeInSelectSearch('beta');
+        await settled();
+
+        assert.dom(noMatchesSelector()).hasText('Search failed. Try again.');
+    });
+
+    test('settled() waits for a slow failed search', async function (assert) {
+        this.server.get('/search', () => new Response(500, {}, { error: 'down' }));
+        this.server.timing = 200;
 
         await render(hbs`<AppLayouts::ApplicationHeader />`);
         await openSelect('.global-search');

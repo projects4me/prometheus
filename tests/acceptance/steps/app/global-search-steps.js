@@ -19,12 +19,6 @@ export const given = function () {
                 ctx.set('currentProject', project);
                 assert.ok(true, `there are ${issuesCount} issues in the application`);
             }
-        },
-        {
-            "the search cannot match by meaning": (assert, ctx) => async function () {
-                ctx.set('searchSemanticUnavailable', true);
-                assert.ok(true, 'the search reports semantic matching as unavailable');
-            }
         }
     ];
 }
@@ -69,11 +63,6 @@ export const then = function () {
                 assert.ok(options[0].endsWith(`- ${subject}`), `the option is ${subject}`);
                 let search = (ctx.get('searchRequests') || []).at(-1);
                 assert.equal(search?.q, subject, 'the header asked the search API');
-            }
-        },
-        {
-            "the global search says only word matches are shown": (assert) => async function () {
-                assert.dom('[data-test-global-search-note]').exists('the note is shown under the options');
             }
         }
     ];

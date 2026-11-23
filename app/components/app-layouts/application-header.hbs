@@ -19,7 +19,7 @@
       @searchEnabled={{true}}
       @search={{perform this.search}}
       @noMatchesMessage={{if this.searchFailed (t "views.app.application.header.searchFailed")}}
-      @afterOptionsComponent={{if this.semanticUnavailable (component "app-layouts/global-search-note")}}
+      @dropdownClass="global-search-dropdown"
       @onChange={{this.itemSelected}} as |issue|>
       <span data-test-global-search-option={{issue.number}}>
         <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
