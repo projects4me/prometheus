@@ -21,7 +21,7 @@
   />
 
   {{#if this.showMenu}}
-    <ul class="dropdown-menu ez-search-menu" role="listbox" data-ez-menu>
+    <ul class="dropdown-menu ez-search-menu {{if this.placement.end "ez-search-menu--end"}} {{if this.placement.up "ez-search-menu--up"}}" role="listbox" data-ez-menu {{place-menu ".ez-search-bar" this.onPlacement}}>
       {{#each this.items as |item|}}
         {{#if item.header}}
           <li class="dropdown-header">{{item.header}}</li>

@@ -31,6 +31,7 @@ export default class EzSearchSearchBarComponent extends Component {
     @tracked activeIndex = 0;
     @tracked cursor = 0;
     @tracked errors = [];
+    @tracked placement = { end: false, up: false };
 
     /**
      * Keep the parse errors of the text and report them with `@onErrors(errors)`.
@@ -236,6 +237,22 @@ export default class EzSearchSearchBarComponent extends Component {
         // a click without a preceding mousedown (assistive technology) has no pointer detail
         if (event.detail === 0) {
             this.pick(suggestion, event);
+        }
+    }
+
+    /**
+     * Keep where the menu opens, measured by `{{place-menu}}` when it opens and when the window resizes.
+     *
+     * @method onPlacement
+     * @param {Object} placement `{ end, up }`
+     */
+    @action
+    onPlacement(placement) {
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        if (placement.end !== this.placement.end || placement.up !== this.placement.up) {
+            this.placement = placement;
         }
     }
 

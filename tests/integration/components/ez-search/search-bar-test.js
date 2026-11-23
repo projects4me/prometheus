@@ -179,3 +179,71 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
         assert.strictEqual(this.runs, 0);
     });
 });
+
+module('Integration | Component | ez-search/search-bar placement', function (hooks) {
+    setupRenderingTest(hooks);
+
+    const originals = {};
+
+    function stubViewport(width, height) {
+        for (const [name, value] of [['innerWidth', width], ['innerHeight', height]]) {
+            Object.defineProperty(window, name, { configurable: true, get: () => value });
+        }
+    }
+
+    hooks.beforeEach(async function () {
+        this.owner.register('service:acl', AclStub);
+        this.schema = issueQuerySchema();
+        originals.width = window.innerWidth;
+        originals.height = window.innerHeight;
+        await render(hbs`<div data-test-spacer><EzSearch::SearchBar @tree={{null}} @schema={{this.schema}} @placeholder="Search" /></div>`);
+    });
+
+    hooks.afterEach(function () {
+        stubViewport(originals.width, originals.height);
+    });
+
+    async function openMenu() {
+        await focus(INPUT);
+        await fillIn(INPUT, '');
+    }
+
+    test('the menu has no placement class when there is room right and below', async function (assert) {
+        const rect = find('[data-ez-search-bar]').getBoundingClientRect();
+        stubViewport(rect.left + 5000, rect.bottom + 5000);
+        await openMenu();
+
+        assert.dom('[data-ez-menu]').doesNotHaveClass('ez-search-menu--end');
+        assert.dom('[data-ez-menu]').doesNotHaveClass('ez-search-menu--up');
+    });
+
+    test('the menu grows left when there is no room to the right', async function (assert) {
+        const rect = find('[data-ez-search-bar]').getBoundingClientRect();
+        stubViewport(rect.left + 100, rect.bottom + 5000);
+        await openMenu();
+
+        assert.dom('[data-ez-menu]').hasClass('ez-search-menu--end');
+        assert.dom('[data-ez-menu]').doesNotHaveClass('ez-search-menu--up');
+    });
+
+    test('the menu opens above when there is no room below', async function (assert) {
+        const rect = find('[data-ez-search-bar]').getBoundingClientRect();
+        stubViewport(rect.left + 5000, rect.bottom + 20);
+        await openMenu();
+
+        assert.dom('[data-ez-menu]').hasClass('ez-search-menu--up');
+        assert.dom('[data-ez-menu]').doesNotHaveClass('ez-search-menu--end');
+    });
+
+    test('the placement is measured again when the window resizes', async function (assert) {
+        const rect = find('[data-ez-search-bar]').getBoundingClientRect();
+        stubViewport(rect.left + 5000, rect.bottom + 5000);
+        await openMenu();
+        assert.dom('[data-ez-menu]').doesNotHaveClass('ez-search-menu--end');
+
+        stubViewport(rect.left + 100, rect.bottom + 5000);
+        window.dispatchEvent(new Event('resize'));
+        await settled();
+        assert.dom('[data-ez-menu]').hasClass('ez-search-menu--end');
+    });
+});

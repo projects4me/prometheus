@@ -57,11 +57,22 @@
     display: block;
     top: 100%;
     left: 0;
-    min-width: 100%;
+    min-width: max(32rem, 100%);
+    max-width: min(48rem, calc(100vw - 16px));
     max-height: 320px;
     overflow-y: auto;
     border-radius: 0;
     z-index: $ezSearchMenuZIndex;
+
+    &.ez-search-menu--end {
+      left: auto;
+      right: 0;
+    }
+
+    &.ez-search-menu--up {
+      top: auto;
+      bottom: 100%;
+    }
 
     .dropdown-header {
       text-transform: uppercase;
@@ -115,6 +126,8 @@
   @media (max-width: 767px) {
     .ez-search-menu {
       width: 100%;
+      min-width: 0;
+      max-width: none;
 
       .ez-search-hint {
         display: none;
