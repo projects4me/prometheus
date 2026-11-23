@@ -537,3 +537,77 @@
 
   }
 }
+
+// Move issue modal (AppUi::TaskBoard::MoveIssue); the picker modal renders inside it
+.board-move-issue {
+  .board-move-subject {
+    margin-bottom: 1.5rem;
+    word-break: break-word;
+  }
+
+  .board-move-label {
+    margin: 1.5rem 0 0.5rem;
+    color: $mediumColor;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .board-move-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .board-move-search {
+    margin-bottom: 1rem;
+  }
+
+  .board-move-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid $borderColor;
+    border-left: 3px solid transparent;
+    border-radius: 0;
+    background-color: $backgroundColor;
+    color: $darkColor;
+    text-align: left;
+
+    &:hover,
+    &:focus {
+      background-color: $borderColor;
+    }
+
+    &.is-current {
+      border-left-color: $primaryColor;
+    }
+
+    &.is-selected {
+      color: $primaryColor;
+    }
+
+    .board-move-name {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .board-move-current {
+      color: $mediumColor;
+      font-size: 0.85em;
+    }
+  }
+
+  li + li .board-move-row {
+    margin-top: -1px;
+  }
+
+  .board-move-dot {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+  }
+}

@@ -1809,6 +1809,15 @@
         "collapseBoard": "Collapse board",
         "expandBoard": "Expand board",
         "backlog": "Backlog",
+        "move": {
+          "title": "Move #{number}",
+          "status": "Status",
+          "assignee": "Assignee",
+          "milestone": "Milestone",
+          "current": "Current",
+          "pickAssignee": "Select assignee",
+          "pickMilestone": "Select milestone"
+        },
         "quickView": "Quick View",
         "hours": "h",
         "minutes": "m",

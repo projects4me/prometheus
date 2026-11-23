@@ -1,0 +1,53 @@
+<AppUi::Modal @title="views.app.board.move.title" @titleParams={{hash number=@issue.issueNumber}} @closeLabel="global.form.close" @confirmLabel="global.form.save" @confirm={{this.save}} @disableSaveBtn={{not this.hasChanges}} @onClose={{@onClose}} @containerClass="board-move-issue" data-test-move-issue>
+  <p class="board-move-subject"><strong>#{{@issue.issueNumber}}</strong> {{@issue.subject}}</p>
+
+  <section class="board-move-section" data-test-move-section="status">
+    <h5 class="board-move-label">{{t "views.app.board.move.status"}}</h5>
+    <ul class="board-move-list">
+      {{#each this.statusRows as |row|}}
+        <li>
+          <button type="button" class="board-move-row {{if row.isCurrent "is-current"}} {{if row.isSelected "is-selected"}}" data-test-move-status={{row.status.name}} aria-pressed={{if row.isSelected "true" "false"}} {{on "click" (fn this.selectStatus row.id)}}>
+            <span class="board-move-dot {{row.status.name}}"></span>
+            <span class="board-move-name">{{row.status.name}}</span>
+            {{#if row.isCurrent}}<span class="board-move-current" data-test-move-current>{{t "views.app.board.move.current"}}</span>{{/if}}
+            {{#if row.isSelected}}<i class="fa fa-check" aria-hidden="true"></i>{{/if}}
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="board-move-section" data-test-move-section="assignee">
+    <h5 class="board-move-label">{{t "views.app.board.move.assignee"}}</h5>
+    <button type="button" class="board-move-row" data-test-move-open="assignee" {{on "click" (fn this.openPicker "assignee")}}>
+      {{#if this.assigneeMember}}<AppUi::Avatar @user={{this.assigneeMember}} @size="s" />{{/if}}
+      <span class="board-move-name" data-test-move-value="assignee">{{this.assigneeMember.name}}</span>
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </section>
+
+  <section class="board-move-section" data-test-move-section="milestone">
+    <h5 class="board-move-label">{{t "views.app.board.move.milestone"}}</h5>
+    <button type="button" class="board-move-row" data-test-move-open="milestone" {{on "click" (fn this.openPicker "milestone")}}>
+      <span class="board-move-name" data-test-move-value="milestone">{{if this.selectedMilestone.id this.selectedMilestone.name (t "views.app.board.backlog")}}</span>
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </section>
+
+  {{#if this.picker}}
+    <AppUi::Modal @title={{if this.isAssigneePicker "views.app.board.move.pickAssignee" "views.app.board.move.pickMilestone"}} @closeLabel="global.form.close" @onClose={{this.closePicker}} @containerClass="board-move-picker" data-test-move-picker={{this.picker}}>
+      <input type="search" class="form-control board-move-search" placeholder={{t "global.form.search"}} aria-label={{t "global.form.search"}} value={{this.query}} {{on "input" this.search}} data-test-move-search>
+      <ul class="board-move-list">
+        {{#each this.pickerRows as |row|}}
+          <li>
+            <button type="button" class="board-move-row {{if row.isSelected "is-selected"}}" data-test-move-pick={{row.item.id}} {{on "click" (fn this.pick row.item)}}>
+              {{#if this.isAssigneePicker}}<AppUi::Avatar @user={{row.item}} @size="s" />{{/if}}
+              <span class="board-move-name">{{if row.isBacklog (t "views.app.board.backlog") row.item.name}}</span>
+              {{#if row.isSelected}}<i class="fa fa-check" aria-hidden="true"></i>{{/if}}
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+    </AppUi::Modal>
+  {{/if}}
+</AppUi::Modal>
