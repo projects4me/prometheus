@@ -22,6 +22,7 @@ In a form, use the FormFields fields, not `AppUi::Select`: they add the label, v
 | `@disabled` | boolean | `false` | Disables the select |
 | `@closeOnSelect` | boolean | `true` | Closes the list after a choice (set `false` for multiple) |
 | `@renderInPlace` | boolean | `false` | Renders the list next to the trigger instead of at the document root. Required inside `AppUi::Modal`, whose dialog sits in the top layer |
+| `@dropdownClass` | string | none | Class added to the dropdown content element, which holds the options and `@afterOptionsComponent`. The list renders at the document root, so use it to scope styles for the options |
 | `@afterOptionsComponent` | component | none | Rendered below the option list, e.g. a footer link. It receives `@select` (`@select.actions.close()` closes the list) |
 | `...attributes` | HTML attributes | none | Applied to the trigger, e.g. `class` or `data-test-*` hooks |
 

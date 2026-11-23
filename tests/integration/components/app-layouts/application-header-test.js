@@ -154,6 +154,7 @@ module('Integration | Component | application-header search task', function (hoo
         assert.strictEqual(snippet.textContent.trim(), 'the beta page', 'record tags are dropped');
         assert.strictEqual(snippet.querySelector('mark').textContent, 'beta', 'the match is marked');
         assert.dom('[data-test-global-search-snippet] b').doesNotExist('record HTML is never rendered');
+        assert.dom('.global-search-dropdown [data-test-global-search-snippet]').exists('the options sit in the scoped dropdown');
         assert.dom('[data-test-global-search-note]').doesNotExist('no note while semantic matching works');
     });
 
@@ -166,6 +167,7 @@ module('Integration | Component | application-header search task', function (hoo
         await settled();
 
         assert.dom('[data-test-global-search-note]').hasText('Matching by meaning is unavailable; showing word matches only.');
+        assert.dom('.global-search-dropdown [data-test-global-search-note]').exists('the note sits in the scoped dropdown');
     });
 
     test('a failed search says so instead of no results', async function (assert) {
