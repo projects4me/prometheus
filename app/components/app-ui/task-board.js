@@ -264,6 +264,36 @@ export default class TaskBoardComponent extends AppComponent {
 	}
 
 	/**
+	 * The milestone shown in the phone dropdown: the active one, else the first
+	 *
+	 * @property selectedMilestone
+	 * @type Object
+	 * @public
+	 */
+	get selectedMilestone() {
+		return this.activeMilestone || objectAt(this.args.milestones, 0);
+	}
+
+	/**
+	 * Phone dropdown change: shows the milestone by clicking its (hidden) tab, so the pane and
+	 * the active milestone follow the same path as a tab click
+	 *
+	 * @method selectMilestoneFromDropdown
+	 * @param {Object} milestone The chosen milestone
+	 * @public
+	 */
+	@action
+	selectMilestoneFromDropdown(milestone) {
+		let id = milestone.id ? milestone.id : 'backlog';
+		let link = document.querySelector(`[data-milestone-tab][data-milestone-id="${id}"] > a`);
+		if (link) {
+			link.click();
+		} else {
+			this.updateActiveMilestone(milestone);
+		}
+	}
+
+	/**
 	 * This action is triggered when the close milestone checkbox is clicked.
 	 * It opens the modal to close the active milestone.
 	 *

@@ -1856,6 +1856,7 @@
           "markComplete": {
             "title": "Mark milestone as complete",
             "confirm": "Mark as complete",
+            "short": "Complete",
             "message": "Are you sure you want to mark the milestone <strong>{milestoneName}</strong> as complete?",
             "details": "Milestone Details:",
             "totalIssues": "Total Issues: <strong>{count}</strong>",

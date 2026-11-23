@@ -88,4 +88,26 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.strictEqual(scrolls.length, 1, 'the board is asked to scroll once');
         assert.strictEqual(typeof scrolls[0].left, 'number', 'to the position of the lane');
     });
+
+    test('phone dropdown lists the milestones and switching shows that milestone', async function (assert) {
+        this.set('milestones', [
+            { id: null, name: 'Backlog', milestoneType: 'backlog', issues: [{ id: 1 }] },
+            { id: 5, name: 'Sprint 5', milestoneType: 'sprint', issues: [] }
+        ]);
+        this.set('statuses', []);
+        this.set('statusClass', {});
+        this.set('noop', () => 0);
+
+        await render(hbs`
+            <AppUi::TaskBoard @milestones={{this.milestones}} @statuses={{this.statuses}} @statusClass={{this.statusClass}} @selectIssue={{this.noop}} @getMilestoneProgress={{this.noop}} @getCompletedIssuesCount={{this.noop}} />
+        `);
+
+        assert.dom('[data-milestone-select-row] .milestone-mark-complete-mobile').doesNotExist('no Complete button for Backlog');
+        await click('[data-milestone-select-row] .ember-power-select-trigger');
+        let options = document.querySelectorAll('.ember-power-select-option');
+        assert.strictEqual(options.length, 2, 'one option per milestone');
+        await click(options[1]);
+        assert.dom('#tab_5').hasClass('active', 'the chosen milestone pane is shown');
+        assert.dom('[data-milestone-select-row] .milestone-mark-complete-mobile').exists('Complete button shows for a sprint');
+    });
 });
