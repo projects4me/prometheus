@@ -25,16 +25,6 @@ import { registerDestructor } from '@ember/destroyable';
  */
 export default class StickyBoardHeadersModifier extends Modifier {
 	/**
-	 * Height of the AdminLTE fixed navbar.  The sticky headers must clear
-	 * this so they do not slide under the navbar when floating.
-	 *
-	 * @property _navbarHeight
-	 * @type Number
-	 * @private
-	 */
-	_navbarHeight = 50;
-
-	/**
 	 * Bound reference to the window scroll handler so it can be removed on
 	 * destroy.
 	 *
@@ -43,6 +33,24 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	 * @private
 	 */
 	_scrollHandler = null;
+
+	/**
+	 * Pending animation frame id, so scroll events are coalesced to one update per frame.
+	 *
+	 * @property _frame
+	 * @type Number|null
+	 * @private
+	 */
+	_frame = null;
+
+	/**
+	 * Translate currently applied to the headers, to avoid redundant style writes.
+	 *
+	 * @property _applied
+	 * @type Number
+	 * @private
+	 */
+	_applied = 0;
 
 	/**
 	 * Removes the scroll listener when the modifier is torn down.
@@ -58,8 +66,7 @@ export default class StickyBoardHeadersModifier extends Modifier {
 
 	/**
 	 * Called when the modifier is first installed.
-	 * Resolves the navbar height dynamically (falls back to 50 px) and
-	 * attaches a passive window scroll listener.
+	 * Attaches a passive window scroll listener.
 	 *
 	 * @method modify
 	 * @param {Element} element
@@ -70,12 +77,14 @@ export default class StickyBoardHeadersModifier extends Modifier {
 		if (this._scrollHandler) {
 			return;
 		}
-		const navbar = document.querySelector('.main-header');
-		if (navbar) {
-			this._navbarHeight = navbar.offsetHeight;
-		}
-
-		this._scrollHandler = this._handleScroll.bind(this);
+		this._scrollHandler = () => {
+			if (this._frame === null) {
+				this._frame = requestAnimationFrame(() => {
+					this._frame = null;
+					this._handleScroll();
+				});
+			}
+		};
 		window.addEventListener('scroll', this._scrollHandler, { passive: true });
 	}
 
@@ -89,6 +98,10 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	_teardown() {
 		if (this._scrollHandler) {
 			window.removeEventListener('scroll', this._scrollHandler);
+		}
+		if (this._frame !== null) {
+			cancelAnimationFrame(this._frame);
+			this._frame = null;
 		}
 		this._resetHeaders();
 	}
@@ -121,24 +134,27 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	 */
 	_handleScroll() {
 		const boardBody = this.element.querySelector('.milestone.box-body');
-		if (!boardBody) return;
+		const headers = this._getHeaders();
+		if (!boardBody || !headers.length) return;
 
+		// Read the navbar's real bottom edge each frame so a changed or late-rendered navbar can't leave a gap.
+		const navbar = document.querySelector('.main-header');
+		const navBottom = navbar ? navbar.getBoundingClientRect().bottom : 0;
 		const boardRect = boardBody.getBoundingClientRect();
-		const offset = this._navbarHeight - boardRect.top;
+		const headerHeight = headers[0].offsetHeight;
+		// Where the header sits without any transform (its current position minus what we applied).
+		const naturalTop = headers[0].getBoundingClientRect().top - this._applied;
+		const offset = navBottom - naturalTop;
+		// Never float beyond the board's lower boundary.
+		const maxOffset = boardRect.bottom - naturalTop - headerHeight;
+		const next = offset > 0 ? Math.max(0, Math.min(offset, maxOffset)) : 0;
 
-		if (offset > 0) {
-			const headers = this._getHeaders();
-			const headerHeight = headers.length ? headers[0].offsetHeight : 64;
-			// Clamp so the header never floats beyond the board's lower boundary
-			const maxOffset = boardRect.height - headerHeight;
-			const clampedOffset = Math.min(offset, maxOffset);
-
-			headers.forEach((header) => {
-				header.style.transform = `translateY(${clampedOffset}px)`;
-			});
-		} else {
-			this._resetHeaders();
-		}
+		if (next === this._applied) return;
+		this._applied = next;
+		const value = next ? `translate3d(0, ${next}px, 0)` : '';
+		headers.forEach((header) => {
+			header.style.transform = value;
+		});
 	}
 
 	/**
@@ -148,6 +164,7 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	 * @private
 	 */
 	_resetHeaders() {
+		this._applied = 0;
 		this._getHeaders().forEach((header) => {
 			header.style.transform = '';
 		});
