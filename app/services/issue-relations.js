@@ -158,6 +158,28 @@ export default class IssueRelationsService extends Service {
 	}
 
 	/**
+	 * Links the issue to several issues, one after the other with link(). A refusal (Gaia's 422) does not stop the
+	 * rest.
+	 *
+	 * @method linkMany
+	 * @param {Issue} issue
+	 * @param {Object[]} rows `{ target, relation }`, target an Issue and relation as in link()
+	 * @return {Promise<Object[]>} one `{ target, relation, error }` per row, `error` null when it was linked
+	 */
+	async linkMany(issue, rows) {
+		let results = [];
+		for (let { target, relation } of rows) {
+			try {
+				await this.link(issue, relation, target);
+				results.push({ target, relation, error: null });
+			} catch (error) {
+				results.push({ target, relation, error });
+			}
+		}
+		return results;
+	}
+
+	/**
 	 * Removes a direct row: deletes its Issuelink, or clears `parentId` for a parent or child row.
 	 *
 	 * @method unlink

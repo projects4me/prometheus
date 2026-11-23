@@ -709,3 +709,35 @@
 		vertical-align: middle;
 	}
 }
+
+.link-issue-modal {
+	.modal-dialog {
+		width: 860px;
+		max-width: 95%;
+	}
+
+	.link-issue-search {
+		margin-bottom: 10px;
+	}
+
+	.link-issue-rows {
+		margin-top: 10px;
+		margin-bottom: 0;
+	}
+
+	.link-issue-row {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 4px 0;
+	}
+
+	.link-issue-row-issue {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.link-issue-row-relation {
+		flex: 0 0 200px;
+	}
+}

@@ -20,6 +20,17 @@ export function register(server, ctx) {
             // The linked-issues box reads the assignees of a level of issues by id
             return schema.issues.where((issue) => idOrList.includes(String(issue.id)));
         }
+        let scopedProjects = [...(issueQuery || '').matchAll(/\(Issue\.projectId : (\d+)\)/g)].map((found) => found[1]);
+        let excludedIds = [...(issueQuery || '').matchAll(/\(Issue\.id !: (\d+)\)/g)].map((found) => found[1]);
+        if (scopedProjects.length && excludedIds.length) {
+            // The Link issues modal searches the issues of a workspace's projects without the issues it excludes
+            let text = ((issueQuery || '').match(/Issue\.subject CONTAINS ([^)]+)\)/) || [])[1];
+            let found = schema.issues
+                .where((issue) => scopedProjects.includes(String(issue.projectId)) && !excludedIds.includes(String(issue.id)))
+                .filter((issue) => !text || String(issue.subject).toLowerCase().includes(text.replace(/['"]/g, '').toLowerCase()))
+                .sort((a, b) => String(b.dateModified || '').localeCompare(String(a.dateModified || '')));
+            return paginate(found, request.queryParams);
+        }
         let field = ctx.get('fieldSearched');
         field = field ? field : 'Issue.issueNumber';
         let value = getValueFromQuery(field, issueQuery);

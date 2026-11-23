@@ -1,5 +1,7 @@
 <AppUi::Modal
   @title="views.app.issue.detail.linkedIssues.linkModal.title"
+  @titleParams={{hash number=@issue.issueNumber}}
+  @confirmParams={{hash count=this.rows.length}}
   @closeLabel="global.form.cancel"
   @confirmLabel="views.app.issue.detail.linkedIssues.linkModal.save"
   @confirm={{this.save}}
@@ -7,35 +9,76 @@
   @onClose={{@onClose}}
   @containerClass="link-issue-modal"
   data-test-link-issue-modal
+  {{on-insert this.setup}}
 >
-  <div class="form-group">
-    <FormFields::FieldRelate
-      @label={{t "views.app.issue.detail.linkedIssues.linkModal.relation"}}
-      @options={{this.relationOptions}}
-      @selected={{this.relation}}
-      @searchField="label"
-      @onchange={{this.setRelation}}
-      @renderInPlace={{true}}
-      @relateType="relate-simple"
-      @data-field="linkIssue.relation"
-    />
-    <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.issue.detail.linkedIssues.linkModal.relationInfo"}} data-test-link-issue-info="relation"></i>
-  </div>
-  <div class="form-group">
-    <FormFields::FieldRelate
-      @placeholder={{t "views.app.issue.detail.linkedIssues.linkModal.issuePlaceholder"}}
-      @label={{t "views.app.issue.detail.linkedIssues.linkModal.issue"}}
-      @search={{perform this.issueSearch}}
-      @searchEnabled={{true}}
-      @selected={{this.selectedIssue}}
-      @onchange={{this.setIssue}}
-      @renderInPlace={{true}}
-      @relateType="relate-issue"
-      @data-field="linkIssue.issue"
-    />
-    <i class="fa fa-info-circle text-muted" aria-hidden="true" title={{t "views.app.issue.detail.linkedIssues.linkModal.issueInfo"}} data-test-link-issue-info="issue"></i>
-    {{#if this.errorMessage}}
-      <span class="error text-red" data-test-link-issue-error>{{this.errorMessage}}</span>
-    {{/if}}
+  {{#if this.schema}}
+    <div class="link-issue-search" data-test-link-issue-search>
+      <EzSearchCompact
+        @linear={{true}}
+        @schema={{this.schema}}
+        @query=""
+        @baseQuery={{this.baseQuery}}
+        @onApply={{this.search}}
+        @aclContext="issue.read"
+      />
+    </div>
+  {{/if}}
+
+  <AppUi::DataTable
+    @columns={{this.columns}}
+    @rows={{this.results}}
+    @selectable={{true}}
+    @selection={{this.selection}}
+    @onSelectionChange={{this.onSelectionChange}}
+    data-test-link-issue-results
+  >
+    <:cell as |record column|>
+      {{#if (eq column.key "issue")}}
+        <span data-test-link-issue-result={{record.id}}>
+          <strong>{{this.label record}}</strong> {{record.subject}}
+        </span>
+      {{else if (eq column.key "status")}}
+        <AppUi::StatusLabel @status={{record.status}} />
+      {{else}}
+        {{record.assignedTo.name}}
+      {{/if}}
+    </:cell>
+  </AppUi::DataTable>
+  {{#if this.searchFailed}}
+    <p class="text-red" data-test-link-issue-search-error>{{t "views.app.issue.detail.linkedIssues.linkModal.searchFailed"}}</p>
+  {{else if this.countLine}}
+    <p class="text-muted small" data-test-link-issue-count>{{this.countLine}}</p>
+  {{/if}}
+
+  <div class="box box-default link-issue-rows" data-test-link-issue-rows>
+    <div class="box-header with-border">
+      <h3 class="box-title">{{t "views.app.issue.detail.linkedIssues.linkModal.toLink"}}</h3>
+    </div>
+    <div class="box-body">
+      {{#each this.rows key="issue.id" as |row|}}
+        <div class="link-issue-row" data-test-link-issue-row={{row.issue.id}}>
+          <div class="link-issue-row-issue">
+            <strong>{{this.label row.issue}}</strong> {{row.issue.subject}}
+            {{#if row.error}}
+              <div class="text-red small" data-test-link-issue-error>{{row.error}}</div>
+            {{/if}}
+          </div>
+          <div class="link-issue-row-relation">
+            <FormFields::FieldRelate
+              @options={{this.optionsFor row}}
+              @selected={{row.relation}}
+              @searchField="label"
+              @onchange={{fn this.setRelation row}}
+              @renderInPlace={{true}}
+              @relateType="relate-simple"
+              @data-field="linkIssue.relation"
+            />
+          </div>
+          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.issue.detail.linkedIssues.linkModal.remove"}} data-test-link-issue-remove={{row.issue.id}} {{on "click" (fn this.removeRow row)}}><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+      {{else}}
+        <p class="text-muted" data-test-link-issue-rows-empty>{{t "views.app.issue.detail.linkedIssues.linkModal.noRows"}}</p>
+      {{/each}}
+    </div>
   </div>
 </AppUi::Modal>
