@@ -48,11 +48,11 @@
     <div class="form-group">
       <Developer::StateSwitch @states={{this.fields}} @value={{this.field}} @onChange={{this.pick}} />
     </div>
-    <div class="checkbox"><label><input type="checkbox" data-control="disabled" checked={{this.disabled}} {{on "change" (fn this.toggle "disabled")}}> Disabled</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control="readonly" checked={{this.readonly}} {{on "change" (fn this.toggle "readonly")}}> Read-only</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control="error" checked={{this.showError}} {{on "change" (fn this.toggle "showError")}}> Validation error</label></div>
+    <FormFields::FieldCheckbox @label="Disabled" @checked={{this.disabled}} @select={{fn this.toggle "disabled"}} data-control="disabled" />
+    <FormFields::FieldCheckbox @label="Read-only" @checked={{this.readonly}} @select={{fn this.toggle "readonly"}} data-control="readonly" />
+    <FormFields::FieldCheckbox @label="Validation error" @checked={{this.showError}} @select={{fn this.toggle "showError"}} data-control="error" />
     {{#if this.hasSearchOption}}
-      <div class="checkbox"><label><input type="checkbox" data-control="search" checked={{this.searchEnabled}} {{on "change" (fn this.toggle "searchEnabled")}}> Search enabled</label></div>
+      <FormFields::FieldCheckbox @label="Search enabled" @checked={{this.searchEnabled}} @select={{fn this.toggle "searchEnabled"}} data-control="search" />
     {{/if}}
     <div class="form-group">
       <label for="demo-placeholder">Placeholder</label>

@@ -17,12 +17,12 @@
         {{/each}}
       </div>
     </div>
-    <div class="checkbox"><label><input type="checkbox" data-control-header checked={{this.showHeader}} {{on "change" (fn this.toggle "showHeader")}}> Header</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-tools checked={{this.showTools}} {{on "change" (fn this.toggle "showTools")}}> Tools</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-footer checked={{this.showFooter}} {{on "change" (fn this.toggle "showFooter")}}> Footer</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-list-view checked={{this.listView}} {{on "change" (fn this.toggle "listView")}}> List view</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-no-padding checked={{this.noPadding}} {{on "change" (fn this.toggle "noPadding")}}> No-padding body</label></div>
-    <div class="checkbox"><label><input type="checkbox" data-control-collapsed checked={{this.collapsed}} {{on "change" (fn this.toggle "collapsed")}}> Collapsed</label></div>
+    <FormFields::FieldCheckbox @label="Header" @checked={{this.showHeader}} @select={{fn this.toggle "showHeader"}} data-control-header />
+    <FormFields::FieldCheckbox @label="Tools" @checked={{this.showTools}} @select={{fn this.toggle "showTools"}} data-control-tools />
+    <FormFields::FieldCheckbox @label="Footer" @checked={{this.showFooter}} @select={{fn this.toggle "showFooter"}} data-control-footer />
+    <FormFields::FieldCheckbox @label="List view" @checked={{this.listView}} @select={{fn this.toggle "listView"}} data-control-list-view />
+    <FormFields::FieldCheckbox @label="No-padding body" @checked={{this.noPadding}} @select={{fn this.toggle "noPadding"}} data-control-no-padding />
+    <FormFields::FieldCheckbox @label="Collapsed" @checked={{this.collapsed}} @select={{fn this.toggle "collapsed"}} data-control-collapsed />
   </:controls>
   <:docs>
     <Developer::Docs @doc="app-ui-box.md" />

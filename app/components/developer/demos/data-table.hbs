@@ -66,19 +66,19 @@
   </:demo>
   <:controls>
     <div class="form-group">
-      <label><input type="checkbox" checked={{this.selectable}} {{on "change" (fn this.flip "selectable")}} /> Selectable</label>
+      <FormFields::FieldCheckbox @label="Selectable" @checked={{this.selectable}} @select={{fn this.flip "selectable"}} />
     </div>
     <div class="form-group">
-      <label><input type="checkbox" checked={{this.grouped}} {{on "change" (fn this.flip "grouped")}} /> Grouped by status</label>
+      <FormFields::FieldCheckbox @label="Grouped by status" @checked={{this.grouped}} @select={{fn this.flip "grouped"}} />
     </div>
     <div class="form-group">
-      <label><input type="checkbox" checked={{this.showActions}} {{on "change" (fn this.flip "showActions")}} /> Row actions and more menu</label>
+      <FormFields::FieldCheckbox @label="Row actions and more menu" @checked={{this.showActions}} @select={{fn this.flip "showActions"}} />
     </div>
     <div class="form-group">
-      <label><input type="checkbox" checked={{this.tree}} data-test-demo-tree {{on "change" (fn this.flip "tree")}} /> Tree rows</label>
+      <FormFields::FieldCheckbox @label="Tree rows" @checked={{this.tree}} @select={{fn this.flip "tree"}} data-test-demo-tree />
     </div>
     <div class="form-group">
-      <label><input type="checkbox" checked={{this.empty}} {{on "change" (fn this.flip "empty")}} /> Empty</label>
+      <FormFields::FieldCheckbox @label="Empty" @checked={{this.empty}} @select={{fn this.flip "empty"}} />
     </div>
   </:controls>
   <:docs>

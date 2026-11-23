@@ -24,18 +24,10 @@
     </div>
   </:demo>
   <:controls>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-multiple checked={{this.multiple}} {{on "change" (fn this.toggle "multiple")}}> Multiple</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-search checked={{this.searchEnabled}} {{on "change" (fn this.toggle "searchEnabled")}}> Search enabled</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-clear checked={{this.allowClear}} {{on "change" (fn this.toggle "allowClear")}}> Allow clear</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-disabled checked={{this.disabled}} {{on "change" (fn this.toggle "disabled")}}> Disabled</label>
-    </div>
+    <FormFields::FieldCheckbox @label="Multiple" @checked={{this.multiple}} @select={{fn this.toggle "multiple"}} data-control-multiple />
+    <FormFields::FieldCheckbox @label="Search enabled" @checked={{this.searchEnabled}} @select={{fn this.toggle "searchEnabled"}} data-control-search />
+    <FormFields::FieldCheckbox @label="Allow clear" @checked={{this.allowClear}} @select={{fn this.toggle "allowClear"}} data-control-clear />
+    <FormFields::FieldCheckbox @label="Disabled" @checked={{this.disabled}} @select={{fn this.toggle "disabled"}} data-control-disabled />
   </:controls>
   <:docs>
     <Developer::Docs @doc="select.md" />

@@ -46,12 +46,8 @@
       <label>State</label>
       <Developer::StateSwitch @value={{this.state}} @onChange={{this.setState}} />
     </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-selectable checked={{this.selectable}} {{on "change" this.setSelectable}}> @selectable</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" data-control-search checked={{this.searchOn}} {{on "change" this.setSearchOn}}> Search block</label>
-    </div>
+    <FormFields::FieldCheckbox @label="&#64;selectable" @checked={{this.selectable}} @select={{this.setSelectable}} data-control-selectable />
+    <FormFields::FieldCheckbox @label="Search block" @checked={{this.searchOn}} @select={{this.setSearchOn}} data-control-search />
     <div class="form-group">
       <label for="demo-group-by">@groupBy</label>
       <select id="demo-group-by" class="form-control input-sm" data-control-group-by {{on "change" this.setGroupBy}}>
