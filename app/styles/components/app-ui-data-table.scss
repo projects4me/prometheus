@@ -90,6 +90,13 @@
 
   // Row actions: the same icon-only btn-box-tool look as the Issue and Project lists
   // (AdminLTE grey, 12px, 5px padding, primary colour on hover), right-aligned with one gap.
+  // The legacy .list-view .actions rule sets display: flex; a table cell must stay a table cell
+  // or its borders are drawn mid-cell instead of on the row line.
+  th.actions,
+  td.actions {
+    display: table-cell;
+  }
+
   .actions {
     white-space: nowrap;
     text-align: right;
