@@ -233,6 +233,18 @@ export function add(tree, parentId, node, index) {
 }
 
 /**
+ * Add an empty row (no field yet) to a group: it stays out of the query until it is filled in.
+ *
+ * @method addBlankCondition
+ * @param {Object} tree
+ * @param {String} groupId The group to add to
+ * @return {Object} The new tree
+ */
+export function addBlankCondition(tree, groupId) {
+    return add(tree, groupId, condition('', '', null));
+}
+
+/**
  * Replace a node.
  *
  * @method replace
