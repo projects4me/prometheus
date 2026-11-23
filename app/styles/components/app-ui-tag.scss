@@ -2,7 +2,27 @@
   AppUi::Tag: the Task Board tag look. 1px border and text in the variant colour on a 16% tint of it,
   11px semibold, square edges. Tags next to each other have a 4px gap and wrap.
 */
+@use 'sass:math';
 @import '../variables.scss';
+
+// WCAG relative luminance of a colour.
+@function app-ui-tag-luminance($colour) {
+  $result: 0;
+  @each $channel, $weight in (red: 0.2126, green: 0.7152, blue: 0.0722) {
+    $value: math.div(if($channel == red, red($colour), if($channel == green, green($colour), blue($colour))), 255);
+    $linear: if($value <= 0.03928, math.div($value, 12.92), math.pow(math.div($value + 0.055, 1.055), 2.4));
+    $result: $result + $weight * $linear;
+  }
+  @return $result;
+}
+
+// #fff or $darkColor, whichever has the higher WCAG contrast ratio on the background.
+@function app-ui-tag-text-on($background) {
+  $bg: app-ui-tag-luminance($background);
+  $white: math.div(1.05, $bg + 0.05);
+  $dark: math.div(max($bg, app-ui-tag-luminance($darkColor)) + 0.05, min($bg, app-ui-tag-luminance($darkColor)) + 0.05);
+  @return if($white > $dark, #fff, $darkColor);
+}
 
 .app-ui-tag {
   display: inline-flex;
@@ -55,5 +75,19 @@
     border-color: $colour;
     background: rgba($colour, 0.16);
     color: $colour;
+  }
+}
+
+.app-ui-tag-solid.app-ui-tag-default {
+  border-color: $lightColor;
+  background: $lightColor;
+  color: app-ui-tag-text-on($lightColor);
+}
+
+@each $name, $colour in (primary: $primaryColor, info: $infoColor, success: $successColor, warning: $warningColor, danger: $dangerColor) {
+  .app-ui-tag-solid.app-ui-tag-#{$name} {
+    border-color: $colour;
+    background: $colour;
+    color: app-ui-tag-text-on($colour);
   }
 }
