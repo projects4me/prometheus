@@ -58,9 +58,9 @@
     {{#if this.body.issues.length}}
       <ul class="list-unstyled idea-plan-issues" data-idea-plan-issues>
         {{#each this.body.issues as |issue|}}
-          <li class="idea-plan-issue">
-            <div class="idea-plan-issue-head clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue={{issue.key}}>
-              <span class="subject"><i class="fa {{if (eq this.expandedKey issue.key) "fa-caret-down" "fa-caret-right"}}"></i> {{issue.subject}}</span>
+          <li class="idea-plan-issue" data-idea-plan-issue={{issue.key}}>
+            <div class="idea-plan-issue-head">
+              <span class="subject clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue-toggle={{issue.key}}><i class="fa {{if (eq this.expandedKey issue.key) "fa-caret-down" "fa-caret-right"}}"></i> {{issue.subject}}</span>
               <span class="meta" data-idea-plan-issue-meta>
                 <span class="project" data-idea-plan-issue-project>{{issue.projectLabel}}</span>
                 <span>{{issue.type}}</span>
@@ -84,6 +84,9 @@
                     <span class="text-muted" data-idea-plan-issue-unreadable>{{created.projectShortcode}}-{{created.issueNumber}}</span>
                   {{else}}
                     <span class="text-muted">{{issue.key}}</span>
+                  {{/if}}
+                  {{#if created.status}}
+                    <AppUi::StatusLabel @status={{created.status}} data-idea-plan-issue-status />
                   {{/if}}
                 {{/let}}
               </span>

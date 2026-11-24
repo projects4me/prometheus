@@ -55,7 +55,7 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-issue-complexity]').hasText('simple');
         assert.dom('[data-idea-plan-issue-depends]').hasText('after b');
         assert.dom('[data-idea-plan-issue-detail="a"]').doesNotExist('collapsed at first');
-        await click('[data-idea-plan-issue="a"]');
+        await click('[data-idea-plan-issue-toggle="a"]');
         assert.dom('[data-idea-plan-description]').includesText('Safe');
         await click('[data-idea-plan-description]');
         assert.dom('[data-idea-plan-issue-detail="a"]').exists('a click in the details keeps them open');
@@ -119,6 +119,20 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-meta]').includesText('b');
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-milestone]').hasText('Ideas (new)');
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-complexity] .fa-cogs').exists();
+    });
+
+    test('a created issue shows its status pill, a planned one without an issue shows none', async function (assert) {
+        this.set('plans', [{ id: '2', version: 2, status: 'created', body: JSON.stringify({ summary: 'S', issues: [
+            { key: 'a', project: 'A Prometheus', projectCode: 'aprom', subject: 'One', priority: 'high', type: 'Task', complexity: 'simple', milestone: 'Claude-v1' },
+            { key: 'b', project: 'A Prometheus', projectCode: 'aprom', subject: 'Two', priority: 'low', type: 'Task', complexity: 'simple', milestone: 'Claude-v1' }
+        ] }) }]);
+        this.set('planIssues', [
+            { ideaplanId: '2', key: 'a', loadedIssue: { issueNumber: 4102, projectShortcode: 'aprom', projectId: '1', status: 'in_progress' } }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-issue="a"] [data-idea-plan-issue-status]').hasClass('in_progress').hasText('In Progress');
+        assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-status]').doesNotExist();
     });
 
     test('a created issue of an unreadable project or without an issue is not a link', async function (assert) {

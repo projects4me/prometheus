@@ -87,14 +87,6 @@ add|ember-template-lint|no-nested-interactive|25|12|25|12|231b100719a7b297fb1e76
 add|ember-template-lint|no-nested-interactive|26|12|26|12|b8cd9068c58b78a035efbd5458ae62fcb1b9aa40|1794614400000|||app/components/form-fields/field-upload.hbs
 add|ember-template-lint|no-invalid-interactive|12|74|12|74|d23a3feec515d62f4ce01497194c205b8fcc02de|1794614400000|||app/components/form-fields/label.hbs
 add|ember-template-lint|no-autofocus-attribute|17|12|17|12|0d2b98a9093686a223ccc82022c3db762739720f|1794614400000|||app/components/idea/conversation-box.hbs
-add|ember-template-lint|require-presentational-children|45|36|45|36|63c443659267531e85ec2cd9b1e0dd766efabbca|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|49|88|49|88|c2a8ca32a733fbeb34bfc0c83c540138d938b73b|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|50|54|50|54|7257225a8e43faf901f3e9d3ab9c12d89bc1bff1|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|51|129|51|129|28edc36e27d8dcba1d27e85b00f2e5448cf6cac7|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|53|53|53|53|8e0fc8faa4d88a40e05aea402044be96f16b9b8d|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|56|24|56|24|0421f55e80b7324f6c4373793fb9665ccf263122|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|60|20|60|20|ad88831fa8a2785090dda8ff1cd38c3c479cb7a9|1794614400000|||app/components/idea/plan-box.hbs
-add|ember-template-lint|require-presentational-children|61|22|61|22|b6bdc5d430a054d9e311fa7056c02abc4085ccd8|1794614400000|||app/components/idea/plan-box.hbs
 add|ember-template-lint|no-curly-component-invocation|6|133|6|133|d1171753a7400580bb2e85a171da218168014d7e|1794614400000|||app/components/idea/summary-box.hbs
 add|ember-template-lint|no-curly-component-invocation|7|80|7|80|f3cd28df8810cdb3114d22f0c4f8f20adf84fbd3|1794614400000|||app/components/idea/summary-box.hbs
 add|ember-template-lint|require-presentational-children|8|6|8|6|8ae58c720884617181ca2587a2fb919f1cac9c2c|1794614400000|||app/components/issue/assignee-select.hbs
@@ -370,3 +362,4 @@ add|ember-template-lint|no-inline-styles|26|31|26|31|b00966baff974390b46b170c5b7
 add|ember-template-lint|no-inline-styles|33|31|33|31|ea01c4cda5bc6652e7ff847e611b4d8ac15861ec|1794614400000|||tests/integration/components/app-ui/task-board/milestones-test.js
 remove|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
 remove|ember-template-lint|no-duplicate-attributes|1|46|1|46|a9eede4f9d695837927696fe167522dacfb391df|1794614400000|||app/components/app-ui/notifications/notification.hbs
+add|ember-template-lint|require-presentational-children|63|274|63|274|63c443659267531e85ec2cd9b1e0dd766efabbca|1795478400000|||app/components/idea/plan-box.hbs
