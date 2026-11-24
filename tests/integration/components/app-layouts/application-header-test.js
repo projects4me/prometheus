@@ -66,7 +66,7 @@ module('Integration | Component | application-header', function (hooks) {
         await render(hbs`
             <AppLayouts::ApplicationHeader />
         `);
-        assert.dom('header li.dropdown.user.user-menu span#user-name').hasText('Rana Nouman', 'current username matched');
+        assert.dom('header li.dropdown.user.user-menu span#user-name').doesNotExist('the redundant username is not in the header');
         assert.dom('li.user-header p > small').hasText('Member since Feb 2022', 'date created matched');
     });
     test('it renders the global search in the navbar and a compact New icon', async function (assert) {
