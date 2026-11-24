@@ -350,6 +350,12 @@
       "expand": "Expand",
       "collapse": "Collapse"
     },
+    "gantt": {
+      "issueList": {
+        "title": "Issues",
+        "open": "Open issue"
+      }
+    },
     "quickList": {
       "moreActions": "More actions",
       "countOfTotal": "{count} of {total}",

@@ -169,3 +169,62 @@ export function hasValidDates(item) {
 export function formatDate(date, format = 'MMM DD, YYYY') {
     return dateUtil.format(date, format);
 }
+
+/**
+ * The issues of a milestone that the timeline shows: the ones with valid start and end dates
+ *
+ * @function getValidIssues
+ * @param {Object} milestone Milestone record with an issues array
+ * @returns {Array} Issues with valid dates
+ */
+export function getValidIssues(milestone) {
+    return (milestone.issues ?? []).filter((issue) => hasValidDates(issue));
+}
+
+/**
+ * Count the milestone's issues that are finished: done, complete, closed or deferred
+ *
+ * @function countCompletedIssues
+ * @param {Object} milestone Milestone record with an issues array
+ * @returns {Number} Number of completed issues
+ */
+export function countCompletedIssues(milestone) {
+    const finished = ['done', 'complete', 'closed', 'deferred'];
+    return (milestone.issues ?? []).filter((issue) => finished.includes(issue.status)).length;
+}
+
+/**
+ * The key a milestone is tracked by: its id, or its type for the virtual backlog
+ *
+ * @function getMilestoneKey
+ * @param {Object} milestone Milestone record
+ * @returns {String} The key
+ */
+export function getMilestoneKey(milestone) {
+    return milestone.id || milestone.milestoneType;
+}
+
+/**
+ * The milestone bar's start and end (YYYY-MM-DD): the milestone's own dates stretched to its earliest
+ * issue start and latest issue end. Both are null when the milestone has no valid dates.
+ *
+ * @function getMilestoneBarDates
+ * @param {Object} milestone Milestone record
+ * @returns {Object} `{ start, end }`
+ */
+export function getMilestoneBarDates(milestone) {
+    if (!hasValidDates(milestone)) {
+        return { start: null, end: null };
+    }
+    let start = milestone.startDate;
+    let end = milestone.endDate;
+    getValidIssues(milestone).forEach((issue) => {
+        if (dateUtil.isBefore(issue.startDate, start)) {
+            start = issue.startDate;
+        }
+        if (dateUtil.isAfter(issue.endDate, end)) {
+            end = issue.endDate;
+        }
+    });
+    return { start: dateUtil.format(start, 'YYYY-MM-DD'), end: dateUtil.format(end, 'YYYY-MM-DD') };
+}

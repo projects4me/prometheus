@@ -4,8 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { hasValidDates } from 'prometheus/utils/gantt-helpers';
-import * as dates from 'prometheus/utils/date';
+import { hasValidDates, getValidIssues, countCompletedIssues, getMilestoneKey, getMilestoneBarDates } from 'prometheus/utils/gantt-helpers';
 
 /**
  * This component renders a single milestone row in the Gantt chart
@@ -38,7 +37,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get milestoneId() {
-        return this.args.milestone.id || this.args.milestone.milestoneType;
+        return getMilestoneKey(this.args.milestone);
     }
 
     /**
@@ -62,7 +61,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get validIssues() {
-        return this.args.milestone.issues.filter(issue => hasValidDates(issue));
+        return getValidIssues(this.args.milestone);
     }
 
     /**
@@ -87,17 +86,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get completedIssuesCount() {
-        if (!this.args.milestone.issues) {
-            return 0;
-        }
-        
-        let closed = 0;
-        closed += this.args.milestone.issues.filter((item) => item.status === 'done').length;
-        closed += this.args.milestone.issues.filter((item) => item.status === 'complete').length;
-        closed += this.args.milestone.issues.filter((item) => item.status === 'closed').length;
-        closed += this.args.milestone.issues.filter((item) => item.status === 'deferred').length;
-        
-        return closed;
+        return countCompletedIssues(this.args.milestone);
     }
 
     /**
@@ -110,19 +99,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get milestoneBarStartDate() {
-        if (!this.hasValidDates) {
-            return null;
-        }
-
-        let earliestDate = this.args.milestone.startDate;
-
-        this.validIssues.forEach((issue) => {
-            if (dates.isBefore(issue.startDate, earliestDate)) {
-                earliestDate = issue.startDate;
-            }
-        });
-
-        return dates.format(earliestDate, 'YYYY-MM-DD');
+        return getMilestoneBarDates(this.args.milestone).start;
     }
 
     /**
@@ -135,19 +112,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get milestoneBarEndDate() {
-        if (!this.hasValidDates) {
-            return null;
-        }
-
-        let latestDate = this.args.milestone.endDate;
-
-        this.validIssues.forEach((issue) => {
-            if (dates.isAfter(issue.endDate, latestDate)) {
-                latestDate = issue.endDate;
-            }
-        });
-
-        return dates.format(latestDate, 'YYYY-MM-DD');
+        return getMilestoneBarDates(this.args.milestone).end;
     }
 
     /**

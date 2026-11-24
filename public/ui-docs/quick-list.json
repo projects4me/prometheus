@@ -12,6 +12,7 @@
     "page": { "type": "number", "required": false, "default": 1, "description": "The current page" },
     "limit": { "type": "number", "required": false, "description": "The page size" },
     "activeId": { "type": "string|number", "required": false, "description": "The id of the open record; its row gets the active bar" },
+    "revealActive": { "type": "boolean", "required": false, "default": false, "description": "When activeId changes, expands the collapsed group that holds that record" },
     "isLoading": { "type": "boolean", "required": false, "default": false, "description": "Shows skeleton rows instead of the items" },
     "error": { "type": "any", "required": false, "description": "A truthy value shows the error state" },
     "selectable": { "type": "boolean", "required": false, "default": false, "description": "Adds a checkbox per row and the selection bar" },
