@@ -73,6 +73,8 @@
     overflow-x: auto;
     scrollbar-width: thin;
     padding: 0rem;
+    // Keep the board's height when every lane is collapsed (collapsed lanes stretch to it)
+    min-height: 45rem;
   }
 
   .milestone-select-row {
