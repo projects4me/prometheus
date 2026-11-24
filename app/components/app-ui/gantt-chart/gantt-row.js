@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { hasValidDates, getValidIssues, countCompletedIssues, getMilestoneKey, getMilestoneBarDates } from 'prometheus/utils/gantt-helpers';
+import { hasValidDates, getValidIssues, getMilestoneKey, getMilestoneBarDates } from 'prometheus/utils/gantt-helpers';
 
 /**
  * This component renders a single milestone row in the Gantt chart
@@ -65,31 +65,6 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
-     * Get the total number of issues for the milestone
-     *
-     * @property totalIssuesCount
-     * @type Number
-     * @for GanttRow
-     * @public
-     */
-    get totalIssuesCount() {
-        return this.args.milestone.issues ? this.args.milestone.issues.length : 0;
-    }
-
-    /**
-     * Get the count of completed issues for the milestone
-     * Completed issues include: done, complete, closed, deferred
-     *
-     * @property completedIssuesCount
-     * @type Number
-     * @for GanttRow
-     * @public
-     */
-    get completedIssuesCount() {
-        return countCompletedIssues(this.args.milestone);
-    }
-
-    /**
      * Calculate the effective start date for the milestone bar
      * considering the earliest issue start date.
      *
@@ -125,21 +100,6 @@ export default class GanttRowComponent extends Component {
     toggleMilestone() {
         if (this.args.onToggle) {
             this.args.onToggle(this.milestoneId);
-        }
-    }
-
-    /**
-     * Action to handle keyboard events for milestone toggle
-     *
-     * @method handleKeyDown
-     * @param {Event} event The keyboard event
-     * @public
-     */
-    @action
-    handleKeyDown(event) {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.toggleMilestone();
         }
     }
 

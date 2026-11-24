@@ -17,6 +17,9 @@
   height: calc(100vh - 150px);
   overflow: hidden;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
 }
 
 .gantt-timeline-wrapper {
@@ -63,18 +66,20 @@
 
 .gantt-container {
   display: flex;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
-/* Left Side - Task List */
-.gantt-task-list {
-  width: 400px;
-  min-width: 400px;
-  border-right: 2px solid #ddd;
+/* Left side - the issue list, with its own vertical scroll */
+.gantt-list-column {
+  width: 25%;
+  min-width: 300px;
+  overflow-y: auto;
+  border-right: 1px solid #e0e0e0;
 }
 
-/* The search block sits at the top of the header band; the gap pushes the column row to the band's bottom */
+/* The search band across the whole panel */
 .gantt-search {
   position: relative;
   z-index: 11;
@@ -83,17 +88,27 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-/* The Days/Weeks tabs sit at the top; the gap pushes the date header to the band's bottom */
-.gantt-container .gantt-time-scale-selector {
-  margin-bottom: var(--gantt-right-gap, 0);
+/* The milestone label stays in view while the timeline scrolls sideways */
+.gantt-milestone-label {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  display: inline-block;
+  padding: 0 10px;
+  line-height: 50px;
+  background: rgba(255, 255, 255, 0.85);
 }
 
-.gantt-header {
-  margin-top: var(--gantt-left-gap, 0);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #fff;
+.gantt-milestone-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+
+  i {
+    width: 16px;
+    font-size: 12px;
+    color: #666;
+  }
 }
 
 .gantt-header-row {
@@ -135,20 +150,6 @@
   justify-content: center;
   padding: 5px;
   border-right: 1px solid #e0e0e0;
-
-  &.task-name {
-    flex: 1;
-    justify-content: flex-start;
-    padding-left: 15px;
-    font-weight: 600;
-  }
-
-  &.task-dates {
-    width: 150px;
-    font-weight: 600;
-    font-size: 12px;
-    border-right: none;
-  }
 
   &.month-cell {
     font-weight: 600;
@@ -198,172 +199,6 @@
   &.week-cell {
     justify-content: center;
   }
-}
-
-.gantt-tasks {
-  overflow-y: auto;
-  height: calc(100% - 5rem);
-}
-
-.gantt-task-row {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  min-height: 45px;
-  border-bottom: 1px solid #e8e8e8;
-  background: #fff;
-  transition: background-color 0.2s, box-shadow 0.2s;
-
-  .issue-overview {
-    padding: 1rem;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .issue-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-shrink: 0;
-    margin-left: 1.2rem;
-  }
-
-  .issue-actions-separator {
-    width: 0.1rem;
-    height: 2.4rem;
-    background: #e0e0e0;
-  }
-
-  .issue-overview-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.8rem;
-    height: 2.8rem;
-    border: none;
-    background: transparent;
-    color: #666;
-    cursor: pointer;
-    border-radius: 0.4rem;
-    transition: all 0.2s;
-    padding: 0;
-
-    i {
-      font-size: 1.4rem;
-    }
-
-    &:hover {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
-    }
-  }
-
-  &:hover {
-    background: #f5f9ff;
-  }
-
-  &.selected {
-    background: #e3f2fd;
-    box-shadow: inset 4px 0 0 #1d4ed8;
-  }
-
-  &.milestone-row {
-    border-bottom: 2px solid #ddd;
-    min-height: 50px;
-
-    &:hover {
-      background: #f0f0f0;
-    }
-  }
-}
-
-.task-info {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 8px 15px;
-}
-
-.gantt-task-row.milestone-row .task-info {
-  cursor: pointer;
-}
-
-.task-name {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-
-  .toggle-icon {
-    cursor: pointer;
-    width: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-
-    &:hover {
-      color: #333;
-    }
-
-    i {
-      font-size: 12px;
-    }
-  }
-
-  .issue-number {
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .issue-subject {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    &.completed {
-      text-decoration: line-through;
-    }
-  }
-
-  .issue-count {
-    font-size: 12px;
-    font-weight: 300;
-  }
-
-  .assignee-avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #3498db;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 600;
-    margin-left: auto;
-  }
-}
-
-.task-dates {
-  width: 15rem;
-  text-align: center;
-  padding: 0 1rem;
-  font-size: 1.2rem;
 }
 
 /* Right Side - Timeline */
@@ -733,38 +568,21 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .gantt-task-list {
-    width: 300px;
-    min-width: 300px;
-  }
-
-  .task-dates {
-    width: 100px;
-    font-size: 10px;
-  }
-}
-
 /* Scrollbar styling */
-.gantt-task-list::-webkit-scrollbar,
 .gantt-timeline-wrapper .gantt-timeline-container::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.gantt-task-list::-webkit-scrollbar-track,
 .gantt-timeline-wrapper .gantt-timeline-container::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.gantt-task-list::-webkit-scrollbar-thumb,
 .gantt-timeline-wrapper .gantt-timeline-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.gantt-task-list::-webkit-scrollbar-thumb:hover,
 .gantt-timeline-wrapper .gantt-timeline-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

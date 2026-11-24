@@ -1,35 +1,19 @@
-<div class="gantt-chart">
-  <div class="gantt-container" {{did-insert this.trackHeaderBand}} {{will-destroy this.untrackHeaderBand}}>
+<div class="gantt-chart box box-primary">
+  {{#if (has-block "search")}}
+    <div class="gantt-search" data-gantt-search>
+      {{yield to="search"}}
+    </div>
+  {{/if}}
+  <div class="gantt-container">
 
-    {{! Left side - Task list }}
-    <div class="gantt-task-list">
-      {{#if (has-block "search")}}
-        <div class="gantt-search" data-gantt-search>
-          {{yield to="search"}}
-        </div>
-      {{/if}}
-      <div class="gantt-header">
-        <div class="gantt-header-row">
-          <div class="gantt-header-cell task-name">{{t "views.app.gantt.milestone"}}</div>
-          <div class="gantt-header-cell task-dates">{{t "views.app.gantt.startEndDate"}}</div>
-        </div>
-      </div>
-      <div class="gantt-tasks" {{initialize-slimscroll width="6"}}>
-        {{#each @milestones as |milestone|}}
-          <AppUi::GanttChart::GanttRow
-            @milestone={{milestone}}
-            @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
-            @onToggle={{this.toggleMilestone}}
-            @onIssueClick={{this.handleIssueClick}}
-            @onOpenIssuePanel={{this.handleOpenIssuePanel}}
-            @selectedIssue={{@selectedIssue}}
-            @isIssuePanelOpen={{@isIssuePanelOpen}}
-            @timelineStart={{@timelineStart}}
-            @timelineEnd={{@timelineEnd}}
-            @dayWidth={{this.dayWidth}}
-          />
-        {{/each}}
-      </div>
+    {{! Left side - issue list }}
+    <div class="gantt-list-column">
+      <AppUi::GanttChart::IssueList
+        @milestones={{@milestones}}
+        @activeId={{@selectedIssue.id}}
+        @onSelect={{this.handleListSelect}}
+        @onOpen={{this.handleOpenIssuePanel}}
+      />
     </div>
 
     {{! Right side - Timeline }}
@@ -128,7 +112,6 @@
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}
-            @showBars={{true}}
             @registerBar={{this.registerIssueBar}}
             @unregisterBar={{this.unregisterIssueBar}}
             @onStartDependencyLink={{this.startDependencyLink}}
