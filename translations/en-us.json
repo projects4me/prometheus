@@ -1106,7 +1106,8 @@
           "title": "Created Issues",
           "empty": "No issues created yet",
           "error": "The created issues could not be loaded.",
-          "version": "Plan v{version}"
+          "version": "Plan v{version}",
+          "doneCount": "{done} of {total} done"
         },
         "summary": {
           "title": "Summary",

@@ -25,6 +25,28 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         assert.dom('[data-idea-created-group="2"] + ul').includesText('Second');
     });
 
+    test('shows the total, the plan date, the done count, the status and the type', async function (assert) {
+        let store = this.owner.lookup('service:store');
+        store.push({ data: [
+            { type: 'issuestatus', id: '1', attributes: { name: 'Closed', done: '1' } },
+            { type: 'issuestatus', id: '2', attributes: { name: 'Open', done: '0' } },
+            { type: 'issuetype', id: '3', attributes: { name: 'Story' } }
+        ] });
+        this.set('readable', ['1']);
+        this.set('plans', [{ id: '1', version: 1, dateCreated: '2026-10-13 10:00:00' }]);
+        this.set('planIssues', [
+            { id: '10', ideaplanId: '1', loadedIssue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'A', status: 'Closed', priority: 'high', typeId: '3' } },
+            { id: '11', ideaplanId: '1', loadedIssue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '5', subject: 'B', status: 'Open', priority: 'low' } }
+        ]);
+        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
+
+        assert.dom('[data-idea-created-total]').hasText('2');
+        assert.dom('[data-idea-created-done]').hasText('1 of 2 done');
+        assert.dom('[data-idea-created-group="1"]').includesText("13 Oct '26");
+        assert.dom('[data-idea-created-issue="10"] .badge').hasText('Closed');
+        assert.dom('[data-idea-created-issue="10"] [data-idea-created-type]').hasText('Story');
+    });
+
     test('the empty state shows when no issue was created', async function (assert) {
         this.set('plans', []);
         this.set('planIssues', []);
