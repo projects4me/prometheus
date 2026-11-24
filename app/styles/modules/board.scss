@@ -255,9 +255,10 @@
         }
       }
 
-      // Sortable drops the dragged card into the narrow collapsed lane; keep it out of sight so its text
-      // is not squeezed into the lane width (the board re-renders the card in its new lane)
-      > .board-issue-item {
+      // While dragging, Sortable puts the card's placeholder in the narrow lane; keep it out of sight so its
+      // text is not squeezed into the lane width (on drop the card moves into the lane's card area)
+      > .board-issue-item.sortable-ghost,
+      > .board-issue-item.sortable-chosen {
         display: none;
       }
 
