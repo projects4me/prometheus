@@ -5,6 +5,7 @@
 import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
 import { next, later } from '@ember/runloop';
 import {
 	generateDateRange,
@@ -35,6 +36,39 @@ export default class GanttChartComponent extends AppComponent {
 	constructor() {
 		super(...arguments);
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
+	}
+
+	/**
+	 * The viewport service: `isPhone` is true below 768px and updates live
+	 *
+	 * @property viewport
+	 * @type ViewportService
+	 * @public
+	 */
+	@service viewport;
+
+	/**
+	 * The tab shown on phones: `list` or `timeline`. Kept when the viewport crosses 768px.
+	 *
+	 * @property phoneTab
+	 * @type String
+	 * @default 'list'
+	 * @public
+	 */
+	@tracked phoneTab = 'list';
+
+	/**
+	 * Action to switch the phone tab
+	 *
+	 * @method setPhoneTab
+	 * @param {String} tab `list` or `timeline`
+	 * @param {Event} [event] click event; its default (hash navigation) is prevented
+	 * @public
+	 */
+	@action
+	setPhoneTab(tab, event) {
+		event?.preventDefault();
+		this.phoneTab = tab;
 	}
 	/**
 	 * Width of a single day column in pixels for days view
@@ -755,11 +789,18 @@ export default class GanttChartComponent extends AppComponent {
 				this.toggleMilestone(key);
 			}
 		}
-		requestAnimationFrame(() => {
+		const scroll = () => {
 			if (!this.isDestroying && !this.isDestroyed) {
 				this.scrollToIssue(issue);
 			}
-		});
+		};
+		if (this.viewport.isPhone) {
+			// the timeline is hidden until its tab renders; scroll once it has a size
+			this.phoneTab = 'timeline';
+			requestAnimationFrame(() => requestAnimationFrame(scroll));
+		} else {
+			requestAnimationFrame(scroll);
+		}
 	}
 
 	/**

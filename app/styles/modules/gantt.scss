@@ -606,3 +606,30 @@
   display: none !important;
 }
 
+/* Phones: List | Timeline tabs under the search, one column at full width */
+@media (max-width: 767px) {
+  .gantt-phone-tabs {
+    margin-bottom: 0;
+
+    .gantt-phone-scale {
+      padding: 6px 10px 0 0;
+    }
+  }
+
+  .gantt-container.gantt-phone {
+    .gantt-list-column {
+      width: 100%;
+      min-width: 0;
+      border-right: 0;
+    }
+
+    .gantt-timeline-wrapper {
+      width: 100%;
+    }
+
+    &.gantt-phone-list .gantt-timeline-wrapper,
+    &.gantt-phone-timeline .gantt-list-column {
+      display: none;
+    }
+  }
+}
