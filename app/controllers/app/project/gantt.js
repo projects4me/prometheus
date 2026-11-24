@@ -484,8 +484,8 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
-	 * This action is used to highlight an issue in both list and timeline views
-	 * Toggles selection: if the same issue is clicked again, it will be deselected
+	 * This action selects an issue in both the list and the timeline. Selecting an issue that is already
+	 * selected keeps it selected.
 	 *
 	 * @method openIssue
 	 * @param {Prometheus.Models.Issue} issue The issue to highlight
@@ -493,12 +493,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 */
 	@action openIssue(issue) {
 		Logger.debug('AppProjectGanttController::openIssue');
-		// Toggle selection: if clicking the same issue, deselect it
-		if (this.selectedIssue?.id === issue?.id) {
-			this.selectedIssue = null;
-		} else {
-			this.selectedIssue = issue;
-		}
+		this.selectedIssue = issue;
 		Logger.debug('-AppProjectGanttController::openIssue');
 	}
 

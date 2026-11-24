@@ -382,8 +382,13 @@ export default class GanttBarComponent extends AppComponent {
      */
     @action
     handleClick(event) {
-        // Only trigger click if not dragging and it's not a task bar
-        if (!this.isDragging && this.args.type !== 'task' && this.args.onClick) {
+        // Only trigger click if not dragging; a task bar selects its issue
+        if (this.isDragging) {
+            return;
+        }
+        if (this.args.type === 'task') {
+            this.args.onSelect?.(this.args.issue);
+        } else if (this.args.onClick) {
             event.stopPropagation();
             this.args.onClick();
         }

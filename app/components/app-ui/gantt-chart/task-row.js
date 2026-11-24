@@ -99,22 +99,6 @@ export default class TaskRowComponent extends Component {
 		return this.args.selectedIssue?.id === this.args.issue?.id;
 	}
 
-	/**
-	 * Get the click handler - returns no-op if panel is open
-	 *
-	 * @property clickHandler
-	 * @type Function
-	 * @for TaskRow
-	 * @public
-	 */
-	get clickHandler() {
-		if (this.args.isIssuePanelOpen) {
-			// Return no-op function when panel is open
-			return () => {};
-		}
-		return this.handleClick;
-	}
-
     /**
      * Action to handle issue click
      * Only called when panel is closed

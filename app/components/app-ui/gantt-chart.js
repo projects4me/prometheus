@@ -10,7 +10,8 @@ import {
 	generateDateRange,
 	groupDatesByMonth,
 	getTotalDays,
-	calculateBarPosition
+	calculateBarPosition,
+	getMilestoneKey
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
@@ -725,7 +726,7 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Action to handle issue click
+	 * Action to handle a bar click: selects the issue; the list scrolls to and marks it through `@activeId`
 	 *
 	 * @method handleIssueClick
 	 * @param {Object} issue The issue that was clicked
@@ -733,15 +734,32 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action
 	handleIssueClick(issue) {
-		const isCurrentlySelected = this.args.selectedIssue?.id === issue?.id;
-		const isSelecting = !isCurrentlySelected;
+		this.args.onIssueClick?.(issue);
+	}
 
-		if (this.args.onIssueClick) {
-			this.args.onIssueClick(issue);
+	/**
+	 * Action to handle a list item click: selects the issue, expands its milestone when collapsed and, once
+	 * the bar is rendered, scrolls it into view
+	 *
+	 * @method handleListSelect
+	 * @param {Object} issue The issue that was clicked
+	 * @public
+	 */
+	@action
+	handleListSelect(issue) {
+		this.args.onIssueClick?.(issue);
+		const milestone = (this.args.milestones ?? []).find((m) => (m.issues ?? []).includes(issue));
+		if (milestone) {
+			const key = getMilestoneKey(milestone);
+			if (!this.isMilestoneExpanded(key)) {
+				this.toggleMilestone(key);
+			}
 		}
-		if (isSelecting) {
-			this.scrollToIssue(issue);
-		}
+		requestAnimationFrame(() => {
+			if (!this.isDestroying && !this.isDestroyed) {
+				this.scrollToIssue(issue);
+			}
+		});
 	}
 
 	/**
@@ -1026,62 +1044,6 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action unregisterTimelineContainer() {
 		this.timelineContainerElement = null;
-	}
-
-	/**
-	 * The observer that keeps the two header columns the same height
-	 *
-	 * @property headerResizeObserver
-	 * @type ResizeObserver
-	 * @private
-	 */
-	headerResizeObserver = null;
-
-	/**
-	 * Makes both sides of the chart's header band the same height, so the timeline starts level with the
-	 * top of the search and the date header sits level with the column row on the left. The shorter side
-	 * gets the difference as a gap above its bottom header (--gantt-left-gap / --gantt-right-gap), which
-	 * keeps the task rows and the timeline rows aligned.
-	 *
-	 * @method trackHeaderBand
-	 * @param {HTMLElement} container The .gantt-container element
-	 * @public
-	 */
-	@action trackHeaderBand(container) {
-		this.headerResizeObserver?.disconnect();
-		this.headerResizeObserver = null;
-		let height = (selector) => container.querySelector(selector)?.offsetHeight ?? 0;
-		let sync = () => {
-			if (this.isDestroying || this.isDestroyed) {
-				return;
-			}
-			let left = height('.gantt-search') + height('.gantt-task-list > .gantt-header');
-			let right = height('.gantt-time-scale-selector') + height('.gantt-timeline-header');
-			let band = Math.max(left, right);
-			container.style.setProperty('--gantt-left-gap', `${band - left}px`);
-			container.style.setProperty('--gantt-right-gap', `${band - right}px`);
-		};
-		sync();
-		if (typeof ResizeObserver === 'function') {
-			this.headerResizeObserver = new ResizeObserver(sync);
-			['.gantt-search', '.gantt-task-list > .gantt-header', '.gantt-time-scale-selector', '.gantt-timeline-header'].forEach((selector) => {
-				let element = container.querySelector(selector);
-				if (element) {
-					this.headerResizeObserver.observe(element);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Stops keeping the header columns the same height
-	 *
-	 * @method untrackHeaderBand
-	 * @public
-	 */
-	@action untrackHeaderBand() {
-		this.headerResizeObserver?.disconnect();
-		this.headerResizeObserver = null;
 	}
 
 	/**

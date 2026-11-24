@@ -1,63 +1,33 @@
-{{#if @showBars}}
-  {{! Timeline side - Show task bar }}
-  <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">
-    <AppUi::GanttChart::GanttBar
-      @startDate={{@issue.startDate}}
-      @endDate={{@issue.endDate}}
-      @timelineStart={{@timelineStart}}
-      @dayWidth={{@dayWidth}}
-      @type="task"
-      @status={{@issue.status}}
-      @onDragStart={{this.handleDragStart}}
-      @onDragUpdate={{this.handleDragUpdate}}
-      @onDragEnd={{this.handleDragEnd}}
-      @onResizeStart={{this.handleResizeStart}}
-      @onResizeUpdate={{this.handleResizeUpdate}}
-      @onResizeEnd={{this.handleResizeEnd}}
-      @onOpen={{this.handleIssueNumberClick}}
-      @showLabel={{true}}
-      @label={{concat "#" this.issueNumber " - " this.issueSubject}}
-      @issue={{@issue}}
-      @showConnectors={{true}}
-      @isLinking={{@isLinking}}
-      @linkingState={{@linkingState}}
-      @registerBar={{@registerBar}}
-      @unregisterBar={{@unregisterBar}}
-      @onStartDependencyLink={{@onStartDependencyLink}}
-      @updateDependencyPositions={{@updateDependencyPositions}}
-      @onCompleteDependencyLink={{@onCompleteDependencyLink}}
-      @timelineContainer={{@timelineContainer}}
-      @onCheckAutoScroll={{@onCheckAutoScroll}}
-      @onStopAutoScroll={{@onStopAutoScroll}}
-      @timelineWidth={{@timelineWidth}}
-    />
-  </div>
-{{else}}
-  {{! Task list side - Show issue info }}
-  <div class="gantt-task-row task-row {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.clickHandler}}>
-    <div class="issue issue-overview">
-      <div class="issue-block">
-        <div class="priority"><AppUi::PriorityIcon @priority={{@issue.priority}}/></div>
-        <div class="data-block">
-          <span class="subject">
-            #{{this.issueNumber}} - {{this.issueSubject}}
-          </span>
-          <span class="badge {{@issue.status}}" style={{status-style @issue.status}}>
-            {{status-label @issue.status}}
-          </span>
-        </div>
-      </div>
-      <div class="issue-actions">
-        <span class="issue-actions-separator"></span>
-        <button
-          type="button"
-          class="issue-overview-icon"
-          {{on "click" this.handleIssueNumberClick}}
-          aria-label="Open issue overview"
-        >
-          <i class="fa fa-eye"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-{{/if}}
+<div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">
+  <AppUi::GanttChart::GanttBar
+    @startDate={{@issue.startDate}}
+    @endDate={{@issue.endDate}}
+    @timelineStart={{@timelineStart}}
+    @dayWidth={{@dayWidth}}
+    @type="task"
+    @status={{@issue.status}}
+    @onDragStart={{this.handleDragStart}}
+    @onDragUpdate={{this.handleDragUpdate}}
+    @onDragEnd={{this.handleDragEnd}}
+    @onResizeStart={{this.handleResizeStart}}
+    @onResizeUpdate={{this.handleResizeUpdate}}
+    @onResizeEnd={{this.handleResizeEnd}}
+    @onSelect={{this.handleClick}}
+    @onOpen={{this.handleIssueNumberClick}}
+    @showLabel={{true}}
+    @label={{concat "#" this.issueNumber " - " this.issueSubject}}
+    @issue={{@issue}}
+    @showConnectors={{true}}
+    @isLinking={{@isLinking}}
+    @linkingState={{@linkingState}}
+    @registerBar={{@registerBar}}
+    @unregisterBar={{@unregisterBar}}
+    @onStartDependencyLink={{@onStartDependencyLink}}
+    @updateDependencyPositions={{@updateDependencyPositions}}
+    @onCompleteDependencyLink={{@onCompleteDependencyLink}}
+    @timelineContainer={{@timelineContainer}}
+    @onCheckAutoScroll={{@onCheckAutoScroll}}
+    @onStopAutoScroll={{@onStopAutoScroll}}
+    @timelineWidth={{@timelineWidth}}
+  />
+</div>
