@@ -351,6 +351,14 @@
       "collapse": "Collapse"
     },
     "gantt": {
+      "tabs": {
+        "list": "List",
+        "timeline": "Timeline"
+      },
+      "scale": {
+        "days": "Days",
+        "weeks": "Weeks"
+      },
       "issueList": {
         "title": "Issues",
         "open": "Open issue"

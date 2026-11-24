@@ -4,7 +4,27 @@
       {{yield to="search"}}
     </div>
   {{/if}}
-  <div class="gantt-container">
+  {{#if this.viewport.isPhone}}
+    <div class="nav-tabs-custom gantt-phone-tabs" data-test-gantt-phone-tabs>
+      <ul class="nav nav-tabs">
+        <li class={{if (eq this.phoneTab "list") "active"}}>
+          <a href="#gantt-tab-list" data-test-gantt-tab="list" {{on "click" (fn this.setPhoneTab "list")}}>{{t "components.gantt.tabs.list"}}</a>
+        </li>
+        <li class={{if (eq this.phoneTab "timeline") "active"}}>
+          <a href="#gantt-tab-timeline" data-test-gantt-tab="timeline" {{on "click" (fn this.setPhoneTab "timeline")}}>{{t "components.gantt.tabs.timeline"}}</a>
+        </li>
+        {{#if (eq this.phoneTab "timeline")}}
+          <li class="pull-right gantt-phone-scale">
+            <div class="btn-group btn-group-xs" data-test-gantt-phone-scale>
+              <button type="button" class="btn btn-default {{if (eq this.timeScale 'days') 'active'}}" {{on "click" (fn this.setTimeScale "days")}}>{{t "components.gantt.scale.days"}}</button>
+              <button type="button" class="btn btn-default {{if (eq this.timeScale 'weeks') 'active'}}" {{on "click" (fn this.setTimeScale "weeks")}}>{{t "components.gantt.scale.weeks"}}</button>
+            </div>
+          </li>
+        {{/if}}
+      </ul>
+    </div>
+  {{/if}}
+  <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}">
 
     {{! Left side - issue list }}
     <div class="gantt-list-column">
@@ -18,6 +38,7 @@
 
     {{! Right side - Timeline }}
     <div class="gantt-timeline-wrapper {{if @isIssuePanelOpen 'gantt-timeline-hidden'}}">
+      {{#unless this.viewport.isPhone}}
       <div class="nav-tabs-custom gantt-time-scale-selector">
         <ul class="nav nav-tabs gantt-time-scale-tabs">
           <li class="gantt-time-scale-tab {{if (eq this.timeScale 'days') 'active' ''}}">
@@ -32,6 +53,7 @@
           </li>
         </ul>
       </div>
+      {{/unless}}
       <div class="gantt-timeline-container" 
         {{did-insert this.registerTimelineContainer}} 
         {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
