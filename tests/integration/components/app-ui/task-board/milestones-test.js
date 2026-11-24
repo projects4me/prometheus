@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import Service from '@ember/service';
 
 module('Integration | Component | app-ui/task-board/milestones', function (hooks) {
     setupRenderingTest(hooks);
@@ -141,5 +142,58 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.dom('[data-lane-empty="inprogress"]').exists('an empty lane has the empty state');
         assert.dom('[data-lane-empty="inprogress"] .fa-inbox').exists('the empty state has the inbox icon');
         assert.dom('[data-lane-empty="inprogress"] span').hasText(/^No issues in /, 'the empty state names the status');
+    });
+
+    test('every lane starts with an add row that opens the add issue dialog', async function (assert) {
+        this.set('milestone', { id: 1, issues: [{
+            id: 1, issueNumber: 1, subject: 'Issue 1', status: 'open', priority: 'medium',
+            issuetype: { name: 'Bug', get() { return null; } }, dateModified: '2026-01-01'
+        }] });
+        this.set('statuses', [{ id: 1, name: 'open' }, { id: 2, name: 'inprogress' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <div class="board">
+                <AppUi::TaskBoard::Milestones
+                    @milestone={{this.milestone}}
+                    @statuses={{this.statuses}}
+                    @statusClass={{this.statusClass}}
+                    @selectIssue={{this.noop}}
+                    @getMilestoneProgress={{this.noop}}
+                    @getCompletedIssuesCount={{this.noop}}
+                />
+            </div>
+        `);
+
+        assert.dom('[data-lane-add]').exists({ count: 2 }, 'filled and empty lanes both have the row');
+        assert.dom('[data-lane-add="inprogress"] .fa-plus').exists('the row has the plus icon');
+        assert.dom('[data-lane-add="inprogress"]').includesText('Add to', 'the row says what it does');
+        assert.dom('[data-lane-add="inprogress"] .lane-add-status').exists('the status label is in its own span');
+    });
+
+    test('the add row is hidden without issue.create', async function (assert) {
+        this.owner.register('service:acl', class extends Service {
+            checkAccess() {
+                return false;
+            }
+        });
+        this.set('milestone', { id: 1, issues: [] });
+        this.set('statuses', [{ id: 1, name: 'open' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <AppUi::TaskBoard::Milestones
+                @milestone={{this.milestone}}
+                @statuses={{this.statuses}}
+                @statusClass={{this.statusClass}}
+                @selectIssue={{this.noop}}
+                @getMilestoneProgress={{this.noop}}
+                @getCompletedIssuesCount={{this.noop}}
+            />
+        `);
+
+        assert.dom('[data-lane-add]').doesNotExist();
     });
 });

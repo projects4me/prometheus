@@ -59,6 +59,12 @@
         </div>
 
         <div class="lane box-body lane-status-{{get-prop @statusClass status.name}}" style={{if status.color (status-style status.name "--lane-color")}} data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>
+          <AccessControl @aclContext="issue.create">
+            <button type="button" class="lane-add-row" data-lane-add={{status.name}} {{on "click" (fn this.showAddIssueDialog status.name)}}>
+              <i class="fa fa-plus" aria-hidden="true"></i>
+              <span>{{t "views.app.board.laneAdd"}} <span class="lane-add-status">{{status-label status.name}}</span></span>
+            </button>
+          </AccessControl>
           {{#if (eq (call (fn this.getIssuesCountForStatus status.name)) 0)}}
             <div class="lane-empty" data-lane-empty={{status.name}}>
               <i class="fa fa-inbox" aria-hidden="true"></i>
