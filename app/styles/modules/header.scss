@@ -225,7 +225,7 @@
 }
 
 $headerSectionGap: 1rem; // between sidebar toggle, project switcher, search and the right-hand menu
-$headerItemGap: 1rem; // between New, notifications and the user menu
+$headerItemGap: 1.4rem; // between New, notifications and the user menu
 $headerIconGap: 0.5rem; // between an icon/avatar and its label
 
 /* Header layout: the navbar is a flex row so the global search sits in the centre without overlapping the
@@ -259,6 +259,13 @@ $headerIconGap: 0.5rem; // between an icon/avatar and its label
         > button {
           padding: 0;
         }
+      }
+
+      /* No divider to the left of the bell and the profile picture. */
+      > li.notifications-menu,
+      > li.notifications-menu > *,
+      > li.user-menu > .dropdown-toggle {
+        border-left: 0;
       }
     }
   }
