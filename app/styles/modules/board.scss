@@ -183,6 +183,10 @@
       border-color: $backgroundColor !important;
     }
 
+    .lane-empty {
+      display: none;
+    }
+
     .lane-header {
       gap: 0.5rem;
       height: 100%;
@@ -276,6 +280,39 @@
 
       > .box-header {
         display: none;
+      }
+
+      // Grey panel with a status-colour top border; the gap to the next lane comes from the margin
+      &[data-lane-name] {
+        margin-right: 0.8rem;
+      }
+
+      > .lane.box-body {
+        --lane-color: #{$lightColor};
+        background-color: #f4f4f4;
+        border: 0;
+        border-top: 3px solid var(--lane-color);
+
+        &.lane-status-box-info { --lane-color: #{$infoColor}; }
+        &.lane-status-box-primary { --lane-color: #{$primaryColor}; }
+        &.lane-status-box-success { --lane-color: #{$successColor}; }
+        &.lane-status-box-warning { --lane-color: #{$warningColor}; }
+        &.lane-status-box-danger { --lane-color: #{$dangerColor}; }
+      }
+
+      .lane-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 4rem 1rem;
+        color: $mediumColor;
+        text-align: center;
+
+        .fa {
+          font-size: 3rem;
+        }
       }
 
       &.lane-collapsed {

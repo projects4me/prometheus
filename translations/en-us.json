@@ -1814,6 +1814,7 @@
         "collapseLane": "Collapse lane",
         "expandLane": "Expand lane",
         "laneStatusBar": "Jump to lane",
+        "laneEmpty": "No issues in {status}",
         "backlog": "Backlog",
         "move": {
           "title": "Move #{number}",
