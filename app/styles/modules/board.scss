@@ -251,6 +251,12 @@
         }
       }
 
+      // Sortable drops the dragged card into the narrow collapsed lane; keep it out of sight so its text
+      // is not squeezed into the lane width (the board re-renders the card in its new lane)
+      > .board-issue-item {
+        display: none;
+      }
+
       &.lane-hover {
         outline: 2px solid $primaryColor;
         outline-offset: -2px;
