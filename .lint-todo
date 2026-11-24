@@ -317,7 +317,6 @@ add|ember-template-lint|no-inline-styles|51|46|51|46|df21caf8b1b2bae4781a4a3d682
 add|ember-template-lint|style-concatenation|51|46|51|46|df21caf8b1b2bae4781a4a3d682a435c2b5baac0|1794614400000|||app/components/app-ui/task-board/milestones.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|4|52|4|52|8a2ab834a2892963a6ea18c5ff29312df0373009|1794614400000|||app/components/developer/demos/dropdown.hbs
 add|ember-template-lint|no-inline-styles|4|24|4|24|5f597fddd8f4198c80774b31dcb08a726bb065f8|1794614400000|||app/components/developer/demos/modal.hbs
-add|ember-template-lint|no-curly-component-invocation|32|35|32|35|f15b5d513464d01d2fa36f30cfd99fab51091e20|1794614400000|||app/components/developer/demos/quick-list.hbs
 add|ember-template-lint|no-invalid-interactive|29|25|29|25|ff76ac307136535636a6db647a4a0576bf402bcf|1794614400000|||app/templates/app/agent/page.hbs
 add|ember-template-lint|no-invalid-interactive|30|25|30|25|c86573277f54fb1eca377576aa3a750cfd6d2bf8|1794614400000|||app/templates/app/agent/page.hbs
 add|ember-template-lint|no-curly-component-invocation|107|28|107|28|9b55c989698f5a07f1d5509f71dc518bf1548413|1794614400000|||app/templates/app/agent/index.hbs

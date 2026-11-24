@@ -37,7 +37,7 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 
 - actions: header tools, in the box tools of the header; the create button goes here (`btn btn-primary btn-sm`, with ACL). Not rendered with @embedded (there is no header): put the tools in the surrounding panel.
 - search: a slot under the header (at the top when embedded), for EzSearchCompact; rendered as is.
-- item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line. An optional leading block on the Item puts a visual (an initials square, an icon, an avatar) in a column on the left, as wide as its content and top-aligned, with the two lines lined up beside it; with selection the row reads checkbox, leading, text.
+- item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line. An optional leading block on the Item puts a visual (an initials square, an icon, an avatar) in a column on the left, as wide as its content and top-aligned, with the two lines lined up beside it; with selection the row reads checkbox, leading, text. An optional trailing block on the Item puts row actions (an icon button such as a quick view) at the right of the row, vertically centred. The block sits beside the row element in a wrapper, never inside it: a route row has no button inside its link, and a click in the block runs only its own action; it never follows the link or reaches a click handler put on the Item.
 - group: replaces the label of a group heading; yields the group with key, label, items and count.
 - selectionActions: the actions of the selection bar; yields the selected ids and a function that clears the selection.
 - empty: replaces the default empty state.
@@ -71,4 +71,5 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 - Do not put a box around an embedded list; the surrounding panel draws the frame.
 - Do not load data inside the list or ask for a total count.
 - Do not build your own rows or empty states; use the item and empty blocks.
+- Do not put buttons in the primary or secondary lines of a route row (a button inside a link); use the trailing block.
 - Do not use it for wide, multi-column data; use a table.

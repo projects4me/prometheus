@@ -22,17 +22,37 @@
           {{/if}}
         </:search>
         <:item as |record Item|>
-          <Item>
-            <:leading><span class="quick-list-demo-initials" data-demo-initials>{{record.initials}}</span></:leading>
-            <:primary>
-              <span>{{record.title}}</span>
-              <AppUi::StatusLabel @status={{record.status}} />
-            </:primary>
-            <:secondary>
-              {{record.creator}} · {{format-date date=record.updated}}
-              {{#each record.tags as |tag|}}<AppUi::Tag>{{tag}}</AppUi::Tag> {{/each}}
-            </:secondary>
-          </Item>
+          {{!-- Two invocations, because passing an empty trailing block still counts as a block. --}}
+          {{#let (format-date date=record.updated) as |updated|}}
+          {{#if this.trailingOn}}
+            <Item>
+              <:leading><span class="quick-list-demo-initials" data-demo-initials>{{record.initials}}</span></:leading>
+              <:primary>
+                <span>{{record.title}}</span>
+                <AppUi::StatusLabel @status={{record.status}} />
+              </:primary>
+              <:secondary>
+                {{record.creator}} · {{updated}}
+                {{#each record.tags as |tag|}}<AppUi::Tag>{{tag}}</AppUi::Tag> {{/each}}
+              </:secondary>
+              <:trailing>
+                <button type="button" class="btn btn-box-tool" title="Quick view" data-demo-preview {{on "click" (fn this.preview record.id)}}><i class="fa fa-eye"></i></button>
+              </:trailing>
+            </Item>
+          {{else}}
+            <Item>
+              <:leading><span class="quick-list-demo-initials" data-demo-initials>{{record.initials}}</span></:leading>
+              <:primary>
+                <span>{{record.title}}</span>
+                <AppUi::StatusLabel @status={{record.status}} />
+              </:primary>
+              <:secondary>
+                {{record.creator}} · {{updated}}
+                {{#each record.tags as |tag|}}<AppUi::Tag>{{tag}}</AppUi::Tag> {{/each}}
+              </:secondary>
+            </Item>
+          {{/if}}
+          {{/let}}
         </:item>
         <:selectionActions as |selected clear|>
           <button type="button" class="btn btn-default btn-xs" data-demo-archive {{on "click" (fn this.select "archive" selected clear)}}>Archive</button>
@@ -48,6 +68,7 @@
     </div>
     <FormFields::FieldCheckbox @label="&#64;selectable" @checked={{this.selectable}} @select={{this.setSelectable}} data-control-selectable />
     <FormFields::FieldCheckbox @label="&#64;embedded" @checked={{this.embedded}} @select={{this.setEmbedded}} data-control-embedded />
+    <FormFields::FieldCheckbox @label="Trailing block" @checked={{this.trailingOn}} @select={{this.setTrailingOn}} data-control-trailing />
     <FormFields::FieldCheckbox @label="Search block" @checked={{this.searchOn}} @select={{this.setSearchOn}} data-control-search />
     <div class="form-group">
       <label for="demo-group-by">@groupBy</label>

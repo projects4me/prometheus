@@ -1,29 +1,22 @@
-{{#let (concat "quick-list-item" (if (has-block "leading") " quick-list-item--with-leading") (if @isActive " quick-list-item--active")) as |classes|}}
-  {{#if @route}}
-    <LinkTo @route={{@route}} @models={{this.models}} @query={{this.query}} class={{classes}} data-test-quick-list-item ...attributes>
-      {{#if (has-block "leading")}}
-        <div class="quick-list-item__leading" data-test-quick-list-item-leading>{{yield to="leading"}}</div>
-        <div class="quick-list-item__body" data-test-quick-list-item-body>
-          <div class="quick-list-item__primary" data-test-quick-list-item-primary>{{yield to="primary"}}</div>
-          {{#if (has-block "secondary")}}<div class="quick-list-item__secondary" data-test-quick-list-item-secondary>{{yield to="secondary"}}</div>{{/if}}
-        </div>
-      {{else}}
-        <div class="quick-list-item__primary" data-test-quick-list-item-primary>{{yield to="primary"}}</div>
-        {{#if (has-block "secondary")}}<div class="quick-list-item__secondary" data-test-quick-list-item-secondary>{{yield to="secondary"}}</div>{{/if}}
-      {{/if}}
-    </LinkTo>
-  {{else}}
-    <div class={{classes}} data-test-quick-list-item ...attributes>
-      {{#if (has-block "leading")}}
-        <div class="quick-list-item__leading" data-test-quick-list-item-leading>{{yield to="leading"}}</div>
-        <div class="quick-list-item__body" data-test-quick-list-item-body>
-          <div class="quick-list-item__primary" data-test-quick-list-item-primary>{{yield to="primary"}}</div>
-          {{#if (has-block "secondary")}}<div class="quick-list-item__secondary" data-test-quick-list-item-secondary>{{yield to="secondary"}}</div>{{/if}}
-        </div>
-      {{else}}
-        <div class="quick-list-item__primary" data-test-quick-list-item-primary>{{yield to="primary"}}</div>
-        {{#if (has-block "secondary")}}<div class="quick-list-item__secondary" data-test-quick-list-item-secondary>{{yield to="secondary"}}</div>{{/if}}
-      {{/if}}
+{{#let (concat "quick-list-item" (if (has-block "leading") " quick-list-item--with-leading") (if (has-block "trailing") " quick-list-item--with-trailing") (if @isActive " quick-list-item--active")) as |classes|}}
+  {{#if (has-block "trailing")}}
+    {{!-- The trailing block is a sibling of the row element, never inside it: no button inside the
+      link, and a click in it never reaches a click handler the host put on the item. --}}
+    <div class="quick-list-item-wrap" data-test-quick-list-item-wrap>
+      <QuickList::ItemRow @route={{@route}} @models={{this.models}} @query={{this.query}} @classes={{classes}}
+        @hasLeading={{has-block "leading"}} @hasSecondary={{has-block "secondary"}} ...attributes>
+        <:leading>{{yield to="leading"}}</:leading>
+        <:primary>{{yield to="primary"}}</:primary>
+        <:secondary>{{yield to="secondary"}}</:secondary>
+      </QuickList::ItemRow>
+      <div class="quick-list-item__trailing" data-test-quick-list-item-trailing>{{yield to="trailing"}}</div>
     </div>
+  {{else}}
+    <QuickList::ItemRow @route={{@route}} @models={{this.models}} @query={{this.query}} @classes={{classes}}
+      @hasLeading={{has-block "leading"}} @hasSecondary={{has-block "secondary"}} ...attributes>
+      <:leading>{{yield to="leading"}}</:leading>
+      <:primary>{{yield to="primary"}}</:primary>
+      <:secondary>{{yield to="secondary"}}</:secondary>
+    </QuickList::ItemRow>
   {{/if}}
 {{/let}}

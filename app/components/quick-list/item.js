@@ -23,6 +23,11 @@ import Component from '@glimmer/component';
  *   pushed to the right.
  * - `<:secondary>`: the second line: small grey text on one line, cut off with an ellipsis, with
  *   optional tags.
+ * - `<:trailing>`: optional row actions (an icon button) at the right of the row, vertically centred.
+ *   The row element and the block then sit side by side in a `quick-list-item-wrap`: the block is a
+ *   sibling of the link, never inside it, so a click in it never follows the link nor reaches a click
+ *   handler the host put on the item (`...attributes` stay on the row element). Without the block the
+ *   row is exactly as before.
  *
  * @class QuickListItemComponent
  * @extends Component
@@ -36,6 +41,9 @@ import Component from '@glimmer/component';
  *     <span class="label new">New</span>
  *   </:primary>
  *   <:secondary>{{idea.createdUserName}}</:secondary>
+ *   <:trailing>
+ *     <button type="button" class="btn btn-box-tool" {{on "click" (fn this.preview idea)}}><i class="fa fa-eye"></i></button>
+ *   </:trailing>
  * </QuickList::Item>
  */
 export default class QuickListItemComponent extends Component {
