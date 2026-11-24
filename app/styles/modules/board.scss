@@ -187,6 +187,10 @@
       display: none;
     }
 
+    .lane-add-row {
+      display: none;
+    }
+
     .lane-header {
       gap: 0.5rem;
       height: 100%;
@@ -304,6 +308,24 @@
         &.lane-status-box-success { --lane-color: #{$successColor}; }
         &.lane-status-box-warning { --lane-color: #{$warningColor}; }
         &.lane-status-box-danger { --lane-color: #{$dangerColor}; }
+      }
+
+      .lane-add-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        margin-bottom: 0.8rem;
+        padding: 1rem;
+        background: #fff;
+        border: 1px dashed #aaa;
+        border-radius: 0;
+        color: $mediumColor;
+
+        .lane-add-status {
+          color: $primaryColor;
+        }
       }
 
       .lane-empty {
