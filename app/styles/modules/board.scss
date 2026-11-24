@@ -648,7 +648,15 @@
     }
 
     .issue-card-right-meta {
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
       gap: 0.5rem;
+    }
+
+    .issue-card-assignee [data-issue-assignee-toggle] {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
     }
 
     .issue-card-comments-count, .issue-card-files-count {
@@ -677,6 +685,8 @@
       align-items: center;
       gap: 0.6rem;
       flex-wrap: wrap;
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
     .issue-type-tag {
