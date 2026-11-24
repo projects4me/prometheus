@@ -660,12 +660,15 @@
       border-top: 0.1rem solid #ddd;
       padding-top: 0.4rem;
       min-height: 4.6rem;
+      flex-wrap: wrap;
+      row-gap: 0.4rem;
     }
 
     .issue-card-right-meta {
       flex: 0 0 auto;
       flex-wrap: nowrap;
       gap: 0.5rem;
+      margin-left: auto;
     }
 
     .issue-card-assignee [data-issue-assignee-toggle] {
@@ -700,8 +703,8 @@
       align-items: center;
       gap: 0.6rem;
       flex-wrap: wrap;
-      flex: 1 1 auto;
-      min-width: 0;
+      flex: 1 0 auto;
+      max-width: 100%;
     }
 
     .issue-type-tag {
