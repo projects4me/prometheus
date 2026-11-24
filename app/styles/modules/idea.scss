@@ -245,3 +245,11 @@
     border: 1px solid $borderColor;
   }
 }
+
+.idea-created-issues {
+  .idea-created-group { padding: 8px 10px; background: #f9f9f9; border-bottom: 1px solid #f4f4f4; }
+  .idea-created-list { margin: 0; }
+  .idea-created-issue { padding: 6px 10px; border-bottom: 1px solid #f4f4f4; }
+  .idea-created-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .idea-created-meta > * { margin-right: 8px; }
+}

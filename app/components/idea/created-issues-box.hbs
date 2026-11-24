@@ -1,23 +1,37 @@
 <div class="box box-info idea-created-issues" data-idea-created-issues>
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.idea.createdIssues.title"}}</h3>
+    <div class="box-tools pull-right">
+      <span class="badge" data-idea-created-total>{{this.total}}</span>
+    </div>
   </div>
-  <div class="box-body">
+  <div class="box-body no-padding">
     {{#if @loadFailed}}
       <div class="alert alert-danger" role="alert" data-idea-created-error>{{t "views.app.idea.createdIssues.error"}}</div>
     {{/if}}
     {{#each this.groups as |group|}}
-      <h5 data-idea-created-group={{group.version}}>{{t "views.app.idea.createdIssues.version" version=group.version}}</h5>
-      <ul class="list-unstyled">
+      <div class="idea-created-group clearfix" data-idea-created-group={{group.version}}>
+        <strong>{{t "views.app.idea.createdIssues.version" version=group.version}}</strong>
+        {{#if group.dateLabel}}<span class="text-muted">{{group.dateLabel}}</span>{{/if}}
+        <span class="text-muted pull-right" data-idea-created-done>{{t "views.app.idea.createdIssues.doneCount" done=group.done total=group.total}}</span>
+      </div>
+      <ul class="list-unstyled idea-created-list">
         {{#each group.links as |link|}}
-          <li data-idea-created-issue={{link.id}}>
-            {{#if link.readable}}
-              <LinkTo @route="app.project.issue.page" @models={{array (lowercase link.projectShortcode) link.issueNumber}}>
-                {{link.label}}
-              </LinkTo>
-              {{link.subject}}
-            {{else}}
-              <span class="text-muted" data-idea-created-plain>{{link.label}} {{link.subject}}</span>
+          <li class="idea-created-issue" data-idea-created-issue={{link.id}}>
+            <div class="idea-created-line">
+              {{#if link.readable}}
+                <strong><LinkTo @route="app.project.issue.page" @models={{array (lowercase link.projectShortcode) link.issueNumber}}>{{link.label}}</LinkTo></strong>
+                <span class="idea-created-subject">{{link.subject}}</span>
+              {{else}}
+                <span class="text-muted" data-idea-created-plain>{{link.label}} {{link.subject}}</span>
+              {{/if}}
+            </div>
+            {{#if link.status}}
+              <div class="idea-created-meta">
+                <AppUi::StatusLabel @status={{link.status}} />
+                <span data-idea-created-priority><AppUi::PriorityIcon @priority={{link.priority}} /> {{t (concat "views.app.issue.lists.priority." link.priority)}}</span>
+                {{#if link.typeName}}<span class="text-muted" data-idea-created-type>{{link.typeName}}</span>{{/if}}
+              </div>
             {{/if}}
           </li>
         {{/each}}

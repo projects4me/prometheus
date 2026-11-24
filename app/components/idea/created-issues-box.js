@@ -3,6 +3,8 @@
  */
 
 import Component from '@glimmer/component';
+import { service } from '@ember/service';
+import { format as formatDate } from 'prometheus/utils/date';
 import decodePlanBody, { isProjectReadable } from 'prometheus/utils/idea-plan-body';
 
 /**
@@ -13,6 +15,8 @@ import decodePlanBody, { isProjectReadable } from 'prometheus/utils/idea-plan-bo
  * @extends Glimmer.Component
  */
 export default class IdeaCreatedIssuesBoxComponent extends Component {
+    @service store;
+
     /**
      * The links of the idea grouped by the version of their plan, the oldest version first
      *
@@ -37,7 +41,53 @@ export default class IdeaCreatedIssuesBoxComponent extends Component {
         });
         return [...byVersion.entries()]
             .sort(([a], [b]) => a - b)
-            .map(([version, links]) => ({ version, links }));
+            .map(([version, links]) => {
+                let plan = (this.args.plans ?? []).find(item => Number(item.version) === version);
+                return {
+                    version,
+                    dateLabel: plan?.dateCreated ? formatDate(plan.dateCreated, "DD MMM 'YY") : '',
+                    total: links.length,
+                    done: links.filter(link => link.done).length,
+                    links
+                };
+            });
+    }
+
+    /**
+     * The total number of created issues
+     *
+     * @property total
+     * @type Number
+     * @public
+     */
+    get total() {
+        return (this.args.planIssues ?? []).length;
+    }
+
+    /**
+     * Whether the issuestatus record of the given status name has the done flag. An unknown status is not done.
+     *
+     * @method isDone
+     * @param {String} statusName
+     * @returns {Boolean}
+     * @private
+     */
+    isDone(statusName) {
+        let status = this.store.peekAll('issuestatus').find(item => item.name === statusName);
+        return !!status && ['1', 'true'].includes(String(status.done).toLowerCase());
+    }
+
+    /**
+     * The name of the type of an issue, from the loaded type record
+     *
+     * @method typeName
+     * @param {Object} issue
+     * @returns {String|undefined}
+     * @private
+     */
+    typeName(issue) {
+        let type = issue.typeId ? this.store.peekRecord('issuetype', issue.typeId) : null;
+        return type?.name ?? issue.issuetype?.name;
     }
 
     /**
@@ -62,6 +112,10 @@ export default class IdeaCreatedIssuesBoxComponent extends Component {
             issueNumber: issue.issueNumber,
             label: `${issue.projectShortcode}-${issue.issueNumber}`,
             subject: issue.subject,
+            status: issue.status,
+            priority: issue.priority,
+            typeName: this.typeName(issue),
+            done: this.isDone(issue.status),
             readable: isProjectReadable(issue.projectId, this.args.readableProjectIds)
         };
     }
