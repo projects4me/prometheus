@@ -8,12 +8,9 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { isDestroying, isDestroyed } from '@ember/destroyable';
 
-/** How many blockers are named before "+N". */
-const SHOWN = 2;
-
 /**
- * The "Blocked by" label of the issue detail header: the first two open blockers as links, then "+N". Hidden while
- * loading and when nothing blocks the issue.
+ * The "Blocked by" label of the issue detail header: loads the open blockers and delegates the display to
+ * Issue::BlockedByTag. Hidden while loading and when nothing blocks the issue.
  *
  * @class IssueBlockedByLabelComponent
  * @namespace Prometheus.Components
@@ -30,17 +27,6 @@ export default class IssueBlockedByLabelComponent extends Component {
 
 	/** Counter of the latest load, so a slow older response cannot overwrite a newer one. */
 	requestId = 0;
-
-	get shown() {
-		return this.blockers.slice(0, SHOWN).map((issue) => ({
-			issue,
-			text: String(issue.projectId) === String(this.args.issue.projectId) ? `#${issue.issueNumber}` : `${String(issue.projectShortcode || '').toLowerCase()}-${issue.issueNumber}`,
-		}));
-	}
-
-	get more() {
-		return Math.max(this.blockers.length - SHOWN, 0);
-	}
 
 	@action
 	async load() {

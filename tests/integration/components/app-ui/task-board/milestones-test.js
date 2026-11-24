@@ -243,4 +243,44 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.true(sameLine, 'caret is on the same line as the avatar');
         assert.strictEqual(window.getComputedStyle(this.element.querySelector('.issue-card-right-meta')).flexShrink, '0', 'right meta does not shrink');
     });
+
+    test('the Blocked by tag sits between the time-left row and the footer, only on blocked cards', async function (assert) {
+        let issue = (id, extra = {}) => ({
+            id, issueNumber: id, projectId: 'p1', subject: `Issue ${id}`, status: 'open', priority: 'medium',
+            issuetype: { name: 'Bug', get() { return null; } }, dateModified: '2026-01-01', ...extra
+        });
+        let blocker = { id: 99, issueNumber: 99, projectId: 'p1', projectShortcode: 'APROM' };
+        this.set('milestone', { id: 1, issues: [
+            issue(1),
+            issue(2),
+            issue(3, { status: 'deferred' })
+        ] });
+        this.set('blockers', { for: (id) => (String(id) === '3' || String(id) === '1' ? [blocker] : []) });
+        this.set('statuses', [{ id: 1, name: 'open' }, { id: 2, name: 'deferred' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <div class="board">
+                <AppUi::TaskBoard::Milestones
+                    @milestone={{this.milestone}}
+                    @statuses={{this.statuses}}
+                    @statusClass={{this.statusClass}}
+                    @blockers={{this.blockers}}
+                    @selectIssue={{this.noop}}
+                    @getMilestoneProgress={{this.noop}}
+                    @getCompletedIssuesCount={{this.noop}}
+                />
+            </div>
+        `);
+
+        assert.dom('[data-test-blocked-by]').exists({ count: 2 }, 'only the two blocked cards show the tag');
+        let cards = [...this.element.querySelectorAll('.issue-card-blocked-by-wrap')];
+        assert.dom('.issue-card-time-left-wrap').exists({ count: 2 }, 'the deferred card has no time-left row');
+        cards.forEach((wrap) => {
+            assert.true(wrap.nextElementSibling?.classList.contains('issue-card-footer'), 'the tag row is directly above the footer');
+            assert.dom('.issue-card-footer [data-test-blocked-by]').doesNotExist();
+            assert.strictEqual(wrap.textContent.replace(/\s+/g, ' ').trim(), 'Blocked by #99');
+        });
+    });
 });

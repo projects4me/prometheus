@@ -284,4 +284,48 @@ module('Unit | Service | issue-relations', function (hooks) {
             assert.strictEqual(this.statusQueries, 1, 'one status query for the one other project');
         });
     });
+
+    module('openBlockersByIssue', function (hooks) {
+        hooks.beforeEach(function () {
+            this.linkQueries = [];
+            this.server.get('/issuelink', (schema, request) => {
+                this.linkQueries.push(request.queryParams.query);
+                return schema.issuelinks.where((link) => link.type === 'blocks' && String(link.targetProjectId) === String(this.project));
+            });
+            this.server.get('/issuestatus', (schema) => schema.issuestatuses.all());
+            this.project = this.server.create('project').id;
+            this.server.create('issuestatus', { projectId: this.project, name: 'new', done: '0' });
+            this.server.create('issuestatus', { projectId: this.project, name: 'closed', done: '1' });
+            this.blocks = (source, target) => this.server.create('issuelink', { type: 'blocks', sourceIssueId: source.id, targetIssueId: target.id, targetProjectId: this.project });
+        });
+
+        test('groups the open blockers by blocked issue with one issuelink query', async function (assert) {
+            let a = this.issue({ projectId: this.project, status: 'new' });
+            let b = this.issue({ projectId: this.project, status: 'new' });
+            let doneBlocker = this.issue({ projectId: this.project, status: 'closed' });
+            let free = this.issue({ projectId: this.project, status: 'new' });
+            this.blocks(a, b);
+            this.blocks(doneBlocker, b);
+            this.blocks(a, free);
+
+            let lookup = await this.service.openBlockersByIssue(this.project);
+
+            assert.strictEqual(this.linkQueries.length, 1);
+            assert.deepEqual(lookup.for(b.id).map((issue) => issue.id), [a.id], 'the done blocker does not count');
+            assert.deepEqual(lookup.for(free.id).map((issue) => issue.id), [a.id]);
+            assert.deepEqual(lookup.for(a.id), [], 'an issue nothing blocks has none');
+        });
+
+        test('a blocker moved to a done status drops out of the lookup', async function (assert) {
+            let a = this.issue({ projectId: this.project, status: 'new' });
+            let b = this.issue({ projectId: this.project, status: 'new' });
+            this.blocks(a, b);
+            let lookup = await this.service.openBlockersByIssue(this.project);
+            assert.strictEqual(lookup.for(b.id).length, 1);
+
+            this.store.push({ data: { type: 'issue', id: String(a.id), attributes: { status: 'closed' } } });
+
+            assert.strictEqual(lookup.for(b.id).length, 0);
+        });
+    });
 });

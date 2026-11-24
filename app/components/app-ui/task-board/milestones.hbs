@@ -126,7 +126,16 @@
                         </div>
                       </div>
                     {{/if}}
-                  {{/let}}                  
+                  {{/let}}
+
+                  {{!-- Issue card blocked by --}}
+                  {{#let (call (fn this.getBlockers issue)) as |blockers|}}
+                    {{#if blockers.length}}
+                      <div class="issue-card-blocked-by-wrap">
+                        <Issue::BlockedByTag @blockers={{blockers}} @projectId={{issue.projectId}} />
+                      </div>
+                    {{/if}}
+                  {{/let}}
 
                   {{!-- Issue card footer --}}
                   <div class="flex-row flex-jc-sb flex-ai-c issue-card-footer">

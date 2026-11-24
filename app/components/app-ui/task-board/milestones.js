@@ -551,6 +551,18 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	}
 
 	/**
+	 * The open blockers of an issue card, from the lookup the board loaded.
+	 *
+	 * @method getBlockers
+	 * @param {Object} issue
+	 * @returns {Array}
+	 * @public
+	 */
+	@action getBlockers(issue) {
+		return this.args.blockers?.for(issue.id) ?? [];
+	}
+
+	/**
 	 * Returns time-left display metadata for issue card.
 	 *
 	 * @method getIssueTimeLeftMeta

@@ -59,6 +59,14 @@ export default class BoardRoute extends App {
     @service bulk;
 
     /**
+     * Loads the blockers of the board's issues.
+     *
+     * @property issueRelations
+     * @type Ember.Service
+     */
+    @service issueRelations;
+
+    /**
      * This function is called by ember when we enter this route and returns
      * resolved promises to the controller. In this function we returns milestone
      * array which contains all milestones and backlog related to the current project.
@@ -69,6 +77,8 @@ export default class BoardRoute extends App {
     async model(params) {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
+        // started now so the blocker lookup runs alongside the board requests
+        let blockersRequest = this.loadBlockers(projectId);
         let searchQuery = params?.query || '';
         let withSearch = (query) => searchQuery ? `(${query}) AND (${searchQuery})` : query;
         let issueRels = 'assignedTo,spent,estimated,parentissue,issuetype,comments,files';
@@ -139,7 +149,8 @@ export default class BoardRoute extends App {
 
         return {
             milestones: [...milestones, backlog],
-            issueStatuses: issueStatuses || []
+            issueStatuses: issueStatuses || [],
+            blockers: await blockersRequest
         };
     }
 
@@ -168,6 +179,23 @@ export default class BoardRoute extends App {
         model.issueStatuses = [...model.issueStatuses.slice()].sort((a, b) => a.sortOrder - b.sortOrder);
         await this.loadSearchData();
         return model;
+    }
+
+    /**
+     * Loads the open blockers of the project's issues with one query. A failure is logged and the cards show no tag.
+     *
+     * @method loadBlockers
+     * @param {String} projectId
+     * @returns {Promise<Object>} the lookup `{ for(issueId) }`
+     * @private
+     */
+    async loadBlockers(projectId) {
+        try {
+            return await this.issueRelations.openBlockersByIssue(projectId);
+        } catch (error) {
+            console.error('Could not load the blockers of the board issues', error);
+            return this.issueRelations.emptyBlockers();
+        }
     }
 
     /**
@@ -230,6 +258,7 @@ export default class BoardRoute extends App {
         Logger.debug('Prometheus.Routes.Board::setupController');
         controller.set('milestones', model.milestones);
         controller.set('issueStatuses', model.issueStatuses);
+        controller.set('blockers', model.blockers);
         controller.set('querySchema', this.searchData?.schema ?? null);
         controller.set('savedsearches', this.searchData?.savedsearches ?? []);
         if (!controller.newSavedsearch) {

@@ -109,8 +109,62 @@ export default class IssueRelationsService extends Service {
 	async openBlockers(issue) {
 		let links = await this._links('target', issue, 'blocks');
 		let blockers = (await Promise.all(links.map((link) => link.sourceIssue))).filter(Boolean);
-		let projectIds = [...new Set(blockers.map((blocker) => String(blocker.projectId)))];
-		let doneByProject = new Map(
+		let doneByProject = await this._doneStatuses(blockers);
+		return blockers.filter((blocker) => this._isOpen(blocker, doneByProject));
+	}
+
+	/**
+	 * The blockers of every issue of a project, from one issuelink query. The result's `for(issueId)` gives the open
+	 * blockers of an issue; it reads each blocker's current status, so a blocker moved to a done status drops out
+	 * without a reload.
+	 *
+	 * @method openBlockersByIssue
+	 * @param {String|Number} projectId
+	 * @return {Promise<{for: function(String|Number): Issue[]}>}
+	 */
+	async openBlockersByIssue(projectId) {
+		let links = await this.store.query('issuelink', {
+			query: `((Issuelink.targetProjectId : ${projectId}) AND (Issuelink.type : blocks))`,
+			rels: 'sourceIssue,targetIssue',
+			limit: -1
+		});
+		let rows = await Promise.all(links.slice().map(async (link) => [await link.targetIssue, await link.sourceIssue]));
+		let byTarget = new Map();
+		for (let [target, source] of rows) {
+			if (!target || !source) {
+				continue;
+			}
+			let key = String(target.id);
+			if (!byTarget.has(key)) {
+				byTarget.set(key, []);
+			}
+			byTarget.get(key).push(source);
+		}
+		let doneByProject = await this._doneStatuses([...byTarget.values()].flat());
+		return { for: (issueId) => (byTarget.get(String(issueId)) || []).filter((blocker) => this._isOpen(blocker, doneByProject)) };
+	}
+
+	/**
+	 * The lookup of a board with no known blockers, used when loading them failed.
+	 *
+	 * @method emptyBlockers
+	 * @return {{for: function(String|Number): Issue[]}}
+	 */
+	emptyBlockers() {
+		return { for: () => [] };
+	}
+
+	/**
+	 * The done status names of each project the issues belong to, one status query per project.
+	 *
+	 * @method _doneStatuses
+	 * @private
+	 * @param {Issue[]} issues
+	 * @return {Promise<Map<String, Set<String>>>}
+	 */
+	async _doneStatuses(issues) {
+		let projectIds = [...new Set(issues.map((issue) => String(issue.projectId)))];
+		return new Map(
 			await Promise.all(
 				projectIds.map(async (projectId) => {
 					let statuses = await this.store.query('issuestatus', { query: `(Issuestatus.projectId : ${projectId})`, limit: 100 });
@@ -118,7 +172,16 @@ export default class IssueRelationsService extends Service {
 				})
 			)
 		);
-		return blockers.filter((blocker) => !doneByProject.get(String(blocker.projectId)).has(blocker.status));
+	}
+
+	/**
+	 * Whether a blocker is still open: its status is not a done status of its own project.
+	 *
+	 * @method _isOpen
+	 * @private
+	 */
+	_isOpen(blocker, doneByProject) {
+		return !doneByProject.get(String(blocker.projectId))?.has(blocker.status);
 	}
 
 	/**
