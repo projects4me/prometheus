@@ -10,6 +10,7 @@
 @import 'quick-list/group';
 @import 'quick-list/toolbar';
 @import 'quick-list/selection';
+@import 'quick-list/embedded';
 
 /* Shared with AppUi::EmptyState, so QuickList and DataTable show the same empty state. */
 .quick-list__state {
@@ -47,6 +48,9 @@
 
   .quick-list__count {
     color: $mediumColor;
+  }
+
+  .quick-list__header .quick-list__count {
     margin-left: 0.4rem;
   }
 

@@ -5,29 +5,26 @@
 import Component from '@glimmer/component';
 
 /**
- * The header of a `QuickList`: the box title with the record count, and the header tools.
+ * The record count of a `QuickList`, as muted text: in the box header, or at the start of the toolbar when the
+ * list is embedded.
  *
  * Arguments:
- * - `@title` {String}: the box title, already translated.
  * - `@count` {Number}: the number of records shown.
  * - `@showCount` {Boolean}: whether to show the count (the list hides it while loading or after an
  *   error). Defaults to true; the count is also hidden when `@count` is not a number.
  * - `@total` {Number}: optional total number of matching records. When it differs from `@count`, the
- *   header reads `count of total` (for example `0 of 64`); otherwise it shows `@count` alone.
+ *   count reads `count of total` (for example `0 of 64`); otherwise it shows `@count` alone.
  * - `@hasNext` {Boolean}: without a `@total`, a next page exists, so the count reads `20+`.
+ * - `@label` {String}: optional noun after the count, already translated (for example `11 Issues`).
  *
- * Block: the default block is rendered inside the header's `box-tools` (the list's `<:actions>`).
- *
- * @class QuickListHeaderComponent
+ * @class QuickListCountComponent
  * @extends Component
  * @author Agent Odysseus
  *
  * @example
- * <QuickList::Header @title="Ideas" @count={{0}} @total={{64}}>
- *   <button type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
- * </QuickList::Header>
+ * <QuickList::Count @count={{0}} @total={{64}} @label="Ideas" />
  */
-export default class QuickListHeaderComponent extends Component {
+export default class QuickListCountComponent extends Component {
 	/**
 	 * Whether a count was passed and should be shown.
 	 *
@@ -40,7 +37,7 @@ export default class QuickListHeaderComponent extends Component {
 	}
 
 	/**
-	 * Whether the header shows `count of total` instead of the count alone.
+	 * Whether the count reads `count of total` instead of the count alone.
 	 *
 	 * @property showTotal
 	 * @type {Boolean}

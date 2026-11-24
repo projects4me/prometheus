@@ -143,6 +143,48 @@ module('Integration | Component | quick-list', function (hooks) {
         assert.strictEqual(retried, 1, '@onRetry is called');
     });
 
+    test('embedded, it renders flat with the count in the toolbar', async function (assert) {
+        this.total = 64;
+        await render(hbs`
+          <QuickList @embedded={{true}} @title="issues" @items={{this.items}} @total={{this.total}}>
+            <:actions><button type="button" data-test-add>Add</button></:actions>
+            <:item as |record Item|><Item><:primary>{{record.name}}</:primary></Item></:item>
+          </QuickList>
+        `);
+
+        assert.dom('.quick-list').hasClass('quick-list--embedded').doesNotHaveClass('box').doesNotHaveClass('box-primary');
+        assert.dom('[data-test-quick-list-header]').doesNotExist('no box header');
+        assert.dom('[data-test-add]').doesNotExist('no header, so no actions');
+        assert.dom('.quick-list-toolbar .quick-list-toolbar-start [data-test-quick-list-count]').hasText('2 of 64 issues');
+        assert.dom('[data-test-quick-list-item]').exists({ count: 2 });
+
+        this.set('total', undefined);
+        assert.dom('[data-test-quick-list-count]').hasText('2 issues');
+    });
+
+    test('embedded, a next page reads count+ and the count hides while loading', async function (assert) {
+        this.noop = () => {};
+        await render(hbs`
+          <QuickList @embedded={{true}} @title="issues" @items={{this.items}} @page={{1}} @limit={{2}}
+                     @hasNext={{true}} @onPage={{this.noop}} @isLoading={{this.isLoading}} />
+        `);
+
+        assert.dom('.quick-list-toolbar [data-test-quick-list-count]').hasText('2+ issues');
+        assert.dom('[data-test-pager-range]').hasText('1-2 / 2+', 'the pager stays');
+
+        this.set('isLoading', true);
+        assert.dom('[data-test-quick-list-count]').doesNotExist();
+        assert.dom('.quick-list-toolbar').exists('the toolbar stays while loading');
+    });
+
+    test('by default it keeps the box and header and has no toolbar count', async function (assert) {
+        await render(LIST);
+
+        assert.dom('.quick-list').hasClass('box').hasClass('box-primary').doesNotHaveClass('quick-list--embedded');
+        assert.dom('[data-test-quick-list-header] [data-test-quick-list-count]').hasText('2');
+        assert.dom('.quick-list-toolbar').doesNotExist('no options, so no toolbar');
+    });
+
     test('an item without a route is not a link', async function (assert) {
         await render(hbs`
           <QuickList::Item @isActive={{true}}>

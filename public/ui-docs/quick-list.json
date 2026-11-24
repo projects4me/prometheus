@@ -4,7 +4,8 @@
   "doc": "quick-list.md",
   "description": "A narrow list of records inside a box: header with title and count, optional search, one row per record, grouping, selection, paging and the loading, empty and error states. It only displays what it is given.",
   "arguments": {
-    "title": { "type": "string", "required": false, "description": "The box title, already translated" },
+    "title": { "type": "string", "required": false, "description": "The box title, already translated; with embedded, the noun after the count in the toolbar" },
+    "embedded": { "type": "boolean", "required": false, "default": false, "description": "Renders the list flat inside a larger panel: no box frame or header (so no actions block); the count moves to the start of the toolbar" },
     "items": { "type": "array", "required": false, "default": [], "description": "The records to show, one row each" },
     "total": { "type": "number", "required": false, "description": "Record count; the header reads \"shown of total\" when it differs from the items shown" },
     "hasNext": { "type": "boolean", "required": false, "default": false, "description": "Whether a next page exists; used when there is no total" },
@@ -116,6 +117,7 @@
     { "name": "searchable", "description": "EzSearchCompact in the search block, with a clear action in the empty state", "arguments": ["onClearSearch"], "blocks": ["search"] },
     { "name": "grouped", "description": "Group headings from a group option", "arguments": ["groupBy", "groupOptions", "onGroup"], "blocks": ["group"] },
     { "name": "sortable", "description": "Sort choices in the toolbar", "arguments": ["sortOptions", "sort", "order", "onSort"] },
-    { "name": "selectable", "description": "A checkbox per row and the selection bar", "arguments": ["selectable", "onSelect"], "blocks": ["selectionActions"] }
+    { "name": "selectable", "description": "A checkbox per row and the selection bar", "arguments": ["selectable", "onSelect"], "blocks": ["selectionActions"] },
+    { "name": "embedded", "description": "Flat inside a larger panel: no box or header, the count in the toolbar", "arguments": ["embedded", "title"] }
   ]
 }

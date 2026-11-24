@@ -45,6 +45,7 @@ export default class DeveloperDemosQuickListComponent extends Component {
 	@tracked state = 'normal';
 	@tracked selectable = true;
 	@tracked searchOn = true;
+	@tracked embedded = false;
 	@tracked groupBy = '';
 	@tracked limit = 10;
 	@tracked page = 1;
@@ -151,6 +152,11 @@ export default class DeveloperDemosQuickListComponent extends Component {
 	}
 
 	@action
+	setEmbedded(event) {
+		this.embedded = event.target.checked;
+	}
+
+	@action
 	setSearchOn(event) {
 		this.searchOn = event.target.checked;
 	}
@@ -227,6 +233,7 @@ export default class DeveloperDemosQuickListComponent extends Component {
 		this.state = 'normal';
 		this.selectable = true;
 		this.searchOn = true;
+		this.embedded = false;
 		this.groupBy = '';
 		this.limit = 10;
 		this.page = 1;

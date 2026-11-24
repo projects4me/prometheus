@@ -1,0 +1,14 @@
+// QuickList with @embedded: flat inside a larger panel, no box frame or header. The count sits at the start of
+// the toolbar, which separates the list from what is above it. The pager keeps its own 10px side padding.
+.quick-list--embedded {
+  margin-bottom: 0;
+  background: transparent;
+
+  .quick-list-toolbar {
+    border-bottom: 1px solid $borderColor;
+  }
+
+  .quick-list__toolbar-count {
+    white-space: nowrap;
+  }
+}
