@@ -68,6 +68,7 @@ module('Unit | Modifier | initialize-sortable', function () {
         InitializeSortable.prototype._handleCollapsedLaneDrop.call(fake, { to: lane, from, item });
         assert.strictEqual(calls.length, 1);
         assert.strictEqual(calls[0][1], laneBody);
+        assert.strictEqual(item.parentElement, laneBody, 'the card is filed in the lane card area');
         assert.true(lane.classList.contains('lane-collapsed'));
         assert.true(lane.classList.contains('lane-dropped'));
     });

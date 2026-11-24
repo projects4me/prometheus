@@ -590,6 +590,9 @@ export default class InitializeSortable extends Modifier {
         if (!laneBody) {
             return;
         }
+        // Sortable leaves the card as a direct child of the narrow lane; file it in the lane's card area
+        // so it is laid out like any other card and shows when the lane is expanded
+        laneBody.appendChild(evt.item);
         _self.updateIssue(evt.item, laneBody, evt.from);
         lane.classList.add('lane-dropped');
         clearTimeout(_self.laneFlashTimer);
