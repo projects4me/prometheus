@@ -45,6 +45,7 @@ export default class DeveloperDemosQuickListComponent extends Component {
 	@tracked state = 'normal';
 	@tracked selectable = true;
 	@tracked searchOn = true;
+	@tracked trailingOn = true;
 	@tracked embedded = false;
 	@tracked groupBy = '';
 	@tracked limit = 10;
@@ -162,6 +163,11 @@ export default class DeveloperDemosQuickListComponent extends Component {
 	}
 
 	@action
+	setTrailingOn(event) {
+		this.trailingOn = event.target.checked;
+	}
+
+	@action
 	setGroupBy(event) {
 		this.groupBy = event.target.value === 'none' ? '' : event.target.value;
 	}
@@ -223,6 +229,11 @@ export default class DeveloperDemosQuickListComponent extends Component {
 		this.log.log('new');
 	}
 
+	@action
+	preview(id) {
+		this.log.log('preview', id);
+	}
+
 	/**
 	 * Back to the initial state of the demo.
 	 *
@@ -233,6 +244,7 @@ export default class DeveloperDemosQuickListComponent extends Component {
 		this.state = 'normal';
 		this.selectable = true;
 		this.searchOn = true;
+		this.trailingOn = true;
 		this.embedded = false;
 		this.groupBy = '';
 		this.limit = 10;

@@ -28,4 +28,15 @@ module('Integration | Component | developer/demos/quick-list', function (hooks) 
 		assert.dom('[data-demo-quick-list] [data-test-quick-list-header]').doesNotExist();
 		assert.dom('[data-demo-quick-list] .quick-list-toolbar [data-test-quick-list-count]').includesText('Issues');
 	});
+
+	test('the trailing control shows a quick view button that logs its own event', async function (assert) {
+		this.set('entry', { name: 'quick-list', label: 'QuickList', status: 'stable', summary: 's', usedIn: [] });
+		await render(hbs`<Developer::Demos::QuickList @entry={{this.entry}} />`);
+		assert.dom('[data-demo-quick-list] [data-demo-preview]').exists({ count: 10 });
+		await click('[data-demo-quick-list] [data-demo-preview]');
+		assert.dom('[data-event-log-row]').exists({ count: 1 });
+		await click('[data-control-trailing]');
+		assert.dom('[data-demo-quick-list] [data-demo-preview]').doesNotExist();
+		assert.dom('[data-demo-quick-list] [data-test-quick-list-item-wrap]').doesNotExist();
+	});
 });

@@ -1,0 +1,33 @@
+// QuickList::Item with a <:trailing> block: the row element (the link or the plain row) and the trailing
+// actions sit side by side in .quick-list-item-wrap, so the actions are never inside the link. The wrap takes
+// the row hover, so the whole row lights up together; the trailing block is vertically centred at the right.
+.quick-list {
+  .quick-list-item-wrap {
+    align-items: center;
+    display: flex;
+
+    &:hover,
+    &:focus-within {
+      background-color: $borderColor;
+    }
+  }
+
+  // Under the wrap so it outranks the base row padding, which comes later in quick-list.scss.
+  .quick-list-item-wrap > .quick-list-item--with-trailing {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-right: 0.6rem;
+  }
+
+  .quick-list-item__trailing {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 0.4rem;
+    padding-right: 1rem;
+
+    .btn {
+      border-radius: 0;
+    }
+  }
+}

@@ -61,14 +61,14 @@
           "name": "Item",
           "type": "component",
           "component": "quick-list/item",
-          "description": "The row content: primary and secondary lines, an optional leading visual on the left",
+          "description": "The row content: primary and secondary lines, an optional leading visual on the left and optional trailing row actions on the right, beside the row link and never inside it",
           "curried": ["isActive"],
           "arguments": {
             "route": { "type": "string", "required": false, "description": "The route the row links to; without it the row is not a link" },
             "model": { "type": "any", "required": false, "description": "The model or id for the route" },
             "query": { "type": "object", "required": false, "default": {}, "description": "The query params of the link" }
           },
-          "blocks": ["leading", "primary", "secondary"]
+          "blocks": ["leading", "primary", "secondary", "trailing"]
         }
       ]
     },

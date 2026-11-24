@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | quick-list/item', function (hooks) {
@@ -70,5 +70,67 @@ module('Integration | Component | quick-list/item', function (hooks) {
         assert.ok(leading.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING, 'body follows leading');
         assert.dom(leading).hasText('AL');
         assert.dom(body).hasText('Login form');
+    });
+
+    test('a trailing block renders beside the row, at its right', async function (assert) {
+        await render(hbs`
+          <QuickList::Item>
+            <:primary><span>Login form</span></:primary>
+            <:trailing><button type="button" data-test-preview>View</button></:trailing>
+          </QuickList::Item>
+        `);
+
+        let wrap = this.element.querySelector('[data-test-quick-list-item-wrap]');
+        assert.ok(wrap, 'the row and the trailing block share a wrapper');
+        let children = Array.from(wrap.children);
+        assert.strictEqual(children.length, 2, 'the wrapper holds the row, then the trailing block');
+        assert.dom(children[0]).hasAttribute('data-test-quick-list-item').hasClass('quick-list-item--with-trailing');
+        assert.dom(children[1]).hasAttribute('data-test-quick-list-item-trailing').hasClass('quick-list-item__trailing');
+        assert.dom('[data-test-quick-list-item-trailing] [data-test-preview]').hasText('View');
+        assert.dom('[data-test-quick-list-item] [data-test-preview]').doesNotExist();
+    });
+
+    test('a click in the trailing block runs only its own action, not the item click', async function (assert) {
+        let calls = [];
+        this.onItem = () => calls.push('item');
+        this.onPreview = () => calls.push('preview');
+        await render(hbs`
+          <QuickList::Item {{on "click" this.onItem}}>
+            <:primary><span>Login form</span></:primary>
+            <:trailing><button type="button" data-test-preview {{on "click" this.onPreview}}>View</button></:trailing>
+          </QuickList::Item>
+        `);
+
+        await click('[data-test-preview]');
+        assert.deepEqual(calls, ['preview'], 'only the trailing action ran');
+        await click('[data-test-quick-list-item-primary]');
+        assert.deepEqual(calls, ['preview', 'item'], 'the item click still works on the row');
+    });
+
+    test('a route row keeps the trailing button outside its link', async function (assert) {
+        await render(hbs`
+          <QuickList::Item @route="app.idea.page" @model="7">
+            <:primary><span>Login form</span></:primary>
+            <:trailing><button type="button" data-test-preview>View</button></:trailing>
+          </QuickList::Item>
+        `);
+
+        let link = this.element.querySelector('[data-test-quick-list-item]');
+        assert.strictEqual(link.tagName, 'A', 'the row is a link');
+        assert.strictEqual(link.querySelector('button'), null, 'no button inside the link');
+        assert.strictEqual(this.element.querySelector('[data-test-quick-list-item-wrap] a [data-test-preview]'), null);
+        assert.dom('[data-test-quick-list-item-wrap] > [data-test-quick-list-item-trailing] [data-test-preview]').exists();
+    });
+
+    test('a row without a trailing block has no wrapper', async function (assert) {
+        await render(hbs`
+          <QuickList::Item>
+            <:primary><span>Login form</span></:primary>
+          </QuickList::Item>
+        `);
+
+        assert.dom('[data-test-quick-list-item-wrap]').doesNotExist();
+        assert.dom('[data-test-quick-list-item-trailing]').doesNotExist();
+        assert.dom('[data-test-quick-list-item]').doesNotHaveClass('quick-list-item--with-trailing');
     });
 });
