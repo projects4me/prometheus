@@ -23,6 +23,8 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  * - `@activeId` {String|Number}: id of the record that is open; its row gets the active bar.
  * - `@isLoading` {Boolean}: shows three skeleton rows instead of the items.
  * - `@error` {*}: any truthy value shows the error state instead of the items.
+ * - `@revealActive` {Boolean}: when `@activeId` changes while grouped, expands the group holding that record if it
+ *   is collapsed.
  * - `@onRetry` {Function}: called by the "Try again" button of the error state; the button is hidden
  *   without it.
  * - `@onClearSearch` {Function}: called by the "Clear the search" button of the default empty state;
@@ -315,6 +317,29 @@ export default class QuickListComponent extends Component {
 	@action
 	clearSelection() {
 		this.selection.clear();
+	}
+
+	/**
+	 * With `@revealActive`, expands the collapsed group that holds the record `@activeId` changed to.
+	 *
+	 * @method activeChanged
+	 * @public
+	 */
+	@action
+	activeChanged() {
+		if (!this.args.revealActive) {
+			return;
+		}
+		// After the render that ran this modifier: the collapse state was already read in it.
+		Promise.resolve().then(() => {
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			let entry = (this.groups ?? []).find((e) => e.collapsed && e.rows.some((row) => row.isActive));
+			if (entry) {
+				this.collapseState.toggle(this.args.groupBy, entry.key);
+			}
+		});
 	}
 
 	/**

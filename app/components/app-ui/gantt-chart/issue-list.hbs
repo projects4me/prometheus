@@ -1,0 +1,33 @@
+<div class="gantt-issue-list" data-test-gantt-issue-list {{scroll-active-into-view @activeId}} ...attributes>
+  <QuickList @embedded={{true}} @title={{t "components.gantt.issueList.title"}} @items={{this.issues}}
+    @activeId={{@activeId}} @revealActive={{true}}
+    @groupOptions={{this.groupOptions}} @groupBy="milestone">
+    <:group as |group|>
+      {{#let (this.details group.key) as |m|}}
+        <span class="gantt-issue-list__milestone" data-test-gantt-issue-list-milestone>
+          <strong>{{m.name}}</strong>
+          {{#if m.total}}<span class="issue-count">({{m.done}}/{{m.total}})</span>{{/if}}
+          {{#if m.start}}<small class="text-muted gantt-issue-list__dates">{{this.range m.start m.end}}</small>{{/if}}
+        </span>
+      {{/let}}
+    </:group>
+    <:item as |issue Item|>
+      <Item data-issue-id={{issue.id}}
+        {{on "click" (fn this.select issue)}}>
+        <:primary>
+          <span class="gantt-issue-list__subject">#{{issue.issueNumber}} {{issue.subject}}</span>
+          <AppUi::StatusLabel @status={{issue.status}} />
+        </:primary>
+        <:secondary>
+          <AppUi::PriorityIcon @priority={{issue.priority}} />
+          <span class="gantt-issue-list__dates">{{this.range issue.startDate issue.endDate}}</span>
+        </:secondary>
+        <:trailing>
+          <button type="button" class="btn btn-box-tool" data-test-gantt-issue-list-open
+            aria-label={{t "components.gantt.issueList.open"}} title={{t "components.gantt.issueList.open"}}
+            {{on "click" (fn this.open issue)}}><i class="fa fa-eye" aria-hidden="true"></i></button>
+        </:trailing>
+      </Item>
+    </:item>
+  </QuickList>
+</div>

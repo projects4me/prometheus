@@ -1,4 +1,4 @@
-<div class="quick-list {{if @embedded 'quick-list--embedded' 'box box-primary'}}" data-test-quick-list {{on-update @items this.itemsChanged}} ...attributes>
+<div class="quick-list {{if @embedded 'quick-list--embedded' 'box box-primary'}}" data-test-quick-list {{on-update @items this.itemsChanged}} {{on-update @activeId this.activeChanged}} ...attributes>
   {{#unless @embedded}}
     <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @hasNext={{@hasNext}} @showCount={{this.showCount}}>
       {{yield to="actions"}}
