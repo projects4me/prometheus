@@ -362,3 +362,11 @@ add|ember-template-lint|no-inline-styles|33|31|33|31|ea01c4cda5bc6652e7ff847e611
 remove|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
 remove|ember-template-lint|no-duplicate-attributes|1|46|1|46|a9eede4f9d695837927696fe167522dacfb391df|1794614400000|||app/components/app-ui/notifications/notification.hbs
 add|ember-template-lint|require-presentational-children|63|274|63|274|63c443659267531e85ec2cd9b1e0dd766efabbca|1795478400000|||app/components/idea/plan-box.hbs
+remove|ember-template-lint|no-at-ember-render-modifiers|2|31|2|31|60910886803ef1eaf2c95b1c4f278130f4e14232|1794614400000|||app/components/app-ui/gantt-chart.hbs
+remove|ember-template-lint|no-at-ember-render-modifiers|2|67|2|67|06afd804863890ff7ff92c926bb9a4c986540804|1794614400000|||app/components/app-ui/gantt-chart.hbs
+remove|ember-template-lint|no-curly-component-invocation|65|8|65|8|1994cdd097430b7390882b041bd48036d3add75d|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
+remove|ember-template-lint|no-curly-component-invocation|65|58|65|58|e0c37d9aa502126740fd12395c2a52001571575a|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
+remove|ember-template-lint|require-presentational-children|54|12|54|12|f85f3d84b43b6b53c27477dbd12d548c78f5a96b|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
+remove|ember-template-lint|require-presentational-children|56|12|56|12|b059f68a432043e84eb523604410f4dae03a508f|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
+remove|ember-template-lint|require-presentational-children|59|8|59|8|ad1d3939cea3d669f349e0e8ffcd0ea122294588|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
+remove|ember-template-lint|no-invalid-interactive|36|103|36|103|18ed5271295043dcece0159f5509d0492fe43da9|1794614400000|||app/components/app-ui/gantt-chart/task-row.hbs
