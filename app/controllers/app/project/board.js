@@ -370,6 +370,14 @@ export default class AppProjectBoardController extends ProjectRelated {
     @tracked querySchema = null;
 
     /**
+     * The open blockers of the board's issues, `{ for(issueId) }`; null until loaded.
+     *
+     * @property blockers
+     * @type Object
+     */
+    @tracked blockers = null;
+
+    /**
      * The saved searches of the user for the issues, loaded by the route; always replaced, never mutated
      *
      * @property savedsearches
