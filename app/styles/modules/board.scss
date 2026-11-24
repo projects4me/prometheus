@@ -144,8 +144,8 @@
 
   .lane {
     height: inherit;
-    width: 28rem;
-    margin-right: 0.5rem;
+    width: 22rem;
+    margin-right: 0.4rem;
 
     .box-header {
       height: 4rem !important;
@@ -186,6 +186,8 @@
     .lane-header {
       gap: 0.5rem;
       height: 100%;
+      padding: 0.4rem 0.6rem;
+      font-size: 1.3rem;
     }
 
     .lane-title {
@@ -339,13 +341,13 @@
   .board-issue-item {
     position: relative;
     cursor: move;
-    margin: 0.3rem 0.3rem 1.2rem 0.3rem;
-    padding: 1rem;
+    margin: 0.2rem 0.2rem 0.6rem 0.2rem;
+    padding: 0.6rem 0.8rem;
     border-left: 0.5rem solid #eee;
     background-color: $backgroundColor;
     user-select: none;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.3px;
-    width: 27rem;
+    width: auto;
 
     // Quick view icon styles
     .issue-quick-view-icon {
@@ -383,11 +385,11 @@
         font-size: 1.4rem;
       }
 
-      margin-bottom: 1rem;
+      margin-bottom: 0.3rem;
 
       .issue-number {
         color: #646262;
-        font-size: 1.8rem;
+        font-size: 1.4rem;
         font-weight: 600;
       }
 
@@ -399,6 +401,8 @@
         color: #4b5563;
         border: 0.1rem solid #d8dde3;
         font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.1rem 0.4rem;
 
         &.priority-low {
           background-color: #e8f8f1;
@@ -433,11 +437,11 @@
     }
 
     .issue-card-subject {
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
 
       a {
-        font-size: 1.8rem;
-        line-height: 1.1;
+        font-size: 1.5rem;
+        line-height: 1.3;
         text-decoration: none;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -449,14 +453,14 @@
     }
 
     .issue-parent-reference {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
       display: flex;
       gap: 0.4rem;
       align-items: center;
 
       a {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
         display: inline;
       }
@@ -464,8 +468,8 @@
 
     .issue-card-effort {
       gap: 1.2rem;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
 
       span {
         white-space: nowrap;
@@ -473,7 +477,7 @@
     }
 
     .issue-card-time-left-wrap {
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.3rem;
     }
 
     .issue-card-time-left {
@@ -482,9 +486,9 @@
       color: #4b5563;
       border-radius: 0.8rem;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      padding: 0.5rem 0.8rem;
+      padding: 0.1rem 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -544,10 +548,10 @@
     }
 
     .issue-card-footer {
-      margin-top: 0.6rem;
+      margin-top: 0.2rem;
       margin-bottom: 0;
       border-top: 0.1rem solid #ddd;
-      padding-top: 0.8rem;
+      padding-top: 0.4rem;
       min-height: 4.6rem;
     }
 
