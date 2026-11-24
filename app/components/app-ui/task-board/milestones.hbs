@@ -45,7 +45,7 @@
               <i class="fa {{if collapsed "fa-angle-right" "fa-angle-left"}}"></i>
             </button>
             <div class="lane-title">
-              <span class="lane-name">{{status-label status.name}}</span> <span class="lane-count">({{call (fn this.getIssuesCountForStatus status.name)}})</span>
+              <span class="lane-name">{{status-label status.name}}</span> <span class="lane-count">({{call (fn this.getIssuesCountForStatus status.name)}})</span>{{#if collapsed}} <i class="fa fa-arrow-down lane-drop-icon" aria-hidden="true"></i>{{/if}}
             </div>
             {{#unless collapsed}}
               <AppUi::DottedAddButton 

@@ -232,6 +232,32 @@
       > .box-body {
         display: none;
       }
+
+      .lane-drop-icon {
+        display: none;
+      }
+
+      &.lane-droppable {
+        outline: 2px dashed black;
+        outline-offset: -2px;
+
+        .lane-drop-icon {
+          display: inline-block;
+          margin-top: 0.3rem;
+        }
+      }
+
+      &.lane-hover {
+        outline: 2px solid $primaryColor;
+        outline-offset: -2px;
+        background-color: rgba(179, 36, 79, 0.1);
+      }
+
+      &.lane-dropped {
+        outline: 2px solid $primaryColor;
+        outline-offset: -2px;
+        transition: outline-color 0.8s ease;
+      }
     }
 
     // Phones: one lane in view, the next peeks in; the status bar replaces the headers
