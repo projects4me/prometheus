@@ -196,4 +196,51 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
 
         assert.dom('[data-lane-add]').doesNotExist();
     });
+    test('assignee caret stays beside the avatar when the footer has several tags', async function (assert) {
+        this.set('milestone', {
+            id: 1,
+            issues: [{
+                id: 1,
+                issueNumber: 1,
+                subject: 'Several tags',
+                status: 'open',
+                priority: 'medium',
+                issuetype: { name: 'Task', get() { return null; } },
+                infoTag: 'Reopened',
+                files: [{ id: 1 }, { id: 2 }],
+                comments: [{ id: 1 }, { id: 2 }],
+                assignedTo: { id: 1, name: 'Some Person' },
+                dateModified: '2026-01-01'
+            }]
+        });
+        this.set('statuses', [{ id: 1, name: 'open' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <div class="board">
+                <AppUi::TaskBoard::Milestones
+                    @milestone={{this.milestone}}
+                    @statuses={{this.statuses}}
+                    @statusClass={{this.statusClass}}
+                    @selectIssue={{this.noop}}
+                    @getMilestoneProgress={{this.noop}}
+                    @getCompletedIssuesCount={{this.noop}}
+                />
+            </div>
+        `);
+
+        this.element.querySelector('.board').style.width = '260px';
+
+        let toggle = this.element.querySelector('.issue-card-assignee [data-issue-assignee-toggle]');
+        let caret = toggle.querySelector('.fa-caret-down');
+        let avatar = toggle.firstElementChild;
+        let avatarBox = avatar.getBoundingClientRect();
+        let caretBox = caret.getBoundingClientRect();
+
+        assert.strictEqual(window.getComputedStyle(toggle).display, 'inline-flex', 'toggle is inline-flex');
+        let sameLine = caretBox.top < avatarBox.bottom;
+        assert.true(sameLine, 'caret is on the same line as the avatar');
+        assert.strictEqual(window.getComputedStyle(this.element.querySelector('.issue-card-right-meta')).flexShrink, '0', 'right meta does not shrink');
+    });
 });
