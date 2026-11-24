@@ -10,7 +10,8 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
-| @title | String | none | The box title, already translated |
+| @title | String | none | The box title, already translated; with @embedded, the noun after the count ("11 Issues") |
+| @embedded | Boolean | false | Renders the list flat inside a larger panel: no box frame and no header; the count moves to the start of the toolbar |
 | @items | Array | none | The records to show, one row each |
 | @total | Number | none | Optional record count; the header reads "shown of total" when it differs from the items shown |
 | @hasNext | Boolean | false | Whether a next page exists; used when there is no total |
@@ -34,8 +35,8 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 
 ## Blocks
 
-- actions: header tools, in the box tools of the header; the create button goes here (`btn btn-primary btn-sm`, with ACL).
-- search: a slot under the header, for EzSearchCompact; rendered as is.
+- actions: header tools, in the box tools of the header; the create button goes here (`btn btn-primary btn-sm`, with ACL). Not rendered with @embedded (there is no header): put the tools in the surrounding panel.
+- search: a slot under the header (at the top when embedded), for EzSearchCompact; rendered as is.
 - item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line. An optional leading block on the Item puts a visual (an initials square, an icon, an avatar) in a column on the left, as wide as its content and top-aligned, with the two lines lined up beside it; with selection the row reads checkbox, leading, text.
 - group: replaces the label of a group heading; yields the group with key, label, items and count.
 - selectionActions: the actions of the selection bar; yields the selected ids and a function that clears the selection.
@@ -63,9 +64,11 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 - Keep the query, sort and page in the caller and pass them in.
 - Use EzSearchCompact in the search block.
 - Let the list draw the pagination: it sits in the box footer, never in the header.
+- Use @embedded when the list is one part of a larger panel (a list beside a timeline in one box): the page stays one panel, not a box per section. The panel draws the frame and the borders between its parts.
 
 ### Avoid
 
+- Do not put a box around an embedded list; the surrounding panel draws the frame.
 - Do not load data inside the list or ask for a total count.
 - Do not build your own rows or empty states; use the item and empty blocks.
 - Do not use it for wide, multi-column data; use a table.

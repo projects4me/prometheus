@@ -27,7 +27,9 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  *   without it.
  * - `@onClearSearch` {Function}: called by the "Clear the search" button of the default empty state;
  *   the button is hidden without it.
- * - `@title` {String}: the box title, already translated.
+ * - `@title` {String}: the box title, already translated. When embedded, the noun after the count (`11 Issues`).
+ * - `@embedded` {Boolean}: renders the list flat inside a larger panel: no `box box-primary` frame and no
+ *   header (so no `<:actions>`); the count moves to the start of the toolbar, which is then always shown.
  *
  * Named blocks:
  * - `<:actions>`: header tools, rendered in the header's `box-tools`.
@@ -186,7 +188,7 @@ export default class QuickListComponent extends Component {
 	}
 
 	/**
-	 * Whether the toolbar is shown: any group or sort option, or `@selectable`.
+	 * Whether the toolbar is shown: any group or sort option, `@selectable`, or `@embedded` (it holds the count).
 	 *
 	 * @property showToolbar
 	 * @type {Boolean}
@@ -194,6 +196,7 @@ export default class QuickListComponent extends Component {
 	 */
 	get showToolbar() {
 		return (
+			!!this.args.embedded ||
 			!!this.args.selectable ||
 			(this.args.groupOptions ?? []).length > 0 ||
 			(this.args.sortOptions ?? []).length > 0

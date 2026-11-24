@@ -1,17 +1,11 @@
+{{!--
+  The header of a QuickList: the box title with the record count (QuickList::Count: @count, @total, @hasNext,
+  @showCount), and the header tools (the default block, the list's <:actions>). @title is already translated.
+--}}
 <div class="box-header with-border quick-list__header" data-test-quick-list-header>
   <h3 class="box-title">
     {{@title}}
-    {{#if this.hasCount}}
-      <small class="quick-list__count" data-test-quick-list-count>
-        {{#if this.showTotal}}
-          {{t "components.quickList.countOfTotal" count=@count total=@total}}
-        {{else if this.showMore}}
-          {{@count}}+
-        {{else}}
-          {{@count}}
-        {{/if}}
-      </small>
-    {{/if}}
+    <QuickList::Count @count={{@count}} @total={{@total}} @hasNext={{@hasNext}} @showCount={{@showCount}} />
   </h3>
   {{#if (has-block)}}
     <div class="box-tools pull-right" data-test-quick-list-actions>

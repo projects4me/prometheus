@@ -1,0 +1,12 @@
+{{#if this.hasCount}}
+  <small class="quick-list__count" data-test-quick-list-count ...attributes>
+    {{#if this.showTotal}}
+      {{t "components.quickList.countOfTotal" count=@count total=@total}}
+    {{else if this.showMore}}
+      {{@count}}+
+    {{else}}
+      {{@count}}
+    {{/if}}
+    {{@label}}
+  </small>
+{{/if}}

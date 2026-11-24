@@ -1,7 +1,9 @@
-<div class="box box-primary quick-list" data-test-quick-list {{on-update @items this.itemsChanged}} ...attributes>
-  <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @hasNext={{@hasNext}} @showCount={{this.showCount}}>
-    {{yield to="actions"}}
-  </QuickList::Header>
+<div class="quick-list {{if @embedded 'quick-list--embedded' 'box box-primary'}}" data-test-quick-list {{on-update @items this.itemsChanged}} ...attributes>
+  {{#unless @embedded}}
+    <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @hasNext={{@hasNext}} @showCount={{this.showCount}}>
+      {{yield to="actions"}}
+    </QuickList::Header>
+  {{/unless}}
   {{yield to="search"}}
   {{#if this.selection.count}}
     <QuickList::SelectionBar @state={{this.selectionState}} @count={{this.selection.count}}
@@ -14,6 +16,10 @@
       <:start>
         {{#if @selectable}}
           <QuickList::SelectAll @state={{this.selectionState}} @onToggle={{this.toggleAll}} />
+        {{/if}}
+        {{#if @embedded}}
+          <QuickList::Count class="quick-list__toolbar-count" @label={{@title}} @count={{this.items.length}} @total={{@total}}
+            @hasNext={{@hasNext}} @showCount={{this.showCount}} />
         {{/if}}
       </:start>
     </QuickList::Toolbar>

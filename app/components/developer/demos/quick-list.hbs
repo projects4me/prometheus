@@ -9,7 +9,7 @@
         @onClearSearch={{if this.query this.clearSearch}}
         @groupOptions={{this.groupOptions}} @groupBy={{this.groupBy}} @onGroup={{this.setGroup}}
         @sortOptions={{this.sortOptions}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.setSort}}
-        @selectable={{this.selectable}}>
+        @selectable={{this.selectable}} @embedded={{this.embedded}}>
         <:actions>
           <button type="button" class="btn btn-box-tool" data-demo-new title="New record" {{on "click" this.newRecord}}><i class="fa fa-plus"></i></button>
         </:actions>
@@ -47,6 +47,7 @@
       <Developer::StateSwitch @value={{this.state}} @onChange={{this.setState}} />
     </div>
     <FormFields::FieldCheckbox @label="&#64;selectable" @checked={{this.selectable}} @select={{this.setSelectable}} data-control-selectable />
+    <FormFields::FieldCheckbox @label="&#64;embedded" @checked={{this.embedded}} @select={{this.setEmbedded}} data-control-embedded />
     <FormFields::FieldCheckbox @label="Search block" @checked={{this.searchOn}} @select={{this.setSearchOn}} data-control-search />
     <div class="form-group">
       <label for="demo-group-by">@groupBy</label>
