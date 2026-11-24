@@ -64,6 +64,40 @@ export default function (assert) {
 	})
 
 	/**
+	 * Collapses every expanded status lane.
+	 */
+	.when('User collapses every lane', async function () {
+		let toggles = Array.from(document.querySelectorAll('[data-lane-toggle]'));
+		assert.ok(toggles.length > 0, 'The board has lanes');
+		for (let toggle of toggles) {
+			if (!toggle.closest('.lane').classList.contains('lane-collapsed')) {
+				await click(toggle);
+			}
+		}
+	})
+
+	/**
+	 * Verifies the lane container keeps at least 45rem while all lanes are collapsed.
+	 */
+	.then('The board area should keep its minimum height', function () {
+		try {
+			let lanes = document.querySelectorAll('[data-lane-toggle]');
+			lanes.forEach((toggle) => {
+				assert.ok(toggle.closest('.lane').classList.contains('lane-collapsed'), 'Every lane is collapsed');
+			});
+			let container = document.querySelector('.board .milestone.box-body');
+			assert.ok(container, 'The lane container exists');
+			let minHeight = 45 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+			assert.ok(container.offsetHeight >= minHeight - 1, `Board area is at least 45rem high (${container.offsetHeight}px)`);
+		} finally {
+			// The collapsed lanes are persisted per project: don't leak them into other scenarios
+			Object.keys(window.localStorage)
+				.filter((key) => key.startsWith('board-collapsed-lanes:'))
+				.forEach((key) => window.localStorage.removeItem(key));
+		}
+	})
+
+	/**
 	 * Verifies the lane is expanded again.
 	 */
 	.then('The $status lane should be expanded', function (status) {

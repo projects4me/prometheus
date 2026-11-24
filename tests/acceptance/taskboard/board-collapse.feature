@@ -67,3 +67,8 @@ Feature: Board collapse functionality | Taskboard
     And The new lane should be remembered as collapsed
     When User toggles the new lane
     Then The new lane should be expanded
+
+  Scenario: The board keeps its height when every lane is collapsed
+
+    When User collapses every lane
+    Then The board area should keep its minimum height
