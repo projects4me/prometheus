@@ -114,4 +114,32 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         assert.dom('#tab_5').hasClass('active', 'the chosen milestone pane is shown');
         assert.dom('[data-milestone-select-row] .milestone-mark-complete-mobile').exists('Complete button shows for a sprint');
     });
+
+    test('an empty lane shows the empty state, a filled lane does not', async function (assert) {
+        this.set('milestone', { id: 1, issues: [{
+            id: 1, issueNumber: 1, subject: 'Issue 1', status: 'open', priority: 'medium',
+            issuetype: { name: 'Bug', get() { return null; } }, dateModified: '2026-01-01'
+        }] });
+        this.set('statuses', [{ id: 1, name: 'open' }, { id: 2, name: 'inprogress' }]);
+        this.set('noop', () => {});
+        this.set('statusClass', {});
+
+        await render(hbs`
+            <div class="board">
+                <AppUi::TaskBoard::Milestones
+                    @milestone={{this.milestone}}
+                    @statuses={{this.statuses}}
+                    @statusClass={{this.statusClass}}
+                    @selectIssue={{this.noop}}
+                    @getMilestoneProgress={{this.noop}}
+                    @getCompletedIssuesCount={{this.noop}}
+                />
+            </div>
+        `);
+
+        assert.dom('[data-lane-empty="open"]').doesNotExist('a lane with issues has no empty state');
+        assert.dom('[data-lane-empty="inprogress"]').exists('an empty lane has the empty state');
+        assert.dom('[data-lane-empty="inprogress"] .fa-inbox').exists('the empty state has the inbox icon');
+        assert.dom('[data-lane-empty="inprogress"] span').hasText(/^No issues in /, 'the empty state names the status');
+    });
 });
