@@ -54,4 +54,21 @@ module('Unit | Modifier | initialize-sortable', function () {
         sortable.destroy();
         lane.remove();
     });
+
+    test('a drop on a collapsed lane saves the lane status through updateIssue and keeps the lane collapsed', function (assert) {
+        let laneBody = document.createElement('div');
+        let lane = document.createElement('div');
+        lane.className = 'lane lane-collapsed';
+        lane.appendChild(laneBody);
+        laneBody.className = 'lane box-body';
+        let calls = [];
+        let item = document.createElement('div');
+        let from = document.createElement('div');
+        let fake = { updateIssue: (...args) => calls.push(args) };
+        InitializeSortable.prototype._handleCollapsedLaneDrop.call(fake, { to: lane, from, item });
+        assert.strictEqual(calls.length, 1);
+        assert.strictEqual(calls[0][1], laneBody);
+        assert.true(lane.classList.contains('lane-collapsed'));
+        assert.true(lane.classList.contains('lane-dropped'));
+    });
 });
