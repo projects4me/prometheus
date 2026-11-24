@@ -255,23 +255,38 @@
         }
       }
 
-      // While dragging, Sortable puts the card's placeholder in the narrow lane; keep it out of sight so its
-      // text is not squeezed into the lane width (on drop the card moves into the lane's card area)
-      > .board-issue-item.sortable-ghost,
-      > .board-issue-item.sortable-chosen {
-        display: none;
-      }
+      // Peek: while a card is held over the lane it opens at full width, so the card drops into its card area
+      // (utils/ui/lane-peek.js adds the class; it is never saved)
+      &.lane-peek {
+        width: 22rem;
+        flex: 0 0 22rem;
+        outline: none;
 
-      &.lane-hover {
-        outline: 2px solid $primaryColor;
-        outline-offset: -2px;
-        background-color: rgba(179, 36, 79, 0.1);
-      }
+        .lane-header {
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 0.4rem 0.6rem;
+        }
 
-      &.lane-dropped {
-        outline: 2px solid $primaryColor;
-        outline-offset: -2px;
-        transition: outline-color 0.8s ease;
+        .lane-title {
+          flex: 1;
+          writing-mode: horizontal-tb;
+          position: static;
+          transform: none;
+          padding-top: 0;
+        }
+
+        .lane-collapse-toggle {
+          order: 0;
+        }
+
+        .lane-drop-icon {
+          display: none;
+        }
+
+        > .box-body {
+          display: block;
+        }
       }
     }
 

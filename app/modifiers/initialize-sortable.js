@@ -7,6 +7,7 @@ import { registerDestructor } from '@ember/destroyable';
 import Sortable from 'sortablejs';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import LanePeek from 'prometheus/utils/ui/lane-peek';
 
 /**
  * Pixels the pointer must travel after mousedown before SortableJS starts a fallback drag.
@@ -29,11 +30,6 @@ const FALLBACK_TOLERANCE = 5;
  * @final
  */
 const TOUCH_DRAG_DELAY = 150;
-
-/**
- * How long, in milliseconds, a collapsed lane keeps its outline after a card is dropped on it.
- */
-const LANE_DROPPED_FLASH = 800;
 
 /**
  * Media query for phones (below Bootstrap's 768px breakpoint); card dragging is off there.
@@ -340,6 +336,15 @@ export default class InitializeSortable extends Modifier {
     draggedItem = null;
 
     /**
+     * Opens a collapsed lane while a card is dragged over it, so the card drops into the lane's card area.
+     *
+     * @property lanePeek
+     * @type LanePeek
+     * @private
+     */
+    lanePeek = new LanePeek();
+
+    /**
      * The trackedProject service provides id of the selected project.
      *
      * @property trackedProject
@@ -369,8 +374,6 @@ export default class InitializeSortable extends Modifier {
         this._attachSortableToLanes();
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
-        this._setupCollapsedLaneSortables();
-        this._observeLaneCollapse();
     }
 
     /**
@@ -390,7 +393,6 @@ export default class InitializeSortable extends Modifier {
 
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
-        _self._setupCollapsedLaneSortables();
     }
 
     /**
@@ -454,7 +456,6 @@ export default class InitializeSortable extends Modifier {
         this._cleanupMilestoneTabSortables();
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
-        this._setupCollapsedLaneSortables();
     }
 
     /**
@@ -484,6 +485,7 @@ export default class InitializeSortable extends Modifier {
         let _self = this;
         _self.selectDropzones(evt);
         _self.draggedItem = null;
+        _self.lanePeek.start();
     }
 
     /**
@@ -496,11 +498,12 @@ export default class InitializeSortable extends Modifier {
      */
     _onEnd(evt) {
         let _self = this;
-        
+
+        // Collapse a peeked lane first, so a failing save can't leave it open.
+        _self.lanePeek.stop();
+
         if (evt.to !== evt.from) {
-            if (evt.to.classList.contains('lane-collapsed')) {
-                _self._handleCollapsedLaneDrop(evt);
-            } else if (evt.to.parentElement.hasAttribute('data-milestone-tab')) {
+            if (evt.to.parentElement.hasAttribute('data-milestone-tab')) {
                 evt.to = evt.to.parentElement;
                 if (!evt.to.classList.contains('active')) {
                     let prevMilestoneId = evt.from.getAttribute('data-field-milestone-id');
@@ -570,95 +573,7 @@ export default class InitializeSortable extends Modifier {
         });
 
         document.querySelectorAll('.lane.lane-collapsed').forEach((lane) => {
-            lane.classList.remove('lane-droppable', 'lane-hover');
-        });
-    }
-
-    /**
-     * This function handles the drop of an issue card on a collapsed lane. The lane's hidden card area
-     * carries the status and milestone data, so it is handed to updateIssue as the target. The lane stays
-     * collapsed and flashes briefly to confirm the drop.
-     *
-     * @method _handleCollapsedLaneDrop
-     * @param {Object} evt
-     * @private
-     */
-    _handleCollapsedLaneDrop(evt) {
-        let _self = this;
-        let lane = evt.to;
-        let laneBody = lane.querySelector(':scope > .lane.box-body');
-        if (!laneBody) {
-            return;
-        }
-        // Sortable leaves the card as a direct child of the narrow lane; file it in the lane's card area
-        // so it is laid out like any other card and shows when the lane is expanded
-        laneBody.appendChild(evt.item);
-        _self.updateIssue(evt.item, laneBody, evt.from);
-        lane.classList.add('lane-dropped');
-        clearTimeout(_self.laneFlashTimer);
-        _self.laneFlashTimer = setTimeout(() => lane.classList.remove('lane-dropped'), LANE_DROPPED_FLASH);
-    }
-
-    /**
-     * This function destroys the sortable instances of the collapsed lanes.
-     *
-     * @method _cleanupCollapsedLaneSortables
-     * @private
-     */
-    _cleanupCollapsedLaneSortables() {
-        document.querySelectorAll('.lane[data-lane-name]').forEach((lane) => {
-            if (lane.collapsedSortable) {
-                lane.collapsedSortable.destroy();
-                lane.collapsedSortable = null;
-            }
-        });
-    }
-
-    /**
-     * This function makes every collapsed lane a drop target (no sorting), like the milestone tabs, and
-     * removes the target from lanes that are open again.
-     *
-     * @method _setupCollapsedLaneSortables
-     * @private
-     */
-    _setupCollapsedLaneSortables() {
-        let _self = this;
-        document.querySelectorAll('.lane[data-lane-name]').forEach((lane) => {
-            let collapsed = lane.classList.contains('lane-collapsed');
-            if (lane.collapsedSortable && !collapsed) {
-                lane.collapsedSortable.destroy();
-                lane.collapsedSortable = null;
-            } else if (!lane.collapsedSortable && collapsed) {
-                lane.collapsedSortable = new Sortable(lane, {
-                    group: _self.groupName,
-                    sort: false,
-                    forceFallback: _self.forceFallback,
-                    disabled: !!_self.disableSortable,
-                    animation: _self.animationSpeed,
-                    draggable: '.not-draggable',
-                    filter: '*'
-                });
-            }
-        });
-    }
-
-    /**
-     * This function re-creates the collapsed lane targets when a lane is collapsed or expanded.
-     *
-     * @method _observeLaneCollapse
-     * @private
-     */
-    _observeLaneCollapse() {
-        let _self = this;
-        if (_self.laneObserver || typeof MutationObserver === 'undefined') {
-            return;
-        }
-        _self.laneObserver = new MutationObserver(() => _self._setupCollapsedLaneSortables());
-        _self.laneObserver.observe(_self.element, {
-            attributes: true,
-            attributeFilter: ['class'],
-            subtree: true,
-            childList: true
+            lane.classList.remove('lane-droppable');
         });
     }
 
@@ -863,9 +778,8 @@ export default class InitializeSortable extends Modifier {
                 _self._onEnd(evt);
             },
             onMove: (evt) => {
-                let hoverClass = evt.to.classList.contains('lane-collapsed') ? 'lane-hover' : 'box-body-color';
-                evt.to.classList.add(hoverClass);
-                (_self.oldLane) && _self.oldLane.classList.remove('box-body-color', 'lane-hover');
+                evt.to.classList.add('box-body-color');
+                (_self.oldLane) && _self.oldLane.classList.remove('box-body-color');
                 _self.oldLane = evt.to;
                 _self.draggedItem = (evt.to != evt.from) ? evt.dragged : null;
             },
@@ -895,10 +809,6 @@ export default class InitializeSortable extends Modifier {
             }
         });
         _self._cleanupMilestoneTabSortables();
-        _self._cleanupCollapsedLaneSortables();
-        if (_self.laneObserver) {
-            _self.laneObserver.disconnect();
-            _self.laneObserver = null;
-        }
+        _self.lanePeek.stop();
     }
 }

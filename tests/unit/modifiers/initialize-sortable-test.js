@@ -55,21 +55,70 @@ module('Unit | Modifier | initialize-sortable', function () {
         lane.remove();
     });
 
-    test('a drop on a collapsed lane saves the lane status through updateIssue and keeps the lane collapsed', function (assert) {
-        let laneBody = document.createElement('div');
-        let lane = document.createElement('div');
-        lane.className = 'lane lane-collapsed';
-        lane.appendChild(laneBody);
-        laneBody.className = 'lane box-body';
-        let calls = [];
-        let item = document.createElement('div');
+    test('drag start starts the lane peek', function (assert) {
         let from = document.createElement('div');
-        let fake = { updateIssue: (...args) => calls.push(args) };
-        InitializeSortable.prototype._handleCollapsedLaneDrop.call(fake, { to: lane, from, item });
-        assert.strictEqual(calls.length, 1);
-        assert.strictEqual(calls[0][1], laneBody);
-        assert.strictEqual(item.parentElement, laneBody, 'the card is filed in the lane card area');
-        assert.true(lane.classList.contains('lane-collapsed'));
-        assert.true(lane.classList.contains('lane-dropped'));
+        let started = 0;
+        let fake = {
+            selectDropzones: () => {},
+            lanePeek: { start: () => started++ }
+        };
+        InitializeSortable.prototype._onStart.call(fake, { from });
+        assert.strictEqual(started, 1);
+    });
+
+    test('a drop in a peeked lane card area saves its status and the lane collapses again', function (assert) {
+        let lane = document.createElement('div');
+        lane.className = 'lane lane-collapsed lane-peek';
+        let laneBody = document.createElement('div');
+        laneBody.className = 'lane box-body';
+        lane.appendChild(laneBody);
+        let fromLane = document.createElement('div');
+        let from = document.createElement('div');
+        from.className = 'lane box-body';
+        fromLane.appendChild(from);
+        let item = document.createElement('div');
+        laneBody.appendChild(item);
+        let calls = [];
+        let stopped = 0;
+        let fake = {
+            updateIssue: (...args) => calls.push(args),
+            unSelectDropzones: () => {},
+            lanePeek: {
+                stop: () => {
+                    stopped++;
+                    lane.classList.remove('lane-peek');
+                }
+            }
+        };
+        InitializeSortable.prototype._onEnd.call(fake, { to: laneBody, from, item });
+        assert.deepEqual(calls, [[item, laneBody, from]], 'saved through updateIssue with the lane card area');
+        assert.strictEqual(stopped, 1, 'the peek stops on drag end');
+        assert.false(lane.classList.contains('lane-peek'));
+        assert.true(lane.classList.contains('lane-collapsed'), 'the lane is collapsed again');
+    });
+
+    test('drag end stops the lane peek even when the card is put back', function (assert) {
+        let from = document.createElement('div');
+        let stopped = 0;
+        let fake = { unSelectDropzones: () => {}, lanePeek: { stop: () => stopped++ } };
+        InitializeSortable.prototype._onEnd.call(fake, { to: from, from, item: document.createElement('div') });
+        assert.strictEqual(stopped, 1);
+    });
+
+    test('collapsed lanes keep their card area Sortable for the peek drop', function (assert) {
+        let board = document.createElement('div');
+        board.innerHTML = '<div class="lane lane-collapsed"><div class="lane box-body"></div></div>';
+        document.body.appendChild(board);
+        let fake = {
+            element: board,
+            getSortableOptions: () => ({}),
+            _setupMilestoneTabsAsSortable: () => {},
+            _setupTabSwitching: () => {}
+        };
+        InitializeSortable.prototype._attachSortableToLanes.call(fake);
+        let body = board.querySelector('.lane.box-body');
+        assert.ok(Sortable.get(body), 'the hidden card area has its Sortable');
+        Sortable.get(body).destroy();
+        board.remove();
     });
 });
