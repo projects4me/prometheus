@@ -220,6 +220,7 @@ export default class IdeaPlanBoxComponent extends Component {
                     created[link.key] = {
                         projectShortcode,
                         issueNumber,
+                        status: issue.status,
                         readable: isProjectReadable(issue.projectId, this.readableProjectIds)
                     };
                 } else {
