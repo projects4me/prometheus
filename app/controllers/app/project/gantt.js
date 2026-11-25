@@ -627,6 +627,32 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
+	 * Ids of the parent issues whose children are collapsed, on both sides of the grid
+	 *
+	 * @property collapsedIssues
+	 * @type Set
+	 * @public
+	 */
+	@tracked collapsedIssues = new Set();
+
+	/**
+	 * Collapses or expands the children of a parent issue
+	 *
+	 * @method toggleIssue
+	 * @param {String} issueId The parent issue's id
+	 * @public
+	 */
+	@action toggleIssue(issueId) {
+		let collapsed = new Set(this.collapsedIssues);
+		if (collapsed.has(issueId)) {
+			collapsed.delete(issueId);
+		} else {
+			collapsed.add(issueId);
+		}
+		this.collapsedIssues = collapsed;
+	}
+
+	/**
 	 * Check if a milestone is expanded
 	 *
 	 * @method isMilestoneExpanded

@@ -79,6 +79,38 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     const barRow = (id) => `.gantt-timeline-row.task-row[data-issue-id="${id}"]`;
     const topOf = (selector) => document.querySelector(selector).getBoundingClientRect().top;
 
+    test('parent and child issues read as a tree in the grid; collapsing hides the children on both sides', async function (assert) {
+        this.milestones[0].issues[0].parentId = '2';
+        this.collapsed = new Set();
+        this.toggleIssue = (id) => {
+            const next = new Set(this.collapsed);
+            next.has(id) ? next.delete(id) : next.add(id);
+            this.set('collapsed', next);
+        };
+        await render(hbs`<AppUi::GanttChart
+            @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+            @timeTotals={{this.timeTotals}}
+            @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+            @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
+            @collapsedIssues={{this.collapsed}} @onToggleIssue={{this.toggleIssue}}
+            @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}}
+            @onCloseIssuePanel={{this.noop}} />`);
+        const order = [...document.querySelectorAll(`${GRID} .gantt-grid-row.task-row`)].map((r) => r.dataset.issueId);
+        assert.deepEqual(order, ['2', '1'], 'the child follows its parent');
+        assert.dom(`${gridRow('1')} .gantt-grid-name`).hasAttribute('data-depth', '1');
+        assert.dom(`${gridRow('2')} [data-test-gantt-issue-toggle]`).exists();
+        assert.dom(barRow('1')).exists();
+
+        await click(`${gridRow('2')} [data-test-gantt-issue-toggle]`);
+        assert.dom(gridRow('1')).doesNotExist('hidden in the grid');
+        assert.dom(barRow('1')).doesNotExist('hidden on the timeline');
+        assert.dom(gridRow('2')).exists();
+
+        await click(`${gridRow('2')} [data-test-gantt-issue-toggle]`);
+        assert.dom(gridRow('1')).exists();
+        assert.dom(barRow('1')).exists();
+    });
+
     test('is one panel with the search on top, the grid beside the timeline in one scroll container', async function (assert) {
         await renderChart();
         assert.dom('.gantt-chart.box.box-primary').exists({ count: 1 });

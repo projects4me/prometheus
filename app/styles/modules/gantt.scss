@@ -368,6 +368,21 @@ $gantt-phone-grid-width: 124px;
   }
 }
 
+.gantt-issue-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+
+  i {
+    width: 16px;
+    font-size: 12px;
+    color: #666;
+  }
+}
+
 .gantt-grid-name .gantt-milestone-toggle {
   min-width: 0;
   overflow: hidden;

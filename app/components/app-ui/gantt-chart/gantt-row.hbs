@@ -22,10 +22,14 @@
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.orderedIssues as |issue|}}
+    {{#each this.treeRows as |row|}}
       <AppUi::GanttChart::TaskRow
         @part="grid"
-        @issue={{issue}}
+        @issue={{row.issue}}
+        @depth={{row.depth}}
+        @hasChildren={{row.hasChildren}}
+        @isCollapsed={{row.isCollapsed}}
+        @onToggleChildren={{this.toggleIssue}}
         @onIssueClick={{@onIssueClick}}
         @onOpenIssuePanel={{@onOpenIssuePanel}}
         @selectedIssue={{@selectedIssue}}
@@ -58,9 +62,9 @@
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.orderedIssues as |issue|}}
+    {{#each this.treeRows as |row|}}
       <AppUi::GanttChart::TaskRow
-        @issue={{issue}}
+        @issue={{row.issue}}
         @timeTotals={{@timeTotals}}
         @timelineStart={{@timelineStart}}
         @dayWidth={{@dayWidth}}

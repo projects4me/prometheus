@@ -217,6 +217,67 @@ export function getOrderedIssues(milestone) {
 }
 
 /**
+ * The most levels the issue grid indents a child; deeper ones stay at the last indent
+ *
+ * @property MAX_INDENT_LEVEL
+ * @type Number
+ */
+export const MAX_INDENT_LEVEL = 3;
+
+/**
+ * The milestone's issues as a parent/child tree in display order: each child follows its parent, children
+ * sorted like top-level issues (dated first). A child whose parent is not in the milestone stays top-level; an
+ * issue already on the path (a parentId cycle) is shown flat. The children of a collapsed parent are left out.
+ *
+ * @function getIssueTree
+ * @param {Object} milestone Milestone record with an issues array
+ * @param {Set|Array} collapsedIds Ids of the parents whose children are hidden
+ * @returns {Array} Rows `{ issue, depth, hasChildren, isCollapsed }`; depth is capped at MAX_INDENT_LEVEL
+ */
+export function getIssueTree(milestone, collapsedIds) {
+    const collapsed = collapsedIds instanceof Set ? collapsedIds : new Set(collapsedIds ?? []);
+    const ordered = getOrderedIssues(milestone);
+    const ids = new Set(ordered.map((issue) => issue.id));
+    const childrenOf = new Map();
+    const roots = [];
+    ordered.forEach((issue) => {
+        const parentId = issue.parentId;
+        if (parentId && parentId !== issue.id && ids.has(parentId)) {
+            if (!childrenOf.has(parentId)) {
+                childrenOf.set(parentId, []);
+            }
+            childrenOf.get(parentId).push(issue);
+        } else {
+            roots.push(issue);
+        }
+    });
+
+    const rows = [];
+    const seen = new Set();
+    const walk = (issue, depth, hidden = false) => {
+        seen.add(issue.id);
+        const children = (childrenOf.get(issue.id) ?? []).filter((child) => !seen.has(child.id));
+        const isCollapsed = hidden || (children.length > 0 && collapsed.has(issue.id));
+        if (!hidden) {
+            rows.push({ issue, depth: Math.min(depth, MAX_INDENT_LEVEL), hasChildren: children.length > 0, isCollapsed });
+        }
+        children.forEach((child) => {
+            if (!seen.has(child.id)) {
+                walk(child, depth + 1, isCollapsed);
+            }
+        });
+    };
+    roots.forEach((issue) => walk(issue, 0));
+    // issues only reachable through a cycle: shown flat
+    ordered.forEach((issue) => {
+        if (!seen.has(issue.id)) {
+            walk(issue, 0);
+        }
+    });
+    return rows;
+}
+
+/**
  * Count the issues of the given milestones that have no valid dates (no bar on the timeline)
  *
  * @function countUndatedIssues
