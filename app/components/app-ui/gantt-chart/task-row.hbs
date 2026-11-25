@@ -5,7 +5,13 @@
     <button type="button" class="gantt-grid-select" data-test-gantt-grid-select
       aria-label={{concat "#" this.issueNumber " " this.issueSubject}} aria-pressed={{if this.isSelected "true" "false"}}
       {{on "click" this.handleClick}}></button>
-    <div class="gantt-grid-cell gantt-grid-name">
+    <div class="gantt-grid-cell gantt-grid-name" style={{this.indentStyle}} data-depth={{@depth}}>
+      {{#if @hasChildren}}
+        <button type="button" class="gantt-issue-toggle" data-test-gantt-issue-toggle
+          aria-expanded={{if @isCollapsed "false" "true"}} {{on "click" this.handleToggleChildren}}>
+          <i class="fa {{if @isCollapsed "fa-chevron-right" "fa-chevron-down"}}" aria-hidden="true"></i>
+        </button>
+      {{/if}}
       <span class="gantt-grid-text"><span class="gantt-grid-number">#{{this.issueNumber}}</span> {{this.issueSubject}}</span>
       <button type="button" class="btn btn-box-tool gantt-grid-open" data-test-gantt-grid-open
         aria-label={{t "components.gantt.issueList.open"}} title={{t "components.gantt.issueList.open"}}

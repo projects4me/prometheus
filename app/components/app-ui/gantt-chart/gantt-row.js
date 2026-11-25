@@ -6,7 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import {
     hasValidDates,
-    getOrderedIssues,
+    getIssueTree,
     getMilestoneKey,
     getMilestoneBarDates,
     countCompletedIssues,
@@ -64,15 +64,15 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
-     * Get all issues, those with dates first and those without after
+     * The issues as tree rows (`{ issue, depth, hasChildren, isCollapsed }`): children follow their parent
      *
-     * @property orderedIssues
+     * @property treeRows
      * @type Array
      * @for GanttRow
      * @public
      */
-    get orderedIssues() {
-        return getOrderedIssues(this.args.milestone);
+    get treeRows() {
+        return getIssueTree(this.args.milestone, this.args.collapsedIssues);
     }
 
     /**
@@ -172,6 +172,18 @@ export default class GanttRowComponent extends Component {
         if (this.args.onToggle) {
             this.args.onToggle(this.milestoneId);
         }
+    }
+
+    /**
+     * Action to collapse or expand an issue's children
+     *
+     * @method toggleIssue
+     * @param {Object} issue The parent issue
+     * @public
+     */
+    @action
+    toggleIssue(issue) {
+        this.args.onToggleIssue?.(issue.id);
     }
 
     /**

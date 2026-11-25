@@ -94,6 +94,8 @@
               @milestone={{milestone}}
               @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
               @onToggle={{this.toggleMilestone}}
+              @collapsedIssues={{@collapsedIssues}}
+              @onToggleIssue={{@onToggleIssue}}
               @onIssueClick={{this.handleGridSelect}}
               @onOpenIssuePanel={{this.handleOpenIssuePanel}}
               @selectedIssue={{@selectedIssue}}
@@ -155,6 +157,7 @@
             @timeTotals={{@timeTotals}}
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
+            @collapsedIssues={{@collapsedIssues}}
             @onIssueClick={{this.handleIssueClick}}
             @onOpenIssuePanel={{this.handleOpenIssuePanel}}
             @selectedIssue={{@selectedIssue}}

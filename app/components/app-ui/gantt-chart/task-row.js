@@ -31,6 +31,31 @@ export default class TaskRowComponent extends Component {
     }
 
     /**
+     * The grid name cell's left padding for the issue's tree level (16px per level)
+     *
+     * @property indentStyle
+     * @type SafeString
+     * @for TaskRow
+     * @public
+     */
+    get indentStyle() {
+        return htmlSafe(`padding-left: ${10 + (this.args.depth ?? 0) * 16}px`);
+    }
+
+    /**
+     * Action to collapse or expand the issue's children
+     *
+     * @method handleToggleChildren
+     * @param {Event} event The click event
+     * @public
+     */
+    @action
+    handleToggleChildren(event) {
+        event?.stopPropagation?.();
+        this.args.onToggleChildren?.(this.args.issue);
+    }
+
+    /**
      * Get the issue number for display
      *
      * @property issueNumber
