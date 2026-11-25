@@ -4,11 +4,10 @@
 
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
-import DateUtils from 'prometheus/utils/date';
 
 /**
  * The content of the shared Gantt bar tooltip: the hovered or focused issue's
- * subject link, estimated and spent time, and who modified it and when.
+ * subject link, estimated and spent time (`@timeTotals`, summed by the controller), and who modified it and when.
  * The chart renders one of these and the bars point it at their issue.
  *
  * @class BarTooltip
@@ -43,26 +42,16 @@ export default class BarTooltipComponent extends Component {
 	}
 
 	/**
-	 * Sum the time logs of a context and format them as hours and minutes.
+	 * Format the issue's logged minutes of a kind (from `@timeTotals`) as hours and minutes.
 	 *
 	 * @method format
-	 * @param {String} context 'spent' or 'estimated'
+	 * @param {String} kind 'spent' or 'estimated'
 	 * @returns {String} The formatted time
 	 * @private
 	 */
-	format(context) {
-		const timelogs = this.args.issue?.[context];
-		let totalHours = 0;
-		let totalMinutes = 0;
-		if (timelogs && timelogs.length > 0) {
-			timelogs.forEach((timelog) => {
-				// Convert days to hours (8 hours per day)
-				const daysToHours = (timelog.days || 0) * 8;
-				totalHours += parseInt(timelog.hours || 0, 10) + parseInt(daysToHours, 10);
-				totalMinutes += parseInt(timelog.minutes || 0, 10);
-			});
-		}
-		const normalized = DateUtils.normalizeMinutes(totalMinutes);
-		return `${totalHours + normalized.hours} ${this.intl.t('global.time.hrs')} ${normalized.minutes} ${this.intl.t('global.time.min')}`;
+	format(kind) {
+		const total = this.args.issue ? this.args.timeTotals?.get(this.args.issue.id) : null;
+		const minutes = total?.[kind] ?? 0;
+		return `${Math.floor(minutes / 60)} ${this.intl.t('global.time.hrs')} ${minutes % 60} ${this.intl.t('global.time.min')}`;
 	}
 }

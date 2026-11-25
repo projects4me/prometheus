@@ -12,6 +12,7 @@ import {
     countCompletedIssues,
     getMilestoneState
 } from 'prometheus/utils/gantt-helpers';
+import { getMilestoneProgress } from 'prometheus/utils/gantt-progress';
 import { format as formatDate, now } from 'prometheus/utils/date';
 
 /**
@@ -98,6 +99,30 @@ export default class GanttRowComponent extends Component {
      */
     get milestoneBarEndDate() {
         return getMilestoneBarDates(this.args.milestone).end;
+    }
+
+    /**
+     * The milestone's % done (finished issues ÷ all issues) for its bar's fill, or null without issues.
+     *
+     * @property progress
+     * @type Number|null
+     * @for GanttRow
+     * @public
+     */
+    get progress() {
+        return getMilestoneProgress(this.args.milestone);
+    }
+
+    /**
+     * The label after the milestone bar: its name and, when it has issues, its % done ("name · 43%").
+     *
+     * @property milestoneLabel
+     * @type String
+     * @for GanttRow
+     * @public
+     */
+    get milestoneLabel() {
+        return this.progress === null ? this.milestoneName : `${this.milestoneName} · ${this.progress}%`;
     }
 
     /**

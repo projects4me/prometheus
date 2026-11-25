@@ -90,15 +90,16 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            'The gantt sent one milestones request and one bulk request and no issue request': (assert, ctx) => async function () {
+            'The gantt sent one milestones request, a bulk request for the lanes and one for the time logs and no issue or time log request': (assert, ctx) => async function () {
                 let sent = ctx.get('ganttRequests') || [];
                 let bulk = sent.findIndex((r) => r.startsWith('POST') && r.endsWith('/bulk'));
                 // the gantt's milestones GET is the last one before its bulk; earlier ones belong to other screens
                 let milestones = sent.slice(0, bulk).map((r, k) => (r.startsWith('GET') && r.endsWith('/milestone') ? k : -1)).filter((k) => k >= 0).pop();
                 assert.ok(bulk > 0 && milestones !== undefined, sent.join(' | '));
                 let gantt = sent.slice(milestones);
-                assert.strictEqual(gantt.filter((r) => r.endsWith('/bulk')).length, 1, sent.join(' | '));
+                assert.strictEqual(gantt.filter((r) => r.endsWith('/bulk')).length, 2, sent.join(' | '));
                 assert.strictEqual(gantt.filter((r) => r.startsWith('GET') && r.endsWith('/issue')).length, 0, sent.join(' | '));
+                assert.strictEqual(gantt.filter((r) => r.startsWith('GET') && r.endsWith('/timelog')).length, 0, sent.join(' | '));
             }
         },
         {

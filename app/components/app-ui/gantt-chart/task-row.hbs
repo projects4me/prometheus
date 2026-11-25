@@ -38,7 +38,8 @@
       @onSelect={{this.handleClick}}
       @onOpen={{this.handleIssueNumberClick}}
       @showLabel={{true}}
-      @label={{concat "#" this.issueNumber " - " this.issueSubject}}
+      @label={{concat "#" this.issueNumber}}
+      @progress={{this.progress}}
       @issue={{@issue}}
       @showConnectors={{true}}
       @isLinking={{@isLinking}}
