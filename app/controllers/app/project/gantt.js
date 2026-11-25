@@ -36,6 +36,15 @@ export default class AppProjectGanttController extends PrometheusController {
 	@service hermes;
 
 	/**
+	 * Saves typed issue links.
+	 *
+	 * @property issueRelations
+	 * @type {Prometheus.Services.IssueRelations}
+	 * @public
+	 */
+	@service issueRelations;
+
+	/**
 	 * Reload prompt shown when a live event cannot be applied in place.
 	 *
 	 * @property liveReloadPrompt
@@ -688,101 +697,77 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
-	 * Create a finish-to-start dependency between two issues
+	 * The pending link waiting for its type: `{ source, target, x, y }`, or null. Set on drop, cleared on choose or cancel.
+	 *
+	 * @property linkPicker
+	 * @type Object|null
+	 * @public
+	 */
+	@tracked linkPicker = null;
+
+	/**
+	 * Opens the link type picker for a dropped link dot. `source` blocks/splits into/relates to `target`.
 	 *
 	 * @method createDependency
-	 * @param {Prometheus.Models.Issue} predecessorIssue
-	 * @param {Prometheus.Models.Issue} successorIssue
+	 * @param {Prometheus.Models.Issue} source
+	 * @param {Prometheus.Models.Issue} target
+	 * @param {Object} point Drop point `{ x, y }` in viewport pixels
 	 * @public
 	 */
 	@action
-	async createDependency(predecessorIssue, successorIssue) {
-		if (!predecessorIssue || !successorIssue) {
+	createDependency(source, target, point = {}) {
+		if (!source || !target) {
 			return;
 		}
+		this.linkPicker = { source, target, x: point.x, y: point.y };
+	}
 
-		if (successorIssue.parentId === predecessorIssue.id) {
-			new Messenger().post({
-				message: this.intl.t('views.app.gantt.dependency.duplicate', {
-					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber, htmlSafe: true }),
-				type: 'info',
-				hideAfter: 3,
-				showCloseButton: true
-			});
+	/**
+	 * Closes the link type picker without linking.
+	 *
+	 * @method cancelLinkPicker
+	 * @public
+	 */
+	@action
+	cancelLinkPicker() {
+		this.linkPicker = null;
+	}
+
+	/**
+	 * Saves the pending link with the chosen relation through issueRelations.link() and draws it at once. Gaia's
+	 * refusal (422) is shown in a danger Messenger.
+	 *
+	 * @method saveLink
+	 * @param {String} relation blocks, splitsInto or relates
+	 * @public
+	 */
+	@action
+	async saveLink(relation) {
+		let pending = this.linkPicker;
+		this.linkPicker = null;
+		if (!pending) {
 			return;
 		}
-
-		if (this.createsCircularDependency(predecessorIssue, successorIssue)) {
-			new Messenger().post({
-				message: this.intl.t('views.app.gantt.dependency.cycleError', {
-					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber, htmlSafe: true }),
-				type: 'error',
-				hideAfter: 5,
-				showCloseButton: true
-			});
-			return;
-		}
-
-		let messenger = new Messenger().post({
-			message: this.intl.t('views.app.gantt.dependency.creating', {
-				predecessor: predecessorIssue.issueNumber,
-				successor: successorIssue.issueNumber, htmlSafe: true }),
-			type: 'info',
-			showCloseButton: false,
-			hideAfter: false
-		});
-
 		try {
-			successorIssue.set('parentId', predecessorIssue.id);
-			successorIssue.set('parentissue', predecessorIssue);
-
-			await successorIssue.save();
-
-			messenger.update({
-				message: this.intl.t('views.app.gantt.dependency.created', {
-					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber, htmlSafe: true }),
-				type: 'success',
-				showCloseButton: true,
-				hideAfter: 3
-			});
+			let link = await this.issueRelations.link(pending.source, relation, pending.target);
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			this.links?.add(link);
 		} catch (error) {
-			Logger.error(
-				'AppProjectGanttController::createDependency - Error:',
-				error
-			);
-
-			successorIssue.rollbackAttributes();
-
-			messenger.update({
-				message: this.intl.t('views.app.gantt.dependency.createError', { htmlSafe: true }),
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			Logger.error('AppProjectGanttController::saveLink - Error:', error);
+			new Messenger().post({
+				message: error?.errors?.[0]?.detail
+					|| error?.errors?.[0]?.title
+					|| this.intl.t('views.app.gantt.linkPicker.failed'),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 5
 			});
 		}
-	}
-
-	/**
-	 * Check if linking the predecessor to the successor would create a cycle
-	 *
-	 * @method createsCircularDependency
-	 * @param {Prometheus.Models.Issue} predecessor
-	 * @param {Prometheus.Models.Issue} successor
-	 * @returns {Boolean}
-	 * @private
-	 */
-	createsCircularDependency(predecessor, successor) {
-		let current = predecessor;
-		while (current) {
-			if (current.get('id') === successor.get('id')) {
-				return true;
-			}
-			current = current.get('parentissue');
-		}
-		return false;
 	}
 
 	/**

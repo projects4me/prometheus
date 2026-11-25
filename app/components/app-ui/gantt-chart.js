@@ -1518,7 +1518,8 @@ export default class GanttChartComponent extends AppComponent {
 		if (dependency && this.args.onCreateDependency) {
 			this.args.onCreateDependency(
 				dependency.predecessor,
-				dependency.successor
+				dependency.successor,
+				{ x: event.clientX, y: event.clientY }
 			);
 		}
 

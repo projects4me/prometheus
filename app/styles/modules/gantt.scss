@@ -965,3 +965,35 @@ $gantt-phone-grid-width: 124px;
   border: 1px solid #e0e0e0;
   border-radius: 0;
 }
+
+/* Link type picker shown at the drop point of a link dot */
+.gantt-link-picker {
+  position: fixed;
+  z-index: 1100;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #d2d6de;
+  padding: 6px 0;
+
+  .gantt-link-picker-title {
+    padding: 3px 12px 6px;
+    font-weight: 600;
+    border-bottom: 1px solid #f4f4f4;
+  }
+
+  .gantt-link-picker-option {
+    display: block;
+    margin: 0;
+    padding: 4px 12px;
+    font-weight: normal;
+    cursor: pointer;
+
+    &:hover {
+      background: #f4f4f4;
+    }
+
+    input {
+      margin-right: 6px;
+    }
+  }
+}
