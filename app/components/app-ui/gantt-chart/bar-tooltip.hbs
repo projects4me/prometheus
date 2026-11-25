@@ -1,0 +1,18 @@
+{{#if @issue}}
+  <LinkTo @route="app.project.issue.page" @models={{array (lowercase @issue.projectShortcode) @issue.issueNumber}} class="issue-title">
+    #{{@issue.issueNumber}} - {{@issue.subject}}
+  </LinkTo>
+  <br>
+  <ion class="ion-md-stopwatch"></ion>
+  <strong>
+    {{t 'views.app.gantt.tooltip.estimatedHours'}}:</strong> {{this.estimated}}
+  <br>
+  <ion class="ion-md-stopwatch"></ion>
+  <strong>
+    {{t 'views.app.gantt.tooltip.spentHours'}}:</strong> {{this.spent}}
+  <br>
+  <strong>{{t 'views.app.gantt.tooltip.modifiedBy'}}:</strong> {{@issue.modifiedBy.name}}
+  {{#let (format-date-time date=@issue.dateModified) as |modifiedAt|}}
+    {{t 'views.app.gantt.tooltip.at'}} {{modifiedAt}}
+  {{/let}}
+{{/if}}

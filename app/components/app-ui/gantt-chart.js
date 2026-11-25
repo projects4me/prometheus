@@ -208,6 +208,46 @@ export default class GanttChartComponent extends AppComponent {
 	currentScrollX = 0;
 
 	/**
+	 * The issue the shared bar tooltip shows.
+	 *
+	 * @property tooltipIssue
+	 * @type {Object}
+	 * @default null
+	 */
+	@tracked tooltipIssue = null;
+
+	/**
+	 * The element holding the shared bar tooltip content.
+	 *
+	 * @property tooltipElement
+	 * @type {Element}
+	 * @default null
+	 */
+	@tracked tooltipElement = null;
+
+	/**
+	 * Remember the tooltip content element so bars can show it.
+	 *
+	 * @method registerTooltipElement
+	 * @param {Element} element
+	 */
+	@action
+	registerTooltipElement(element) {
+		this.tooltipElement = element;
+	}
+
+	/**
+	 * A bar was hovered or focused: show its issue in the shared tooltip.
+	 *
+	 * @method showTooltipIssue
+	 * @param {Object} issue
+	 */
+	@action
+	showTooltipIssue(issue) {
+		this.tooltipIssue = issue;
+	}
+
+	/**
 	 * Current time scale filter (days | weeks)
 	 *
 	 * @property timeScale

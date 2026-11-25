@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click, settled, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 import EmberObject from '@ember/object';
@@ -35,7 +35,8 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         this.viewport = this.owner.lookup('service:viewport');
         const issue = (id, number) => ({
             id, issueNumber: number, subject: `Subject ${number}`, status: 'new', priority: 'high',
-            startDate: '2026-11-10', endDate: '2026-11-12'
+            startDate: '2026-11-10', endDate: '2026-11-12', projectShortcode: 'APROM',
+            modifiedBy: { name: `Modifier ${number}` }
         });
         this.milestones = [
             { id: 'm1', name: 'Alpha', startDate: '2026-11-01', endDate: '2026-11-30', issues: [issue('1', 1), issue('2', 2)] },
@@ -250,5 +251,20 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.dom('.gantt-issue-panel-visible').exists();
             assert.dom('.gantt-quick-view-modal').doesNotExist();
         });
+    });
+
+    test('one shared tooltip shows the hovered bar issue, with no hidden block or id per bar', async function (assert) {
+        await renderChart();
+        assert.dom('[id^="tooltip-"]').doesNotExist();
+        assert.dom('[data-test-gantt-tooltip]').exists({ count: 1 }, 'host before hover');
+
+        const bars = this.element.querySelectorAll('.task-row [data-test-gantt-bar]');
+        await triggerEvent(bars[1], 'mouseenter');
+        assert.dom('[data-test-gantt-tooltip]', document.body).exists({ count: 1 }, 'host after hover');
+        assert.dom('[data-test-gantt-tooltip] .issue-title', document.body).includesText('#2 - Subject 2');
+        assert.dom('[data-test-gantt-tooltip]', document.body).includesText('Modifier 2');
+
+        await triggerEvent(bars[0], 'mouseenter');
+        assert.dom('[data-test-gantt-tooltip] .issue-title', document.body).includesText('#1 - Subject 1');
     });
 });
