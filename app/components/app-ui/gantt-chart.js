@@ -75,14 +75,14 @@ export default class GanttChartComponent extends AppComponent {
 	@service intl;
 
 	/**
-	 * The tab shown on phones: `list` or `timeline`. Kept when the viewport crosses 768px.
+	 * The tab shown on phones: `timeline` (default) or `list`. Kept when the viewport crosses 768px.
 	 *
 	 * @property phoneTab
 	 * @type String
-	 * @default 'list'
+	 * @default 'timeline'
 	 * @public
 	 */
-	@tracked phoneTab = 'list';
+	@tracked phoneTab = 'timeline';
 
 	/**
 	 * Action to switch the phone tab

@@ -297,23 +297,36 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom(GRID).exists();
     });
 
-    test('phones get List | Timeline tabs under the search, opening on List', async function (assert) {
+    test('phones get Timeline | List tabs under the search, opening on Timeline', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();
         assert.dom('[data-test-gantt-phone-tabs]').exists();
-        assert.dom('[data-test-gantt-tab="list"]').exists();
+        assert.dom('[data-test-gantt-phone-tabs] li:first-child [data-test-gantt-tab="timeline"]').hasText('Timeline');
         assert.dom('[data-test-gantt-tab="list"]').hasText('List');
-        assert.dom('[data-test-gantt-tab="timeline"]').hasText('Timeline');
+        assert.dom('.gantt-container').hasClass('gantt-phone-timeline');
+        assert.dom('[data-test-gantt-toolbar]').exists();
+        await click('[data-test-gantt-tab="list"]');
         assert.dom('.gantt-container').hasClass('gantt-phone-list');
         assert.dom('[data-test-gantt-toolbar]').doesNotExist('the toolbar is on the Timeline tab only');
-        assert.dom(GRID).doesNotExist('the phone timeline has no grid yet');
         assert.dom('[data-test-gantt-issue-list] [data-issue-id]').exists({ count: 3 });
+    });
+
+    test('the phone Timeline tab has the frozen issue column and the swipe hint', async function (assert) {
+        this.viewport.isPhone = true;
+        await renderChart();
+        assert.dom(GRID).exists('the frozen issue column');
+        assert.dom(gridRow('2')).exists();
+        assert.dom(`${gridRow('2')} .gantt-grid-number`).hasText('#2');
+        assert.dom(`${gridRow('2')} .gantt-grid-text`).exists();
+        assert.dom('.gantt-container').hasClass('gantt-phone');
+        assert.dom('[data-test-gantt-swipe-hint]').hasText('Swipe to scroll in time');
+        await click('[data-test-gantt-tab="list"]');
+        assert.dom('[data-test-gantt-swipe-hint]').doesNotExist();
     });
 
     test('on phones the Timeline tab shows the scale group and Today only', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();
-        await click('[data-test-gantt-tab="timeline"]');
         assert.dom('.gantt-container').hasClass('gantt-phone-timeline');
         assert.dom('[data-test-gantt-scale]').exists();
         assert.dom('[data-test-gantt-today]').exists();
@@ -385,6 +398,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     test('a list tap on a phone switches to the Timeline tab and selects the issue', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();
+        await click('[data-test-gantt-tab="list"]');
         await click('[data-test-gantt-issue-list] [data-issue-id="2"]');
         assert.strictEqual(this.selected.id, '2');
         assert.dom('.gantt-container').hasClass('gantt-phone-timeline');
@@ -396,6 +410,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     test('the layout follows the viewport live and keeps the selection', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();
+        await click('[data-test-gantt-tab="list"]');
         await click('[data-test-gantt-issue-list] [data-issue-id="2"]');
         this.viewport.isPhone = false;
         await settled();
@@ -425,6 +440,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         test('on phones the eye opens the bottom sheet, keeps the tab and closing clears the panel', async function (assert) {
             this.viewport.isPhone = true;
             await renderWithPanel();
+            await click('[data-test-gantt-tab="list"]');
             await click('[data-test-gantt-issue-list-open]');
             assert.dom('dialog.gantt-quick-view-modal, .gantt-quick-view-modal').exists();
             assert.dom('.gantt-issue-panel').doesNotExist();
