@@ -369,7 +369,8 @@
         "start": "Start",
         "end": "End",
         "overdue": "Overdue",
-        "done": "Done"
+        "done": "Done",
+        "noDates": "No dates"
       }
     },
     "quickList": {

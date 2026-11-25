@@ -6,7 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import {
     hasValidDates,
-    getValidIssues,
+    getOrderedIssues,
     getMilestoneKey,
     getMilestoneBarDates,
     countCompletedIssues,
@@ -63,15 +63,15 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
-     * Get issues with valid dates
+     * Get all issues, those with dates first and those without after
      *
-     * @property validIssues
+     * @property orderedIssues
      * @type Array
      * @for GanttRow
      * @public
      */
-    get validIssues() {
-        return getValidIssues(this.args.milestone);
+    get orderedIssues() {
+        return getOrderedIssues(this.args.milestone);
     }
 
     /**

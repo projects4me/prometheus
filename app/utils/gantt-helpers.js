@@ -205,6 +205,32 @@ export function getValidIssues(milestone) {
 }
 
 /**
+ * All issues of a milestone in display order: the ones with dates first, then the ones without
+ *
+ * @function getOrderedIssues
+ * @param {Object} milestone Milestone record with an issues array
+ * @returns {Array} Dated issues followed by undated issues
+ */
+export function getOrderedIssues(milestone) {
+    const issues = milestone.issues ?? [];
+    return [...issues.filter((issue) => hasValidDates(issue)), ...issues.filter((issue) => !hasValidDates(issue))];
+}
+
+/**
+ * Count the issues of the given milestones that have no valid dates (no bar on the timeline)
+ *
+ * @function countUndatedIssues
+ * @param {Array} milestones Milestone records with an issues array
+ * @returns {Number} Number of undated issues
+ */
+export function countUndatedIssues(milestones) {
+    return (milestones ?? []).reduce(
+        (total, milestone) => total + (milestone.issues ?? []).filter((issue) => !hasValidDates(issue)).length,
+        0
+    );
+}
+
+/**
  * Count the milestone's issues that are finished: done, complete, closed or deferred
  *
  * @function countCompletedIssues

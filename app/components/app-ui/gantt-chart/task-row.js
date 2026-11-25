@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
+import { hasValidDates } from 'prometheus/utils/gantt-helpers';
 
 /**
  * This component renders a single task/issue row in the Gantt chart
@@ -37,6 +38,18 @@ export default class TaskRowComponent extends Component {
      */
     get issueNumber() {
         return this.args.issue.issueNumber || '';
+    }
+
+    /**
+     * Whether the issue has valid start and end dates (otherwise it has no bar)
+     *
+     * @property hasDates
+     * @type Boolean
+     * @for TaskRow
+     * @public
+     */
+    get hasDates() {
+        return hasValidDates(this.args.issue);
     }
 
     /**

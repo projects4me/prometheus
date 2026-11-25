@@ -22,7 +22,7 @@
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.validIssues as |issue|}}
+    {{#each this.orderedIssues as |issue|}}
       <AppUi::GanttChart::TaskRow
         @part="grid"
         @issue={{issue}}
@@ -56,7 +56,7 @@
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.validIssues as |issue|}}
+    {{#each this.orderedIssues as |issue|}}
       <AppUi::GanttChart::TaskRow
         @issue={{issue}}
         @timelineStart={{@timelineStart}}
