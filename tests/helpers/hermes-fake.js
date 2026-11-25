@@ -147,13 +147,11 @@ export function installFakeHermes(hooks) {
 		let originalDisconnect = hermes.disconnect.bind(hermes);
 
 		hermes.connect = () => {
-			let token = hermes.session.data?.authenticated?.access_token || null;
-			if (hermes.socket && hermes.authToken === token) {
+			if (hermes.socket) {
 				return hermes.socket;
 			}
 
 			originalDisconnect();
-			hermes.authToken = token;
 
 			let socket = new FakeSocket();
 			hermes.socket = socket;

@@ -26,7 +26,6 @@ module("Integration | Service | hermes", function (hooks) {
       disconnect() {},
     };
     service.socket = socket;
-    service.authToken = null;
     return socket;
   }
 

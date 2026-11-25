@@ -42,7 +42,7 @@ threads. Those live in the controller handlers.
 ## Session lifecycle
 
 1. Signed-in `loading-assets` (and `app` if assets are already loaded) calls
-   `hermes.connect()` with `auth.token` from the native session service (`services/session.js`), then
+   `hermes.connect()`. The handshake `auth` callback reads the current token from the native session service (`services/session.js`) on every handshake. When Hermes closes the socket on expiry (`io server disconnect`), the service awaits `session.ensureFreshToken()` and reconnects; auth refusals retry a few times with backoff. Then
    `notifications.startLiveSync()`.
 2. A mounted project route calls `controller.registerHermesIntents(projectId)`.
    That controller’s disposer is cleared in the route’s exit hook.
@@ -71,7 +71,7 @@ Issue list, the issue activity list, wiki, and non-conversation comments are not
 
 ## Client contract (what this app sends)
 
-Handshake: Socket.IO `auth.token` (OAuth access token).
+Handshake: Socket.IO `auth` callback returning `{ token }` (the session's current OAuth access token, read per handshake).
 
 ```json
 {

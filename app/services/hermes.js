@@ -42,14 +42,54 @@ export default class HermesService extends Service {
     socket = null;
 
     /**
-     * Access token last used to open the socket.
+     * Socket.IO client factory. Tests replace it with a stub.
      *
-     * @property authToken
-     * @type String|null
+     * @property socketFactory
+     * @type Function
      * @for HermesService
      * @private
      */
-    authToken = null;
+    socketFactory = io;
+
+    /**
+     * Auth refusals in a row since the last successful connect.
+     *
+     * @property authRetries
+     * @type Number
+     * @for HermesService
+     * @private
+     */
+    authRetries = 0;
+
+    /**
+     * Most auth-refusal reconnects before giving up.
+     *
+     * @property maxAuthRetries
+     * @type Number
+     * @for HermesService
+     * @private
+     */
+    maxAuthRetries = 3;
+
+    /**
+     * Base backoff in ms before an auth-refusal reconnect (doubles per try).
+     *
+     * @property authRetryDelayMs
+     * @type Number
+     * @for HermesService
+     * @private
+     */
+    authRetryDelayMs = 1000;
+
+    /**
+     * Bound disconnect handler.
+     *
+     * @property disconnectHandler
+     * @type Function|null
+     * @for HermesService
+     * @private
+     */
+    disconnectHandler = null;
 
     /**
      * Bound connect handler that resends the current intent snapshot.
@@ -192,32 +232,43 @@ export default class HermesService extends Service {
     localWriteTtlMs = 5000;
 
     /**
-     * Opens (or reuses) the session socket authenticated with auth.token.
+     * Opens the session socket, or reuses the open one. The handshake `auth`
+     * is a callback, so every handshake and reconnect sends the session's
+     * current access token; the service keeps no copy of it.
      *
      * @method connect
      * @returns {Object|null} The Socket.IO client
      * @public
      */
     connect() {
-        let token = this.session.data?.authenticated?.access_token || null;
-        if (this.socket && this.authToken === token) {
+        if (this.socket) {
             return this.socket;
         }
 
-        this.disconnect();
-        this.authToken = token;
-        this.socket = io(resolveHermesUrl(config.hermes?.url), {
-            auth: { token },
+        this.authRetries = 0;
+        this.socket = this.socketFactory(resolveHermesUrl(config.hermes?.url), {
+            auth: (cb) =>
+                cb({ token: this.session.data?.authenticated?.access_token || null }),
             transports: ["polling", "websocket"],
             withCredentials: false,
             timeout: 20000,
         });
+        let socket = this.socket;
 
         this.connectHandler = () => {
+            this.authRetries = 0;
             this.reconcileIntents(true);
+        };
+        this.disconnectHandler = (reason) => {
+            if (reason === "io server disconnect") {
+                this.reconnectWithFreshToken(socket);
+            }
         };
         this.connectErrorHandler = (err) => {
             this.lastError = err;
+            if (err && err.message === "unauthorized") {
+                this.retryAfterAuthRefusal(socket);
+            }
             console.error(
                 "Hermes connect_error",
                 err && err.message ? err.message : err,
@@ -231,13 +282,60 @@ export default class HermesService extends Service {
             this.dispatchDomainEvent(envelope);
         };
         this.socket.on("connect", this.connectHandler);
+        this.socket.on("disconnect", this.disconnectHandler);
         this.socket.on("connect_error", this.connectErrorHandler);
         this.socket.on("domain:event", this.domainEventHandler);
         return this.socket;
     }
 
     /**
-     * Closes the socket and clears handshake handlers. Registrations are kept
+     * After the server closed the socket (token expiry or access recheck),
+     * refreshes the session token and reconnects while the session is still
+     * authenticated and this socket is still the service's socket.
+     *
+     * @method reconnectWithFreshToken
+     * @param {Object} socket The socket that was closed
+     * @returns {Promise<void>}
+     * @private
+     */
+    async reconnectWithFreshToken(socket) {
+        try {
+            await this.session.ensureFreshToken();
+        } catch (err) {
+            this.lastError = err;
+            console.error("Hermes token refresh failed", err && err.message);
+            return;
+        }
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        if (this.socket === socket && this.session.isAuthenticated) {
+            socket.connect();
+        }
+    }
+
+    /**
+     * After an auth refusal on the handshake, refreshes the token and tries
+     * again with a growing delay, up to maxAuthRetries times.
+     *
+     * @method retryAfterAuthRefusal
+     * @param {Object} socket The socket that was refused
+     * @returns {Promise<void>}
+     * @private
+     */
+    async retryAfterAuthRefusal(socket) {
+        if (this.authRetries >= this.maxAuthRetries) {
+            console.error("Hermes auth refused; giving up");
+            return;
+        }
+        let delay = this.authRetryDelayMs * 2 ** this.authRetries;
+        this.authRetries += 1;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        await this.reconnectWithFreshToken(socket);
+    }
+
+    /**
+     * Closes the socket (no reconnect: a client disconnect) and clears handlers. Registrations are kept
      * so a later connect can resend them.
      *
      * @method disconnect
@@ -249,6 +347,9 @@ export default class HermesService extends Service {
             if (this.connectHandler) {
                 this.socket.off("connect", this.connectHandler);
             }
+            if (this.disconnectHandler) {
+                this.socket.off("disconnect", this.disconnectHandler);
+            }
             if (this.connectErrorHandler) {
                 this.socket.off("connect_error", this.connectErrorHandler);
             }
@@ -258,8 +359,8 @@ export default class HermesService extends Service {
             this.socket.disconnect();
             this.socket = null;
         }
-        this.authToken = null;
         this.connectHandler = null;
+        this.disconnectHandler = null;
         this.connectErrorHandler = null;
         this.domainEventHandler = null;
     }

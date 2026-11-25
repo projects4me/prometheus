@@ -29,7 +29,7 @@ and Hermes room keys are out of scope here.
 | Status | Accepted |
 | Decision | The `hermes` service holds a single Socket.IO connection for the tab. Screens do not open their own sockets. |
 | Rationale | Auth, reconnect, and intent snapshots are session concerns. Per-route sockets would duplicate handshake and leak connections on navigation. |
-| Implications | `hermes.connect()` is idempotent for the same access token. Route enter/exit only changes registrations. |
+| Implications | `hermes.connect()` reuses the open socket. The handshake `auth` is a callback that reads the session's current access token, so every reconnect sends a fresh one; the service keeps no copy. Route enter/exit only changes registrations. |
 
 ### D-002 — Connect after login; disconnect on logout
 

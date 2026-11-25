@@ -213,7 +213,6 @@ module('Integration | Service | notifications', function (hooks) {
 			off() {},
 			disconnect() {},
 		};
-		hermes.authToken = null;
 		service.hermes = hermes;
 		service.currentUser = { user: { id: 'user-1' } };
 		service.notifications = [];
