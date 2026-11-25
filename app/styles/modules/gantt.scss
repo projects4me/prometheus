@@ -814,6 +814,24 @@ $gantt-phone-grid-width: 124px;
 @media (max-width: 767px) {
   .gantt-phone-tabs {
     margin-bottom: 0;
+    position: relative;
+
+    .gantt-options {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+
+      .app-dropdown-btn {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+    }
+
+    .gantt-options-menu {
+      padding: 6px 12px;
+      white-space: nowrap;
+    }
 
   }
 

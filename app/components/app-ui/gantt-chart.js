@@ -21,7 +21,7 @@ import {
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
-import { loadToolbarPreferences, saveToolbarPreferences } from 'prometheus/utils/gantt/toolbar-preferences';
+import { loadToolbarPreferences, saveToolbarPreferences, loadPhonePreferences, savePhonePreferences } from 'prometheus/utils/gantt/toolbar-preferences';
 
 /**
  * This component renders the main Gantt chart view with timeline and milestones/issues
@@ -43,8 +43,11 @@ export default class GanttChartComponent extends AppComponent {
 		const saved = loadToolbarPreferences();
 		// phones open on Days around today, whatever scale the desktop remembers
 		this.timeScale = this.viewport.isPhone ? 'days' : saved.scale;
-		this.showDependencies = saved.dependencies;
-		this.showWeekends = saved.weekends;
+		// phones keep their own layer options: lines and labels off until turned on
+		const layers = this.viewport.isPhone ? loadPhonePreferences() : saved;
+		this.showDependencies = layers.dependencies;
+		this.showWeekends = layers.weekends;
+		this.showLabels = this.viewport.isPhone ? layers.labels : true;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
 	}
 
@@ -333,6 +336,15 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked showWeekends = true;
 
 	/**
+	 * Whether the bars carry their labels; always on for desktop, a remembered option on phones
+	 *
+	 * @property showLabels
+	 * @type Boolean
+	 * @public
+	 */
+	@tracked showLabels = true;
+
+	/**
 	 * The project's issue statuses for the legend, one per name, in the order the store holds them
 	 *
 	 * @property legendStatuses
@@ -479,8 +491,16 @@ export default class GanttChartComponent extends AppComponent {
 	 * @private
 	 */
 	savePreferences() {
+		if (this.viewport.isPhone) {
+			savePhonePreferences({
+				dependencies: this.showDependencies,
+				labels: this.showLabels,
+				weekends: this.showWeekends
+			});
+			return;
+		}
 		saveToolbarPreferences({
-			scale: this.viewport.isPhone ? loadToolbarPreferences().scale : this.timeScale,
+			scale: this.timeScale,
 			dependencies: this.showDependencies,
 			weekends: this.showWeekends
 		});
@@ -495,6 +515,18 @@ export default class GanttChartComponent extends AppComponent {
 	@action
 	toggleDependencies() {
 		this.showDependencies = !this.showDependencies;
+		this.savePreferences();
+	}
+
+	/**
+	 * Shows or hides the bar labels (phones' options menu)
+	 *
+	 * @method toggleLabels
+	 * @public
+	 */
+	@action
+	toggleLabels() {
+		this.showLabels = !this.showLabels;
 		this.savePreferences();
 	}
 

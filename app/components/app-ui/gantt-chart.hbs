@@ -14,6 +14,16 @@
           <a href="#gantt-tab-list" data-test-gantt-tab="list" {{on "click" (fn this.setPhoneTab "list")}}>{{t "components.gantt.tabs.list"}}</a>
         </li>
       </ul>
+      <AppUi::Dropdown @align="end" @title={{t "components.gantt.options.label"}} class="gantt-options" data-test-gantt-options>
+        <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+        <:content>
+          <div class="gantt-options-menu" data-test-gantt-options-menu>
+            <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.dependenciesLines"}} @checked={{this.showDependencies}} @select={{this.toggleDependencies}} @data-select="gantt-options-dependencies" />
+            <FormFields::FieldCheckbox @label={{t "components.gantt.options.barLabels"}} @checked={{this.showLabels}} @select={{this.toggleLabels}} @data-select="gantt-options-labels" />
+            <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-options-weekends" />
+          </div>
+        </:content>
+      </AppUi::Dropdown>
     </div>
   {{/if}}
   {{#if (or (not this.viewport.isPhone) (eq this.phoneTab "timeline"))}}
@@ -155,6 +165,7 @@
             @onIssueResizeStart={{this.handleIssueResizeStart}}
             @onIssueResizeUpdate={{this.handleIssueResizeUpdate}}
             @onIssueResizeEnd={{this.handleIssueResizeEnd}}
+            @showBarLabels={{this.showLabels}}
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}

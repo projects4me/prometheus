@@ -363,7 +363,12 @@
       "toolbar": {
         "today": "Today",
         "dependencies": "Dependencies",
-        "weekends": "Weekends"
+        "weekends": "Weekends",
+        "dependenciesLines": "Dependency lines"
+      },
+      "options": {
+        "label": "Chart options",
+        "barLabels": "Bar labels"
       },
       "issueList": {
         "title": "Issues",
