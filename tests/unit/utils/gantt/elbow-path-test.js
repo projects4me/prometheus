@@ -4,9 +4,15 @@
 
 import { module, test } from 'qunit';
 import { buildElbowPath, STUB } from 'prometheus/utils/gantt/elbow-path';
+import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 
 module('Unit | Utility | gantt/elbow-path', function () {
     const ROW = 45;
+
+    test('the gap defaults to half of GANTT_ROW_HEIGHT', function (assert) {
+        const path = buildElbowPath({ x: 200, y: 20 }, { x: 100, y: 65 });
+        assert.strictEqual(path, `M 200 20 H ${200 + STUB} V ${20 + GANTT_ROW_HEIGHT / 2} H ${100 - STUB} V 65 H 100`);
+    });
 
     test('forward link steps down at the stub and enters the dependent from the left', function (assert) {
         const path = buildElbowPath({ x: 100, y: 20 }, { x: 200, y: 65 }, ROW);

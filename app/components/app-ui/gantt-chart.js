@@ -6,13 +6,15 @@ import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { htmlSafe } from '@ember/template';
 import { next, later } from '@ember/runloop';
 import {
 	generateDateRange,
 	groupDatesByMonth,
 	getTotalDays,
 	calculateBarPosition,
-	getMilestoneKey
+	getMilestoneKey,
+	GANTT_ROW_HEIGHT
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
@@ -300,7 +302,18 @@ export default class GanttChartComponent extends AppComponent {
 	 * @for GanttChartComponent
 	 * @public
 	 */
-	rowHeight = 45;
+	rowHeight = GANTT_ROW_HEIGHT;
+
+	/**
+	 * Sets --gantt-row-height on the chart root so the SCSS uses the same row height
+	 *
+	 * @property rowHeightStyle
+	 * @type SafeString
+	 * @public
+	 */
+	get rowHeightStyle() {
+		return htmlSafe(`--gantt-row-height: ${this.rowHeight}px`);
+	}
 
 	/**
 	 * Width of the grid pattern in pixels
@@ -853,7 +866,7 @@ export default class GanttChartComponent extends AppComponent {
 			const containerRect = this.timelineContainerElement.getBoundingClientRect();
 			const rowTop = rowRect.top - containerRect.top + this.timelineContainerElement.scrollTop;
 			const containerHeight = this.timelineContainerElement.clientHeight;
-			const rowHeight = rowRect.height;
+			const rowHeight = this.rowHeight;
 
 			// Center the row vertically in the viewport
 			scrollTop = Math.max(0, rowTop - (containerHeight / 2) + (rowHeight / 2));
