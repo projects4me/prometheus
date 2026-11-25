@@ -12,6 +12,36 @@
         {{t "views.app.workspace.detail.noRuntime"}}
       {{/if}}
     </p>
+
+    {{#if this.canBind}}
+      <div class="workspace-environment-bind">
+        <FormFields::FieldRelate
+          @renderInPlace={{true}}
+          @placeholder={{t "views.app.workspace.settings.environment.runtimePlaceholder"}}
+          @label={{t "views.app.workspace.settings.environment.runtimeLabel"}}
+          @value={{this.selectedRuntimeId}}
+          @options={{this.runtimeOptions}}
+          @selected={{this.selectedRuntime}}
+          @searchField="label"
+          @onchange={{this.selectRuntime}}
+          @relateType="relate-simple"
+          @data-field="workspace.runtime"
+        />
+
+        {{#each this.runtimeErrors as |message|}}
+          <div class="alert alert-danger" data-test-environment-error>{{message}}</div>
+        {{/each}}
+
+        <button type="button" class="btn btn-primary" data-btn="save-runtime" disabled={{this.saveDisabled}} {{on "click" this.bind}}>
+          {{t "views.app.workspace.settings.environment.save"}}
+        </button>
+        {{#if this.isBound}}
+          <button type="button" class="btn btn-default" data-btn="unbind-runtime" disabled={{this.saving}} {{on "click" this.unbind}}>
+            {{t "views.app.workspace.settings.environment.unbind"}}
+          </button>
+        {{/if}}
+      </div>
+    {{/if}}
   </:body>
 </AppUi::Box>
 

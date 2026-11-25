@@ -41,6 +41,33 @@ Feature: Workspace | Settings
     When User navigates to app/workspace/ENG/settings/environment
     Then The Environment tab shows runtime "talos-1" online and 2 repositories with base branches
 
+  Scenario: A runtime from Settings > Services is bound to the workspace
+
+    Given Workspace ENG exists with 1 projects
+    And Service client "talos-9" of kind runtime exists with status "active"
+    And Workspace ENG has no runtime bound
+    When User navigates to app/workspace/ENG/settings/environment
+    And User picks the runtime "talos-9" on the Environment tab
+    And User saves the runtime on the Environment tab
+    Then Workspace ENG is bound to runtime "talos-9"
+
+  Scenario: The runtime is unbound from the workspace
+
+    Given Workspace ENG exists with 1 projects
+    And Workspace ENG has environment facts with runtime "talos-1" online
+    When User navigates to app/workspace/ENG/settings/environment
+    And User unbinds the runtime on the Environment tab
+    Then Workspace ENG has no runtime
+
+  Scenario: Gaia refuses a runtime
+
+    Given Workspace ENG exists with 1 projects
+    And Service client "talos-off" of kind runtime exists with status "disabled"
+    When User navigates to app/workspace/ENG/settings/environment
+    And User picks the runtime "talos-off" on the Environment tab
+    And User saves the runtime on the Environment tab
+    Then The Environment tab shows the refusal "The runtime is disabled"
+
   Scenario: The Agents tab links to the existing views
 
     Given Workspace ENG exists with 0 projects

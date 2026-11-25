@@ -214,6 +214,16 @@ export default class WorkspaceModel extends Model {
     @belongsTo('serviceclient', { async: true, inverse: null }) runtime;
 
     /**
+     * The id of the runtime the workspace is bound to, null when unbound (Gaia validates it on save)
+     *
+     * @property runtimeId
+     * @type String
+     * @for Workspace
+     * @public
+     */
+    @attr('string') runtimeId;
+
+    /**
      * The projects of this workspace
      *
      * @property projects
