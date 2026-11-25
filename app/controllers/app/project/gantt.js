@@ -54,6 +54,15 @@ export default class AppProjectGanttController extends PrometheusController {
 	@service issuePreview;
 
 	/**
+	 * The viewport service: on phones the eye opens a bottom sheet and leaves the selection alone
+	 *
+	 * @property viewport
+	 * @type ViewportService
+	 * @public
+	 */
+	@service viewport;
+
+	/**
 	 * Disposer returned by issuePreview.register() for this screen.
 	 *
 	 * @property issuePreviewDisposer

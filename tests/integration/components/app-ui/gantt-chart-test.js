@@ -8,10 +8,17 @@ import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { render, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import EmberObject from '@ember/object';
+import AclStub from '../../stub-services/acl-stub';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 
 class ViewportStub extends Service {
     @tracked isPhone = false;
+}
+
+class PanelState {
+    @tracked open = false;
+    @tracked issue = null;
 }
 
 class Expanded {
@@ -149,5 +156,43 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.gantt-time-scale-selector').exists();
         assert.strictEqual(this.selected.id, '2');
         assert.dom('[data-test-gantt-issue-list] [data-issue-id="2"]').hasClass('quick-list-item--active');
+    });
+    module('issue quick view', function (hooks) {
+        hooks.beforeEach(function () {
+            this.owner.register('service:acl', AclStub);
+            this.projectController = EmberObject.create({ members: [], membersList: [], issuesList: [], projectId: '1' });
+            this.panelState = new PanelState();
+            this.openPanel = (i) => { this.panelState.issue = EmberObject.create({ ...i, timelogs: [], comments: [], files: [] }); this.panelState.open = true; };
+            this.closePanel = () => { this.panelState.issue = null; this.panelState.open = false; };
+        });
+
+        const renderWithPanel = () => render(hbs`<AppUi::GanttChart
+            @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+            @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+            @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
+            @onOpenIssuePanel={{this.openPanel}} @selectedIssue={{this.selected}}
+            @isIssuePanelOpen={{this.panelState.open}} @panelIssue={{this.panelState.issue}}
+            @projectController={{this.projectController}} @onCloseIssuePanel={{this.closePanel}} />`);
+
+        test('on phones the eye opens the bottom sheet, keeps the tab and closing clears the panel', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderWithPanel();
+            await click('[data-test-gantt-issue-list-open]');
+            assert.dom('dialog.gantt-quick-view-modal, .gantt-quick-view-modal').exists();
+            assert.dom('.gantt-issue-panel').doesNotExist();
+            assert.dom('.gantt-container').hasClass('gantt-phone-list');
+            assert.strictEqual(this.selected, null);
+            assert.dom('.gantt-timeline-wrapper').doesNotHaveClass('gantt-timeline-hidden');
+            this.closePanel();
+            await settled();
+            assert.dom('.gantt-quick-view-modal').doesNotExist();
+        });
+
+        test('on desktop the eye opens the side panel, not the modal', async function (assert) {
+            await renderWithPanel();
+            await click('[data-test-gantt-issue-list-open]');
+            assert.dom('.gantt-issue-panel-visible').exists();
+            assert.dom('.gantt-quick-view-modal').doesNotExist();
+        });
     });
 });
