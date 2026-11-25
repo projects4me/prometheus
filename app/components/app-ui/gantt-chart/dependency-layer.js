@@ -8,6 +8,15 @@ import { action } from '@ember/object';
 import { buildElbowPath } from 'prometheus/utils/gantt/elbow-path';
 
 /**
+ * px a second link between the same pair of issues is shifted by, so both stay visible
+ *
+ * @property PAIR_OFFSET
+ * @type Number
+ * @final
+ */
+const PAIR_OFFSET = 5;
+
+/**
  * Renders SVG connectors that represent task dependencies in the Gantt chart
  *
  * @class DependencyLayer
@@ -143,7 +152,8 @@ export default class DependencyLayerComponent extends Component {
         this.contextMenu = {
             ...position,
             fromIssueId: line.fromIssueId,
-            toIssueId: line.toIssueId
+            toIssueId: line.toIssueId,
+            link: line.link
         };
 
         document.addEventListener('click', this.handleGlobalClick, true);
@@ -157,11 +167,8 @@ export default class DependencyLayerComponent extends Component {
      * @public
      */
     @action handleDeleteDependency() {
-        if (this.contextMenu && this.args.onDeleteDependency) {
-            this.args.onDeleteDependency(
-                this.contextMenu.fromIssueId,
-                this.contextMenu.toIssueId
-            );
+        if (this.contextMenu?.link && this.args.onDeleteDependency) {
+            this.args.onDeleteDependency(this.contextMenu.link);
         }
         this.closeContextMenu();
     }
@@ -276,6 +283,7 @@ export default class DependencyLayerComponent extends Component {
 
         let dependencies = this.args.dependencies || [];
         let lines = [];
+        let drawnPairs = {};
 
         dependencies.forEach((dependency) => {
             if (dependency.type === 'relates' && !this.isSelectedLink(dependency) && !this.isHoveredLink(dependency)) {
@@ -296,12 +304,17 @@ export default class DependencyLayerComponent extends Component {
                 return;
             }
 
+            let pair = [dependency.fromIssueId, dependency.toIssueId].map(String).sort().join('-');
+            let offset = (drawnPairs[pair] || 0) * PAIR_OFFSET;
+            drawnPairs[pair] = (drawnPairs[pair] || 0) + 1;
+
             lines.push({
                 id: `${dependency.type || 'link'}-${dependency.fromIssueId}-${dependency.toIssueId}`,
                 type: dependency.type,
                 conflict: Boolean(dependency.conflict),
                 marker: this.markerFor(dependency),
-                path: this.buildPath(start, end),
+                path: this.buildPath(start, end, offset),
+                link: dependency.link,
                 fromIssueId: dependency.fromIssueId,
                 toIssueId: dependency.toIssueId,
                 selected: this.isSelectedLink(dependency)
@@ -327,10 +340,13 @@ export default class DependencyLayerComponent extends Component {
         if (dependency.conflict) {
             return 'url(#dependency-arrowhead-conflict)';
         }
+        if (this.isSelectedLink(dependency)) {
+            return 'url(#dependency-arrowhead-active)';
+        }
         if (dependency.type === 'splits') {
             return 'url(#dependency-arrowhead-splits)';
         }
-        return this.isSelectedLink(dependency) ? 'url(#dependency-arrowhead-active)' : 'url(#dependency-arrowhead)';
+        return 'url(#dependency-arrowhead)';
     }
 
     /**
@@ -469,11 +485,12 @@ export default class DependencyLayerComponent extends Component {
      * @method buildPath
      * @param {{x:Number,y:Number}} start
      * @param {{x:Number,y:Number}} end
+     * @param {Number} offset
      * @returns {String}
      * @private
      */
-    buildPath(start, end) {
-        return buildElbowPath(start, end, this.args.rowHeight);
+    buildPath(start, end, offset = 0) {
+        return buildElbowPath(start, end, this.args.rowHeight, offset);
     }
 
     /**

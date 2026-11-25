@@ -712,6 +712,7 @@ $gantt-phone-grid-width: 124px;
   pointer-events: visibleStroke;
   cursor: pointer;
 
+  // After the type rules so the highlight wins over a type's colour but keeps its dash style
   &.selected,
   &.active {
     stroke: $primaryColor;

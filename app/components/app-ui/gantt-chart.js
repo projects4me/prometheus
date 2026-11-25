@@ -1268,28 +1268,6 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Handle delete dependency action from dependency layer context menu
-	 *
-	 * @method handleDeleteDependency
-	 * @param {String} fromIssueId
-	 * @param {String} toIssueId
-	 * @public
-	 */
-	@action
-	handleDeleteDependency(fromIssueId, toIssueId) {
-		let predecessor = this.issueMap[fromIssueId];
-		let successor = this.issueMap[toIssueId];
-
-		if (!predecessor || !successor) {
-			return;
-		}
-
-		if (this.args.onDeleteDependency) {
-			this.args.onDeleteDependency(predecessor, successor);
-		}
-	}
-
-	/**
 	 * Check if a milestone is expanded
 	 *
 	 * @method isMilestoneExpanded
