@@ -14,7 +14,9 @@ import {
 	calculateBarPosition,
 	getMilestoneKey,
 	GANTT_ROW_HEIGHT,
-	toFiniteNumber
+	toFiniteNumber,
+	getValidIssues,
+	countUndatedIssues
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
@@ -62,6 +64,15 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@service store;
+
+	/**
+	 * The intl service, for the footer's plural texts
+	 *
+	 * @property intl
+	 * @type IntlService
+	 * @public
+	 */
+	@service intl;
 
 	/**
 	 * The tab shown on phones: `list` or `timeline`. Kept when the viewport crosses 768px.
@@ -336,6 +347,33 @@ export default class GanttChartComponent extends AppComponent {
 			seen.add(status.name);
 			return true;
 		});
+	}
+
+	/**
+	 * The footer's right side: the timeline's date range and the counts of what the chart shows
+	 * ("16 Nov – 10 Jan · 3 milestones · 4 issues shown · 1 without dates"). The undated part is left out at 0.
+	 *
+	 * @property footerSummary
+	 * @type String
+	 * @public
+	 */
+	get footerSummary() {
+		void this.args.liveSyncRevision;
+		const milestones = toArray(this.args.milestones);
+		const parts = [];
+		if (this.args.timelineStart && this.args.timelineEnd) {
+			parts.push(
+				`${dates.format(this.args.timelineStart, 'D MMM')} – ${dates.format(this.args.timelineEnd, 'D MMM')}`
+			);
+		}
+		const shown = milestones.reduce((total, milestone) => total + getValidIssues(milestone).length, 0);
+		const undated = countUndatedIssues(milestones);
+		parts.push(this.intl.t('components.gantt.footer.milestones', { count: milestones.length }));
+		parts.push(this.intl.t('components.gantt.footer.issuesShown', { count: shown }));
+		if (undated > 0) {
+			parts.push(this.intl.t('components.gantt.footer.withoutDates', { count: undated }));
+		}
+		return parts.join(' · ');
 	}
 
 	/**
