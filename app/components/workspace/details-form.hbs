@@ -31,6 +31,19 @@
             @data-field="workspace.description"
           />
         </div>
+        <div class="field-group">
+          <FormFields::FieldRelate
+            @placeholder={{t "views.app.workspace.form.selectManager"}}
+            @label={{t "views.app.workspace.form.manager"}}
+            @value={{@model.managerId}}
+            @options={{@usersList}}
+            @selected={{find-by "value" @model.managerId @usersList}}
+            @searchField="label"
+            @onchange={{@selectRelated}}
+            @relateType="relate-simple"
+            @data-field="workspace.managerId"
+          />
+        </div>
       </div>
     </:body>
   </AppUi::Box>

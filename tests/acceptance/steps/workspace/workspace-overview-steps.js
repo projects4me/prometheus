@@ -35,7 +35,8 @@ export default function (assert) {
                     name: `${code} workspace`,
                     shortCode: code,
                     projectCount: parseInt(count, 10),
-                    createdBy: server.schema.users.find(1)
+                    createdBy: server.schema.users.find(1),
+                    manager: server.schema.users.find(1)
                 });
                 for (let i = 1; i <= parseInt(count, 10); i++) {
                     server.create('project', {
@@ -233,7 +234,7 @@ export default function (assert) {
             'The workspace header shows $code',
             async function (code) {
                 assert.dom('.workspace-details .workspace-shortcode').hasText(`(${code})`, `The header shows ${code}`);
-                assert.dom('.workspace-details .workspace-creator .users-list-name').exists('The creator is shown');
+                assert.dom('.workspace-details .workspace-manager .users-list-name').exists('The manager is shown');
             }
         )
         .then(

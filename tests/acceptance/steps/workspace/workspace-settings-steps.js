@@ -143,6 +143,15 @@ export default function (assert) {
         .when('User saves the workspace details in Settings', async function () {
             await click('[data-btn="save"]');
         })
+        .when('User picks "$name" as the manager in Settings', async function (name) {
+            await click('.workspace-details-form [data-field="workspace.managerId"] .ember-power-select-trigger');
+            let option = [...document.querySelectorAll('.ember-power-select-option')].find((el) => el.textContent.includes(name));
+            assert.ok(option, `option ${name} is listed`);
+            await click(option);
+        })
+        .then('Workspace $code has manager User $userId', function (code, userId) {
+            assert.equal(String(server.schema.workspaces.findBy({ shortCode: code }).managerId), String(userId), 'manager stored');
+        })
         .then('Workspace "$name" with code "$code" is stored', function (name, code) {
             let workspace = server.schema.workspaces.findBy({ shortCode: code });
             assert.ok(workspace, 'workspace exists');

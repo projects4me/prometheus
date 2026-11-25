@@ -44,6 +44,26 @@ export default class WorkspaceModel extends Model {
     @attr('string') description;
 
     /**
+     * Id of the user who manages the workspace
+     *
+     * @property managerId
+     * @type String
+     * @for Workspace
+     * @private
+     */
+    @attr('string') managerId;
+
+    /**
+     * The user who manages the workspace
+     *
+     * @property manager
+     * @type UserModel
+     * @for Workspace
+     * @private
+     */
+    @belongsTo('user', { async: true, inverse: null }) manager;
+
+    /**
      * Number of projects in the workspace (read only, computed by Gaia)
      *
      * @property projectCount

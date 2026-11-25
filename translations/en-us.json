@@ -3036,6 +3036,7 @@
         "detail": {
           "description": "Description",
           "createdBy": "Created the workspace",
+          "manager": "Workspace Manager",
           "breadcrumb": "Workspace",
           "settings": "Settings",
           "projects": "Projects",
@@ -3078,6 +3079,8 @@
         },
         "form": {
           "information": "Workspace Information",
+          "manager": "Manager",
+          "selectManager": "Select the manager",
           "description": "Description",
           "saved": "Workspace <strong>{name}</strong> has been saved successfully",
           "saveFailed": "The workspace could not be saved"

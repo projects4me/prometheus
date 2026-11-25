@@ -13,6 +13,8 @@
           @model={{this.model}}
           @message={{this.message}}
           @validateField={{this.validateField}}
+          @usersList={{this.usersList}}
+          @selectRelated={{fn this.selectRelated this.model 'managerId'}}
           @aclContext="workspace.create"
           @onSave={{fn this.save "workspaceCreate"}}
           @onCancel={{this.cancel}}
