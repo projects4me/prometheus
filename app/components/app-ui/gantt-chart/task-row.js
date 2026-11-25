@@ -5,7 +5,8 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
-import { hasValidDates } from 'prometheus/utils/gantt-helpers';
+import { htmlSafe } from '@ember/template';
+import { hasValidDates, calculateBarPosition, calculateBarWidth } from 'prometheus/utils/gantt-helpers';
 import { getIssueProgress } from 'prometheus/utils/gantt-progress';
 
 /**
@@ -63,6 +64,70 @@ export default class TaskRowComponent extends Component {
      */
     get hasDates() {
         return hasValidDates(this.args.issue);
+    }
+
+    /**
+     * Which edge of the row holds the chip: `left` or `right` when the whole bar lies outside the
+     * visible window (phones only; `@chipWindow` is null otherwise), else null
+     *
+     * @property edgeChip
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get edgeChip() {
+        const window = this.args.chipWindow;
+        if (!window || !this.hasDates || !this.args.timelineStart) {
+            return null;
+        }
+        const { startDate, endDate } = this.args.issue;
+        const left = calculateBarPosition(this.args.timelineStart, startDate, this.args.dayWidth);
+        const right = left + calculateBarWidth(startDate, endDate, this.args.dayWidth);
+        if (right <= window.start) {
+            return 'left';
+        }
+        return left >= window.end ? 'right' : null;
+    }
+
+    /**
+     * Places the chip at the edge of the visible window, in the row's own coordinates
+     *
+     * @property edgeChipStyle
+     * @type SafeString
+     * @for TaskRow
+     * @public
+     */
+    get edgeChipStyle() {
+        const window = this.args.chipWindow;
+        if (!window) {
+            return htmlSafe('');
+        }
+        return htmlSafe(this.edgeChip === 'left'
+            ? `left: ${window.start + 4}px`
+            : `right: ${this.args.timelineWidth - window.end + 4}px`);
+    }
+
+    /**
+     * The chip's text: the issue's start date, such as "22 Nov"
+     *
+     * @property edgeChipDate
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get edgeChipDate() {
+        return dates.format(this.args.issue.startDate, 'D MMM');
+    }
+
+    /**
+     * Action to handle a tap on the chip: scrolls to the bar and selects the issue
+     *
+     * @method handleChipSelect
+     * @public
+     */
+    @action
+    handleChipSelect() {
+        this.args.onChipSelect?.(this.args.issue);
     }
 
     /**

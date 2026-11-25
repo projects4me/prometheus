@@ -24,6 +24,9 @@
         {{/each}}
       </div>
       <button type="button" class="btn btn-default btn-sm gantt-today-button" data-test-gantt-today {{on "click" this.scrollToToday}}>{{t "components.gantt.toolbar.today"}}</button>
+      {{#if this.viewport.isPhone}}
+        <span class="gantt-visible-range text-muted" data-test-gantt-visible-range>{{this.visibleRangeLabel}}</span>
+      {{/if}}
       {{#unless this.viewport.isPhone}}
         <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.dependencies"}} @checked={{this.showDependencies}} @select={{this.toggleDependencies}} @data-select="gantt-dependencies" />
         <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
@@ -155,6 +158,8 @@
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}
+            @chipWindow={{this.chipWindow}}
+            @onChipSelect={{this.handleGridSelect}}
             @registerBar={{this.registerIssueBar}}
             @unregisterBar={{this.unregisterIssueBar}}
             @onStartDependencyLink={{this.startDependencyLink}}

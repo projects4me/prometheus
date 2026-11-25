@@ -41,7 +41,8 @@ export default class GanttChartComponent extends AppComponent {
 	constructor() {
 		super(...arguments);
 		const saved = loadToolbarPreferences();
-		this.timeScale = saved.scale;
+		// phones open on Days around today, whatever scale the desktop remembers
+		this.timeScale = this.viewport.isPhone ? 'days' : saved.scale;
 		this.showDependencies = saved.dependencies;
 		this.showWeekends = saved.weekends;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
@@ -377,14 +378,109 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Saves the scale and both toggles under the one documented key
+	 * First timeline pixel in view, in timeline coordinates (the part beside the frozen column)
+	 *
+	 * @property visibleStart
+	 * @type Number
+	 * @default 0
+	 * @private
+	 */
+	@tracked visibleStart = 0;
+
+	/**
+	 * Width in pixels of the timeline part in view; 0 until measured
+	 *
+	 * @property visibleWidth
+	 * @type Number
+	 * @default 0
+	 * @private
+	 */
+	@tracked visibleWidth = 0;
+
+	/**
+	 * Animation frame of a pending visible-range update (the scroll listener is throttled with it)
+	 *
+	 * @property visibleFrameId
+	 * @type Number
+	 * @private
+	 */
+	visibleFrameId = null;
+
+	/**
+	 * The pixel window `{ start, end }` the edge chips compare the bars with; null off phones or unmeasured
+	 *
+	 * @property chipWindow
+	 * @type Object
+	 * @public
+	 */
+	get chipWindow() {
+		if (!this.viewport.isPhone || this.visibleWidth <= 0) {
+			return null;
+		}
+		return { start: this.visibleStart, end: this.visibleStart + this.visibleWidth };
+	}
+
+	/**
+	 * The visible dates as text, such as "22 \u2013 29 Nov" or "28 Nov \u2013 4 Dec"; empty until measured
+	 *
+	 * @property visibleRangeLabel
+	 * @type String
+	 * @public
+	 */
+	get visibleRangeLabel() {
+		if (this.visibleWidth <= 0 || !this.args.timelineStart || !this.dayWidth) {
+			return '';
+		}
+		const first = dates.add(this.args.timelineStart, Math.floor(this.visibleStart / this.dayWidth), 'days');
+		const last = dates.add(first, Math.max(0, Math.ceil(this.visibleWidth / this.dayWidth) - 1), 'days');
+		const from = dates.isSame(first, last, { unit: 'month' }) ? 'D' : 'D MMM';
+		return `${dates.format(first, from)} \u2013 ${dates.format(last, 'D MMM')}`;
+	}
+
+	/**
+	 * Reads the scroll position and width of the timeline container into the visible window
+	 *
+	 * @method updateVisibleRange
+	 * @private
+	 */
+	updateVisibleRange() {
+		this.visibleFrameId = null;
+		if (this.isDestroying || this.isDestroyed || !this.timelineContainerElement) {
+			return;
+		}
+		const start = this.timelineContainerElement.scrollLeft;
+		const width = Math.max(0, this.timelineViewportWidth);
+		if (start !== this.visibleStart) {
+			this.visibleStart = start;
+		}
+		if (width !== this.visibleWidth) {
+			this.visibleWidth = width;
+		}
+	}
+
+	/**
+	 * Scroll listener of the timeline container: one visible-range update per animation frame
+	 *
+	 * @method handleTimelineScroll
+	 * @private
+	 */
+	@action
+	handleTimelineScroll() {
+		if (this.visibleFrameId === null) {
+			this.visibleFrameId = requestAnimationFrame(() => this.updateVisibleRange());
+		}
+	}
+
+	/**
+	 * Saves the scale and both toggles under the one documented key. On phones the scale is the
+	 * desktop's saved one, so a phone's Days choice never replaces it.
 	 *
 	 * @method savePreferences
 	 * @private
 	 */
 	savePreferences() {
 		saveToolbarPreferences({
-			scale: this.timeScale,
+			scale: this.viewport.isPhone ? loadToolbarPreferences().scale : this.timeScale,
 			dependencies: this.showDependencies,
 			weekends: this.showWeekends
 		});
@@ -429,6 +525,7 @@ export default class GanttChartComponent extends AppComponent {
 		const todayLeft = calculateBarPosition(this.args.timelineStart, today, this.dayWidth);
 		const left = Math.max(0, todayLeft - (this.timelineViewportWidth / 2) + (this.dayWidth / 2));
 		this.timelineContainerElement.scrollTo({ left, behavior: 'auto' });
+		this.updateVisibleRange();
 	}
 
 	/**
@@ -736,7 +833,10 @@ export default class GanttChartComponent extends AppComponent {
 			}
 			if (this.args.selectedIssue) {
 				this.scrollToIssue(this.args.selectedIssue);
+			} else if (this.viewport.isPhone) {
+				this.scrollToToday();
 			}
+			this.updateVisibleRange();
 		});
 		this.followBarTransition();
 	}
@@ -1186,6 +1286,17 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action registerTimelineContainer(element) {
 		this.timelineContainerElement = element;
+		element.addEventListener('scroll', this.handleTimelineScroll, { passive: true });
+		// the container has its size after layout; phones then open with today in view
+		requestAnimationFrame(() => {
+			if (this.isDestroying || this.isDestroyed || this.timelineContainerElement !== element) {
+				return;
+			}
+			if (this.viewport.isPhone) {
+				this.scrollToToday();
+			}
+			this.updateVisibleRange();
+		});
 	}
 
 	/**
@@ -1195,6 +1306,11 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@action unregisterTimelineContainer() {
+		this.timelineContainerElement?.removeEventListener('scroll', this.handleTimelineScroll);
+		if (this.visibleFrameId !== null) {
+			cancelAnimationFrame(this.visibleFrameId);
+			this.visibleFrameId = null;
+		}
 		this.timelineContainerElement = null;
 	}
 
