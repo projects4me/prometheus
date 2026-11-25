@@ -172,6 +172,23 @@ export default function (assert) {
             let projects = [...document.querySelectorAll('.workspace-environment-repositories [data-test-repository-project]')].map((cell) => cell.textContent.trim());
             assert.deepEqual(projects, ['ENG project 1', 'Workspace'], 'the project, or Workspace when there is none');
         })
+        .given('Gaia refuses the workspace members with "$message"', async function (message) {
+            server.get('/workspacemember', () => new Response(403, {}, { status: 'ERROR', error: message }));
+            assert.ok(true, 'Gaia refuses the members');
+        })
+        .given('Gaia refuses the workspace projects with "$message"', async function (message) {
+            server.get('/project', () => new Response(403, {}, { status: 'ERROR', error: message }));
+            assert.ok(true, 'Gaia refuses the projects');
+        })
+        .then('The Members box shows the error "$message"', function (message) {
+            assert.dom('.workspace-members [data-test-box-error]').includesText(message);
+        })
+        .then('The Member Projects box shows the error "$message"', function (message) {
+            assert.dom('.workspace-member-projects [data-test-box-error]').includesText(message);
+        })
+        .then('The Members box lists $count rows', function (count) {
+            assert.dom('.workspace-members [data-member-id]').exists({ count: parseInt(count, 10) });
+        })
         .then('The Member Projects table lists $count projects with the four columns', function (count) {
             assert.dom('.workspace-member-projects [data-project-id]').exists({ count: parseInt(count, 10) });
             assert.dom('.workspace-member-projects th').exists({ count: 5 }, 'four data columns and the action column');
