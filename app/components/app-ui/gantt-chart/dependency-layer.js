@@ -45,6 +45,15 @@ export default class DependencyLayerComponent extends Component {
     element = null;
 
     /**
+     * The timeline body the hover listener is attached to
+     *
+     * @property hoverContainer
+     * @type HTMLElement|null
+     * @private
+     */
+    hoverContainer = null;
+
+    /**
      * Capture the SVG element once inserted in the DOM
      *
      * @method setupElement
@@ -242,6 +251,12 @@ export default class DependencyLayerComponent extends Component {
         let container = this.args.timelineBodyElement;
         let registry = this.args.barRegistry || {};
 
+        if (container && this.hoverContainer !== container) {
+            this.hoverContainer?.removeEventListener('mouseover', this.handlePointerOver);
+            container.addEventListener('mouseover', this.handlePointerOver);
+            this.hoverContainer = container;
+        }
+
         if (!container) {
             this.lines = [];
             this.previewLine = null;
@@ -263,6 +278,10 @@ export default class DependencyLayerComponent extends Component {
         let lines = [];
 
         dependencies.forEach((dependency) => {
+            if (dependency.type === 'relates' && !this.isSelectedLink(dependency) && !this.isHoveredLink(dependency)) {
+                return;
+            }
+
             let fromEl = registry[dependency.fromIssueId];
             let toEl = registry[dependency.toIssueId];
 
@@ -278,7 +297,10 @@ export default class DependencyLayerComponent extends Component {
             }
 
             lines.push({
-                id: `${dependency.fromIssueId}-${dependency.toIssueId}`,
+                id: `${dependency.type || 'link'}-${dependency.fromIssueId}-${dependency.toIssueId}`,
+                type: dependency.type,
+                conflict: Boolean(dependency.conflict),
+                marker: this.markerFor(dependency),
                 path: this.buildPath(start, end),
                 fromIssueId: dependency.fromIssueId,
                 toIssueId: dependency.toIssueId,
@@ -288,6 +310,72 @@ export default class DependencyLayerComponent extends Component {
 
         this.lines = lines;
         this.previewLine = this.buildPreviewLine(containerRect, scrollOffsets, registry);
+    }
+
+    /**
+     * The arrowhead of a link: none for relates, red for a conflict, plum for splits
+     *
+     * @method markerFor
+     * @param {Object} dependency
+     * @returns {String|undefined}
+     * @public
+     */
+    markerFor(dependency) {
+        if (dependency.type === 'relates') {
+            return undefined;
+        }
+        if (dependency.conflict) {
+            return 'url(#dependency-arrowhead-conflict)';
+        }
+        if (dependency.type === 'splits') {
+            return 'url(#dependency-arrowhead-splits)';
+        }
+        return this.isSelectedLink(dependency) ? 'url(#dependency-arrowhead-active)' : 'url(#dependency-arrowhead)';
+    }
+
+    /**
+     * The issue whose bar the pointer is over (its relates links show while hovered)
+     *
+     * @property hoveredIssueId
+     * @type String|null
+     * @public
+     */
+    @tracked hoveredIssueId = null;
+
+    /**
+     * Track the bar under the pointer, so relates links of the hovered issue are drawn
+     *
+     * @method handlePointerOver
+     * @param {Event} event
+     * @public
+     */
+    @action handlePointerOver(event) {
+        let registry = this.args.barRegistry || {};
+        let hovered = Object.keys(registry).find((id) => registry[id]?.contains?.(event.target)) ?? null;
+
+        if (hovered !== this.hoveredIssueId) {
+            this.hoveredIssueId = hovered;
+            this.refreshLines();
+        }
+    }
+
+    /**
+     * Whether the hovered issue is either end of the dependency
+     *
+     * @method isHoveredLink
+     * @param {Object} dependency
+     * @returns {Boolean}
+     * @public
+     */
+    isHoveredLink(dependency) {
+        let hoveredId = this.hoveredIssueId;
+
+        if (hoveredId === undefined || hoveredId === null) {
+            return false;
+        }
+
+        return String(dependency.fromIssueId) === String(hoveredId) ||
+            String(dependency.toIssueId) === String(hoveredId);
     }
 
     /**
@@ -398,6 +486,7 @@ export default class DependencyLayerComponent extends Component {
     willDestroy() {
         super.willDestroy(...arguments);
         this.element?.removeEventListener('click', this.handleCanvasClick);
+        this.hoverContainer?.removeEventListener('mouseover', this.handlePointerOver);
         this.closeContextMenu();
     }
 }

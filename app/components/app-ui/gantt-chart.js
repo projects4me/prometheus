@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { isConflict } from 'prometheus/utils/gantt/conflicts';
 import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -897,7 +898,8 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Build the dependency list based on issue parentId relationships
+	 * The lines to draw: the project's issue links whose two issues both have bars on the chart. Each carries its
+	 * type, its Issuelink and, for `blocks`, whether it is a schedule conflict. Parent/child draws no line.
 	 *
 	 * @property dependencies
 	 * @type Array
@@ -905,17 +907,32 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get dependencies() {
-		let deps = [];
+		let lookup = this.args.links;
+		if (!lookup) {
+			return [];
+		}
+		// Read the selection so the list is recomputed, and the layer redraws, when it changes (relates links show for it)
+		let selectedId = this.args.selectedIssue?.id;
 		let issueMap = this.issueMap;
+		let deps = [];
 
-		this.allIssues.forEach((issue) => {
-			let parentId = issue.parentId;
-			if (parentId && issueMap[parentId]) {
-				deps.push({
-					fromIssueId: parentId,
-					toIssueId: issue.id
-				});
+		lookup.links.forEach((link) => {
+			let fromId = link.belongsTo('sourceIssue').id();
+			let toId = link.belongsTo('targetIssue').id();
+			let from = issueMap[fromId];
+			let to = issueMap[toId];
+
+			if (!from || !to) {
+				return;
 			}
+			deps.push({
+				fromIssueId: fromId,
+				toIssueId: toId,
+				type: link.type,
+				selectedId,
+				link,
+				conflict: link.type === 'blocks' && isConflict(from, to, (issue) => lookup.isOpen(issue))
+			});
 		});
 
 		return deps;
