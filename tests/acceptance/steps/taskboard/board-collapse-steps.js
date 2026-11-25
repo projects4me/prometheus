@@ -57,10 +57,12 @@ export default function (assert) {
 	 * Verifies the lane is collapsed: marked, narrow and without visible cards.
 	 */
 	.then('The $status lane should be collapsed', function (status) {
-		let lane = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane');
+		let head = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane-head');
+		let lane = document.querySelector(`.lane[data-lane-name="${status}"]`);
 		assert.ok(lane.classList.contains('lane-collapsed'), `${status} lane should be collapsed`);
+		assert.ok(head.classList.contains('lane-collapsed'), `${status} lane header should be collapsed`);
 		assert.notOk(lane.querySelector(':scope > .box-body').offsetParent, 'Cards of a collapsed lane are hidden');
-		assert.ok(lane.querySelector('.fa-angle-right'), 'Collapsed lane shows the expand button');
+		assert.ok(head.querySelector('.fa-angle-right'), 'Collapsed lane shows the expand button');
 	})
 
 	/**
@@ -70,7 +72,7 @@ export default function (assert) {
 		let toggles = Array.from(document.querySelectorAll('[data-lane-toggle]'));
 		assert.ok(toggles.length > 0, 'The board has lanes');
 		for (let toggle of toggles) {
-			if (!toggle.closest('.lane').classList.contains('lane-collapsed')) {
+			if (!toggle.closest('.lane-head').classList.contains('lane-collapsed')) {
 				await click(toggle);
 			}
 		}
@@ -83,7 +85,7 @@ export default function (assert) {
 		try {
 			let lanes = document.querySelectorAll('[data-lane-toggle]');
 			lanes.forEach((toggle) => {
-				assert.ok(toggle.closest('.lane').classList.contains('lane-collapsed'), 'Every lane is collapsed');
+				assert.ok(toggle.closest('.lane-head').classList.contains('lane-collapsed'), 'Every lane is collapsed');
 			});
 			let container = document.querySelector('.board .milestone.box-body');
 			assert.ok(container, 'The lane container exists');
@@ -101,9 +103,10 @@ export default function (assert) {
 	 * Verifies the lane is expanded again.
 	 */
 	.then('The $status lane should be expanded', function (status) {
-		let lane = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane');
+		let head = document.querySelector(`[data-lane-toggle="${status}"]`).closest('.lane-head');
+		let lane = document.querySelector(`.lane[data-lane-name="${status}"]`);
 		assert.notOk(lane.classList.contains('lane-collapsed'), `${status} lane should be expanded`);
-		assert.ok(lane.querySelector('.fa-angle-left'), 'Expanded lane shows the collapse button');
+		assert.ok(head.querySelector('.fa-angle-left'), 'Expanded lane shows the collapse button');
 	})
 
 	/**
