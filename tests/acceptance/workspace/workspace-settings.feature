@@ -13,12 +13,6 @@ Feature: Workspace | Settings
     Then The workspace settings show the tabs "projects, environment, agents, delete"
     And The workspace settings Projects tab is open
 
-  Scenario: The Who Can Manage box lists the permissions
-
-    Given Workspace ENG exists with 0 projects
-    When User navigates to app/workspace/ENG/settings/projects
-    Then The Who Can Manage box lists the workspace permissions
-
   Scenario: The old edit link lands on Settings
 
     Given Workspace ENG exists with 0 projects

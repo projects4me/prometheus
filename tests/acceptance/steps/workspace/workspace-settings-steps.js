@@ -239,12 +239,6 @@ export default function (assert) {
             assert.dom('.workspace-members [data-btn="remove-member"]').exists({ count: parseInt(count, 10) });
             assert.dom('.workspace-members [data-btn="invite-member"]').exists();
         })
-        .then('The Who Can Manage box lists the workspace permissions', function () {
-            let text = document.querySelector('.workspace-who-can-manage').textContent;
-            ['workspace.update', 'membership.create', 'membership.delete', 'project.update', 'agent.*'].forEach((permission) => {
-                assert.ok(text.includes(permission), permission);
-            });
-        })
         .then('The Agents tab links to agents, workflows, tools and skills', function () {
             ['agents', 'workflows', 'tools', 'skills'].forEach((name) => {
                 assert.dom(`[data-agents-link="${name}"]`).exists(name);

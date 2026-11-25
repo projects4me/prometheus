@@ -112,21 +112,6 @@
         @onCancel={{this.cancel}}
       />
     </AccessControl>
-
-    <AppUi::Box @variant="info" class="workspace-who-can-manage">
-      <:header>
-        <h3 class="box-title">{{t "views.app.workspace.settings.whoCanManage.title"}}</h3>
-      </:header>
-      <:body>
-        <ul class="list-unstyled">
-          <li data-permission="workspace.update"><code>workspace.update</code> {{t "views.app.workspace.settings.whoCanManage.workspace"}}</li>
-          <li data-permission="membership"><code>membership.create</code>, <code>membership.delete</code> {{t "views.app.workspace.settings.whoCanManage.members"}}</li>
-          <li data-permission="project.update"><code>project.update</code> {{t "views.app.workspace.settings.whoCanManage.projects"}}</li>
-          <li data-permission="agent"><code>agent.*</code> {{t "views.app.workspace.settings.whoCanManage.agents"}}</li>
-          <li data-permission="other">{{t "views.app.workspace.settings.whoCanManage.other"}}</li>
-        </ul>
-      </:body>
-    </AppUi::Box>
   </div>
 </div>
 
