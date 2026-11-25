@@ -26,18 +26,20 @@
   {{/if}}
   <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}">
 
-    {{! Left side - issue list }}
-    <div class="gantt-list-column">
-      <AppUi::GanttChart::IssueList
-        @milestones={{@milestones}}
-        @activeId={{@selectedIssue.id}}
-        @onSelect={{this.handleListSelect}}
-        @onOpen={{this.handleOpenIssuePanel}}
-      />
-    </div>
+    {{! Phones - the List tab's issue list }}
+    {{#if this.viewport.isPhone}}
+      <div class="gantt-list-column">
+        <AppUi::GanttChart::IssueList
+          @milestones={{@milestones}}
+          @activeId={{@selectedIssue.id}}
+          @onSelect={{this.handleListSelect}}
+          @onOpen={{this.handleOpenIssuePanel}}
+        />
+      </div>
+    {{/if}}
 
-    {{! Right side - Timeline }}
-    <div class="gantt-timeline-wrapper {{if (and @isIssuePanelOpen (not this.viewport.isPhone)) 'gantt-timeline-hidden'}}">
+    {{! The grid (desktop) and the timeline, row for row in one scroll container }}
+    <div class="gantt-timeline-wrapper {{if (and @isIssuePanelOpen (not this.viewport.isPhone)) 'gantt-panel-open'}}">
       {{#unless this.viewport.isPhone}}
       <div class="nav-tabs-custom gantt-time-scale-selector">
         <ul class="nav nav-tabs gantt-time-scale-tabs">
@@ -57,15 +59,44 @@
       <div class="gantt-timeline-container"
         {{did-insert this.registerTimelineContainer}}
         {{will-destroy this.unregisterTimelineContainer}}>
-      <AppUi::GanttChart::TimelineHeader
-        @dateRange={{this.dateRange}}
-        @monthGroups={{this.monthGroups}}
-        @weekGroups={{this.weekGroups}}
-        @yearGroups={{this.yearGroups}}
-        @dayWidth={{this.dayWidth}}
-        @timeScale={{this.timeScale}}
-      />
-      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
+      <div class="gantt-scroll-header">
+        {{#unless this.viewport.isPhone}}
+          <div class="gantt-grid-header" data-test-gantt-grid-header>
+            <div class="gantt-grid-cell gantt-grid-name">{{t "components.gantt.grid.name"}}</div>
+            <div class="gantt-grid-cell gantt-grid-who">{{t "components.gantt.grid.who"}}</div>
+            <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.start"}}</div>
+            <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.end"}}</div>
+          </div>
+        {{/unless}}
+        <div class="gantt-timeline-column">
+          <AppUi::GanttChart::TimelineHeader
+            @dateRange={{this.dateRange}}
+            @monthGroups={{this.monthGroups}}
+            @weekGroups={{this.weekGroups}}
+            @yearGroups={{this.yearGroups}}
+            @dayWidth={{this.dayWidth}}
+            @timeScale={{this.timeScale}}
+          />
+        </div>
+      </div>
+      <div class="gantt-scroll-body">
+      {{#unless this.viewport.isPhone}}
+        <div class="gantt-grid-column" data-test-gantt-grid
+          {{register-element this.registerGridColumn}}>
+          {{#each @milestones as |milestone|}}
+            <AppUi::GanttChart::GanttRow
+              @part="grid"
+              @milestone={{milestone}}
+              @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
+              @onToggle={{this.toggleMilestone}}
+              @onIssueClick={{this.handleGridSelect}}
+              @onOpenIssuePanel={{this.handleOpenIssuePanel}}
+              @selectedIssue={{@selectedIssue}}
+            />
+          {{/each}}
+        </div>
+      {{/unless}}
+      <div class="gantt-timeline-body gantt-timeline-column" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
         <svg
           class="gantt-grid-overlay"
           width={{this.timelineWidth}}
@@ -110,6 +141,7 @@
         {{#each @milestones as |milestone|}}
           <AppUi::GanttChart::GanttRow
             @milestone={{milestone}}
+            @showLabel={{this.viewport.isPhone}}
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
@@ -142,8 +174,9 @@
         {{/each}}
       </div>
       </div>
+      </div>
     </div>
-    
+
     {{! Issue Details: a bottom sheet on phones, a side panel otherwise }}
     {{#if this.viewport.isPhone}}
       {{#if (and @isIssuePanelOpen @panelIssue)}}

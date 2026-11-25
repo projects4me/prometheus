@@ -7,6 +7,8 @@
  * Based on GanttPro interface design
  */
 
+$gantt-grid-width: 440px;
+
 .gantt-view {
   width: 100%;
   overflow: hidden;
@@ -71,7 +73,7 @@
   overflow: hidden;
 }
 
-/* Left side - the issue list, with its own vertical scroll */
+/* Phones - the List tab's issue list, with its own vertical scroll */
 .gantt-list-column {
   width: 25%;
   min-width: 300px;
@@ -95,7 +97,7 @@
   z-index: 5;
   display: inline-block;
   padding: 0 10px;
-  line-height: var(--gantt-row-height, 45px);
+  line-height: var(--gantt-row-height, 36px);
   background: rgba(255, 255, 255, 0.85);
 }
 
@@ -219,10 +221,170 @@
     overflow-y: auto;
     background: #fff;
     position: relative;
+    display: flex;
+    flex-direction: column;
 
     &.gantt-timeline-hidden {
       display: none !important;
     }
+  }
+}
+
+/* One header band and one body: the grid (desktop) on the left, the timeline beside it, row for row */
+.gantt-scroll-header,
+.gantt-scroll-body {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+}
+
+.gantt-scroll-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+}
+
+.gantt-scroll-body {
+  flex: 1 0 auto;
+}
+
+.gantt-grid-header,
+.gantt-grid-column {
+  position: sticky;
+  left: 0;
+  flex: 0 0 auto;
+  width: $gantt-grid-width;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.gantt-grid-header {
+  z-index: 11;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 6px;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Above the bars, the dependency lines and the in-row labels that scroll under it */
+.gantt-grid-column {
+  z-index: 9;
+}
+
+.gantt-grid-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--gantt-row-height, 36px);
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+
+  &.task-row {
+    cursor: pointer;
+
+    .gantt-grid-name {
+      padding-left: 30px;
+    }
+  }
+
+  &:hover,
+  &.selected {
+    background: rgba(29, 78, 216, 0.08);
+  }
+
+  .gantt-grid-open {
+    visibility: hidden;
+  }
+
+  &:hover .gantt-grid-open,
+  &.selected .gantt-grid-open,
+  .gantt-grid-open:focus {
+    visibility: visible;
+  }
+}
+
+/* The row's select button, stretched under the eye button */
+.gantt-grid-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gantt-grid-open {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+}
+
+.gantt-grid-cell {
+  flex: 0 0 auto;
+  padding: 0 6px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &.gantt-grid-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 10px;
+  }
+
+  &.gantt-grid-who {
+    width: 44px;
+    text-align: center;
+  }
+
+  &.gantt-grid-date {
+    width: 64px;
+  }
+}
+
+.gantt-grid-name .gantt-milestone-toggle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.gantt-grid-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gantt-grid-number {
+  color: $secondaryColor;
+}
+
+.gantt-grid-count {
+  flex: 0 0 auto;
+}
+
+/* Desktop with the issue panel open: the grid stays, the timeline gives way to the panel */
+.gantt-timeline-wrapper.gantt-panel-open {
+  flex: 0 0 auto;
+
+  .gantt-time-scale-selector,
+  .gantt-timeline-column {
+    display: none;
+  }
+
+  .gantt-timeline-container {
+    overflow-x: hidden;
+  }
+
+  .gantt-scroll-header,
+  .gantt-scroll-body {
+    width: auto;
   }
 }
 
@@ -237,6 +399,8 @@
 
 .gantt-timeline-body {
   position: relative;
+  /* Its own stacking context, so dragged bars and lines stay under the sticky grid */
+  z-index: 0;
   width: var(--gantt-timeline-width);
   min-height: 100%;
 }
@@ -270,7 +434,7 @@
 
 .gantt-timeline-row {
   position: relative;
-  height: var(--gantt-row-height, 45px);
+  height: var(--gantt-row-height, 36px);
   box-sizing: border-box;
   transition: background-color 0.2s;
 
@@ -279,7 +443,7 @@
   }
 
   &.milestone-row {
-    height: var(--gantt-row-height, 45px);
+    height: var(--gantt-row-height, 36px);
   }
 }
 
@@ -307,9 +471,10 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
+  /* Phones only: desktop shows the assignee in the grid's Who column */
   .assignee-avatar {
     position: absolute;
-    right: -4.5rem;
+    right: -3.5rem;
   }
 }
 

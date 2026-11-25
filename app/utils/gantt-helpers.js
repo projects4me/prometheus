@@ -19,7 +19,7 @@ import * as dateUtil from 'prometheus/utils/date';
  * @property GANTT_ROW_HEIGHT
  * @type Number
  */
-export const GANTT_ROW_HEIGHT = 45;
+export const GANTT_ROW_HEIGHT = 36;
 
 /**
  * Calculate the number of days between two dates
@@ -250,4 +250,22 @@ export function getMilestoneBarDates(milestone) {
         }
     });
     return { start: dateUtil.format(start, 'YYYY-MM-DD'), end: dateUtil.format(end, 'YYYY-MM-DD') };
+}
+
+/**
+ * The state a milestone's grid row shows: `done` when it has issues and all are finished, `overdue` when its
+ * end date (the bar end) is before today and not all are finished, otherwise null.
+ *
+ * @function getMilestoneState
+ * @param {Object} milestone Milestone record with an issues array
+ * @param {String} today Today in YYYY-MM-DD format
+ * @returns {String|null} `done`, `overdue` or null
+ */
+export function getMilestoneState(milestone, today) {
+    const total = milestone.issues?.length ?? 0;
+    if (total > 0 && countCompletedIssues(milestone) === total) {
+        return 'done';
+    }
+    const { end } = getMilestoneBarDates(milestone);
+    return end && dateUtil.isBefore(end, today, { unit: 'day' }) ? 'overdue' : null;
 }

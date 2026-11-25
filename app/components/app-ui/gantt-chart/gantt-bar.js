@@ -35,6 +35,15 @@ export default class GanttBarComponent extends AppComponent {
 	 */
 	@service intl;
 
+	/**
+	 * The viewport service: phones have no grid, so the bar shows the assignee itself
+	 *
+	 * @property viewport
+	 * @type {Prometheus.Services.viewport}
+	 * @public
+	 */
+	@service viewport;
+
     /**
      * Track if the bar is being dragged
      *

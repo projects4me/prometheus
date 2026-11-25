@@ -362,6 +362,14 @@
       "issueList": {
         "title": "Issues",
         "open": "Open issue"
+      },
+      "grid": {
+        "name": "Milestone / Issue",
+        "who": "Who",
+        "start": "Start",
+        "end": "End",
+        "overdue": "Overdue",
+        "done": "Done"
       }
     },
     "quickList": {
