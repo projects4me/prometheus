@@ -369,6 +369,14 @@
         "title": "Issues",
         "open": "Open issue"
       },
+      "footer": {
+        "hintMove": "Drag a bar to move it",
+        "hintResize": "Drag either end to change dates",
+        "hintLink": "Drag the dot onto another bar to link them",
+        "milestones": "{count, plural, one {# milestone} other {# milestones}}",
+        "issuesShown": "{count, plural, one {# issue shown} other {# issues shown}}",
+        "withoutDates": "{count, plural, other {# without dates}}"
+      },
       "grid": {
         "name": "Milestone / Issue",
         "who": "Who",

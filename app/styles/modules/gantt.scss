@@ -90,6 +90,26 @@ $gantt-grid-width: 440px;
   border-bottom: 1px solid #e0e0e0;
 }
 
+/* The strip at the bottom of the panel: interaction hints and the shown range and counts */
+.gantt-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 10px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  font-size: 12px;
+  color: #777;
+
+  .gantt-footer-hints > span + span {
+    margin-left: 16px;
+  }
+
+  .gantt-footer-summary {
+    white-space: nowrap;
+  }
+}
+
 /* The milestone label stays in view while the timeline scrolls sideways */
 .gantt-milestone-label {
   position: sticky;
