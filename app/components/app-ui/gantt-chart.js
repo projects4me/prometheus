@@ -19,6 +19,7 @@ import {
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
+import { loadToolbarPreferences, saveToolbarPreferences } from 'prometheus/utils/gantt/toolbar-preferences';
 
 /**
  * This component renders the main Gantt chart view with timeline and milestones/issues
@@ -37,6 +38,10 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	constructor() {
 		super(...arguments);
+		const saved = loadToolbarPreferences();
+		this.timeScale = saved.scale;
+		this.showDependencies = saved.dependencies;
+		this.showWeekends = saved.weekends;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
 	}
 
@@ -48,6 +53,15 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@service viewport;
+
+	/**
+	 * The store, for the status legend
+	 *
+	 * @property store
+	 * @type StoreService
+	 * @public
+	 */
+	@service store;
 
 	/**
 	 * The tab shown on phones: `list` or `timeline`. Kept when the viewport crosses 768px.
@@ -101,8 +115,21 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get dayWidth() {
+		if (this.timeScale === 'months') {
+			return this.monthDayWidth;
+		}
 		return this.timeScale === 'weeks' ? this.weekWidth : this.dayWidthValue;
 	}
+
+	/**
+	 * Width of a single day in pixels for the months view (a month is about 120px)
+	 *
+	 * @property monthDayWidth
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	monthDayWidth = 4;
 
 	/**
 	 * Registry of rendered task bars so we can calculate dependency positions
@@ -264,7 +291,107 @@ export default class GanttChartComponent extends AppComponent {
 	 * @type String
 	 * @public
 	 */
-	@tracked timeScale = 'days';
+	@tracked timeScale = 'weeks';
+
+	/**
+	 * The scales of the toolbar's button group
+	 *
+	 * @property scales
+	 * @type Array
+	 * @public
+	 */
+	scales = ['days', 'weeks', 'months'];
+
+	/**
+	 * Whether the dependency layer is drawn; remembered per user
+	 *
+	 * @property showDependencies
+	 * @type Boolean
+	 * @public
+	 */
+	@tracked showDependencies = true;
+
+	/**
+	 * Whether the weekend columns are shaded; remembered per user
+	 *
+	 * @property showWeekends
+	 * @type Boolean
+	 * @public
+	 */
+	@tracked showWeekends = true;
+
+	/**
+	 * The project's issue statuses for the legend, one per name, in the order the store holds them
+	 *
+	 * @property legendStatuses
+	 * @type Array
+	 * @public
+	 */
+	get legendStatuses() {
+		const seen = new Set();
+		return this.store.peekAll('issuestatus').filter((status) => {
+			if (!status.name || seen.has(status.name)) {
+				return false;
+			}
+			seen.add(status.name);
+			return true;
+		});
+	}
+
+	/**
+	 * Saves the scale and both toggles under the one documented key
+	 *
+	 * @method savePreferences
+	 * @private
+	 */
+	savePreferences() {
+		saveToolbarPreferences({
+			scale: this.timeScale,
+			dependencies: this.showDependencies,
+			weekends: this.showWeekends
+		});
+	}
+
+	/**
+	 * Shows or hides the dependency lines
+	 *
+	 * @method toggleDependencies
+	 * @public
+	 */
+	@action
+	toggleDependencies() {
+		this.showDependencies = !this.showDependencies;
+		this.savePreferences();
+	}
+
+	/**
+	 * Shows or hides the weekend shading
+	 *
+	 * @method toggleWeekends
+	 * @public
+	 */
+	@action
+	toggleWeekends() {
+		this.showWeekends = !this.showWeekends;
+		this.savePreferences();
+	}
+
+	/**
+	 * Scrolls the timeline sideways so today is centred (clamped by the browser at the ends)
+	 *
+	 * @method scrollToToday
+	 * @public
+	 */
+	@action
+	scrollToToday() {
+		if (!this.timelineContainerElement || !this.args.timelineStart) {
+			return;
+		}
+		const today = dates.format(dates.now(), 'YYYY-MM-DD');
+		const todayLeft = calculateBarPosition(this.args.timelineStart, today, this.dayWidth);
+		const left = Math.max(0, todayLeft - (this.timelineViewportWidth / 2) + (this.dayWidth / 2));
+		this.timelineContainerElement.scrollTo({ left, behavior: 'auto' });
+	}
 
 	/**
 	 * Computed property that generates the date range for the timeline
@@ -423,6 +550,10 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get gridVerticalPath() {
+		if (this.timeScale === 'months') {
+			// a day is a few pixels wide: day lines would only be noise
+			return '';
+		}
 		const lines = [];
 		for (let day = 1; day <= 7; day++) {
 			lines.push(`M ${day * this.gridDayWidth} 0 V ${this.rowHeight}`);
@@ -600,6 +731,7 @@ export default class GanttChartComponent extends AppComponent {
 			return;
 		}
 		this.timeScale = scale;
+		this.savePreferences();
 		// The new scale renders before the next frame
 		requestAnimationFrame(() => {
 			if (this.isDestroying || this.isDestroyed) {

@@ -119,6 +119,18 @@ export default class TimelineHeaderComponent extends Component {
 	}
 
 	/**
+	 * The months scale has month columns only; the day row would be a few pixels per cell
+	 *
+	 * @property showDayRow
+	 * @type Boolean
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get showDayRow() {
+		return this.args.timeScale !== 'months';
+	}
+
+	/**
 	 * Check if the week row should be shown
 	 *
 	 * @property showWeekRow

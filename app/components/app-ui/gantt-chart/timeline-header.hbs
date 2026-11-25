@@ -36,6 +36,7 @@
     </div>
   {{/if}}
 
+  {{#if this.showDayRow}}
   <div class="gantt-header-row day-row">
     {{#each this.dateRangeWithFlags as |date|}}
       <div
@@ -46,4 +47,5 @@
       </div>
     {{/each}}
   </div>
+  {{/if}}
 </div>
