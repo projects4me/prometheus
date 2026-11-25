@@ -1,7 +1,6 @@
 <div 
   class="{{this.effectiveBarClass}} {{if this.shouldShowConnectors 'show-connectors'}}" 
-  {{did-insert this.applyBarStyle}}
-  {{did-update this.applyBarStyle this.barLeft this.barWidth this.dragOffset this.isDragging this.isResizing this.resizeOffset}}
+  style={{this.positionStyle}}
   {{on "mousedown" this.handleMouseDown}}
   {{on "mousemove" this.handleBarMouseMove}}
   {{on "click" this.handleClick}}

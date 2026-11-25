@@ -7,14 +7,14 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
-import { next, later } from '@ember/runloop';
 import {
 	generateDateRange,
 	groupDatesByMonth,
 	getTotalDays,
 	calculateBarPosition,
 	getMilestoneKey,
-	GANTT_ROW_HEIGHT
+	GANTT_ROW_HEIGHT,
+	toFiniteNumber
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
@@ -217,26 +217,6 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked timeScale = 'days';
 
 	/**
-	 * Controls visibility of the scale conversion overlay
-	 *
-	 * @property showScaleConversionOverlay
-	 * @type Boolean
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	@tracked showScaleConversionOverlay = false;
-
-	/**
-	 * Stores the conversion message
-	 *
-	 * @property conversionMessage
-	 * @type String
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	@tracked conversionMessage = '';
-
-	/**
 	 * Computed property that generates the date range for the timeline
 	 *
 	 * @property dateRange
@@ -305,18 +285,35 @@ export default class GanttChartComponent extends AppComponent {
 	rowHeight = GANTT_ROW_HEIGHT;
 
 	/**
-	 * Sets --gantt-row-height on the chart root so the SCSS uses the same row height
+	 * Custom properties on the chart root: row height, day width and timeline width. A scale change only
+	 * changes this one style; header cells, spans and bars compute their size from it in the SCSS.
 	 *
-	 * @property rowHeightStyle
+	 * @property rootStyle
 	 * @type SafeString
 	 * @public
 	 */
-	get rowHeightStyle() {
-		return htmlSafe(`--gantt-row-height: ${this.rowHeight}px`);
+	get rootStyle() {
+		return htmlSafe(
+			`--gantt-row-height: ${toFiniteNumber(this.rowHeight)}px; ` +
+			`--gantt-day-width: ${toFiniteNumber(this.dayWidth)}px; ` +
+			`--gantt-timeline-width: ${toFiniteNumber(this.timelineWidth)}px`
+		);
 	}
 
 	/**
-	 * Width of the grid pattern in pixels
+	 * Width of one day column in the grid pattern, in pixels
+	 *
+	 * @property gridDayWidth
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get gridDayWidth() {
+		return Math.max(this.dayWidth, 1);
+	}
+
+	/**
+	 * Width of the grid pattern: one week of seven day columns
 	 *
 	 * @property gridPatternWidth
 	 * @type Number
@@ -324,57 +321,51 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get gridPatternWidth() {
-		return Math.max(this.dayWidth, 1);
+		return this.gridDayWidth * 7;
 	}
 
 	/**
-	 * Apply styles to grid overlay SVG element
+	 * Horizontal offset of the week pattern so that each tile starts on a Monday
 	 *
-	 * @method applyGridOverlayStyle
-	 * @param {SVGElement} element
+	 * @property gridPatternX
+	 * @type Number
+	 * @for GanttChartComponent
 	 * @public
 	 */
-	@action
-	applyGridOverlayStyle(element) {
-		if (element) {
-			element.style.width = `${this.timelineWidth}px`;
-			element.style.height = '100%';
+	get gridPatternX() {
+		if (!this.args.timelineStart) {
+			return 0;
 		}
+		const mondayIndex = (dates.part(this.args.timelineStart, 'day') + 6) % 7;
+		return mondayIndex === 0 ? 0 : -mondayIndex * this.gridDayWidth;
 	}
 
 	/**
-	 * Apply styles to weekend overlay element
+	 * Left edge of the Saturday/Sunday shading inside the week pattern
 	 *
-	 * @method applyWeekendOverlayStyle
-	 * @param {HTMLElement} element
+	 * @property gridWeekendX
+	 * @type Number
+	 * @for GanttChartComponent
 	 * @public
 	 */
-	@action
-	applyWeekendOverlayStyle(element) {
-		if (element) {
-			element.style.width = `${this.timelineWidth}px`;
-			element.style.height = '100%';
-		}
+	get gridWeekendX() {
+		return this.gridDayWidth * 5;
 	}
 
 	/**
-	 * Apply styles to weekend block element
+	 * Width of the Saturday/Sunday shading inside the week pattern
 	 *
-	 * @method applyWeekendBlockStyle
-	 * @param {Object} highlight
-	 * @param {HTMLElement} element
+	 * @property gridWeekendWidth
+	 * @type Number
+	 * @for GanttChartComponent
 	 * @public
 	 */
-	@action
-	applyWeekendBlockStyle(highlight, element) {
-		if (element && highlight) {
-			element.style.left = `${highlight.left}px`;
-			element.style.width = `${highlight.width}px`;
-		}
+	get gridWeekendWidth() {
+		return this.gridDayWidth * 2;
 	}
 
 	/**
-	 * Get the vertical path for the grid pattern
+	 * Get the vertical path for the grid pattern: one line at the end of each of the seven days
 	 *
 	 * @property gridVerticalPath
 	 * @type String
@@ -382,7 +373,11 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get gridVerticalPath() {
-		return `M ${this.gridPatternWidth} 0 V ${this.rowHeight}`;
+		const lines = [];
+		for (let day = 1; day <= 7; day++) {
+			lines.push(`M ${day * this.gridDayWidth} 0 V ${this.rowHeight}`);
+		}
+		return lines.join(' ');
 	}
 
 	/**
@@ -543,118 +538,29 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Get the weekend highlights for the timeline
-	 *
-	 * @property weekendHighlights
-	 * @type Array
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	get weekendHighlights() {
-		let dayWidth = this.dayWidth;
-
-		return this.dateRange
-			.map((date, index) => ({
-				isWeekend: [0, 6].includes(dates.part(date.date, 'day')),
-				left: index * dayWidth
-			}))
-			.filter((item) => item.isWeekend)
-			.map(({ left }) => ({
-				left,
-				width: dayWidth
-			}));
-	}
-
-	/**
-	 * Set overlay width based on timeline container viewport
-	 *
-	 * @method setOverlayWidth
-	 * @public
-	 */
-	setOverlayWidth() {
-		if (!this.timelineContainerElement) {
-			return;
-		}
-
-		const rect = this.timelineContainerElement.getBoundingClientRect();
-		
-		let overlay = this.timelineContainerElement.querySelector('.gantt-scale-conversion-overlay');
-		if (overlay) {
-			overlay.style.width = `${rect.width}px`;
-		}
-	}
-
-	/**
-	 * Show the scale conversion overlay
-	 *
-	 * @method showConversionOverlay
-	 * @public
-	 */
-	showConversionOverlay() {
-		this.showScaleConversionOverlay = true;
-		this.toggleTimelineContainerScroll();
-		this.setOverlayWidth();
-	}
-
-	/**
-	 * Set the conversion message based on the scale
-	 *
-	 * @method setTimeScaleConversionMessage
-	 * @param {String} scale
-	 */
-	@action
-	setTimeScaleConversionMessage(scale) {
-		if (scale === 'days') {
-			this.conversionMessage = this.intl.t('views.app.gantt.conversion.switchingToDays');
-		} else {
-			this.conversionMessage = this.intl.t('views.app.gantt.conversion.switchingToWeeks');
-		}
-	}
-
-	/**
-	 * Change time scale between days and weeks
+	 * Change time scale between days and weeks. Only the root `--gantt-day-width` changes, so the switch
+	 * is immediate; the dependency lines follow the bars while their size transition plays.
 	 *
 	 * @method setTimeScale
 	 * @param {String} scale
 	 */
 	@action
 	setTimeScale(scale) {
-		if (scale && this.timeScale !== scale) {
-			this.setTimeScaleConversionMessage(scale);
-			this.showConversionOverlay();
-			later(this, () => {
-				this.timeScale = scale;
-				next(this, () => {
-					if (this.args.selectedIssue) {
-						this.scrollToIssue(this.args.selectedIssue);
-					}
-				});
-			}, 100);
+		if (!scale || this.timeScale === scale) {
+			return;
 		}
-	}
-
-	/**
-	 * Toggle the timeline container scroll
-	 *
-	 * @method toggleTimelineContainerScroll
-	 * @public
-	 */
-	@action toggleTimelineContainerScroll() {
-		this.timelineContainerElement.style.overflow = this.showScaleConversionOverlay ? 'hidden' : 'auto';
-	}
-
-	/**
-	 * Update the timeline body width when timelineWidth changes
-	 *
-	 * @method updateTimelineBodyWidth
-	 * @param {HTMLElement} element
-	 * @public
-	 */
-	@action updateTimelineBodyWidth(element) {
-			if (element && this.timelineWidth) {
-				element.style.width = `${this.timelineWidth}px`;
+		this.timeScale = scale;
+		// The new scale renders before the next frame
+		requestAnimationFrame(() => {
+			if (this.isDestroying || this.isDestroyed) {
+				return;
 			}
-	}	
+			if (this.args.selectedIssue) {
+				this.scrollToIssue(this.args.selectedIssue);
+			}
+		});
+		this.followBarTransition();
+	}
 
 	/**
 	 * Flatten all milestone issues into a single array for convenience.
@@ -1066,7 +972,6 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action registerTimelineBody(element) {
 		this.timelineBodyElement = element;
-		this.timelineBodyElement.style.width = `${this.timelineWidth}px`;
 	}
 
 	/**
@@ -1494,38 +1399,25 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Hide the scale conversion overlay when the timeline width is changed and update the dependency arrow positions.
+	 * Refresh the dependency positions on every frame for a short while, so the lines follow the bars
+	 * while their left/width transition plays after a scale change.
 	 *
-	 * @method hideScaleConversionOverlay
+	 * @method followBarTransition
 	 * @public
 	 */
-	@action
-	hideScaleConversionOverlay(){
-		next(() => {
-			this.hideConversionOverlay();
-			let times = 0;
-
-			// update dependency positions to ensure the dependency layer is updated when conversion scale is changed
-			let updateDepPos = () => {
-				this.updateBarRegisteryVersion();
-				times++;
-				if (times < 30) {
-					requestAnimationFrame(updateDepPos);
-				}
-			};
-			requestAnimationFrame(updateDepPos.bind(this));			
-		});
-	}
-	
-	/**
-	 * Hide the scale conversion overlay
-	 *
-	 * @method hideConversionOverlay
-	 * @public
-	 */
-	hideConversionOverlay(){
-		this.showScaleConversionOverlay = false;
-		this.toggleTimelineContainerScroll();
+	followBarTransition() {
+		let frames = 0;
+		const refresh = () => {
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			this.updateBarRegisteryVersion();
+			frames++;
+			if (frames < 30) {
+				requestAnimationFrame(refresh);
+			}
+		};
+		requestAnimationFrame(refresh);
 	}
 
 	/**

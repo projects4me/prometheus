@@ -49,9 +49,6 @@
     }
   },
   "app/components/app-ui/gantt-chart.js": {
-    "ember/no-runloop": {
-      "count": 3
-    },
     "no-dupe-class-members": {
       "count": 3
     },

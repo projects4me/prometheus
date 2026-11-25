@@ -6,7 +6,14 @@ import AppComponent from 'prometheus/components/app';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { calculateBarWidth, calculateBarPosition } from 'prometheus/utils/gantt-helpers';
+import {
+    calculateBarWidth,
+    calculateBarPosition,
+    getDaysBetween,
+    getPositionInDays,
+    toFiniteNumber
+} from 'prometheus/utils/gantt-helpers';
+import { htmlSafe } from '@ember/template';
 import DateUtils from 'prometheus/utils/date';
 import { later } from '@ember/runloop';
 import * as dates from 'prometheus/utils/date';
@@ -263,15 +270,72 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
-     * Get the bar style string
+     * Days from the timeline start to the bar's start date
      *
-     * @property barStyle
-     * @type String
+     * @property startDay
+     * @type Number
      * @for GanttBar
      * @public
      */
-    get barStyle() {
-        return `left: ${this.barLeft}px; width: ${this.barWidth}px;`;
+    get startDay() {
+        return getPositionInDays(this.args.timelineStart, this.args.startDate);
+    }
+
+    /**
+     * Number of days the bar covers, start and end inclusive, at least one
+     *
+     * @property spanDays
+     * @type Number
+     * @for GanttBar
+     * @public
+     */
+    get spanDays() {
+        return Math.max(1, getDaysBetween(this.args.startDate, this.args.endDate) + 1);
+    }
+
+    /**
+     * Live pixel shift of the bar's left edge: the drag offset, plus the resize offset when resizing from the left
+     *
+     * @property liveShift
+     * @type Number
+     * @for GanttBar
+     * @public
+     */
+    get liveShift() {
+        const resizeShift = this.isResizing && this.resizeHandle === 'left' ? this.resizeOffset : 0;
+        return this.dragOffset + resizeShift;
+    }
+
+    /**
+     * Live pixel change of the bar's width while it is being resized
+     *
+     * @property liveStretch
+     * @type Number
+     * @for GanttBar
+     * @public
+     */
+    get liveStretch() {
+        if (!this.isResizing) {
+            return 0;
+        }
+        return this.resizeHandle === 'left' ? -this.resizeOffset : this.resizeOffset;
+    }
+
+    /**
+     * The bar's position as CSS custom properties. Start and span are in days, so a scale change only
+     * changes `--gantt-day-width` on the chart root and the SCSS recomputes left and width. Only numbers
+     * go into the string.
+     *
+     * @property positionStyle
+     * @type SafeString
+     * @for GanttBar
+     * @public
+     */
+    get positionStyle() {
+        return htmlSafe(
+            `--bar-start: ${toFiniteNumber(this.startDay)}; --bar-days: ${toFiniteNumber(this.spanDays)}; ` +
+            `--bar-shift: ${toFiniteNumber(this.liveShift)}px; --bar-stretch: ${toFiniteNumber(this.liveStretch)}px`
+        );
     }
 
     /**
@@ -812,32 +876,6 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
-     * Apply effective bar style including drag offset directly to element
-     *
-     * @method applyBarStyle
-     * @param {HTMLElement} element
-     * @TODO Come up with more optimal solution for dependency positions update instead of using requestAnimationFrame.
-     * @public
-     */
-    @action
-    applyBarStyle(element) {
-        if (!element) {
-            return;
-        }
-        const left = this.effectiveBarLeft + this.dragOffset;
-        const width = this.effectiveBarWidth;
-        element.style.left = `${left}px`;
-        element.style.width = `${width}px`;
-        if (this.isDragging || this.isResizing) {
-            element.style.opacity = '0.7';
-            element.style.cursor = this.isResizing ? (this.resizeHandle === 'left' ? 'w-resize' : 'e-resize') : 'grabbing';
-        } else {
-            element.style.opacity = '';
-            element.style.cursor = '';
-        }
-    }
-
-    /**
      * Get the effective bar class including dragging and resizing state
      *
      * @property effectiveBarClass
@@ -857,7 +895,7 @@ export default class GanttBarComponent extends AppComponent {
         }
 
         if (this.isResizing) {
-            classes.push('resizing');
+            classes.push('resizing', `resizing-${this.resizeHandle}`);
         }
         
         return classes.join(' ');

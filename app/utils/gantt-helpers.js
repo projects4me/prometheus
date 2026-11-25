@@ -34,6 +34,19 @@ export function getDaysBetween(startDate, endDate) {
 }
 
 /**
+ * Coerce a value to a finite number for an inline style string, 0 otherwise. Styles built with
+ * htmlSafe only ever interpolate the result, never raw input.
+ *
+ * @function toFiniteNumber
+ * @param {*} value
+ * @returns {Number}
+ */
+export function toFiniteNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : 0;
+}
+
+/**
  * Calculate the position (in days) from timeline start to item start
  *
  * @function getPositionInDays
