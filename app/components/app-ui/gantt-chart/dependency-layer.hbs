@@ -27,18 +27,24 @@
       >
         <path d="M 0 0 L 6 3 L 0 6 z" class="dependency-arrowhead-active"></path>
       </marker>
+      <marker id="dependency-arrowhead-conflict" markerWidth="4" markerHeight="4" refX="4" refY="2" orient="auto" markerUnits="strokeWidth">
+        <path d="M 0 0 L 4 2 L 0 4 z" class="dependency-arrowhead-conflict"></path>
+      </marker>
+      <marker id="dependency-arrowhead-splits" markerWidth="4" markerHeight="4" refX="4" refY="2" orient="auto" markerUnits="strokeWidth">
+        <path d="M 0 0 L 4 2 L 0 4 z" class="dependency-arrowhead-splits"></path>
+      </marker>
     </defs>
 
     {{#each this.lines as |line|}}
       <path
         d={{line.path}}
-        class="dependency-line {{if (eq this.activeDependencyId line.id) 'active'}} {{if line.selected 'selected'}}"
+        class="dependency-line {{if line.type (concat 'dependency-line-' line.type)}} {{if line.conflict 'conflict'}} {{if (eq this.activeDependencyId line.id) 'active'}} {{if line.selected 'selected'}}"
         role="button"
         data-from-issue-id="{{line.fromIssueId}}"
         data-to-issue-id="{{line.toIssueId}}"
         {{on "click" (fn this.handleLineClick line)}}
         {{on "contextmenu" (fn this.handleContextMenu line)}}
-        marker-end={{if (or line.selected (eq this.activeDependencyId line.id)) "url(#dependency-arrowhead-active)" "url(#dependency-arrowhead)"}}
+        marker-end={{if (eq this.activeDependencyId line.id) "url(#dependency-arrowhead-active)" line.marker}}
       />
     {{/each}}
 

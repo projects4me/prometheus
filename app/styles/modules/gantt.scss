@@ -717,6 +717,20 @@ $gantt-phone-grid-width: 124px;
     stroke: $primaryColor;
   }
 
+  &.dependency-line-blocks.conflict {
+    stroke: $dangerColor;
+  }
+
+  &.dependency-line-splits {
+    stroke: $highlightColor;
+    stroke-dasharray: 8 4;
+  }
+
+  &.dependency-line-relates {
+    stroke-dasharray: 2 4;
+    stroke-linecap: round;
+  }
+
   &.preview {
     stroke-dasharray: 6;
     cursor: default;
@@ -726,6 +740,14 @@ $gantt-phone-grid-width: 124px;
 
 .dependency-arrowhead {
   fill: $secondaryColor;
+}
+
+.dependency-arrowhead-conflict {
+  fill: $dangerColor;
+}
+
+.dependency-arrowhead-splits {
+  fill: $highlightColor;
 }
 
 .dependency-arrowhead-active {
