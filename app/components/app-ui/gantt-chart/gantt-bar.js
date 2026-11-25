@@ -456,7 +456,7 @@ export default class GanttBarComponent extends AppComponent {
             return false;
         }
 
-        if (this.args.isLinking) {
+        if (this.args.isLinking || this.args.isSelected) {
             return true;
         }
 

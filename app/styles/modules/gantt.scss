@@ -547,9 +547,11 @@ $gantt-grid-width: 440px;
   height: 14px;
   z-index: 2;
 
+  /* Selected or keyboard-focused: a square ring, with the resize handles and link dot kept visible */
+  &.selected,
   &:focus-visible {
-    outline: 2px solid #3c8dbc;
-    outline-offset: 2px;
+    outline: 2px solid $highlightColor;
+    outline-offset: 0;
   }
 
   &.draggable {
@@ -830,5 +832,24 @@ $gantt-grid-width: 440px;
   .gantt-legend-status {
     font-size: 11px;
     border-radius: 0;
+  }
+}
+
+/* Visible resize handles at both ends of the selected bar (the edge zones still do the resizing) */
+.gantt-bar-resize-handle {
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 10px;
+  margin-top: -5px;
+  background: $highlightColor;
+  pointer-events: none;
+
+  &.gantt-bar-resize-handle-start {
+    left: 1px;
+  }
+
+  &.gantt-bar-resize-handle-end {
+    right: 1px;
   }
 }
