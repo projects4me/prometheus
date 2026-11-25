@@ -75,7 +75,7 @@ export default class WorkspaceSettingsProjectsController extends AppWorkspacesCr
     get memberColumns() {
         let t = (key) => this.intl.t(`views.app.workspace.settings.members.${key}`);
         return [
-            { key: 'member', label: t('member'), sortable: true, sortKey: 'User.name' },
+            { key: 'member', label: t('member'), sortable: true, sortKey: 'Workspacemember.userName' },
             { key: 'type', label: t('type') },
             { key: 'projects', label: t('projects') },
             { key: 'openIssues', label: t('openIssues') },

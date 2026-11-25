@@ -140,3 +140,20 @@ Feature: Workspace | Settings
     Then The Move project out dialog warns of 1 runs in progress
     When User confirms the Move project out dialog
     Then The Move project out dialog shows the error "Work is in progress"
+
+  Scenario: Member Projects still lists its projects when the members request fails
+
+    Given Workspace ENG exists with 2 projects
+    And Gaia refuses the workspace members with "Access denied to workspacemember"
+    When User navigates to app/workspace/ENG/settings/projects
+    Then The Member Projects table lists 2 projects with the four columns
+    And The Members box shows the error "Access denied to workspacemember"
+
+  Scenario: Members still lists its rows when the projects request fails
+
+    Given Workspace ENG exists with 2 projects
+    And User 1 is a member of 2 projects of workspace ENG
+    And Gaia refuses the workspace projects with "Access denied to project"
+    When User navigates to app/workspace/ENG/settings/projects
+    Then The Member Projects box shows the error "Access denied to project"
+    And The Members box lists 1 rows

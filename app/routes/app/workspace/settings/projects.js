@@ -50,24 +50,55 @@ export default class WorkspaceSettingsProjectsRoute extends App {
         if (!parent.workspace) {
             return parent;
         }
+        let [projects, members] = await Promise.all([this.loadProjects(parent.workspace, params), this.loadMembers(parent.workspace, params)]);
+        return { workspace: parent.workspace, ...projects, ...members };
+    }
+
+    /**
+     * Loads one page of the workspace's projects. A failure is returned as the box's own error, so it never
+     * empties the Members box.
+     *
+     * @method loadProjects
+     * @param {Workspace} workspace
+     * @param {Object} params the query params
+     * @return {Object}
+     * @protected
+     */
+    async loadProjects(workspace, params) {
         try {
-            let projects = await this.store.query('project', {
-                query: `((Project.workspaceId : ${parent.workspace.id}))`,
+            let rows = await this.store.query('project', {
+                query: `((Project.workspaceId : ${workspace.id}))`,
                 sort: params?.sort || 'Project.name',
                 order: params?.order || 'asc',
                 page: Math.max(1, Number(params?.page) || 1),
                 limit: this.pageSize
             });
-            let members = await this.loadMembers(parent.workspace, params);
-            return { workspace: parent.workspace, projects: projects.slice(), hasNextProjects: Boolean(projects.meta?.links?.next), ...members };
+            return { projects: rows.slice(), hasNextProjects: Boolean(rows.meta?.links?.next), projectsError: null };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
-            return { workspace: parent.workspace, projects: [], hasNextProjects: false, members: [], hasNextMembers: false };
+            return { projects: [], hasNextProjects: false, projectsError: this.errorMessage(error) };
         }
     }
 
     /**
-     * Loads one page of the workspace's members, one row per person, sorted by name.
+     * Returns the reason Gaia gave for a failed request.
+     *
+     * @method errorMessage
+     * @param {Error} error
+     * @return {String}
+     * @protected
+     */
+    errorMessage(error) {
+        let errors = error?.errors;
+        if (typeof errors === 'string' && errors) {
+            return errors;
+        }
+        let details = Array.isArray(errors) ? errors.map((item) => item?.detail).filter(Boolean) : [];
+        return details.length ? details.join(' ') : (error?.message || '');
+    }
+
+    /**
+     * Loads one page of the workspace's members, one row per person, sorted by name. A failure is returned as the box's own error.
      *
      * @method loadMembers
      * @param {Workspace} workspace
@@ -76,15 +107,20 @@ export default class WorkspaceSettingsProjectsRoute extends App {
      * @protected
      */
     async loadMembers(workspace, params) {
-        let rows = await this.store.query('workspacemember', {
-            query: `((Workspacemember.workspaceId : ${workspace.id}))`,
-            rels: 'user',
-            sort: 'User.name',
-            order: params?.memberOrder === 'desc' ? 'desc' : 'asc',
-            page: Math.max(1, Number(params?.memberPage) || 1),
-            limit: this.memberPageSize
-        });
-        return { members: rows.slice(), hasNextMembers: Boolean(rows.meta?.links?.next) };
+        try {
+            let rows = await this.store.query('workspacemember', {
+                query: `((Workspacemember.workspaceId : ${workspace.id}))`,
+                rels: 'user',
+                sort: 'Workspacemember.userName',
+                order: params?.memberOrder === 'desc' ? 'desc' : 'asc',
+                page: Math.max(1, Number(params?.memberPage) || 1),
+                limit: this.memberPageSize
+            });
+            return { members: rows.slice(), hasNextMembers: Boolean(rows.meta?.links?.next), membersError: null };
+        } catch (error) {
+            this.errorManager.handleLoadError(error, { moduleName: 'workspace' });
+            return { members: [], hasNextMembers: false, membersError: this.errorMessage(error) };
+        }
     }
 
     setupController(controller, model) {
@@ -93,6 +129,8 @@ export default class WorkspaceSettingsProjectsRoute extends App {
         controller.set('hasNextProjects', Boolean(model.hasNextProjects));
         controller.set('members', model.members || []);
         controller.set('hasNextMembers', Boolean(model.hasNextMembers));
+        controller.set('projectsError', model.projectsError || null);
+        controller.set('membersError', model.membersError || null);
         controller.set('message', {});
     }
 }

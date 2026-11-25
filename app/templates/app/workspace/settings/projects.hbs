@@ -10,6 +10,9 @@
         </AccessControl>
       </:tools>
       <:body>
+        {{#if this.projectsError}}
+          <AppUi::EmptyState @icon="fa-exclamation-triangle" @message={{this.projectsError}} data-test-box-error />
+        {{else}}
         <AppUi::DataTable @columns={{this.columns}} @rows={{this.projects}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.sortData}}>
           <:cell as |project column|>
             {{#if (eq column.key "name")}}
@@ -37,6 +40,7 @@
             <Exceptions::NothingFound @description={{t "views.app.workspace.settings.projects.empty"}} />
           </:empty>
         </AppUi::DataTable>
+        {{/if}}
       </:body>
       <:bottom>
         {{#if (or (gt this.offset 0) this.hasNextProjects)}}
@@ -59,7 +63,10 @@
         <div class="callout callout-info" data-members-callout>
           {{t "views.app.workspace.settings.members.sharing" count=this.model.projectCount}}
         </div>
-        <AppUi::DataTable @columns={{this.memberColumns}} @rows={{this.members}} @sort="User.name" @order={{this.memberOrder}} @onSort={{this.sortMembers}}>
+        {{#if this.membersError}}
+          <AppUi::EmptyState @icon="fa-exclamation-triangle" @message={{this.membersError}} data-test-box-error />
+        {{else}}
+        <AppUi::DataTable @columns={{this.memberColumns}} @rows={{this.members}} @sort="Workspacemember.userName" @order={{this.memberOrder}} @onSort={{this.sortMembers}}>
           <:cell as |member column|>
             {{#if (eq column.key "member")}}
               <span data-member-id={{member.user.id}}>
@@ -82,6 +89,7 @@
             <Exceptions::NothingFound @description={{t "views.app.workspace.settings.members.empty"}} />
           </:empty>
         </AppUi::DataTable>
+        {{/if}}
       </:body>
       <:bottom>
         {{#if (or (gt this.memberOffset 0) this.hasNextMembers)}}
