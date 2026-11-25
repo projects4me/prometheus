@@ -489,48 +489,31 @@
 
 .dependency-line {
   fill: none;
-  stroke: #4dabf7;
-  stroke-width: 3px;
-  opacity: 0.7;
+  stroke: $secondaryColor;
+  stroke-width: 2px;
+  stroke-linejoin: miter;
+  opacity: 1;
   pointer-events: visibleStroke;
   cursor: pointer;
-  transition:
-    stroke 0.2s,
-    opacity 0.2s,
-    stroke-width 0.2s;
 
-  &:hover {
-    stroke: #1c7ed6;
-    opacity: 1;
-    stroke-width: 2.5px;
+  &.selected,
+  &.active {
+    stroke: $primaryColor;
   }
 
   &.preview {
     stroke-dasharray: 6;
-    opacity: 0.5;
     cursor: default;
     pointer-events: none;
-  }
-
-  &.active {
-    stroke: #1c7ed6;
-    stroke-width: 3px;
-    opacity: 1;
-    filter: drop-shadow(0 0 4px rgba(28, 126, 214, 0.6));
-
-    &:hover {
-      stroke: #1971c2;
-      stroke-width: 3.5px;
-    }
   }
 }
 
 .dependency-arrowhead {
-  fill: #4dabf7;
+  fill: $secondaryColor;
 }
 
 .dependency-arrowhead-active {
-  fill: #1c7ed6;
+  fill: $primaryColor;
 }
 
 .dependency-context-menu {

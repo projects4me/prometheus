@@ -370,3 +370,5 @@ remove|ember-template-lint|require-presentational-children|54|12|54|12|f85f3d84b
 remove|ember-template-lint|require-presentational-children|56|12|56|12|b059f68a432043e84eb523604410f4dae03a508f|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
 remove|ember-template-lint|require-presentational-children|59|8|59|8|ad1d3939cea3d669f349e0e8ffcd0ea122294588|1794614400000|||app/components/app-ui/gantt-chart/gantt-row.hbs
 remove|ember-template-lint|no-invalid-interactive|36|103|36|103|18ed5271295043dcece0159f5509d0492fe43da9|1794614400000|||app/components/app-ui/gantt-chart/task-row.hbs
+remove|ember-template-lint|no-invalid-interactive|6|4|6|4|058ba858b9112ef639271138bd7ffd4333273512|1794614400000|||app/components/app-ui/gantt-chart/dependency-layer.hbs
+remove|ember-template-lint|no-invalid-interactive|39|8|39|8|dfba0f5d7dfdfd4e10a09b50a012e0646ddbbd1a|1794614400000|||app/components/app-ui/gantt-chart/dependency-layer.hbs

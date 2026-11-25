@@ -3,7 +3,6 @@
     class="gantt-dependency-layer-canvas"
     {{did-insert this.setupElement}}
     {{did-update this.refreshLines @registryVersion @dependencies @timelineBodyElement @linkingState}}
-    {{on "click" this.handleCanvasClick}}
   >
     <defs>
       <marker
@@ -33,12 +32,13 @@
     {{#each this.lines as |line|}}
       <path
         d={{line.path}}
-        class="dependency-line {{if (eq this.activeDependencyId line.id) 'active'}}"
+        class="dependency-line {{if (eq this.activeDependencyId line.id) 'active'}} {{if line.selected 'selected'}}"
+        role="button"
         data-from-issue-id="{{line.fromIssueId}}"
         data-to-issue-id="{{line.toIssueId}}"
         {{on "click" (fn this.handleLineClick line)}}
         {{on "contextmenu" (fn this.handleContextMenu line)}}
-        marker-end={{if (eq this.activeDependencyId line.id) "url(#dependency-arrowhead-active)" "url(#dependency-arrowhead)"}}
+        marker-end={{if (or line.selected (eq this.activeDependencyId line.id)) "url(#dependency-arrowhead-active)" "url(#dependency-arrowhead)"}}
       />
     {{/each}}
 
