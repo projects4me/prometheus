@@ -153,4 +153,28 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
         await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'Enter');
         assert.deepEqual(this.calls.open, []);
     });
+
+    test('a selected task bar shows its ring, both resize handles and the link dot until deselected', async function (assert) {
+        this.selected = true;
+        await render(hbs`<div class="gantt-chart" style={{this.rootStyle}}><AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42 - Fix login"
+            @startDate="2026-11-10"
+            @endDate="2026-11-12"
+            @timelineStart="2026-11-01"
+            @dayWidth={{30}}
+            @isSelected={{this.selected}}
+            @showConnectors={{true}}
+            @updateDependencyPositions={{this.noop}}
+        /></div>`);
+        assert.dom('[data-test-gantt-bar]').hasClass('selected');
+        assert.dom('[data-test-gantt-resize-handle]').exists({ count: 2 });
+        assert.dom('.connector-dot-end').exists();
+
+        this.set('selected', false);
+        assert.dom('[data-test-gantt-bar]').doesNotHaveClass('selected');
+        assert.dom('[data-test-gantt-resize-handle]').doesNotExist();
+        assert.dom('.connector-dot-end').doesNotExist();
+    });
 });
