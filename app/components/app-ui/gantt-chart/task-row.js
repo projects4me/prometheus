@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
 import { hasValidDates } from 'prometheus/utils/gantt-helpers';
+import { getIssueProgress } from 'prometheus/utils/gantt-progress';
 
 /**
  * This component renders a single task/issue row in the Gantt chart
@@ -38,6 +39,18 @@ export default class TaskRowComponent extends Component {
      */
     get issueNumber() {
         return this.args.issue.issueNumber || '';
+    }
+
+    /**
+     * The issue's % done for its bar's fill, from its status and its logged time (`@timeTotals`), or null.
+     *
+     * @property progress
+     * @type Number|null
+     * @for TaskRow
+     * @public
+     */
+    get progress() {
+        return getIssueProgress(this.args.issue, this.args.timeTotals?.get(this.args.issue.id));
     }
 
     /**

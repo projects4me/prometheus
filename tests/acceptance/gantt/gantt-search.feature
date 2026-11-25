@@ -21,7 +21,7 @@ Feature: Gantt | search the task list with ezSearch
 
     Given The gantt requests are recorded
     When User navigates to app/project/project_1/gantt
-    Then The gantt sent one milestones request and one bulk request and no issue request
+    Then The gantt sent one milestones request, a bulk request for the lanes and one for the time logs and no issue or time log request
 
   Scenario: Running a query requests the issues with it ANDed with milestone and project
 

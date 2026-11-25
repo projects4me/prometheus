@@ -358,7 +358,7 @@ export default class GanttBarComponent extends AppComponent {
         let classes = ['gantt-bar'];
         
         if (this.args.type === 'milestone') {
-            classes.push('gantt-bar-milestone', 'bg-red');
+            classes.push('gantt-bar-milestone');
         } else {
             classes.push('gantt-bar-task');
             if (this.args.status) {
@@ -382,7 +382,7 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
-     * Accessible name of the bar: the label, or the issue number and subject when no label is passed
+     * Accessible name of the bar: the issue number and subject, or the label when the bar has no issue
      *
      * @property accessibleLabel
      * @type String
@@ -390,15 +390,37 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get accessibleLabel() {
-        if (this.displayLabel) {
-            return this.displayLabel;
-        }
         const issue = this.args.issue;
-        return issue ? `#${issue.issueNumber} - ${issue.subject ?? ''}` : '';
+        return issue ? `#${issue.issueNumber} - ${issue.subject ?? ''}` : this.displayLabel;
     }
 
     /**
-     * Check if label should be shown inside bar
+     * Whether the bar shows a % done fill (`@progress` is a number)
+     *
+     * @property hasProgress
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get hasProgress() {
+        return typeof this.args.progress === 'number' && Number.isFinite(this.args.progress);
+    }
+
+    /**
+     * The fill's width as a CSS custom property: `@progress` clamped to 0..100. Only a number goes into the string.
+     *
+     * @property progressStyle
+     * @type SafeString
+     * @for GanttBar
+     * @public
+     */
+    get progressStyle() {
+        const progress = Math.min(100, Math.max(0, toFiniteNumber(this.args.progress)));
+        return htmlSafe(`--bar-progress: ${progress}`);
+    }
+
+    /**
+     * Check if a label should be shown after the bar
      *
      * @property showLabel
      * @type Boolean
@@ -406,8 +428,7 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get showLabel() {
-        // Only show label if bar is wide enough (> 100px)
-        return this.displayLabel;
+        return Boolean(this.displayLabel);
     }
 
     /**

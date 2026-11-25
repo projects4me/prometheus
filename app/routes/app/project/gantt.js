@@ -9,6 +9,22 @@ import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 
 import { replaceRecords } from 'prometheus/utils/array/record-list';
+
+/**
+ * Issue ids per time log query of the Gantt (keeps each query string short).
+ *
+ * @property TIMELOG_CHUNK
+ * @type Number
+ */
+const TIMELOG_CHUNK = 50;
+
+/**
+ * Most time log rows one query of TIMELOG_CHUNK issues returns.
+ *
+ * @property TIMELOG_LIMIT
+ * @type Number
+ */
+const TIMELOG_LIMIT = 1000;
 /**
  * This is the route to load the Gantt chart for a project
  *
@@ -125,7 +141,8 @@ export default class GanttRoute extends App {
 						modelName: 'issue',
 						query: {
 							query: query,
-							rels: 'assignedTo,modifiedBy,spent,estimated,parentissue,issuetype,issuestatus,reportedBy,ownedBy',
+							// belongsTo rels only: the time logs come from their own query (loadTimelogs)
+							rels: 'assignedTo,modifiedBy,parentissue,issuetype,issuestatus,reportedBy,ownedBy',
 							limit: -1
 						}
 					};
@@ -150,13 +167,54 @@ export default class GanttRoute extends App {
 		// Calculate project timeline bounds
 		let timelineBounds = this.calculateTimelineBounds(milestonesArray);
 
+		let timelogs = await this.loadTimelogs(milestonesArray);
+
 		let model = hash({
 			milestones: milestonesArray,
+			timelogs: timelogs,
 			timelineStart: timelineBounds.start,
 			timelineEnd: timelineBounds.end
 		});
 
 		return model;
+	}
+
+	/**
+	 * Loads the spent and estimated time logs of the shown issues for the bars' % done, in one bulk request of
+	 * TIMELOG_CHUNK issue ids per item, each filtered on the server and capped at TIMELOG_LIMIT rows. A failed
+	 * item only leaves its issues without a fill.
+	 *
+	 * @method loadTimelogs
+	 * @param {Array} milestones The milestones with their issues
+	 * @returns {Promise<Array>} The time log records
+	 */
+	async loadTimelogs(milestones) {
+		let issueIds = milestones.flatMap((milestone) => toArray(milestone.issues).map((issue) => issue.id));
+		if (issueIds.length === 0) {
+			return [];
+		}
+		let chunks = [];
+		for (let i = 0; i < issueIds.length; i += TIMELOG_CHUNK) {
+			chunks.push(issueIds.slice(i, i + TIMELOG_CHUNK));
+		}
+		let results = await this.bulk.query(
+			chunks.map((ids, index) => ({
+				id: `timelogs-${index}`,
+				modelName: 'timelog',
+				query: {
+					query: `((Timelog.issueId CONTAINS ${ids.map((id) => `'${id}'`).join(',')}) AND ((Timelog.context : spent) OR (Timelog.context : est)))`,
+					limit: TIMELOG_LIMIT
+				}
+			}))
+		);
+		return chunks.flatMap((ids, index) => {
+			let result = results[`timelogs-${index}`];
+			if (!result || result.error) {
+				this.errorManager.handleError(result?.error, { moduleName: 'timelog' });
+				return [];
+			}
+			return toArray(result.records);
+		});
 	}
 
 	/**
@@ -251,6 +309,7 @@ export default class GanttRoute extends App {
 	setupController(controller, model) {
 		Logger.debug('Prometheus.Routes.Gantt::setupController');
 		controller.set('milestones', model.milestones);
+		controller.set('timelogs', model.timelogs ?? []);
 		controller.set('timelineStart', model.timelineStart);
 		controller.set('timelineEnd', model.timelineEnd);
 		controller.set('querySchema', this.searchData?.schema ?? null);

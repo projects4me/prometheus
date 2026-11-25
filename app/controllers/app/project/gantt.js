@@ -4,13 +4,14 @@
 
 import PrometheusController from 'prometheus/controllers/prometheus';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import { tracked, cached } from '@glimmer/tracking';
 import { inject as controller } from '@ember/controller';
 import { service } from '@ember/service';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
+import { sumTimelogs } from 'prometheus/utils/gantt-progress';
 
 /**
  * Gantt chart controller, including Hermes live handlers for dates,
@@ -90,6 +91,29 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @public
 	 */
 	@tracked milestones = [];
+
+	/**
+	 * The spent and estimated time logs of the shown issues, loaded by the route in their own query.
+	 *
+	 * @property timelogs
+	 * @type Array
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked timelogs = [];
+
+	/**
+	 * The logged time per issue (issue id → `{ spent, estimated }` minutes) the bars and the tooltip read.
+	 *
+	 * @property timeTotals
+	 * @type Map
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@cached
+	get timeTotals() {
+		return sumTimelogs(this.timelogs);
+	}
 
 	/**
 	 * Timeline window start date (YYYY-MM-DD).

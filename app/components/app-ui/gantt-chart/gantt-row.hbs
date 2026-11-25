@@ -50,7 +50,8 @@
         @timelineStart={{@timelineStart}}
         @dayWidth={{@dayWidth}}
         @type="milestone"
-        @label={{this.milestoneName}}
+        @label={{this.milestoneLabel}}
+        @progress={{this.progress}}
       />
     {{/if}}
   </div>
@@ -59,6 +60,7 @@
     {{#each this.orderedIssues as |issue|}}
       <AppUi::GanttChart::TaskRow
         @issue={{issue}}
+        @timeTotals={{@timeTotals}}
         @timelineStart={{@timelineStart}}
         @dayWidth={{@dayWidth}}
         @onIssueClick={{@onIssueClick}}

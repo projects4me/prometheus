@@ -18,6 +18,9 @@
   data-test-gantt-bar
   {{initialize-tooltip contentElement=@tooltipElement interactive=true theme="gantt-issue-tooltip"}}
 >
+  {{#if this.hasProgress}}
+    <span class="gantt-bar-fill" style={{this.progressStyle}} data-test-gantt-bar-fill></span>
+  {{/if}}
   {{#if (and (eq @type "task") @issue)}}
     <div class="gantt-bar-hover-zones">
       <div 
@@ -56,19 +59,10 @@
     {{/if}}
   {{/if}}
   {{#if this.showLabel}}
-    {{#if (eq @type "milestone")}}
-      <div class="milestone-sticky-label">
-        <i class="fa fa-caret-up milestone-caret milestone-caret-start"></i>
-        <span class="bar-label">{{this.displayLabel}}</span>
-      </div>
-    {{else}}
-      <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
-    {{/if}}
+    {{! After the bar: the issue number, or the milestone's "name · %" }}
+    <span class="bar-label {{if this.isCompleted 'completed'}} {{if (and (eq @type "task") this.viewport.isPhone) 'after-avatar'}}" data-test-gantt-bar-label>{{this.displayLabel}}</span>
   {{/if}}
   {{#if this.isKeyboardOperable}}
     <span id="gantt-bar-hint-{{@issue.id}}" class="sr-only">{{t 'views.app.gantt.bar.keyboardHint'}}</span>
-  {{/if}}
-  {{#if (eq @type "milestone")}}
-    <i class="fa fa-caret-up milestone-caret milestone-caret-end"></i>
   {{/if}}
 </div>

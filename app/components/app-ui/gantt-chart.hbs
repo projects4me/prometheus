@@ -144,6 +144,7 @@
           <AppUi::GanttChart::GanttRow
             @milestone={{milestone}}
             @showLabel={{this.viewport.isPhone}}
+            @timeTotals={{@timeTotals}}
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
@@ -215,7 +216,7 @@
   {{! One tooltip content for every bar; the bar under the pointer or focus fills it }}
   <div hidden>
     <div data-test-gantt-tooltip {{register-element this.registerTooltipElement}}>
-      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} />
+      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} @timeTotals={{@timeTotals}} />
     </div>
   </div>
 </div>
