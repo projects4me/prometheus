@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { currentURL, findAll } from '@ember/test-helpers';
+import { currentURL, findAll, waitUntil } from '@ember/test-helpers';
 import { chooseOption, openSelect, searchSelect } from 'prometheus/tests/helpers/select';
 
 export const given = function () {
@@ -47,6 +47,10 @@ export const when = function () {
         },
         {
             "User selects $issue": (assert) => async function (issue) {
+                // The results load after the debounced search: wait for the option, or selectChoose
+                // treats the text as a CSS selector and throws.
+                await waitUntil(() => findAll('.ember-power-select-option')
+                    .some((option) => option.textContent.includes(issue)));
                 await chooseOption('div.global-search', `${issue}`);
                 assert.ok(true, `${issue} selected`);
             }
