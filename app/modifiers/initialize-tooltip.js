@@ -13,6 +13,7 @@ import tippy, { followCursor } from 'tippy.js';
  *
  * @example
  *      <div {{initialize-tooltip content="Add issue"}}>
+ *      <div {{initialize-tooltip contentElement=this.sharedContentElement}}>  (an Element shared by several hosts)
  *
  * @class InitializeTooltipModifier
  * @namespace Prometheus.Modifiers
@@ -53,7 +54,7 @@ export default class InitializeTooltipModifier extends Modifier {
 		[],
 		{
 			content = '',
-			templateId = null,
+			contentElement = null,
 			placement = 'top',
 			interactive = false,
 			theme = 'light'
@@ -65,33 +66,21 @@ export default class InitializeTooltipModifier extends Modifier {
 			}
 
 			this._tooltip = tippy(element, {
-				content: this.getContent(templateId, content),
+				content: contentElement ? '' : content,
 				allowHTML: true,
 				plugins: [followCursor],
 				followCursor: true,
 				followCursor: 'horizontal',
 				placement: placement,
 				theme: theme,
-				interactive: interactive
+				interactive: interactive,
+				// An element shared by several hosts can sit in one tooltip at a time: move it in when this one shows
+				onShow: (instance) => {
+					if (contentElement) {
+						instance.setContent(contentElement);
+					}
+				}
 			});
-		}
-	}
-
-	/**
-	 * Returns the content for the tooltip based on the template id or the content passed.
-	 *
-	 * @method getContent
-	 * @param {String} templateId - The id of the template to use
-	 * @param {String} content - The content to display
-	 * @returns {String} The content to display
-	 * @public
-	 */
-	getContent(templateId, content) {
-		if (templateId) {
-			const template = document.getElementById(`tooltip-${templateId}`);
-			return template?.innerHTML;
-		} else {
-			return content;
 		}
 	}
 

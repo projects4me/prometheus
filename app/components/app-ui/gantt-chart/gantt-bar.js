@@ -14,7 +14,6 @@ import {
     toFiniteNumber
 } from 'prometheus/utils/gantt-helpers';
 import { htmlSafe } from '@ember/template';
-import DateUtils from 'prometheus/utils/date';
 import { later } from '@ember/runloop';
 import * as dates from 'prometheus/utils/date';
 
@@ -814,6 +813,29 @@ export default class GanttBarComponent extends AppComponent {
     @action handleMouseEnter() {
         // Show connectors when hovering over the bar to indicate they're available
         this.isHovering = true;
+        this.showTooltip();
+    }
+
+    /**
+     * Point the shared chart tooltip at this bar's issue (keyboard focus).
+     *
+     * @method handleFocus
+     * @public
+     */
+    @action handleFocus() {
+        this.showTooltip();
+    }
+
+    /**
+     * Tell the chart which issue the shared tooltip shows.
+     *
+     * @method showTooltip
+     * @private
+     */
+    showTooltip() {
+        if (this.args.issue && this.args.onTooltipIssue) {
+            this.args.onTooltipIssue(this.args.issue);
+        }
     }
 
     /**
@@ -1107,61 +1129,6 @@ export default class GanttBarComponent extends AppComponent {
             return this.originalLeftForResize + this.resizeOffset;
         }
         return this.barLeft;
-    }
-
-    /**
-     * Calculate accumulated time (hours and minutes) for a given context (spent or estimated)
-     *
-     * @method calculateTimeForContext
-     * @param {String} context The context ('spent' or 'estimated')
-     * @returns {Object} Object with hours and minutes
-     * @public
-     */
-    calculateTimeForContext(context) {
-        if (!this.args.issue || !this.args.issue[context]) {
-            return { hours: 0, minutes: 0 };
-        }
-
-        let totalHours = 0;
-        let totalMinutes = 0;
-
-        const timelogs = this.args.issue[context];
-        if (timelogs && timelogs.length > 0) {
-            timelogs.forEach((timelog) => {
-                // Convert days to hours (8 hours per day)
-                const daysToHours = (timelog.days || 0) * 8;
-                const hours = parseInt(timelog.hours || 0, 10) + parseInt(daysToHours, 10);
-                const minutes = parseInt(timelog.minutes || 0, 10);
-
-                totalHours += hours;
-                totalMinutes += minutes;
-            });
-        }
-
-        // Normalize minutes to ensure they don't exceed 60
-        const normalized = DateUtils.normalizeMinutes(totalMinutes);
-        totalHours += normalized.hours;
-        totalMinutes = normalized.minutes;
-
-        return {
-            hours: totalHours,
-            minutes: totalMinutes
-        };
-    }
-
-    /**
-     * Format the time for a given context
-     *
-     * @method formatTime
-     * @param {String} type The context ('spent' or 'estimated')
-     * @returns {String} The formatted time
-     * @public
-     */
-    @action formatTime(type) {
-        let time = this.calculateTimeForContext(type);
-        const hrs = time.hours || 0;
-        const mins = time.minutes || 0;
-        return `${hrs} ${this.intl.t('global.time.hrs')} ${mins} ${this.intl.t('global.time.min')}`;
     }
 
     /**

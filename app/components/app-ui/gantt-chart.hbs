@@ -136,6 +136,8 @@
             @onCheckAutoScroll={{this.checkAndStartAutoScrollForBar}}
             @onStopAutoScroll={{this.stopAutoScroll}}
             @timelineWidth={{this.timelineWidth}}
+            @tooltipElement={{this.tooltipElement}}
+            @onTooltipIssue={{this.showTooltipIssue}}
           />
         {{/each}}
       </div>
@@ -174,5 +176,11 @@
         @issueTypes={{@issueTypes}}
       />
     {{/if}}
+  </div>
+  {{! One tooltip content for every bar; the bar under the pointer or focus fills it }}
+  <div hidden>
+    <div data-test-gantt-tooltip {{register-element this.registerTooltipElement}}>
+      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} />
+    </div>
   </div>
 </div>
