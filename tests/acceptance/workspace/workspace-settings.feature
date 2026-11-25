@@ -27,6 +27,14 @@ Feature: Workspace | Settings
     And User saves the workspace details in Settings
     Then Workspace "Platform" with code "ENG" is stored
 
+  Scenario: The manager is changed from Settings
+
+    Given Workspace ENG exists with 0 projects
+    When User navigates to app/workspace/ENG/settings/projects
+    And User picks "User_2" as the manager in Settings
+    And User saves the workspace details in Settings
+    Then Workspace ENG has manager User 2
+
   Scenario: The Environment tab lists the runtime and the repositories with their base branches
 
     Given Workspace ENG exists with 1 projects

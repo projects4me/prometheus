@@ -34,10 +34,10 @@
             <:body>
               <div class="row project-manager-row">
                 <div class="project-manager-col">
-                  <div class="project-manager workspace-creator">
-                    <AppUi::Avatar @user={{this.model.workspace.createdBy}} @size="l" @minSize="m" />
-                    <LinkTo @route="app.user.page" @model={{this.model.workspace.createdBy.id}} class="users-list-name">{{this.model.workspace.createdBy.name}}</LinkTo>
-                    <span class="users-list-date">{{t "views.app.workspace.detail.createdBy"}}</span>
+                  <div class="project-manager workspace-manager">
+                    <AppUi::Avatar @user={{this.model.workspace.manager}} @size="l" @minSize="m" />
+                    <LinkTo @route="app.user.page" @model={{this.model.workspace.manager.id}} class="users-list-name">{{this.model.workspace.manager.name}}</LinkTo>
+                    <span class="users-list-date">{{t "views.app.workspace.detail.manager"}}</span>
                   </div>
                 </div>
                 <div class="project-manager-details">

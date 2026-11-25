@@ -31,6 +31,7 @@ export default class WorkspaceSettingsRoute extends App {
         try {
             let workspaces = await this.store.query('workspace', {
                 query: `((Workspace.shortCode : ${shortCode}))`,
+                rels: 'manager',
                 limit: 1
             });
             let workspace = objectAt(workspaces, 0);
