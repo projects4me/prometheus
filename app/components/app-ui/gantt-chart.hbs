@@ -37,7 +37,7 @@
     </div>
 
     {{! Right side - Timeline }}
-    <div class="gantt-timeline-wrapper {{if @isIssuePanelOpen 'gantt-timeline-hidden'}}">
+    <div class="gantt-timeline-wrapper {{if (and @isIssuePanelOpen (not this.viewport.isPhone)) 'gantt-timeline-hidden'}}">
       {{#unless this.viewport.isPhone}}
       <div class="nav-tabs-custom gantt-time-scale-selector">
         <ul class="nav nav-tabs gantt-time-scale-tabs">
@@ -151,14 +151,37 @@
       </div>
     </div>
     
-    {{! Issue Details Panel - shown when issue is opened }}
-    <AppUi::GanttChart::IssueDetailsPanel
-      @isOpen={{@isIssuePanelOpen}}
-      @issue={{@panelIssue}}
-      @onClose={{@onCloseIssuePanel}}
-      @selectStatic={{@selectStatic}}
-      @projectController={{@projectController}}
-      @issueTypes={{@issueTypes}}
-    />
+    {{! Issue Details: a bottom sheet on phones, a side panel otherwise }}
+    {{#if this.viewport.isPhone}}
+      {{#if (and @isIssuePanelOpen @panelIssue)}}
+        <AppUi::Modal
+          @title="views.app.board.quickView"
+          @removeConfirmBtn={{true}}
+          @closeLabel="global.form.close"
+          @onClose={{@onCloseIssuePanel}}
+          @containerClass="gantt-quick-view-modal"
+        >
+          <Issue::IssueDetails
+            @issue={{@panelIssue}}
+            @selectStatic={{@selectStatic}}
+            @projectController={{@projectController}}
+            @issueTypes={{@issueTypes}}
+            @quickView={{true}}
+            @hideCloseButton={{true}}
+            @renderSingleColumn={{false}}
+            @closeIssueDetails={{@onCloseIssuePanel}}
+          />
+        </AppUi::Modal>
+      {{/if}}
+    {{else}}
+      <AppUi::GanttChart::IssueDetailsPanel
+        @isOpen={{@isIssuePanelOpen}}
+        @issue={{@panelIssue}}
+        @onClose={{@onCloseIssuePanel}}
+        @selectStatic={{@selectStatic}}
+        @projectController={{@projectController}}
+        @issueTypes={{@issueTypes}}
+      />
+    {{/if}}
   </div>
 </div>
