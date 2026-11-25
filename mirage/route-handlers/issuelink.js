@@ -12,7 +12,11 @@ import applyQuery from '../helpers/apply-query';
  */
 export function register(server, ctx) {
     server.get('/issuelink', (schema, request) => {
-        let links = applyQuery(schema.issuelinks.all(), request);
+        let query = request.queryParams.query || '';
+        let either = /\(Issuelink\.projectId : (\w+)\) OR \(Issuelink\.targetProjectId : (\w+)\)/.exec(query);
+        let links = either
+            ? schema.issuelinks.where((link) => String(link.projectId) === either[1] || String(link.targetProjectId) === either[2])
+            : applyQuery(schema.issuelinks.all(), request);
         let limit = parseInt(request.queryParams.limit, 10);
         if (limit > 0) {
             links = schema.issuelinks.find(links.models.slice(0, limit).map((link) => link.id));

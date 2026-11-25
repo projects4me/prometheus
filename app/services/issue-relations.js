@@ -3,6 +3,7 @@
  */
 
 import Service, { service } from '@ember/service';
+import IssueLinkLookup from 'prometheus/utils/gantt/issue-link-lookup';
 
 const LIMIT = 50;
 
@@ -142,6 +143,40 @@ export default class IssueRelationsService extends Service {
 		}
 		let doneByProject = await this._doneStatuses([...byTarget.values()].flat());
 		return { for: (issueId) => (byTarget.get(String(issueId)) || []).filter((blocker) => this._isOpen(blocker, doneByProject)) };
+	}
+
+	/**
+	 * Every issue link where the project is the source or the target, of all types, from one issuelink query, as an
+	 * IssueLinkLookup. The query keeps `limit: -1` like the board's blockers: a project's links are few (one per
+	 * dependency) and the chart needs all of them to draw its lines.
+	 *
+	 * @method linksOfProject
+	 * @param {String|Number} projectId
+	 * @return {Promise<IssueLinkLookup>}
+	 */
+	async linksOfProject(projectId) {
+		let links = await this.store.query('issuelink', {
+			query: `((Issuelink.projectId : ${projectId}) OR (Issuelink.targetProjectId : ${projectId}))`,
+			rels: 'sourceIssue,targetIssue',
+			limit: -1
+		});
+		let list = links.slice();
+		let issues = (await Promise.all(list.flatMap((link) => [link.sourceIssue, link.targetIssue]))).filter(Boolean);
+		let doneByProject = await this._doneStatuses(issues);
+		return new IssueLinkLookup(
+			list.filter((link) => link.belongsTo('sourceIssue').value() && link.belongsTo('targetIssue').value()),
+			{ projectId, isOpen: (issue) => this._isOpen(issue, doneByProject) }
+		);
+	}
+
+	/**
+	 * The link lookup of a project with no known links, used when loading them failed.
+	 *
+	 * @method emptyLinks
+	 * @return {IssueLinkLookup}
+	 */
+	emptyLinks() {
+		return new IssueLinkLookup([]);
 	}
 
 	/**

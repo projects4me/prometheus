@@ -103,6 +103,16 @@ export default class AppProjectGanttController extends PrometheusController {
 	@tracked timelogs = [];
 
 	/**
+	 * The project's typed issue links (IssueLinkLookup), loaded by the route; the chart gets it as `@links`.
+	 *
+	 * @property links
+	 * @type IssueLinkLookup
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked links = null;
+
+	/**
 	 * The logged time per issue (issue id → `{ spent, estimated }` minutes) the bars and the tooltip read.
 	 *
 	 * @property timeTotals
