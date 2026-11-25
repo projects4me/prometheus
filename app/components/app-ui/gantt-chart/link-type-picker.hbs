@@ -1,0 +1,13 @@
+{{#if @source}}
+  <div class="gantt-link-picker" style={{this.style}} data-test-link-picker {{on-insert this.setup}}>
+    <div class="gantt-link-picker-title" data-test-link-picker-title>
+      {{t "views.app.gantt.linkPicker.title" source=@source.issueNumber target=@target.issueNumber}}
+    </div>
+    {{#each this.relations as |item|}}
+      <label class="gantt-link-picker-option" data-test-link-picker-option={{item.relation}}>
+        <input type="radio" name="gantt-link-type" value={{item.relation}} {{on "change" (fn this.choose item.relation)}}>
+        {{t (concat "views.app.gantt.linkPicker." item.key) source=@source.issueNumber target=@target.issueNumber}}
+      </label>
+    {{/each}}
+  </div>
+{{/if}}

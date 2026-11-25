@@ -2577,12 +2577,14 @@
           "updated": "Issue <strong>{issueNumber}</strong> updated. New dates: <strong>{startDate}</strong> - <strong>{endDate}</strong>",
           "updateError": "Failed to update issue dates"
         },
+        "linkPicker": {
+          "title": "Link #{source} to #{target}",
+          "blocks": "#{source} blocks #{target}",
+          "splitsInto": "#{source} splits into #{target}",
+          "relates": "#{source} relates to #{target}",
+          "failed": "The issues could not be linked"
+        },
         "dependency": {
-          "duplicate": "A dependency already exists between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
-          "cycleError": "Creating this dependency would create a circular dependency between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
-          "creating": "Creating dependency between {predecessor} and {successor}...",
-          "created": "Dependency created between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
-          "createError": "Failed to create dependency",
           "deleting": "Deleting dependency between <strong>{predecessor}</strong> and <strong>{successor}</strong>...",
           "deleted": "Dependency deleted between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
           "deleteError": "Failed to delete dependency",
@@ -3427,11 +3429,6 @@
             "updateError": "Failed to update issue dates. Please try again."
           },
           "dependency": {
-            "creating": "Linking #{successor} to #{predecessor}...",
-            "created": "#{successor} now depends on #{predecessor}",
-            "duplicate": "#{successor} already depends on #{predecessor}",
-            "cycleError": "Cannot create circular dependency between #{successor} and #{predecessor}",
-            "createError": "Failed to create dependency. Please try again.",
             "deleteConfirm": "Remove dependency so #{successor} no longer depends on #{predecessor}?",
             "deleting": "Removing dependency between #{predecessor} and #{successor}...",
             "deleted": "Dependency between #{predecessor} and #{successor} removed",

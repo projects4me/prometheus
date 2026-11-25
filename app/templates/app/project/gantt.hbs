@@ -39,4 +39,14 @@
       {{/if}}
     </:search>
   </AppUi::GanttChart>
+  {{#if this.linkPicker}}
+    <AppUi::GanttChart::LinkTypePicker
+      @source={{this.linkPicker.source}}
+      @target={{this.linkPicker.target}}
+      @x={{this.linkPicker.x}}
+      @y={{this.linkPicker.y}}
+      @onSelect={{this.saveLink}}
+      @onCancel={{this.cancelLinkPicker}}
+    />
+  {{/if}}
 </div>
