@@ -95,7 +95,7 @@
   z-index: 5;
   display: inline-block;
   padding: 0 10px;
-  line-height: 50px;
+  line-height: var(--gantt-row-height, 45px);
   background: rgba(255, 255, 255, 0.85);
 }
 
@@ -268,7 +268,8 @@
 
 .gantt-timeline-row {
   position: relative;
-  min-height: 45px;
+  height: var(--gantt-row-height, 45px);
+  box-sizing: border-box;
   transition: background-color 0.2s;
 
   &.selected {
@@ -276,7 +277,7 @@
   }
 
   &.milestone-row {
-    min-height: 50px;
+    height: var(--gantt-row-height, 45px);
   }
 }
 

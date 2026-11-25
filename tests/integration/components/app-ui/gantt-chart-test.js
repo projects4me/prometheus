@@ -8,6 +8,7 @@ import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { render, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 import EmberObject from '@ember/object';
 import AclStub from '../../stub-services/acl-stub';
 import CurrentUserStub from '../../stub-services/current-user-stub';
@@ -75,6 +76,17 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-issue-list] [data-issue-id]').exists({ count: 3 });
         assert.dom('.gantt-timeline-row.task-row').exists({ count: 2 });
         assert.dom('[data-test-gantt-milestone-label]').exists({ count: 2 });
+    });
+
+    test('milestone and issue rows share the one row height, grid and links read it too', async function (assert) {
+        this.state.ids = new Set(['m1']);
+        await renderChart();
+        assert.dom('.gantt-chart').hasAttribute('style', `--gantt-row-height: ${GANTT_ROW_HEIGHT}px`);
+        const heights = [...document.querySelectorAll('.gantt-timeline-row')].map((r) => r.offsetHeight);
+        assert.ok(heights.length >= 3, 'milestone and issue rows rendered');
+        assert.true(heights.every((h) => h === GANTT_ROW_HEIGHT), `all rows are ${GANTT_ROW_HEIGHT}px: ${heights}`);
+        assert.dom('.gantt-grid-overlay pattern').hasAttribute('height', String(GANTT_ROW_HEIGHT));
+        assert.dom('.grid-line-horizontal').hasAttribute('d', new RegExp(`^M 0 ${GANTT_ROW_HEIGHT} H`));
     });
 
     test('a list click selects the issue and expands its collapsed milestone', async function (assert) {

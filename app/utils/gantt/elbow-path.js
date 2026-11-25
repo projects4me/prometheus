@@ -2,6 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
+
 /**
  * Length in px of the horizontal stub that leaves the first bar and enters the dependent bar
  *
@@ -18,7 +20,7 @@ export const STUB = 12;
  * @type Number
  * @final
  */
-const DEFAULT_ROW_HEIGHT = 45;
+const DEFAULT_ROW_HEIGHT = GANTT_ROW_HEIGHT;
 
 /**
  * Build the SVG path of a right-angled (elbow) dependency connector.

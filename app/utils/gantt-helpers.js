@@ -12,6 +12,16 @@
 import * as dateUtil from 'prometheus/utils/date';
 
 /**
+ * The one height, in px, of every Gantt row (issue and milestone rows alike).
+ * The grid pattern, the dependency routing, scrollToIssue and (through the
+ * --gantt-row-height custom property on the chart root) the SCSS all read it.
+ *
+ * @property GANTT_ROW_HEIGHT
+ * @type Number
+ */
+export const GANTT_ROW_HEIGHT = 45;
+
+/**
  * Calculate the number of days between two dates
  *
  * @function getDaysBetween
