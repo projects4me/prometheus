@@ -118,6 +118,24 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         level('scrolled');
     });
 
+    test('an undated issue is listed after the dated ones, with dashes and a No dates row, and counts', async function (assert) {
+        const undated = { id: '20', issueNumber: 20, subject: 'Undated', status: 'new', startDate: null, endDate: null };
+        const dated = { id: '21', issueNumber: 21, subject: 'Dated', status: 'done', startDate: '2026-11-10', endDate: '2026-11-12' };
+        this.milestones = [{ id: 'm1', name: 'Alpha', startDate: '2026-11-01', endDate: '2026-11-30', issues: [undated, dated] }];
+        this.state.ids = new Set(['m1']);
+        await renderChart();
+        const ids = [...document.querySelectorAll(`${GRID} .gantt-grid-row.task-row`)].map((row) => row.dataset.issueId);
+        assert.deepEqual(ids, ['21', '20'], 'dated issues order first');
+        assert.dom(`${gridRow('20')} [data-test-gantt-grid-start]`).hasText('—');
+        assert.dom(`${gridRow('20')} [data-test-gantt-grid-end]`).hasText('—');
+        assert.dom(`${barRow('20')} [data-test-gantt-no-dates]`).hasText('No dates');
+        assert.dom(`${barRow('20')} [data-test-gantt-bar]`).doesNotExist();
+        assert.dom(`${barRow('21')} [data-test-gantt-no-dates]`).doesNotExist();
+        assert.dom(`${GRID} [data-milestone-id="m1"] [data-test-gantt-milestone-count]`).hasText('1 / 2');
+        await click(`${gridRow('20')} [data-test-gantt-grid-select]`);
+        assert.strictEqual(this.selected.id, '20', 'selectable');
+    });
+
     test('the milestone state reads Overdue past its end and Done when all its issues are', async function (assert) {
         const late = { id: '7', issueNumber: 7, subject: 'Late', status: 'new', startDate: '2020-01-02', endDate: '2020-01-03' };
         const shipped = { ...late, id: '8', issueNumber: 8, status: 'done' };

@@ -445,6 +445,14 @@ $gantt-grid-width: 440px;
   &.milestone-row {
     height: var(--gantt-row-height, 36px);
   }
+
+  .gantt-no-dates {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+  }
 }
 
 /* Gantt Bars */
