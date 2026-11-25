@@ -1,9 +1,16 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import NotificationsStub from '../../../stub-services/notifications-stub';
 import CurrentUserStub from '../../../stub-services/current-user-stub';
+
+/**
+ * Current user stub with the id the recipient records below belong to
+ */
+class SignedInUserStub extends CurrentUserStub {
+	user = { id: '1', name: 'Rana Nouman' };
+}
 
 const item = (id, isRead, date) => ({
 	id,
@@ -22,7 +29,7 @@ module(
 
 		hooks.beforeEach(function () {
 			this.owner.register('service:notifications', NotificationsStub);
-			this.owner.register('service:current-user', CurrentUserStub);
+			this.owner.register('service:current-user', SignedInUserStub);
 			this.set('group', {
 				isGroup: true,
 				key: 'test-5',
@@ -83,6 +90,31 @@ module(
 				.hasAttribute('title', 'Mark as read');
 			await click('[data-notification-group-mark-read]');
 			assert.dom('.unread-notification').doesNotExist();
+		});
+
+		test("the heading button follows the current user's records, not the first one", async function (assert) {
+			const shared = (id, mine, theirs) => ({
+				...item(id, mine, new Date()),
+				recipientRecords: [
+					{ userId: '2', isRead: theirs },
+					{ userId: '1', isRead: mine }
+				]
+			});
+			this.set('group', {
+				...this.group,
+				notifications: [shared('1', '1', '0')]
+			});
+			await render(
+				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
+			);
+			assert.dom('[data-notification-group-mark-read]').doesNotExist('read for me');
+
+			this.set('group', {
+				...this.group,
+				notifications: [shared('1', '0', '1')]
+			});
+			await settled();
+			assert.dom('[data-notification-group-mark-read]').exists('unread for me');
 		});
 
 		test('no heading button when every notification is read', async function (assert) {

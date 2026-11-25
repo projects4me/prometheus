@@ -8,7 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import groupByIssue from 'prometheus/utils/notifications/group-by-issue';
 import { peekOrPush, pushIfMissing } from 'prometheus/utils/live/collection';
-import { toArray } from 'prometheus/utils/array/to-array';
+import { recipientRecordFor } from 'prometheus/utils/notifications/recipient';
 
 /**
  * Service for managing user notifications, including Hermes live sync for
@@ -108,8 +108,9 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Loads notifications for the current user
-	 * Now focuses only on data fetching, not pagination management
+	 * Loads one page of the current user's notifications. Page 1 (the default)
+	 * replaces the list; later pages only append the notifications that are not
+	 * listed yet and leave the listed ones as they are.
 	 *
 	 * @method loadNotifications
 	 * @param {Object} paginationInfo - Object containing page, pageSize, etc.
@@ -123,37 +124,20 @@ export default class NotificationsService extends Service {
 			return { items: [] }; // No hasReachedEnd here
 		}
 
-		const { page, pageSize } = paginationInfo;
+		const page = paginationInfo.page ?? 1;
+		const pageSize = paginationInfo.pageSize ?? this.pageSize;
 
 		try {
-			let loadedNotifications = [];
-
-			// Load unread notifications first if beyond page 1
-			if (page > 1) {
-				const unreadResult = await this.loadUnreadNotifications(
-					pageSize
-				);
-				loadedNotifications = unreadResult.notifications;
-			}
-
-			// Load regular paginated notifications
-			const paginatedResult = await this.loadPaginatedNotifications(
+			const { notifications, meta } = await this.loadPaginatedNotifications(
 				page,
 				pageSize
 			);
-			loadedNotifications = [
-				...loadedNotifications,
-				...paginatedResult.notifications
-			];
 
-			this.processLoadedNotifications(
-				loadedNotifications,
-				paginatedResult.meta
-			);
+			this.processLoadedNotifications(notifications, meta, page);
 
 			return {
-				items: loadedNotifications,
-				meta: paginatedResult.meta
+				items: notifications,
+				meta
 			};
 		} catch (error) {
 			console.error('Error loading notifications:', error);
@@ -192,49 +176,25 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Loads only unread notifications
-	 * @method loadUnreadNotifications
-	 * @public
-	 * @async
-	 * @returns {Promise<Object>} Object containing notifications and metadata
-	 */
-	async loadUnreadNotifications() {
-		const options = {
-			rels: 'recipientRecords',
-			query: `((recipientRecords.userId : ${this.currentUser.user.id}) AND (recipientRecords.isRead : 0))`,
-			sort: 'Systemnotification.dateCreated',
-			order: 'desc',
-			limit: 15
-		};
-
-		const unreadNotifications = await this.store.query(
-			'systemnotification',
-			options
-		);
-
-		return {
-			notifications: unreadNotifications.slice()
-		};
-	}
-
-	/**
 	 * Processes loaded notifications and updates the notification array
 	 * @method processLoadedNotifications
 	 * @public
 	 * @param {Array} loadedNotifications New notifications to process
 	 * @param {Object} meta Metadata from the API response
+	 * @param {Number} page The page that was loaded
 	 */
-	processLoadedNotifications(loadedNotifications, meta) {
-		// Update unread count
-		this.unreadCount = meta.unreadCount;
+	processLoadedNotifications(loadedNotifications, meta, page) {
+		if (meta?.unreadCount !== undefined) {
+			this.unreadCount = meta.unreadCount;
+		}
 
-		// If first page, just use the loaded notifications
-		if (this.page === 1) {
+		// The first page replaces the list
+		if (page === 1) {
 			this.notifications = loadedNotifications;
 			return;
 		}
 
-		// For subsequent pages, merge and deduplicate
+		// Later pages only append what is not listed yet
 		const uniqueNotifications =
 			this.deduplicateNotifications(loadedNotifications);
 		this.notifications = [...this.notifications, ...uniqueNotifications];
@@ -283,9 +243,7 @@ export default class NotificationsService extends Service {
 		if (!notification) return;
 
 		try {
-			const recipientRecord = toArray(notification.recipientRecords).find(
-				(un) => un.userId === this.currentUser.user.id
-			);
+			const recipientRecord = recipientRecordFor(notification, this.currentUser.user.id);
 
 			if (recipientRecord && recipientRecord.isRead === '0') {
 				recipientRecord.isRead = '1';
@@ -380,9 +338,7 @@ export default class NotificationsService extends Service {
 
 			// Update local state - mark all loaded notifications as read
 			this.notifications.forEach((notification) => {
-				const recipientRecord = toArray(notification.recipientRecords).find(
-					(un) => un.userId === this.currentUser.user.id
-				);
+				const recipientRecord = recipientRecordFor(notification, this.currentUser.user.id);
 
 				if (recipientRecord) {
 					recipientRecord.isRead = '1';
@@ -463,7 +419,7 @@ export default class NotificationsService extends Service {
 				)
 				.map((n) => ({
 					notificationId: n.id,
-					record: toArray(n.recipientRecords).find((r) => r.userId === userId)
+					record: recipientRecordFor(n, userId)
 				}))
 				.filter((t) => t.record && t.record.isRead === '0');
 
@@ -528,9 +484,7 @@ export default class NotificationsService extends Service {
 					(!only || only.includes(String(n.id)))
 			)
 			.forEach((notification) => {
-				const recipientRecord = toArray(notification.recipientRecords).find(
-					(un) => un.userId === this.currentUser.user?.id
-				);
+				const recipientRecord = recipientRecordFor(notification, this.currentUser.user?.id);
 				if (recipientRecord) {
 					recipientRecord.isRead = '1';
 				}
@@ -675,9 +629,7 @@ export default class NotificationsService extends Service {
 	_handleCrossTabMessage(data) {
 		if (data.type === 'MARK_ALL_AS_READ') {
 			this.notifications.forEach((notification) => {
-				const recipientRecord = toArray(notification.recipientRecords).find(
-					(un) => un.userId === this.currentUser.user?.id
-				);
+				const recipientRecord = recipientRecordFor(notification, this.currentUser.user?.id);
 				if (recipientRecord) {
 					recipientRecord.isRead = '1';
 				}
@@ -694,9 +646,7 @@ export default class NotificationsService extends Service {
 			);
 
 			if (notification) {
-				const recipientRecord = toArray(notification.recipientRecords).find(
-					(un) => un.userId === this.currentUser.user?.id
-				);
+				const recipientRecord = recipientRecordFor(notification, this.currentUser.user?.id);
 				if (recipientRecord) {
 					recipientRecord.isRead = '1';
 				}

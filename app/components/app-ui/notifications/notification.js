@@ -5,7 +5,7 @@
 import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { objectAt } from '../../../utils/array/object-at';
+import { isUnreadFor } from '../../../utils/notifications/recipient';
 import issueLink from '../../../utils/notifications/issue-link';
 
 /**
@@ -59,7 +59,7 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	 * @public
 	 */
 	get isUnread() {
-		return objectAt(this.args.notification.recipientRecords, 0)?.isRead === '0';
+		return isUnreadFor(this.args.notification, this.currentUser.user?.id);
 	}
 
 	/**

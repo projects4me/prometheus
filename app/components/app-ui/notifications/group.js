@@ -6,7 +6,7 @@ import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { objectAt } from '../../../utils/array/object-at';
+import { isUnreadFor } from '../../../utils/notifications/recipient';
 import issueLink from '../../../utils/notifications/issue-link';
 
 /**
@@ -33,7 +33,7 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 	get hasUnread() {
 		return this.args.group.notifications.some(
 			(notification) =>
-				objectAt(notification.recipientRecords, 0)?.isRead === '0'
+				isUnreadFor(notification, this.currentUser.user?.id)
 		);
 	}
 
