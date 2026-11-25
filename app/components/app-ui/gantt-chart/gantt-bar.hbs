@@ -49,9 +49,11 @@
         {{/if}}
       </div>
     </div>
-    <span class="assignee-avatar">
-      <AppUi::Avatar @user={{@issue.assignedTo}} @size="m" {{initialize-tooltip content=@issue.assignedTo.name placement="right"}} />
-    </span>    
+    {{#if this.viewport.isPhone}}
+      <span class="assignee-avatar">
+        <AppUi::Avatar @user={{@issue.assignedTo}} @size="s" {{initialize-tooltip content=@issue.assignedTo.name placement="right"}} />
+      </span>
+    {{/if}}
   {{/if}}
   {{#if this.showLabel}}
     {{#if (eq @type "milestone")}}

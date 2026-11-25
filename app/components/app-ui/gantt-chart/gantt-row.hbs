@@ -1,52 +1,90 @@
-<div class="gantt-timeline-row milestone-row" data-milestone-id="{{this.milestoneId}}">
-  <div class="gantt-milestone-label" data-test-gantt-milestone-label>
-    <button type="button" class="gantt-milestone-toggle" data-test-gantt-milestone-toggle
-      aria-expanded={{if @isExpanded "true" "false"}} {{on "click" this.toggleMilestone}}>
-      <i class="fa {{if @isExpanded "fa-chevron-down" "fa-chevron-right"}}" aria-hidden="true"></i>
-      <strong>{{this.milestoneName}}</strong>
-    </button>
+{{#if (eq @part "grid")}}
+  {{! Grid side - the milestone's cells, level with its timeline row }}
+  <div class="gantt-grid-row milestone-row" data-milestone-id="{{this.milestoneId}}" data-test-gantt-grid-row>
+    <div class="gantt-grid-cell gantt-grid-name">
+      <button type="button" class="gantt-milestone-toggle" data-test-gantt-milestone-toggle
+        aria-expanded={{if @isExpanded "true" "false"}} {{on "click" this.toggleMilestone}}>
+        <i class="fa {{if @isExpanded "fa-chevron-down" "fa-chevron-right"}}" aria-hidden="true"></i>
+        <strong class="gantt-grid-text">{{this.milestoneName}}</strong>
+      </button>
+      {{#if (eq this.state "overdue")}}
+        <span class="label label-danger" data-test-gantt-milestone-state="overdue">{{t "components.gantt.grid.overdue"}}</span>
+      {{else if (eq this.state "done")}}
+        <span class="label label-success" data-test-gantt-milestone-state="done">{{t "components.gantt.grid.done"}}</span>
+      {{/if}}
+      {{#if this.totalIssuesCount}}
+        <span class="text-muted gantt-grid-count" data-test-gantt-milestone-count>{{this.completedIssuesCount}} / {{this.totalIssuesCount}}</span>
+      {{/if}}
+    </div>
+    <div class="gantt-grid-cell gantt-grid-who"></div>
+    <div class="gantt-grid-cell gantt-grid-date">{{if this.hasValidDates (format-date date=this.milestoneBarStartDate format="D MMM")}}</div>
+    <div class="gantt-grid-cell gantt-grid-date">{{if this.hasValidDates (format-date date=this.milestoneBarEndDate format="D MMM")}}</div>
   </div>
-  {{#if this.hasValidDates}}
-    <AppUi::GanttChart::GanttBar
-      @startDate={{this.milestoneBarStartDate}}
-      @endDate={{this.milestoneBarEndDate}}
-      @timelineStart={{@timelineStart}}
-      @dayWidth={{@dayWidth}}
-      @type="milestone"
-      @label={{this.milestoneName}}
-    />
-  {{/if}}
-</div>
 
-{{#if @isExpanded}}
-  {{#each this.validIssues as |issue|}}
-    <AppUi::GanttChart::TaskRow
-      @issue={{issue}}
-      @timelineStart={{@timelineStart}}
-      @dayWidth={{@dayWidth}}
-      @onIssueClick={{@onIssueClick}}
-      @onOpenIssuePanel={{@onOpenIssuePanel}}
-      @selectedIssue={{@selectedIssue}}
-      @isIssuePanelOpen={{@isIssuePanelOpen}}
-      @onIssueDragStart={{@onIssueDragStart}}
-      @onIssueDragUpdate={{@onIssueDragUpdate}}
-      @onIssueDragEnd={{@onIssueDragEnd}}
-      @onIssueResizeStart={{@onIssueResizeStart}}
-      @onIssueResizeUpdate={{@onIssueResizeUpdate}}
-      @onIssueResizeEnd={{@onIssueResizeEnd}}
-      @registerBar={{@registerBar}}
-      @unregisterBar={{@unregisterBar}}
-      @onStartDependencyLink={{@onStartDependencyLink}}
-      @onCompleteDependencyLink={{@onCompleteDependencyLink}}
-      @isLinking={{@isLinking}}
-      @linkingState={{@linkingState}}
-      @updateDependencyPositions={{@updateDependencyPositions}}
-      @timelineContainer={{@timelineContainer}}
-      @onCheckAutoScroll={{@onCheckAutoScroll}}
-      @onStopAutoScroll={{@onStopAutoScroll}}
-      @timelineWidth={{@timelineWidth}}
-      @tooltipElement={{@tooltipElement}}
-      @onTooltipIssue={{@onTooltipIssue}}
-    />
-  {{/each}}
+  {{#if @isExpanded}}
+    {{#each this.validIssues as |issue|}}
+      <AppUi::GanttChart::TaskRow
+        @part="grid"
+        @issue={{issue}}
+        @onIssueClick={{@onIssueClick}}
+        @onOpenIssuePanel={{@onOpenIssuePanel}}
+        @selectedIssue={{@selectedIssue}}
+      />
+    {{/each}}
+  {{/if}}
+{{else}}
+  <div class="gantt-timeline-row milestone-row" data-milestone-id="{{this.milestoneId}}">
+    {{#if @showLabel}}
+      <div class="gantt-milestone-label" data-test-gantt-milestone-label>
+        <button type="button" class="gantt-milestone-toggle" data-test-gantt-milestone-toggle
+          aria-expanded={{if @isExpanded "true" "false"}} {{on "click" this.toggleMilestone}}>
+          <i class="fa {{if @isExpanded "fa-chevron-down" "fa-chevron-right"}}" aria-hidden="true"></i>
+          <strong>{{this.milestoneName}}</strong>
+        </button>
+      </div>
+    {{/if}}
+    {{#if this.hasValidDates}}
+      <AppUi::GanttChart::GanttBar
+        @startDate={{this.milestoneBarStartDate}}
+        @endDate={{this.milestoneBarEndDate}}
+        @timelineStart={{@timelineStart}}
+        @dayWidth={{@dayWidth}}
+        @type="milestone"
+        @label={{this.milestoneName}}
+      />
+    {{/if}}
+  </div>
+
+  {{#if @isExpanded}}
+    {{#each this.validIssues as |issue|}}
+      <AppUi::GanttChart::TaskRow
+        @issue={{issue}}
+        @timelineStart={{@timelineStart}}
+        @dayWidth={{@dayWidth}}
+        @onIssueClick={{@onIssueClick}}
+        @onOpenIssuePanel={{@onOpenIssuePanel}}
+        @selectedIssue={{@selectedIssue}}
+        @isIssuePanelOpen={{@isIssuePanelOpen}}
+        @onIssueDragStart={{@onIssueDragStart}}
+        @onIssueDragUpdate={{@onIssueDragUpdate}}
+        @onIssueDragEnd={{@onIssueDragEnd}}
+        @onIssueResizeStart={{@onIssueResizeStart}}
+        @onIssueResizeUpdate={{@onIssueResizeUpdate}}
+        @onIssueResizeEnd={{@onIssueResizeEnd}}
+        @registerBar={{@registerBar}}
+        @unregisterBar={{@unregisterBar}}
+        @onStartDependencyLink={{@onStartDependencyLink}}
+        @onCompleteDependencyLink={{@onCompleteDependencyLink}}
+        @isLinking={{@isLinking}}
+        @linkingState={{@linkingState}}
+        @updateDependencyPositions={{@updateDependencyPositions}}
+        @timelineContainer={{@timelineContainer}}
+        @onCheckAutoScroll={{@onCheckAutoScroll}}
+        @onStopAutoScroll={{@onStopAutoScroll}}
+        @timelineWidth={{@timelineWidth}}
+        @tooltipElement={{@tooltipElement}}
+        @onTooltipIssue={{@onTooltipIssue}}
+      />
+    {{/each}}
+  {{/if}}
 {{/if}}

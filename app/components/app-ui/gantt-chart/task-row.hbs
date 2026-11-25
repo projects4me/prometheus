@@ -1,35 +1,58 @@
-<div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">
-  <AppUi::GanttChart::GanttBar
-    @startDate={{@issue.startDate}}
-    @endDate={{@issue.endDate}}
-    @timelineStart={{@timelineStart}}
-    @dayWidth={{@dayWidth}}
-    @type="task"
-    @status={{@issue.status}}
-    @onDragStart={{this.handleDragStart}}
-    @onDragUpdate={{this.handleDragUpdate}}
-    @onDragEnd={{this.handleDragEnd}}
-    @onResizeStart={{this.handleResizeStart}}
-    @onResizeUpdate={{this.handleResizeUpdate}}
-    @onResizeEnd={{this.handleResizeEnd}}
-    @onSelect={{this.handleClick}}
-    @onOpen={{this.handleIssueNumberClick}}
-    @showLabel={{true}}
-    @label={{concat "#" this.issueNumber " - " this.issueSubject}}
-    @issue={{@issue}}
-    @showConnectors={{true}}
-    @isLinking={{@isLinking}}
-    @linkingState={{@linkingState}}
-    @registerBar={{@registerBar}}
-    @unregisterBar={{@unregisterBar}}
-    @onStartDependencyLink={{@onStartDependencyLink}}
-    @updateDependencyPositions={{@updateDependencyPositions}}
-    @onCompleteDependencyLink={{@onCompleteDependencyLink}}
-    @timelineContainer={{@timelineContainer}}
-    @onCheckAutoScroll={{@onCheckAutoScroll}}
-    @onStopAutoScroll={{@onStopAutoScroll}}
-    @timelineWidth={{@timelineWidth}}
-    @tooltipElement={{@tooltipElement}}
-    @onTooltipIssue={{@onTooltipIssue}}
-  />
-</div>
+{{#if (eq @part "grid")}}
+  {{! Grid side - the issue's cells, level with its timeline row }}
+  <div class="gantt-grid-row task-row {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" data-test-gantt-grid-row>
+    {{! Stretched over the row, so a click anywhere on it selects the issue }}
+    <button type="button" class="gantt-grid-select" data-test-gantt-grid-select
+      aria-label={{concat "#" this.issueNumber " " this.issueSubject}} aria-pressed={{if this.isSelected "true" "false"}}
+      {{on "click" this.handleClick}}></button>
+    <div class="gantt-grid-cell gantt-grid-name">
+      <span class="gantt-grid-text"><span class="gantt-grid-number">#{{this.issueNumber}}</span> {{this.issueSubject}}</span>
+      <button type="button" class="btn btn-box-tool gantt-grid-open" data-test-gantt-grid-open
+        aria-label={{t "components.gantt.issueList.open"}} title={{t "components.gantt.issueList.open"}}
+        {{on "click" this.handleIssueNumberClick}}><i class="fa fa-eye" aria-hidden="true"></i></button>
+    </div>
+    <div class="gantt-grid-cell gantt-grid-who" data-test-gantt-grid-who>
+      {{#if @issue.assignedTo}}
+        <AppUi::Avatar @user={{@issue.assignedTo}} @size="xs" />
+      {{/if}}
+    </div>
+    <div class="gantt-grid-cell gantt-grid-date" data-test-gantt-grid-start>{{if @issue.startDate (format-date date=@issue.startDate format="D MMM")}}</div>
+    <div class="gantt-grid-cell gantt-grid-date" data-test-gantt-grid-end>{{if @issue.endDate (format-date date=@issue.endDate format="D MMM")}}</div>
+  </div>
+{{else}}
+  <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">
+    <AppUi::GanttChart::GanttBar
+      @startDate={{@issue.startDate}}
+      @endDate={{@issue.endDate}}
+      @timelineStart={{@timelineStart}}
+      @dayWidth={{@dayWidth}}
+      @type="task"
+      @status={{@issue.status}}
+      @onDragStart={{this.handleDragStart}}
+      @onDragUpdate={{this.handleDragUpdate}}
+      @onDragEnd={{this.handleDragEnd}}
+      @onResizeStart={{this.handleResizeStart}}
+      @onResizeUpdate={{this.handleResizeUpdate}}
+      @onResizeEnd={{this.handleResizeEnd}}
+      @onSelect={{this.handleClick}}
+      @onOpen={{this.handleIssueNumberClick}}
+      @showLabel={{true}}
+      @label={{concat "#" this.issueNumber " - " this.issueSubject}}
+      @issue={{@issue}}
+      @showConnectors={{true}}
+      @isLinking={{@isLinking}}
+      @linkingState={{@linkingState}}
+      @registerBar={{@registerBar}}
+      @unregisterBar={{@unregisterBar}}
+      @onStartDependencyLink={{@onStartDependencyLink}}
+      @updateDependencyPositions={{@updateDependencyPositions}}
+      @onCompleteDependencyLink={{@onCompleteDependencyLink}}
+      @timelineContainer={{@timelineContainer}}
+      @onCheckAutoScroll={{@onCheckAutoScroll}}
+      @onStopAutoScroll={{@onStopAutoScroll}}
+      @timelineWidth={{@timelineWidth}}
+      @tooltipElement={{@tooltipElement}}
+      @onTooltipIssue={{@onTooltipIssue}}
+    />
+  </div>
+{{/if}}

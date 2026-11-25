@@ -67,23 +67,80 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         <:search><span data-test-search>search</span></:search>
     </AppUi::GanttChart>`);
 
-    test('is one panel with the search on top, the list beside a bars-only timeline', async function (assert) {
+    const GRID = '[data-test-gantt-grid]';
+    const gridRow = (id) => `${GRID} .gantt-grid-row[data-issue-id="${id}"]`;
+    const barRow = (id) => `.gantt-timeline-row.task-row[data-issue-id="${id}"]`;
+    const topOf = (selector) => document.querySelector(selector).getBoundingClientRect().top;
+
+    test('is one panel with the search on top, the grid beside the timeline in one scroll container', async function (assert) {
         await renderChart();
         assert.dom('.gantt-chart.box.box-primary').exists({ count: 1 });
         assert.dom('.gantt-chart > .gantt-search [data-test-search]').exists();
-        assert.dom('.gantt-task-list').doesNotExist();
-        assert.dom('.gantt-task-row').doesNotExist();
-        assert.dom('[data-test-gantt-issue-list]').exists();
-        assert.dom('[data-test-gantt-issue-list] [data-issue-id]').exists({ count: 3 });
+        assert.dom('[data-test-gantt-issue-list]').doesNotExist('the issue list is the phone List tab only');
+        assert.dom(`.gantt-timeline-container ${GRID}`).exists({ count: 1 });
+        assert.dom('[data-test-gantt-grid-header]').hasText(/Milestone \/ Issue\s+Who\s+Start\s+End/);
+        assert.dom(`${GRID} .gantt-grid-row.milestone-row`).exists({ count: 2 });
+        assert.dom(`${GRID} .gantt-grid-row.task-row`).exists({ count: 2 });
         assert.dom('.gantt-timeline-row.task-row').exists({ count: 2 });
-        assert.dom('[data-test-gantt-milestone-label]').exists({ count: 2 });
+        assert.dom('[data-test-gantt-milestone-label]').doesNotExist('the milestone name is in the grid');
+        assert.dom(`${gridRow('1')} .gantt-grid-name`).hasText('#1 Subject 1');
+        assert.dom(`${gridRow('1')} .gantt-grid-date`).exists({ count: 2 });
+        assert.dom(`${gridRow('1')} [data-test-gantt-grid-start]`).hasText('10 Nov');
+        assert.dom(`${gridRow('1')} [data-test-gantt-grid-end]`).hasText('12 Nov');
+        assert.dom('.gantt-bar .assignee-avatar').doesNotExist('the Who column replaces the bar avatar');
+        assert.dom('[data-test-gantt-milestone-count]').exists({ count: 2 });
+        assert.dom(`${GRID} [data-milestone-id="m1"] [data-test-gantt-milestone-count]`).hasText('0 / 2');
+    });
+
+    test('every grid row sits level with its timeline row, expanded, collapsed and scrolled', async function (assert) {
+        this.state.ids = new Set(['m1', 'm2']);
+        await renderChart();
+        const level = (label) => {
+            ['m1', 'm2'].forEach((id) => {
+                const selector = `[data-milestone-id="${id}"]`;
+                assert.strictEqual(topOf(`${GRID} ${selector}`), topOf(`.gantt-timeline-row${selector}`), `${label}: milestone ${id}`);
+            });
+            [...document.querySelectorAll(`${GRID} .gantt-grid-row.task-row`)].forEach((row) => {
+                const id = row.dataset.issueId;
+                assert.strictEqual(row.getBoundingClientRect().top, topOf(barRow(id)), `${label}: issue ${id}`);
+            });
+        };
+        level('expanded');
+        await click(`${GRID} [data-milestone-id="m1"] [data-test-gantt-milestone-toggle]`);
+        assert.dom(`${GRID} .gantt-grid-row.task-row`).exists({ count: 1 });
+        level('m1 collapsed');
+        const container = document.querySelector('.gantt-timeline-container');
+        container.style.height = '80px';
+        container.style.flex = 'none';
+        container.scrollTop = 40;
+        await settled();
+        assert.ok(container.scrollTop > 0, 'the one container scrolled');
+        level('scrolled');
+    });
+
+    test('the milestone state reads Overdue past its end and Done when all its issues are', async function (assert) {
+        const late = { id: '7', issueNumber: 7, subject: 'Late', status: 'new', startDate: '2020-01-02', endDate: '2020-01-03' };
+        const shipped = { ...late, id: '8', issueNumber: 8, status: 'done' };
+        this.timelineStart = '2020-01-01';
+        this.milestones = [
+            { id: 'm3', name: 'Past', startDate: '2020-01-01', endDate: '2020-01-31', issues: [late, shipped] },
+            { id: 'm4', name: 'Shipped', startDate: '2020-01-01', endDate: '2020-01-31', issues: [{ ...shipped, id: '9' }] },
+            { id: 'm5', name: 'Later', startDate: '2099-01-01', endDate: '2099-01-31', issues: [{ ...late, id: '10', startDate: '2099-01-02', endDate: '2099-01-03' }] }
+        ];
+        await renderChart();
+        assert.dom(`${GRID} [data-milestone-id="m3"] .label.label-danger`).hasText('Overdue');
+        assert.dom(`${GRID} [data-milestone-id="m3"] [data-test-gantt-milestone-count]`).hasText('1 / 2');
+        assert.dom(`${GRID} [data-milestone-id="m4"] .label.label-success`).hasText('Done');
+        assert.dom(`${GRID} [data-milestone-id="m4"] .label-danger`).doesNotExist();
+        assert.dom(`${GRID} [data-milestone-id="m5"] [data-test-gantt-milestone-state]`).doesNotExist();
     });
 
     test('milestone and issue rows share the one row height, grid and links read it too', async function (assert) {
         this.state.ids = new Set(['m1']);
         await renderChart();
         assert.dom('.gantt-chart').hasAttribute('style', new RegExp(`--gantt-row-height: ${GANTT_ROW_HEIGHT}px`));
-        const heights = [...document.querySelectorAll('.gantt-timeline-row')].map((r) => r.offsetHeight);
+        assert.strictEqual(GANTT_ROW_HEIGHT, 36);
+        const heights = [...document.querySelectorAll('.gantt-timeline-row, .gantt-grid-row')].map((r) => r.offsetHeight);
         assert.ok(heights.length >= 3, 'milestone and issue rows rendered');
         assert.true(heights.every((h) => h === GANTT_ROW_HEIGHT), `all rows are ${GANTT_ROW_HEIGHT}px: ${heights}`);
         assert.dom('.gantt-grid-overlay pattern').hasAttribute('height', String(GANTT_ROW_HEIGHT));
@@ -134,35 +191,40 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('x', '0');
     });
 
-    test('a list click selects the issue and expands its collapsed milestone', async function (assert) {
+    test('a grid row click selects the issue, highlighted on both sides', async function (assert) {
         await renderChart();
-        assert.dom('.gantt-timeline-row.task-row[data-issue-id="3"]').doesNotExist();
-        await click('[data-test-gantt-issue-list] [data-issue-id="3"]');
-        assert.strictEqual(this.selected.id, '3');
-        assert.dom('.gantt-timeline-row.task-row[data-issue-id="3"]').exists();
-        assert.dom('.gantt-timeline-row.task-row[data-issue-id="3"]').hasClass('selected');
-        await click('[data-test-gantt-issue-list] [data-issue-id="3"]');
-        assert.strictEqual(this.selected.id, '3', 'a second click does not deselect');
-    });
-
-    test('a bar click selects the issue and marks it in the list', async function (assert) {
-        await renderChart();
-        await click('.gantt-timeline-row.task-row[data-issue-id="2"] [data-test-gantt-bar]');
+        await click(`${gridRow('2')} [data-test-gantt-grid-select]`);
         assert.strictEqual(this.selected.id, '2');
-        assert.dom('[data-test-gantt-issue-list] [data-issue-id="2"]').hasClass('quick-list-item--active');
+        assert.dom(gridRow('2')).hasClass('selected');
+        assert.dom(barRow('2')).hasClass('selected');
+        assert.dom(gridRow('1')).doesNotHaveClass('selected');
+        await click(`${gridRow('2')} [data-test-gantt-grid-select]`);
+        assert.strictEqual(this.selected.id, '2', 'a second click does not deselect');
     });
 
-    test('the eye opens the issue panel', async function (assert) {
+    test('a bar click selects its grid row', async function (assert) {
         await renderChart();
-        await click('[data-test-gantt-issue-list] [data-issue-id="1"] + [data-test-quick-list-item-trailing] [data-test-gantt-issue-list-open]');
+        await click(`${barRow('2')} [data-test-gantt-bar]`);
+        assert.strictEqual(this.selected.id, '2');
+        assert.dom(gridRow('2')).hasClass('selected');
+    });
+
+    test('the eye opens the issue panel without selecting the row', async function (assert) {
+        await renderChart();
+        await click(`${gridRow('1')} [data-test-gantt-grid-open]`);
         assert.deepEqual(this.panel, ['1']);
+        assert.strictEqual(this.selected, null);
     });
 
-    test('collapsing a milestone in the timeline keeps the list group', async function (assert) {
+    test('collapsing a milestone collapses both sides', async function (assert) {
         await renderChart();
-        await click('[data-test-gantt-milestone-toggle]');
+        await click(`${GRID} [data-milestone-id="m1"] [data-test-gantt-milestone-toggle]`);
         assert.dom('.gantt-timeline-row.task-row').doesNotExist();
-        assert.dom('[data-test-gantt-issue-list] [data-issue-id="1"]').exists();
+        assert.dom(`${GRID} .gantt-grid-row.task-row`).doesNotExist();
+        assert.dom(`${GRID} [data-milestone-id="m1"] [data-test-gantt-milestone-toggle]`).hasAttribute('aria-expanded', 'false');
+        await click(`${GRID} [data-milestone-id="m2"] [data-test-gantt-milestone-toggle]`);
+        assert.dom(barRow('3')).exists();
+        assert.dom(gridRow('3')).exists();
     });
 
     test('desktop has no phone tabs and shows both columns', async function (assert) {
@@ -170,6 +232,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-phone-tabs]').doesNotExist();
         assert.dom('.gantt-time-scale-selector').exists();
         assert.dom('.gantt-container').doesNotHaveClass('gantt-phone');
+        assert.dom(GRID).exists();
     });
 
     test('phones get List | Timeline tabs under the search, opening on List', async function (assert) {
@@ -182,6 +245,8 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.gantt-container').hasClass('gantt-phone-list');
         assert.dom('[data-test-gantt-phone-scale]').doesNotExist('Days/Weeks only on the Timeline tab');
         assert.dom('.gantt-time-scale-selector').doesNotExist();
+        assert.dom(GRID).doesNotExist('the phone timeline has no grid yet');
+        assert.dom('[data-test-gantt-issue-list] [data-issue-id]').exists({ count: 3 });
     });
 
     test('on phones the Timeline tab shows Days/Weeks', async function (assert) {
@@ -212,8 +277,9 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-phone-tabs]').doesNotExist();
         assert.dom('.gantt-time-scale-selector').exists();
         assert.strictEqual(this.selected.id, '2');
-        assert.dom('[data-test-gantt-issue-list] [data-issue-id="2"]').hasClass('quick-list-item--active');
+        assert.dom(gridRow('2')).hasClass('selected');
     });
+
     module('issue quick view', function (hooks) {
         hooks.beforeEach(function () {
             this.owner.register('service:acl', AclStub);
@@ -245,11 +311,14 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.dom('.gantt-quick-view-modal').doesNotExist();
         });
 
-        test('on desktop the eye opens the side panel, not the modal', async function (assert) {
+        test('on desktop the eye opens the side panel beside the grid, not the modal', async function (assert) {
             await renderWithPanel();
-            await click('[data-test-gantt-issue-list-open]');
+            await click(`${gridRow('1')} [data-test-gantt-grid-open]`);
             assert.dom('.gantt-issue-panel-visible').exists();
             assert.dom('.gantt-quick-view-modal').doesNotExist();
+            assert.dom('.gantt-timeline-wrapper').hasClass('gantt-panel-open');
+            assert.dom(GRID).isVisible();
+            assert.dom('.gantt-timeline-body').isNotVisible();
         });
     });
 

@@ -158,6 +158,16 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked timelineContainerElement = null;
 
 	/**
+	 * The grid column (desktop only), sticky on the left of the timeline container
+	 *
+	 * @property gridColumnElement
+	 * @type HTMLElement|null
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	gridColumnElement = null;
+
+	/**
 	 * Describes the currently active dependency link interaction (if any)
 	 *
 	 * @property linkingState
@@ -763,6 +773,19 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Action to handle a grid row click: selects the issue and scrolls the timeline sideways to its bar
+	 *
+	 * @method handleGridSelect
+	 * @param {Object} issue The issue that was clicked
+	 * @public
+	 */
+	@action
+	handleGridSelect(issue) {
+		this.args.onIssueClick?.(issue);
+		this.scrollToIssue(issue, { vertical: false });
+	}
+
+	/**
 	 * Action to handle issue number link click (opens panel)
 	 *
 	 * @method handleOpenIssuePanel
@@ -782,10 +805,11 @@ export default class GanttChartComponent extends AppComponent {
 	 *
 	 * @method scrollToIssue
 	 * @param {Object} issue The issue to scroll to
+	 * @param {Object} [options] `{ vertical }`: false keeps the vertical position
 	 * @public
 	 */
 	@action
-	scrollToIssue(issue) {
+	scrollToIssue(issue, { vertical = true } = {}) {
 		if (!issue || !issue.startDate || !this.timelineContainerElement || !this.timelineBodyElement) {
 			return;
 		}
@@ -797,7 +821,7 @@ export default class GanttChartComponent extends AppComponent {
 			this.dayWidth
 		);
 
-		const containerWidth = this.timelineContainerElement.clientWidth;
+		const containerWidth = this.timelineViewportWidth;
 		const scrollLeft = Math.max(0, barLeft - (containerWidth / 2) + (this.dayWidth * 2));
 
 		// Find the issue row element for vertical scroll (y-axis)
@@ -807,7 +831,7 @@ export default class GanttChartComponent extends AppComponent {
 
 		let scrollTop = this.timelineContainerElement.scrollTop;
 
-		if (issueRow) {
+		if (issueRow && vertical) {
 			const rowRect = issueRow.getBoundingClientRect();
 			const containerRect = this.timelineContainerElement.getBoundingClientRect();
 			const rowTop = rowRect.top - containerRect.top + this.timelineContainerElement.scrollTop;
@@ -1046,6 +1070,39 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Capture the grid column, which sticks over the left of the timeline container
+	 *
+	 * @method registerGridColumn
+	 * @param {HTMLElement} element
+	 * @public
+	 */
+	@action registerGridColumn(element) {
+		this.gridColumnElement = element;
+	}
+
+	/**
+	 * Width of the grid column sticking over the left of the timeline container (0 on phones)
+	 *
+	 * @property gridWidth
+	 * @type Number
+	 * @public
+	 */
+	get gridWidth() {
+		return this.gridColumnElement?.isConnected ? this.gridColumnElement.offsetWidth : 0;
+	}
+
+	/**
+	 * Width of the part of the timeline container that shows the timeline, beside the grid
+	 *
+	 * @property timelineViewportWidth
+	 * @type Number
+	 * @public
+	 */
+	get timelineViewportWidth() {
+		return (this.timelineContainerElement?.clientWidth ?? 0) - this.gridWidth;
+	}
+
+	/**
 	 * Register a rendered issue bar element for dependency calculations
 	 *
 	 * @method registerIssueBar
@@ -1243,7 +1300,7 @@ export default class GanttChartComponent extends AppComponent {
 		const rect = container.getBoundingClientRect();
 		const mouseX = event.clientX;
 
-		const distFromLeft = mouseX - rect.left;
+		const distFromLeft = mouseX - (rect.left + this.gridWidth);
 		const distFromRight = rect.right - mouseX;
 
 		let scrollX = 0;
@@ -1339,7 +1396,7 @@ export default class GanttChartComponent extends AppComponent {
 
 		const containerScrollLeft = container.scrollLeft;
 		const containerVisibleLeft = containerScrollLeft;
-		const containerVisibleRight = containerScrollLeft + container.clientWidth;
+		const containerVisibleRight = containerScrollLeft + this.timelineViewportWidth;
 
 		const barDistFromLeftEdge = barLeft - containerVisibleLeft;
 		const barDistFromRightEdge = containerVisibleRight - barRight;

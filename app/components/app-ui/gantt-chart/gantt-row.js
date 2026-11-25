@@ -4,10 +4,20 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { hasValidDates, getValidIssues, getMilestoneKey, getMilestoneBarDates } from 'prometheus/utils/gantt-helpers';
+import {
+    hasValidDates,
+    getValidIssues,
+    getMilestoneKey,
+    getMilestoneBarDates,
+    countCompletedIssues,
+    getMilestoneState
+} from 'prometheus/utils/gantt-helpers';
+import { format as formatDate, now } from 'prometheus/utils/date';
 
 /**
- * This component renders a single milestone row in the Gantt chart
+ * This component renders a single milestone row in the Gantt chart, with its issue rows when expanded.
+ * `@part="grid"` draws the grid cells (name, state, counts, dates); otherwise it draws the timeline bars, with
+ * the milestone label inside the row when `@showLabel` is set (phones, which have no grid).
  *
  * @class GanttRow
  * @namespace Prometheus.Components.AppUi.GanttChart
@@ -88,6 +98,42 @@ export default class GanttRowComponent extends Component {
      */
     get milestoneBarEndDate() {
         return getMilestoneBarDates(this.args.milestone).end;
+    }
+
+    /**
+     * Number of the milestone's issues that are finished
+     *
+     * @property completedIssuesCount
+     * @type Number
+     * @for GanttRow
+     * @public
+     */
+    get completedIssuesCount() {
+        return countCompletedIssues(this.args.milestone);
+    }
+
+    /**
+     * Number of the milestone's issues
+     *
+     * @property totalIssuesCount
+     * @type Number
+     * @for GanttRow
+     * @public
+     */
+    get totalIssuesCount() {
+        return this.args.milestone.issues?.length ?? 0;
+    }
+
+    /**
+     * The state label of the grid row: `done`, `overdue` or null
+     *
+     * @property state
+     * @type String
+     * @for GanttRow
+     * @public
+     */
+    get state() {
+        return getMilestoneState(this.args.milestone, formatDate(now(), 'YYYY-MM-DD'));
     }
 
     /**
