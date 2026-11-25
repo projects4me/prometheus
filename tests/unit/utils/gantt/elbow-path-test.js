@@ -49,6 +49,14 @@ module('Unit | Utility | gantt/elbow-path', function () {
         assert.ok(b.startsWith(`M 100 20 H ${100 + STUB} V`));
     });
 
+    test('an offset shifts the vertical run so a second link between the pair stays visible', function (assert) {
+        const start = { x: 100, y: 20 };
+        const end = { x: 300, y: 65 };
+        assert.notStrictEqual(buildElbowPath(start, end, ROW, 5), buildElbowPath(start, end, ROW));
+        assert.strictEqual(buildElbowPath(start, end, ROW, 5), `M 100 20 H ${100 + STUB + 5} V 65 H 300`);
+        assert.ok(buildElbowPath({ x: 200, y: 20 }, { x: 100, y: 65 }, ROW, 5).includes('V 47.5'));
+    });
+
     test('contains only horizontal and vertical segments', function (assert) {
         const path = buildElbowPath({ x: 200, y: 20 }, { x: 100, y: 65 }, ROW);
         assert.notOk(/[CLQSA]/.test(path));

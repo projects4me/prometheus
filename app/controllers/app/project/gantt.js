@@ -771,56 +771,33 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
-	 * Delete an existing dependency between two issues (remove parent link)
+	 * Deletes a typed link through issueRelations.unlink() and removes its line at once. Gaia's refusal is shown in
+	 * a danger Messenger.
 	 *
-	 * @method deleteDependency
-	 * @param {Prometheus.Models.Issue} predecessorIssue
-	 * @param {Prometheus.Models.Issue} successorIssue
+	 * @method deleteLink
+	 * @param {Issuelink} link
 	 * @public
 	 */
 	@action
-	async deleteDependency(predecessorIssue, successorIssue) {
-		if (!predecessorIssue || !successorIssue) {
+	async deleteLink(link) {
+		if (!link) {
 			return;
 		}
-
-		// Only delete if this dependency actually exists
-		if (successorIssue.parentId !== predecessorIssue.id) {
-			return;
-		}
-
-		let messenger = new Messenger().post({
-			message: this.intl.t('views.app.gantt.dependency.deleting', {
-				predecessor: predecessorIssue.issueNumber,
-				successor: successorIssue.issueNumber, htmlSafe: true }),
-			type: 'info',
-			showCloseButton: false,
-			hideAfter: false
-		});
-
 		try {
-			successorIssue.set('parentId', null);
-			successorIssue.set('parentissue', null);
-
-			await successorIssue.save();
-
-			messenger.update({
-				message: this.intl.t('views.app.gantt.dependency.deleted', {
-					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber, htmlSafe: true }),
-				type: 'success',
-				showCloseButton: true,
-				hideAfter: 3
-			});
+			await this.issueRelations.unlink(link.belongsTo('sourceIssue').value(), { link });
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			this.links?.remove(link);
 		} catch (error) {
-			Logger.error(
-				'AppProjectGanttController::deleteDependency - Error:',
-				error
-			);
-			successorIssue.rollbackAttributes();
-
-			messenger.update({
-				message: this.intl.t('views.app.gantt.dependency.deleteError', { htmlSafe: true }),
+			if (this.isDestroying || this.isDestroyed) {
+				return;
+			}
+			Logger.error('AppProjectGanttController::deleteLink - Error:', error);
+			new Messenger().post({
+				message: error?.errors?.[0]?.detail
+					|| error?.errors?.[0]?.title
+					|| this.intl.t('views.app.gantt.dependency.deleteError', { htmlSafe: true }),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 5

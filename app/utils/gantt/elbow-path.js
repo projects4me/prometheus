@@ -34,21 +34,22 @@ const DEFAULT_ROW_HEIGHT = GANTT_ROW_HEIGHT;
  * @param {{x:Number,y:Number}} start right edge of the first bar, mid-height
  * @param {{x:Number,y:Number}} end left edge of the dependent bar, mid-height
  * @param {Number} rowHeight height of one Gantt row in px
+ * @param {Number} offset px the vertical run is shifted by, so a second link between the same pair stays visible
  * @returns {String}
  */
-export function buildElbowPath(start, end, rowHeight = DEFAULT_ROW_HEIGHT) {
+export function buildElbowPath(start, end, rowHeight = DEFAULT_ROW_HEIGHT, offset = 0) {
     if (!start || !end) {
         return '';
     }
 
-    const trunkX = start.x + STUB;
+    const trunkX = start.x + STUB + offset;
 
     if (end.x - start.x >= 2 * STUB) {
         return `M ${start.x} ${start.y} H ${trunkX} V ${end.y} H ${end.x}`;
     }
 
     // Towards the target's row; same row (or target above) handled: only strictly above goes up.
-    const gapY = end.y < start.y ? start.y - rowHeight / 2 : start.y + rowHeight / 2;
+    const gapY = end.y < start.y ? start.y - rowHeight / 2 + offset : start.y + rowHeight / 2 + offset;
 
-    return `M ${start.x} ${start.y} H ${trunkX} V ${gapY} H ${end.x - STUB} V ${end.y} H ${end.x}`;
+    return `M ${start.x} ${start.y} H ${trunkX} V ${gapY} H ${end.x - STUB - offset} V ${end.y} H ${end.x}`;
 }
