@@ -7,11 +7,11 @@
   {{#if this.viewport.isPhone}}
     <div class="nav-tabs-custom gantt-phone-tabs" data-test-gantt-phone-tabs>
       <ul class="nav nav-tabs">
-        <li class={{if (eq this.phoneTab "list") "active"}}>
-          <a href="#gantt-tab-list" data-test-gantt-tab="list" {{on "click" (fn this.setPhoneTab "list")}}>{{t "components.gantt.tabs.list"}}</a>
-        </li>
         <li class={{if (eq this.phoneTab "timeline") "active"}}>
           <a href="#gantt-tab-timeline" data-test-gantt-tab="timeline" {{on "click" (fn this.setPhoneTab "timeline")}}>{{t "components.gantt.tabs.timeline"}}</a>
+        </li>
+        <li class={{if (eq this.phoneTab "list") "active"}}>
+          <a href="#gantt-tab-list" data-test-gantt-tab="list" {{on "click" (fn this.setPhoneTab "list")}}>{{t "components.gantt.tabs.list"}}</a>
         </li>
       </ul>
     </div>
@@ -55,14 +55,12 @@
         {{did-insert this.registerTimelineContainer}}
         {{will-destroy this.unregisterTimelineContainer}}>
       <div class="gantt-scroll-header">
-        {{#unless this.viewport.isPhone}}
-          <div class="gantt-grid-header" data-test-gantt-grid-header>
+        <div class="gantt-grid-header" data-test-gantt-grid-header>
             <div class="gantt-grid-cell gantt-grid-name">{{t "components.gantt.grid.name"}}</div>
             <div class="gantt-grid-cell gantt-grid-who">{{t "components.gantt.grid.who"}}</div>
             <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.start"}}</div>
             <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.end"}}</div>
-          </div>
-        {{/unless}}
+        </div>
         <div class="gantt-timeline-column">
           <AppUi::GanttChart::TimelineHeader
             @dateRange={{this.dateRange}}
@@ -75,7 +73,6 @@
         </div>
       </div>
       <div class="gantt-scroll-body">
-      {{#unless this.viewport.isPhone}}
         <div class="gantt-grid-column" data-test-gantt-grid
           {{register-element this.registerGridColumn}}>
           {{#each @milestones as |milestone|}}
@@ -90,7 +87,6 @@
             />
           {{/each}}
         </div>
-      {{/unless}}
       <div class="gantt-timeline-body gantt-timeline-column" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
         <svg
           class="gantt-grid-overlay"
@@ -143,7 +139,6 @@
         {{#each @milestones as |milestone|}}
           <AppUi::GanttChart::GanttRow
             @milestone={{milestone}}
-            @showLabel={{this.viewport.isPhone}}
             @timeTotals={{@timeTotals}}
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
@@ -213,6 +208,9 @@
       />
     {{/if}}
   </div>
+  {{#if (and this.viewport.isPhone (eq this.phoneTab "timeline"))}}
+    <div class="gantt-swipe-hint text-muted" data-test-gantt-swipe-hint>{{t "components.gantt.footer.swipeHint"}}</div>
+  {{/if}}
   {{#unless this.viewport.isPhone}}
     <div class="gantt-footer" data-test-gantt-footer>
       <span class="gantt-footer-hints" data-test-gantt-footer-hints>

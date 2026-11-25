@@ -8,6 +8,7 @@
  */
 
 $gantt-grid-width: 440px;
+$gantt-phone-grid-width: 124px;
 
 .gantt-view {
   width: 100%;
@@ -804,6 +805,11 @@ $gantt-grid-width: 440px;
   display: none !important;
 }
 
+.gantt-swipe-hint {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
 /* Phones: List | Timeline tabs under the search, one column at full width */
 @media (max-width: 767px) {
   .gantt-phone-tabs {
@@ -820,6 +826,30 @@ $gantt-grid-width: 440px;
 
     .gantt-timeline-wrapper {
       width: 100%;
+    }
+
+    /* The frozen issue column: fixed width, so long subjects ellipsize instead of growing it */
+    .gantt-grid-header,
+    .gantt-grid-column {
+      width: $gantt-phone-grid-width;
+      min-width: $gantt-phone-grid-width;
+      max-width: $gantt-phone-grid-width;
+      box-sizing: border-box;
+    }
+
+    .gantt-grid-who,
+    .gantt-grid-date,
+    .gantt-grid-count,
+    .gantt-grid-open {
+      display: none;
+    }
+
+    .gantt-grid-header .gantt-grid-name {
+      visibility: hidden;
+    }
+
+    .gantt-grid-row.task-row .gantt-grid-name {
+      padding-left: 10px;
     }
 
     &.gantt-phone-list .gantt-timeline-wrapper,
