@@ -29,7 +29,13 @@ class Expanded {
 module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     setupRenderingTest(hooks);
 
+    hooks.afterEach(function () {
+        window.localStorage.removeItem('gantt-toolbar');
+    });
+
     hooks.beforeEach(function () {
+        // the older tests measure Days; the toolbar tests below set their own state
+        window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'days' }));
         this.owner.register('service:current-user', CurrentUserStub);
         this.owner.register('service:viewport', ViewportStub);
         this.viewport = this.owner.lookup('service:viewport');
@@ -180,7 +186,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.deepEqual(barBox('1'), { left: '720px', width: '240px' }, 'Days: 9 days in, 3 days wide at 80px');
         assert.strictEqual(getComputedStyle(document.querySelector('.day-cell')).width, '80px');
 
-        await click('a[href="#gantt-scale-weeks"]');
+        await click('[data-test-gantt-scale-button="weeks"]');
         assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
         assert.dom('.gantt-bar-task[data-issue-id="1"]').hasAttribute('style', /--bar-start: 9; --bar-days: 3;/);
         assert.deepEqual(barBox('1'), { left: '315px', width: '105px' }, 'Weeks: same days at 35px');
@@ -198,7 +204,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-grid-weekend]').hasAttribute('x', '400').hasAttribute('width', '160');
         assert.strictEqual(getComputedStyle(document.querySelector('[data-test-gantt-grid-weekend]')).fill, 'rgba(204, 204, 204, 0.3)');
 
-        await click('a[href="#gantt-scale-weeks"]');
+        await click('[data-test-gantt-scale-button="weeks"]');
         assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('width', '245').hasAttribute('x', '-210');
         assert.dom('[data-test-gantt-grid-weekend]').hasAttribute('x', '175').hasAttribute('width', '70');
     });
@@ -248,7 +254,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     test('desktop has no phone tabs and shows both columns', async function (assert) {
         await renderChart();
         assert.dom('[data-test-gantt-phone-tabs]').doesNotExist();
-        assert.dom('.gantt-time-scale-selector').exists();
+        assert.dom('[data-test-gantt-toolbar]').exists();
         assert.dom('.gantt-container').doesNotHaveClass('gantt-phone');
         assert.dom(GRID).exists();
     });
@@ -261,18 +267,81 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-tab="list"]').hasText('List');
         assert.dom('[data-test-gantt-tab="timeline"]').hasText('Timeline');
         assert.dom('.gantt-container').hasClass('gantt-phone-list');
-        assert.dom('[data-test-gantt-phone-scale]').doesNotExist('Days/Weeks only on the Timeline tab');
-        assert.dom('.gantt-time-scale-selector').doesNotExist();
+        assert.dom('[data-test-gantt-toolbar]').doesNotExist('the toolbar is on the Timeline tab only');
         assert.dom(GRID).doesNotExist('the phone timeline has no grid yet');
         assert.dom('[data-test-gantt-issue-list] [data-issue-id]').exists({ count: 3 });
     });
 
-    test('on phones the Timeline tab shows Days/Weeks', async function (assert) {
+    test('on phones the Timeline tab shows the scale group and Today only', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();
         await click('[data-test-gantt-tab="timeline"]');
         assert.dom('.gantt-container').hasClass('gantt-phone-timeline');
-        assert.dom('[data-test-gantt-phone-scale]').exists();
+        assert.dom('[data-test-gantt-scale]').exists();
+        assert.dom('[data-test-gantt-today]').exists();
+        assert.dom('[data-test-gantt-toolbar] input[type="checkbox"]').doesNotExist();
+        assert.dom('[data-test-gantt-legend]').doesNotExist();
+    });
+
+    test('the toolbar defaults to Weeks with both toggles on, and lists the statuses', async function (assert) {
+        window.localStorage.removeItem('gantt-toolbar');
+        const store = this.owner.lookup('service:store');
+        store.createRecord('issuestatus', { name: 'new', color: '#3c8dbc' });
+        store.createRecord('issuestatus', { name: 'done', color: '#00a65a' });
+        await renderChart();
+        assert.dom('[data-test-gantt-scale-button="weeks"]').hasClass('btn-primary');
+        assert.dom('[data-test-gantt-scale-button="days"]').doesNotHaveClass('btn-primary');
+        assert.dom('[data-select="gantt-dependencies"]').isChecked();
+        assert.dom('[data-select="gantt-weekends"]').isChecked();
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
+        assert.dom('[data-test-gantt-legend-status]').exists({ count: 2 });
+        assert.dom('[data-test-gantt-legend-status]').hasText('New');
+        assert.dom('.nav-tabs-custom.gantt-time-scale-selector').doesNotExist('the old tab strip is gone');
+    });
+
+    test('Months renders one column per month at the narrow day width', async function (assert) {
+        await renderChart();
+        await click('[data-test-gantt-scale-button="months"]');
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 4px/);
+        assert.dom('.month-cell').exists({ count: 2 });
+        assert.strictEqual(getComputedStyle(document.querySelector('.month-cell')).width, `${30 * 4}px`, 'November is 30 days');
+        assert.dom('.day-cell').doesNotExist();
+        assert.deepEqual(barBox('1'), { left: '36px', width: '20px' }, 'positioned by days at 4px; the bar keeps its minimum width');
+    });
+
+    test('Today scrolls the timeline so today is in view', async function (assert) {
+        const today = new Date();
+        const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        this.timelineStart = iso(new Date(today.getFullYear(), today.getMonth() - 6, 1));
+        this.timelineEnd = iso(new Date(today.getFullYear(), today.getMonth() + 6, 28));
+        await renderChart();
+        const container = document.querySelector('.gantt-timeline-container');
+        assert.strictEqual(container.scrollLeft, 0);
+        await click('[data-test-gantt-today]');
+        assert.ok(container.scrollLeft > 0, 'scrolled towards today');
+    });
+
+    test('the toggles hide and show the dependency layer and weekend shading, and persist', async function (assert) {
+        await renderChart();
+        assert.dom('.gantt-dependency-layer').exists();
+        assert.dom('[data-test-gantt-grid-weekend]').exists();
+        await click('[data-select="gantt-dependencies"]');
+        await click('[data-select="gantt-weekends"]');
+        assert.dom('.gantt-dependency-layer').doesNotExist();
+        assert.dom('[data-test-gantt-grid-weekend]').doesNotExist();
+        assert.deepEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')), { scale: 'days', dependencies: false, weekends: false });
+        await click('[data-test-gantt-scale-button="months"]');
+        assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).scale, 'months');
+        await click('[data-select="gantt-dependencies"]');
+        assert.dom('.gantt-dependency-layer').exists();
+    });
+
+    test('the saved scale and toggles are restored on the next render', async function (assert) {
+        window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'months', dependencies: false, weekends: false }));
+        await renderChart();
+        assert.dom('[data-test-gantt-scale-button="months"]').hasClass('btn-primary');
+        assert.dom('[data-select="gantt-dependencies"]').isNotChecked();
+        assert.dom('.gantt-dependency-layer').doesNotExist();
     });
 
     test('a list tap on a phone switches to the Timeline tab and selects the issue', async function (assert) {
@@ -293,7 +362,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         this.viewport.isPhone = false;
         await settled();
         assert.dom('[data-test-gantt-phone-tabs]').doesNotExist();
-        assert.dom('.gantt-time-scale-selector').exists();
+        assert.dom('[data-test-gantt-toolbar]').exists();
         assert.strictEqual(this.selected.id, '2');
         assert.dom(gridRow('2')).hasClass('selected');
     });

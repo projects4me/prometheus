@@ -13,15 +13,26 @@
         <li class={{if (eq this.phoneTab "timeline") "active"}}>
           <a href="#gantt-tab-timeline" data-test-gantt-tab="timeline" {{on "click" (fn this.setPhoneTab "timeline")}}>{{t "components.gantt.tabs.timeline"}}</a>
         </li>
-        {{#if (eq this.phoneTab "timeline")}}
-          <li class="pull-right gantt-phone-scale">
-            <div class="btn-group btn-group-xs" data-test-gantt-phone-scale>
-              <button type="button" class="btn btn-default {{if (eq this.timeScale 'days') 'active'}}" {{on "click" (fn this.setTimeScale "days")}}>{{t "components.gantt.scale.days"}}</button>
-              <button type="button" class="btn btn-default {{if (eq this.timeScale 'weeks') 'active'}}" {{on "click" (fn this.setTimeScale "weeks")}}>{{t "components.gantt.scale.weeks"}}</button>
-            </div>
-          </li>
-        {{/if}}
       </ul>
+    </div>
+  {{/if}}
+  {{#if (or (not this.viewport.isPhone) (eq this.phoneTab "timeline"))}}
+    <div class="gantt-toolbar" data-test-gantt-toolbar>
+      <div class="btn-group btn-group-sm" data-test-gantt-scale>
+        {{#each this.scales as |scale|}}
+          <button type="button" class="btn {{if (eq this.timeScale scale) 'btn-primary' 'btn-default'}}" data-test-gantt-scale-button={{scale}} {{on "click" (fn this.setTimeScale scale)}}>{{t (concat "components.gantt.scale." scale)}}</button>
+        {{/each}}
+      </div>
+      <button type="button" class="btn btn-default btn-sm gantt-today-button" data-test-gantt-today {{on "click" this.scrollToToday}}>{{t "components.gantt.toolbar.today"}}</button>
+      {{#unless this.viewport.isPhone}}
+        <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.dependencies"}} @checked={{this.showDependencies}} @select={{this.toggleDependencies}} @data-select="gantt-dependencies" />
+        <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
+        <div class="gantt-legend" data-test-gantt-legend>
+          {{#each this.legendStatuses as |status|}}
+            <span class="label gantt-legend-status" style={{status-style status.name}} data-test-gantt-legend-status>{{status-label status.name}}</span>
+          {{/each}}
+        </div>
+      {{/unless}}
     </div>
   {{/if}}
   <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}">
@@ -40,22 +51,6 @@
 
     {{! The grid (desktop) and the timeline, row for row in one scroll container }}
     <div class="gantt-timeline-wrapper {{if (and @isIssuePanelOpen (not this.viewport.isPhone)) 'gantt-panel-open'}}">
-      {{#unless this.viewport.isPhone}}
-      <div class="nav-tabs-custom gantt-time-scale-selector">
-        <ul class="nav nav-tabs gantt-time-scale-tabs">
-          <li class="gantt-time-scale-tab {{if (eq this.timeScale 'days') 'active' ''}}">
-            <a href="#gantt-scale-days" data-toggle="tab" aria-expanded={{if (eq this.timeScale 'days') "true" "false"}} {{on "click" (fn this.setTimeScale "days")}}>
-              Days
-            </a>
-          </li>
-          <li class="gantt-time-scale-tab {{if (eq this.timeScale 'weeks') 'active' ''}}">
-            <a href="#gantt-scale-weeks" data-toggle="tab" aria-expanded={{if (eq this.timeScale 'weeks') "true" "false"}} {{on "click" (fn this.setTimeScale "weeks")}}>
-              Weeks
-            </a>
-          </li>
-        </ul>
-      </div>
-      {{/unless}}
       <div class="gantt-timeline-container"
         {{did-insert this.registerTimelineContainer}}
         {{will-destroy this.unregisterTimelineContainer}}>
@@ -113,19 +108,22 @@
               patternUnits="userSpaceOnUse"
               data-test-gantt-grid-pattern
             >
-              <rect
-                x={{this.gridWeekendX}}
-                width={{this.gridWeekendWidth}}
-                height={{this.rowHeight}}
-                class="grid-weekend"
-                data-test-gantt-grid-weekend
-              />
+              {{#if this.showWeekends}}
+                <rect
+                  x={{this.gridWeekendX}}
+                  width={{this.gridWeekendWidth}}
+                  height={{this.rowHeight}}
+                  class="grid-weekend"
+                  data-test-gantt-grid-weekend
+                />
+              {{/if}}
               <path d={{this.gridVerticalPath}} class="grid-line-vertical" vector-effect="non-scaling-stroke" />
               <path d={{this.gridHorizontalPath}} class="grid-line-horizontal" vector-effect="non-scaling-stroke" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill={{concat "url(#" this.gridPatternId ")"}} />
         </svg>
+        {{#if this.showDependencies}}
         <AppUi::GanttChart::DependencyLayer
           @dependencies={{this.dependencies}}
           @barRegistry={{this.barRegistry}}
@@ -138,6 +136,7 @@
           @onDeleteDependency={{this.handleDeleteDependency}}
           @onCancelDependencyLink={{this.cancelDependencyLink}}
         />
+        {{/if}}
         {{#each @milestones as |milestone|}}
           <AppUi::GanttChart::GanttRow
             @milestone={{milestone}}

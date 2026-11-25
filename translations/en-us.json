@@ -357,7 +357,13 @@
       },
       "scale": {
         "days": "Days",
-        "weeks": "Weeks"
+        "weeks": "Weeks",
+        "months": "Months"
+      },
+      "toolbar": {
+        "today": "Today",
+        "dependencies": "Dependencies",
+        "weekends": "Weekends"
       },
       "issueList": {
         "title": "Issues",
