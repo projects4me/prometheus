@@ -328,4 +328,71 @@ module('Unit | Service | issue-relations', function (hooks) {
             assert.strictEqual(lookup.for(b.id).length, 0);
         });
     });
+
+    module('linksOfProject', function (hooks) {
+        hooks.beforeEach(function () {
+            this.server.get('/issuestatus', (schema) => schema.issuestatuses.all());
+            this.project = this.server.create('project').id;
+            this.other = this.server.create('project').id;
+            this.server.create('issuestatus', { projectId: this.project, name: 'new', done: '0' });
+            this.server.create('issuestatus', { projectId: this.project, name: 'closed', done: '1' });
+            this.mk = (type, source, target) =>
+                this.server.create('issuelink', { type, sourceIssueId: source.id, targetIssueId: target.id, projectId: source.projectId, targetProjectId: target.projectId });
+        });
+
+        test('loads all types in both directions with one query and indexes them by issue', async function (assert) {
+            let a = this.issue({ projectId: this.project, status: 'new' });
+            let b = this.issue({ projectId: this.project, status: 'closed' });
+            let c = this.issue({ projectId: this.project, status: 'new' });
+            let ext = this.issue({ projectId: this.other, status: 'new' });
+            this.mk('blocks', a, b);
+            this.mk('splits', a, c);
+            this.mk('relates', c, b);
+            this.mk('blocks', ext, a);
+            let queries = 0;
+            this.server.pretender.handledRequest = (verb, path) => {
+                if (path.includes('issuelink')) queries++;
+            };
+
+            let lookup = await this.service.linksOfProject(this.project);
+
+            assert.strictEqual(queries, 1);
+            assert.strictEqual(lookup.links.length, 4);
+            // Mirage does not serialize the issues' projectId; give the loaded records theirs
+            for (let issue of [a, b, c, ext]) {
+                this.store.push({ data: { type: 'issue', id: String(issue.id), attributes: { projectId: String(issue.projectId) } } });
+            }
+            assert.deepEqual(lookup.blockedBy(b.id).map((l) => l.belongsTo('sourceIssue').id()), [a.id]);
+            assert.deepEqual(lookup.blocks(a.id).map((l) => l.belongsTo('targetIssue').id()), [b.id]);
+            assert.deepEqual(lookup.blockedBy(a.id).map((l) => l.belongsTo('sourceIssue').id()), [ext.id]);
+            assert.strictEqual(lookup.splitInto(a.id).length, 1);
+            assert.strictEqual(lookup.splitFrom(c.id).length, 1);
+            assert.strictEqual(lookup.relates(b.id).length, 1);
+            assert.strictEqual(lookup.relates(c.id).length, 1);
+            assert.deepEqual(lookup.externalIssues.map((i) => i.id), [ext.id]);
+            // the records now carry their projectId, so a second load reads the project's done statuses
+            let again = await this.service.linksOfProject(this.project);
+            assert.true(again.isOpen(await this.open(a)));
+            assert.false(again.isOpen(await this.open(b)));
+        });
+
+        test('add and remove update the lookup in place', async function (assert) {
+            let a = this.issue({ projectId: this.project, status: 'new' });
+            let b = this.issue({ projectId: this.project, status: 'new' });
+            let link = this.mk('blocks', a, b);
+            let lookup = await this.service.linksOfProject(this.project);
+            let record = lookup.links[0];
+            assert.strictEqual(link.id, record.id);
+
+            lookup.remove(record);
+            assert.strictEqual(lookup.blockedBy(b.id).length, 0);
+            lookup.add(record);
+            lookup.add(record);
+            assert.strictEqual(lookup.blockedBy(b.id).length, 1, 'added once');
+        });
+
+        test('emptyLinks has no links', function (assert) {
+            assert.strictEqual(this.service.emptyLinks().links.length, 0);
+        });
+    });
 });

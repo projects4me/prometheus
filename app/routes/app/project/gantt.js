@@ -70,6 +70,15 @@ export default class GanttRoute extends App {
 	@service('saved-search') savedSearch;
 
 	/**
+	 * Loads the project's typed issue links.
+	 *
+	 * @property issueRelations
+	 * @type Ember.Service
+	 * @for GanttRoute
+	 */
+	@service issueRelations;
+
+	/**
 	 * Batches the milestone lane queries into one bulk request.
 	 *
 	 * @property bulk
@@ -108,6 +117,8 @@ export default class GanttRoute extends App {
 	async model(params) {
 		let _self = this;
 		let projectId = this.trackedProject.getProjectId();
+		// one request, alongside the milestones
+		let linksRequest = this.loadLinks(projectId);
 
 		let searchQuery = params?.query || '';
 		this.query = searchQuery;
@@ -172,11 +183,29 @@ export default class GanttRoute extends App {
 		let model = hash({
 			milestones: milestonesArray,
 			timelogs: timelogs,
+			links: await linksRequest,
 			timelineStart: timelineBounds.start,
 			timelineEnd: timelineBounds.end
 		});
 
 		return model;
+	}
+
+	/**
+	 * Loads the project's issue links with one query. A failure is logged and the Gantt has no links.
+	 *
+	 * @method loadLinks
+	 * @param {String} projectId
+	 * @returns {Promise<IssueLinkLookup>}
+	 * @private
+	 */
+	async loadLinks(projectId) {
+		try {
+			return await this.issueRelations.linksOfProject(projectId);
+		} catch (error) {
+			console.error('Could not load the issue links of the Gantt', error);
+			return this.issueRelations.emptyLinks();
+		}
 	}
 
 	/**
@@ -310,6 +339,7 @@ export default class GanttRoute extends App {
 		Logger.debug('Prometheus.Routes.Gantt::setupController');
 		controller.set('milestones', model.milestones);
 		controller.set('timelogs', model.timelogs ?? []);
+		controller.set('links', model.links ?? this.issueRelations.emptyLinks());
 		controller.set('timelineStart', model.timelineStart);
 		controller.set('timelineEnd', model.timelineEnd);
 		controller.set('querySchema', this.searchData?.schema ?? null);
