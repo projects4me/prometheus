@@ -4,7 +4,9 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 import * as dates from 'prometheus/utils/date';
+import { toFiniteNumber } from 'prometheus/utils/gantt-helpers';
 
 /**
  * Timeline header renderer for months/weeks/days
@@ -132,35 +134,16 @@ export default class TimelineHeaderComponent extends Component {
 	}
 
 	/**
-	 * Apply the span style to the element
+	 * The span's width in days as a CSS custom property; the SCSS multiplies it by `--gantt-day-width`,
+	 * so a scale change does not touch the span. Only a number goes into the string.
 	 *
-	 * @property applySpanStyle
-	 * @type Function
-	 * @for TimelineHeaderComponent
+	 * @method spanStyle
+	 * @param {Object} span a year, month or week group with `days`
+	 * @return {SafeString}
 	 * @public
 	 */
 	@action
-	applySpanStyle(span, element) {
-		if (element && span) {
-			const width = span.days * this.args.dayWidth;
-			element.style.width = `${width}px`;
-			element.style.minWidth = `${width}px`;
-		}
-	}
-
-	/**
-	 * Apply the day cell style to the element
-	 *
-	 * @property applyDayCellStyle
-	 * @type Function
-	 * @for TimelineHeaderComponent
-	 * @public
-	 */
-	@action
-	applyDayCellStyle(element) {
-		if (element && this.args.dayWidth) {
-			element.style.width = `${this.args.dayWidth}px`;
-			element.style.minWidth = `${this.args.dayWidth}px`;
-		}
+	spanStyle(span) {
+		return htmlSafe(`--span-days: ${toFiniteNumber(span?.days)}`);
 	}
 }

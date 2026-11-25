@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, triggerKeyEvent, triggerEvent, focus } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { htmlSafe } from '@ember/template';
 import CurrentUserStub from '../../../stub-services/current-user-stub';
 
 module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks) {
@@ -26,10 +27,12 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
         };
         this.onDragStart = () => this.calls.dragStart++;
         this.noop = () => {};
+        // the chart root sets the day width the bar's SCSS reads
+        this.rootStyle = htmlSafe('--gantt-day-width: 30px');
     });
 
     const renderTaskBar = (context) =>
-        render(hbs`<AppUi::GanttChart::GanttBar
+        render(hbs`<div class="gantt-chart" style={{this.rootStyle}}><AppUi::GanttChart::GanttBar
             @type="task"
             @issue={{this.issue}}
             @label="#42 - Fix login"
@@ -42,7 +45,7 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
             @onDragEnd={{this.onDragEnd}}
             @onResizeEnd={{this.onResizeEnd}}
             @updateDependencyPositions={{this.noop}}
-        />`, context);
+        /></div>`, context);
 
     test('a task bar is a focusable group named after its issue', async function (assert) {
         await renderTaskBar(this);
@@ -116,6 +119,23 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
         await triggerEvent(document, 'mouseup', { button: 0, clientX: startX + 30, clientY: rect.top + 2 });
         assert.strictEqual(this.calls.dragStart, 1);
         assert.deepEqual(this.calls.move, [1]);
+    });
+
+    test('the bar is positioned in days, with the live drag offset in the same custom properties', async function (assert) {
+        await renderTaskBar(this);
+        const bar = this.element.querySelector('[data-test-gantt-bar]');
+        assert.dom(bar).hasAttribute('style', '--bar-start: 9; --bar-days: 3; --bar-shift: 0px; --bar-stretch: 0px');
+        assert.strictEqual(getComputedStyle(bar).left, '270px');
+        assert.strictEqual(getComputedStyle(bar).width, '90px');
+
+        const rect = bar.getBoundingClientRect();
+        const startX = rect.left + rect.width / 2;
+        await triggerEvent(bar, 'mousedown', { button: 0, clientX: startX, clientY: rect.top + 2 });
+        await triggerEvent(document, 'mousemove', { clientX: startX + 45, clientY: rect.top + 2 });
+        assert.dom(bar).hasClass('dragging');
+        assert.dom(bar).hasAttribute('style', /--bar-shift: 45px;/);
+        await triggerEvent(document, 'mouseup', { button: 0, clientX: startX + 45, clientY: rect.top + 2 });
+        assert.dom(bar).hasAttribute('style', /--bar-shift: 0px;/);
     });
 
     test('a milestone bar is not keyboard-operable', async function (assert) {

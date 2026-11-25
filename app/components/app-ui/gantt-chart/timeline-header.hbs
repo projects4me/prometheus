@@ -4,8 +4,7 @@
       {{#each @yearGroups as |yearGroup|}}
         <div
           class="gantt-header-cell year-cell"
-          {{did-insert (fn this.applySpanStyle yearGroup)}}
-          {{did-update (fn this.applySpanStyle yearGroup) yearGroup @dayWidth}}
+          style={{call (fn this.spanStyle yearGroup)}}
         >
           {{yearGroup.year}}
         </div>
@@ -17,8 +16,7 @@
     {{#each @monthGroups as |monthGroup|}}
       <div
         class="gantt-header-cell month-cell"
-        {{did-insert (fn this.applySpanStyle monthGroup)}}
-        {{did-update (fn this.applySpanStyle monthGroup) monthGroup @dayWidth}}
+        style={{call (fn this.spanStyle monthGroup)}}
       >
         {{monthGroup.month}} {{monthGroup.year}}
       </div>
@@ -30,8 +28,7 @@
       {{#each @weekGroups as |weekGroup|}}
         <div
           class="gantt-header-cell week-cell"
-          {{did-insert (fn this.applySpanStyle weekGroup)}}
-          {{did-update (fn this.applySpanStyle weekGroup) weekGroup @dayWidth}}
+          style={{call (fn this.spanStyle weekGroup)}}
         >
           W{{weekGroup.week}} ({{weekGroup.year}})
         </div>
@@ -43,8 +40,6 @@
     {{#each this.dateRangeWithFlags as |date|}}
       <div
         class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}} {{if date.isCurrentWeek 'current-week'}} {{if date.isCurrentWeekFirst 'current-week-first'}} {{if date.isCurrentWeekLast 'current-week-last'}} {{if date.isToday 'current-day'}}"
-        {{did-insert this.applyDayCellStyle}}
-        {{did-update this.applyDayCellStyle @dayWidth}}
         title="{{date.dayOfWeek}}, {{date.month}} {{date.day}}, {{date.year}}"
       >
         {{date.day}}

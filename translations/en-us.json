@@ -2539,10 +2539,6 @@
           "days": "Days",
           "weeks": "Weeks"
         },
-        "conversion": {
-          "switchingToDays": "Switching to Days view",
-          "switchingToWeeks": "Switching to Weeks view"
-        },
         "headers": {
           "task": "Task",
           "startEnd": "Start - End"

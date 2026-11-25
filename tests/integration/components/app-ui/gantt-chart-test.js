@@ -81,12 +81,56 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     test('milestone and issue rows share the one row height, grid and links read it too', async function (assert) {
         this.state.ids = new Set(['m1']);
         await renderChart();
-        assert.dom('.gantt-chart').hasAttribute('style', `--gantt-row-height: ${GANTT_ROW_HEIGHT}px`);
+        assert.dom('.gantt-chart').hasAttribute('style', new RegExp(`--gantt-row-height: ${GANTT_ROW_HEIGHT}px`));
         const heights = [...document.querySelectorAll('.gantt-timeline-row')].map((r) => r.offsetHeight);
         assert.ok(heights.length >= 3, 'milestone and issue rows rendered');
         assert.true(heights.every((h) => h === GANTT_ROW_HEIGHT), `all rows are ${GANTT_ROW_HEIGHT}px: ${heights}`);
         assert.dom('.gantt-grid-overlay pattern').hasAttribute('height', String(GANTT_ROW_HEIGHT));
         assert.dom('.grid-line-horizontal').hasAttribute('d', new RegExp(`^M 0 ${GANTT_ROW_HEIGHT} H`));
+    });
+
+    const barBox = (id) => {
+        const bar = document.querySelector(`.gantt-bar-task[data-issue-id="${id}"]`);
+        // jump the bar's size transition to its end state
+        bar.getAnimations().forEach((animation) => animation.finish());
+        const style = getComputedStyle(bar);
+        return { left: style.left, width: style.width };
+    };
+
+    test('bars take their position from days and the root day width, at Days and Weeks', async function (assert) {
+        await renderChart();
+        assert.dom('.gantt-bar-task[data-issue-id="1"]').hasAttribute('style', /--bar-start: 9; --bar-days: 3;/);
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 80px/);
+        assert.deepEqual(barBox('1'), { left: '720px', width: '240px' }, 'Days: 9 days in, 3 days wide at 80px');
+        assert.strictEqual(getComputedStyle(document.querySelector('.day-cell')).width, '80px');
+
+        await click('a[href="#gantt-scale-weeks"]');
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
+        assert.dom('.gantt-bar-task[data-issue-id="1"]').hasAttribute('style', /--bar-start: 9; --bar-days: 3;/);
+        assert.deepEqual(barBox('1'), { left: '315px', width: '105px' }, 'Weeks: same days at 35px');
+        assert.strictEqual(getComputedStyle(document.querySelector('.day-cell')).width, '35px');
+        assert.strictEqual(getComputedStyle(document.querySelector('.month-cell')).width, `${30 * 35}px`, 'November spans 30 days');
+        assert.dom('.gantt-timeline-container .loader').doesNotExist('no scale-conversion overlay');
+    });
+
+    test('weekends are shaded in the one-week grid pattern, not one element per weekend', async function (assert) {
+        await renderChart();
+        assert.dom('.weekend-block').doesNotExist();
+        assert.dom('[data-test-gantt-grid-weekend]').exists({ count: 1 });
+        // 2026-11-01 is a Sunday: the tile starts on the Monday six days earlier, Saturday and Sunday are columns 5 and 6
+        assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('width', '560').hasAttribute('x', '-480');
+        assert.dom('[data-test-gantt-grid-weekend]').hasAttribute('x', '400').hasAttribute('width', '160');
+        assert.strictEqual(getComputedStyle(document.querySelector('[data-test-gantt-grid-weekend]')).fill, 'rgba(204, 204, 204, 0.3)');
+
+        await click('a[href="#gantt-scale-weeks"]');
+        assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('width', '245').hasAttribute('x', '-210');
+        assert.dom('[data-test-gantt-grid-weekend]').hasAttribute('x', '175').hasAttribute('width', '70');
+    });
+
+    test('a timeline starting on a Monday needs no pattern offset', async function (assert) {
+        this.timelineStart = '2026-11-02';
+        await renderChart();
+        assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('x', '0');
     });
 
     test('a list click selects the issue and expands its collapsed milestone', async function (assert) {

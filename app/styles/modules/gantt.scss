@@ -158,6 +158,8 @@
   }
 
   &.day-cell {
+    width: var(--gantt-day-width);
+    min-width: var(--gantt-day-width);
     color: #666;
     font-size: 11px;
 
@@ -199,6 +201,14 @@
   &.week-cell {
     justify-content: center;
   }
+
+  /* Year, month and week spans: --span-days is set per cell, the day width once on the chart root */
+  &.year-cell,
+  &.month-cell,
+  &.week-cell {
+    width: calc(var(--span-days) * var(--gantt-day-width));
+    min-width: calc(var(--span-days) * var(--gantt-day-width));
+  }
 }
 
 /* Right Side - Timeline */
@@ -227,6 +237,7 @@
 
 .gantt-timeline-body {
   position: relative;
+  width: var(--gantt-timeline-width);
   min-height: 100%;
 }
 
@@ -234,10 +245,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: var(--gantt-timeline-width);
+  height: 100%;
   pointer-events: none;
-  z-index: 1;
+  /* Paints in DOM order below the rows, so the weekend shading and grid lines sit under the bars */
+  z-index: 0;
+}
+
+/* Saturday and Sunday columns of the one-week grid pattern */
+.gantt-grid-overlay .grid-weekend {
+  fill: rgba($lightColor, 0.3);
 }
 
 .gantt-grid-overlay .grid-line-vertical,
@@ -249,21 +266,6 @@
 
 .gantt-grid-overlay .grid-line-horizontal {
   stroke: rgba(15, 23, 42, 0.05);
-}
-
-.gantt-weekend-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  pointer-events: none;
-}
-
-.gantt-weekend-overlay .weekend-block {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background: rgba($lightColor, 0.3);
 }
 
 .gantt-timeline-row {
@@ -284,6 +286,12 @@
 /* Gantt Bars */
 .gantt-bar {
   position: absolute;
+  /* --bar-start and --bar-days are in days; --bar-shift and --bar-stretch carry the live drag/resize offset */
+  left: calc(var(--bar-start, 0) * var(--gantt-day-width) + var(--bar-shift, 0px));
+  width: max(
+    var(--gantt-day-width),
+    calc(var(--bar-days, 1) * var(--gantt-day-width) + var(--bar-stretch, 0px))
+  );
   height: 28px;
   top: 50%;
   transform: translateY(-50%);
@@ -384,6 +392,18 @@
     cursor: grabbing;
     opacity: 0.7;
     z-index: 100;
+  }
+
+  &.resizing {
+    opacity: 0.7;
+  }
+
+  &.resizing-left {
+    cursor: w-resize;
+  }
+
+  &.resizing-right {
+    cursor: e-resize;
   }
 
   .bar-label {

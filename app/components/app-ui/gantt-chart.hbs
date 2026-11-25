@@ -1,4 +1,4 @@
-<div class="gantt-chart box box-primary" style={{this.rowHeightStyle}}>
+<div class="gantt-chart box box-primary" style={{this.rootStyle}}>
   {{#if (has-block "search")}}
     <div class="gantt-search" data-gantt-search>
       {{yield to="search"}}
@@ -54,14 +54,9 @@
         </ul>
       </div>
       {{/unless}}
-      <div class="gantt-timeline-container" 
-        {{did-insert this.registerTimelineContainer}} 
-        {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
+      <div class="gantt-timeline-container"
+        {{did-insert this.registerTimelineContainer}}
         {{will-destroy this.unregisterTimelineContainer}}>
-      {{! Scale conversion overlay }}
-      {{#if this.showScaleConversionOverlay}}
-        <AppUi::Loader @message={{this.conversionMessage}} @variant="overlay" />
-      {{/if}}
       <AppUi::GanttChart::TimelineHeader
         @dateRange={{this.dateRange}}
         @monthGroups={{this.monthGroups}}
@@ -70,11 +65,9 @@
         @dayWidth={{this.dayWidth}}
         @timeScale={{this.timeScale}}
       />
-      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{did-update this.updateTimelineBodyWidth this.timelineWidth}} {{will-destroy this.unregisterTimelineBody}}>
+      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
         <svg
           class="gantt-grid-overlay"
-          {{did-insert this.applyGridOverlayStyle}}
-          {{did-update this.applyGridOverlayStyle this.timelineWidth}}
           width={{this.timelineWidth}}
           height="100%"
           xmlns="http://www.w3.org/2000/svg"
@@ -83,29 +76,25 @@
           <defs>
             <pattern
               id={{this.gridPatternId}}
+              x={{this.gridPatternX}}
               width={{this.gridPatternWidth}}
               height={{this.rowHeight}}
               patternUnits="userSpaceOnUse"
+              data-test-gantt-grid-pattern
             >
+              <rect
+                x={{this.gridWeekendX}}
+                width={{this.gridWeekendWidth}}
+                height={{this.rowHeight}}
+                class="grid-weekend"
+                data-test-gantt-grid-weekend
+              />
               <path d={{this.gridVerticalPath}} class="grid-line-vertical" vector-effect="non-scaling-stroke" />
               <path d={{this.gridHorizontalPath}} class="grid-line-horizontal" vector-effect="non-scaling-stroke" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill={{concat "url(#" this.gridPatternId ")"}} />
         </svg>
-        <div 
-          class="gantt-weekend-overlay"
-          {{did-insert this.applyWeekendOverlayStyle}}
-          {{did-update this.applyWeekendOverlayStyle this.timelineWidth}}
-        >
-          {{#each this.weekendHighlights as |highlight|}}
-            <div
-              class="weekend-block"
-              {{did-insert (fn this.applyWeekendBlockStyle highlight)}}
-              {{did-update (fn this.applyWeekendBlockStyle highlight) this.timelineWidth}}
-            ></div>
-          {{/each}}
-        </div>
         <AppUi::GanttChart::DependencyLayer
           @dependencies={{this.dependencies}}
           @barRegistry={{this.barRegistry}}
