@@ -195,6 +195,43 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.gantt-timeline-container .loader').doesNotExist('no scale-conversion overlay');
     });
 
+    test('the Weeks scale labels each week by its first day', async function (assert) {
+        this.timelineStart = '2026-11-02';
+        this.timelineEnd = '2026-11-29';
+        await renderChart();
+        await click('[data-test-gantt-scale-button="weeks"]');
+        const labels = [...document.querySelectorAll('.week-cell')].map((cell) => cell.textContent.trim());
+        assert.deepEqual(labels, ['2 Nov', '9 Nov', '16 Nov', '23 Nov']);
+    });
+
+    test('the today line sits at today offset, in Days and Weeks', async function (assert) {
+        const day = (offset) => new Date(Date.now() + offset * 86400000).toISOString().slice(0, 10);
+        this.timelineStart = day(-10);
+        this.timelineEnd = day(30);
+        await renderChart();
+        const centreOffsets = () => {
+            const line = document.querySelector('[data-test-gantt-today-line]').getBoundingClientRect();
+            const cell = document.querySelector('.day-cell.current-day').getBoundingClientRect();
+            return { line: line.left + line.width / 2, cell: cell.left + cell.width / 2, width: getComputedStyle(document.querySelector('[data-test-gantt-today-line]')).width };
+        };
+        assert.dom('[data-test-gantt-today-line]').exists({ count: 1 }).hasAttribute('style', /--today-start: 1\d/);
+        for (const scale of ['days', 'weeks']) {
+            if (scale === 'weeks') {
+                await click('[data-test-gantt-scale-button="weeks"]');
+            }
+            const { line, cell, width } = centreOffsets();
+            assert.strictEqual(width, '2px', `${scale}: 2px wide`);
+            assert.ok(Math.abs(line - cell) < 1, `${scale}: centred on today's day cell (${line} vs ${cell})`);
+        }
+    });
+
+    test('there is no today line when today is outside the timeline', async function (assert) {
+        this.timelineStart = '2020-01-01';
+        this.timelineEnd = '2020-02-29';
+        await renderChart();
+        assert.dom('[data-test-gantt-today-line]').doesNotExist();
+    });
+
     test('weekends are shaded in the one-week grid pattern, not one element per weekend', async function (assert) {
         await renderChart();
         assert.dom('.weekend-block').doesNotExist();

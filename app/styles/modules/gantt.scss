@@ -415,6 +415,18 @@ $gantt-grid-width: 440px;
   z-index: 0;
 }
 
+/* Today: a 2px line down the full body height, centred in today's day column. Above the grid, below the bars */
+.gantt-today-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc((var(--today-start, 0) + 0.5) * var(--gantt-day-width) - 1px);
+  width: 2px;
+  background: $primaryColor;
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Saturday and Sunday columns of the one-week grid pattern */
 .gantt-grid-overlay .grid-weekend {
   fill: rgba($lightColor, 0.3);
