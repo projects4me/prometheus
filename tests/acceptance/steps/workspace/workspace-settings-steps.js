@@ -157,6 +157,40 @@ export default function (assert) {
             assert.dom('.workspace-settings .nav-tabs li.active [data-tab="projects"]').exists('Projects tab is active');
             assert.dom('.workspace-details-form').exists('details form is shown');
         })
+        .given('Service client "$name" of kind runtime exists with status "$status"', async function (name, status) {
+            server.create('serviceclient', { name, kind: 'runtime', status });
+            assert.ok(true, `runtime ${name} registered`);
+        })
+        .given('Workspace $code has no runtime bound', async function (code) {
+            assert.equal(server.schema.workspaces.findBy({ shortCode: code }).runtimeId ?? null, null, 'no runtime bound');
+        })
+        .when('User picks the runtime "$name" on the Environment tab', async function (name) {
+            await click('.workspace-environment-bind .ember-power-select-trigger');
+            let option = [...document.querySelectorAll('.workspace-environment-bind .ember-power-select-option')].find((el) => el.textContent.includes(name));
+            assert.ok(option, `option ${name} is listed`);
+            await click(option);
+        })
+        .when('User saves the runtime on the Environment tab', async function () {
+            await click('[data-btn="save-runtime"]');
+        })
+        .when('User unbinds the runtime on the Environment tab', async function () {
+            await click('[data-btn="unbind-runtime"]');
+        })
+        .then('Workspace $code is bound to runtime "$name"', function (code, name) {
+            let workspace = server.schema.workspaces.findBy({ shortCode: code });
+            let runtime = server.schema.serviceclients.findBy({ name });
+            assert.equal(String(workspace.runtimeId), String(runtime.id), 'runtime bound in the API');
+            assert.dom('.workspace-environment-runtime [data-test-environment-runtime]').includesText(name);
+        })
+        .then('Workspace $code has no runtime', function (code) {
+            assert.equal(server.schema.workspaces.findBy({ shortCode: code }).runtimeId ?? null, null, 'runtime unbound in the API');
+            assert.dom('.workspace-environment-runtime [data-test-environment-dot]').doesNotExist();
+            assert.dom('[data-btn="unbind-runtime"]').doesNotExist();
+        })
+        .then('The Environment tab shows the refusal "$message"', function (message) {
+            assert.dom('.workspace-environment-runtime [data-test-environment-error]').includesText(message);
+            assert.dom('.workspace-environment-runtime [data-test-environment-dot]').doesNotExist();
+        })
         .given('Workspace $code has repositories "$a" on "$ab" and "$b" on "$bb"', async function (code, a, ab, b, bb) {
             let workspace = server.schema.workspaces.findBy({ shortCode: code });
             let project = server.schema.projects.where({ workspaceId: workspace.id }).models[0];

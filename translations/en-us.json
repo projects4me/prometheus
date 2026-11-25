@@ -3011,6 +3011,11 @@
           },
           "environment": {
             "runtimeTitle": "Runtime",
+            "runtimeLabel": "Runtime",
+            "runtimePlaceholder": "Choose a runtime from Settings › Services",
+            "save": "Save",
+            "unbind": "Unbind",
+            "bindFailed": "The runtime could not be bound",
             "repositoriesTitle": "Repositories",
             "online": "online",
             "offline": "offline",

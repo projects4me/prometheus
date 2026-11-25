@@ -35,6 +35,10 @@ export function register(server) {
 		if (other && other.id !== workspace.id) {
 			return duplicateCode();
 		}
+		let runtimeId = requestData.attributes.runtimeId;
+		if (runtimeId && schema.serviceclients.find(runtimeId)?.status === 'disabled') {
+			return new Response(422, {}, { status: 'ERROR', messages: ['The runtime is disabled'] });
+		}
 		workspace.update(requestData.attributes);
 		return workspace;
 	});
