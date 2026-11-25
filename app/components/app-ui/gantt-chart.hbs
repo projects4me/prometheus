@@ -123,6 +123,9 @@
           </defs>
           <rect width="100%" height="100%" fill={{concat "url(#" this.gridPatternId ")"}} />
         </svg>
+        {{#if this.todayLineStyle}}
+          <div class="gantt-today-line" style={{this.todayLineStyle}} data-test-gantt-today-line></div>
+        {{/if}}
         {{#if this.showDependencies}}
         <AppUi::GanttChart::DependencyLayer
           @dependencies={{this.dependencies}}

@@ -49,9 +49,6 @@
     }
   },
   "app/components/app-ui/gantt-chart.js": {
-    "no-dupe-class-members": {
-      "count": 3
-    },
     "no-unused-vars": {
       "count": 2
     }
@@ -1010,11 +1007,6 @@
     },
     "no-unused-vars": {
       "count": 9
-    }
-  },
-  "tests/acceptance/steps/issue/issue-hierarchy-steps.js": {
-    "no-unused-vars": {
-      "count": 2
     }
   },
   "tests/acceptance/steps/issue/issue-planning-steps.js": {

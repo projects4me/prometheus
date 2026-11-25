@@ -412,6 +412,35 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * The index of today in the date range (its day count from the timeline start), or null when today is outside it.
+	 * The today line positions itself from this with the root `--gantt-day-width`.
+	 *
+	 * @property todayOffset
+	 * @type Number|null
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get todayOffset() {
+		const today = dates.format(dates.now(), 'YYYY-MM-DD');
+		const index = this.dateRange.findIndex((day) => day.date === today);
+		return index === -1 ? null : index;
+	}
+
+	/**
+	 * The today line's position as a CSS custom property in days; the SCSS centres it in today's day column.
+	 * Empty when today is outside the timeline.
+	 *
+	 * @property todayLineStyle
+	 * @type SafeString|null
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get todayLineStyle() {
+		const offset = this.todayOffset;
+		return offset === null ? null : htmlSafe(`--today-start: ${toFiniteNumber(offset)}`);
+	}
+
+	/**
 	 * Computed property that groups dates by month for the header
 	 *
 	 * @property monthGroups
@@ -636,78 +665,8 @@ export default class GanttChartComponent extends AppComponent {
 				current = {
 					week,
 					year,
-					days: 0
-				};
-				groups.push(current);
-			}
-			current.days++;
-		});
-
-		return groups;
-	}
-
-	/**
-	 * Check if the week scale should be shown
-	 *
-	 * @property showWeekScale
-	 * @type Boolean
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	get showWeekScale() {
-		return this.timeScale === 'weeks';
-	}
-
-	/**
-	 * Get the year groups for the timeline
-	 *
-	 * @property yearGroups
-	 * @type Array
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	get yearGroups() {
-		let groups = [];
-		let current = null;
-
-		this.dateRange.forEach((day) => {
-			let year = dates.part(day.date, 'year');
-			if (!current || current.year !== year) {
-				current = {
-					year,
-					days: 0
-				};
-				groups.push(current);
-			}
-			current.days++;
-		});
-
-		return groups;
-	}
-
-	/**
-	 * Get the week groups for the timeline
-	 *
-	 * @property weekGroups
-	 * @type Array
-	 * @for GanttChartComponent
-	 * @public
-	 */
-	get weekGroups() {
-		if (!this.showWeekScale) {
-			return [];
-		}
-
-		let groups = [];
-		let current = null;
-
-		this.dateRange.forEach((day) => {
-			let week = dates.part(day.date, 'isoWeek');
-			let year = dates.part(day.date, 'isoWeekYear');
-			if (!current || current.week !== week || current.year !== year) {
-				current = {
-					week,
-					year,
+					startDate: day.date,
+					label: dates.format(day.date, 'D MMM'),
 					days: 0
 				};
 				groups.push(current);
