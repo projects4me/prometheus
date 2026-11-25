@@ -46,3 +46,46 @@ export function saveToolbarPreferences(preferences) {
 		// storage unavailable
 	}
 }
+
+/**
+ * The localStorage key of the phone's layer options, kept apart from the desktop toolbar's.
+ * Its value is JSON: `{ dependencies, labels, weekends }`.
+ *
+ * @property GANTT_PHONE_KEY
+ * @type String
+ */
+export const GANTT_PHONE_KEY = 'gantt-toolbar-phone';
+
+/**
+ * Reads the phone's saved layer options; dependency lines and bar labels are off until turned on
+ *
+ * @function loadPhonePreferences
+ * @return {Object} `{ dependencies, labels, weekends }`
+ */
+export function loadPhonePreferences() {
+	let saved = {};
+	try {
+		saved = JSON.parse(window.localStorage.getItem(GANTT_PHONE_KEY)) || {};
+	} catch {
+		saved = {};
+	}
+	return {
+		dependencies: saved.dependencies === true,
+		labels: saved.labels === true,
+		weekends: saved.weekends !== false
+	};
+}
+
+/**
+ * Saves the phone's layer options; when storage is unavailable they stay for this session only
+ *
+ * @function savePhonePreferences
+ * @param {Object} preferences `{ dependencies, labels, weekends }`
+ */
+export function savePhonePreferences(preferences) {
+	try {
+		window.localStorage.setItem(GANTT_PHONE_KEY, JSON.stringify(preferences));
+	} catch {
+		// storage unavailable
+	}
+}

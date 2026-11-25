@@ -611,4 +611,46 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         await renderChart();
         assert.dom('[data-test-gantt-footer]').doesNotExist();
     });
+
+    module('phone options menu', function (hooks) {
+        hooks.afterEach(function () {
+            window.localStorage.removeItem('gantt-toolbar-phone');
+        });
+
+        const LABEL = '[data-test-gantt-bar-label]';
+        const openMenu = () => click('[data-test-gantt-options] .app-dropdown-btn');
+
+        test('phones hide dependency lines and bar labels by default', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderChart();
+            assert.dom('.gantt-dependency-layer').doesNotExist();
+            assert.dom(LABEL).doesNotExist();
+            await openMenu();
+            assert.dom('[data-select="gantt-options-dependencies"]').isNotChecked();
+            assert.dom('[data-select="gantt-options-labels"]').isNotChecked();
+            assert.dom('[data-select="gantt-options-weekends"]').isChecked();
+        });
+
+        test('each checkbox shows its layer and is remembered apart from desktop', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderChart();
+            await openMenu();
+            await click('[data-select="gantt-options-labels"]');
+            assert.dom(LABEL).exists();
+            await click('[data-select="gantt-options-dependencies"]');
+            assert.dom('.gantt-dependency-layer').exists();
+            await click('[data-select="gantt-options-weekends"]');
+            assert.dom('[data-test-gantt-grid-weekend]').doesNotExist();
+            const saved = JSON.parse(window.localStorage.getItem('gantt-toolbar-phone'));
+            assert.deepEqual(saved, { dependencies: true, labels: true, weekends: false });
+            assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).dependencies, undefined, 'desktop key untouched');
+        });
+
+        test('desktop is unaffected: labels show and there is no options menu', async function (assert) {
+            await renderChart();
+            assert.dom('[data-test-gantt-options]').doesNotExist();
+            assert.dom(LABEL).exists();
+            assert.dom('.gantt-dependency-layer').exists();
+        });
+    });
 });

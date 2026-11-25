@@ -428,7 +428,7 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get showLabel() {
-        return Boolean(this.displayLabel);
+        return this.args.showLabels !== false && Boolean(this.displayLabel);
     }
 
     /**
