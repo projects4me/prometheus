@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { render, click, settled, triggerEvent } from '@ember/test-helpers';
+import { render, click, settled, triggerEvent, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 import EmberObject from '@ember/object';
@@ -405,6 +405,79 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.gantt-timeline-row.task-row[data-issue-id="2"]').hasClass('selected');
         await click('[data-test-gantt-tab="list"]');
         assert.dom('[data-test-gantt-issue-list] [data-issue-id="2"]').hasClass('quick-list-item--active');
+    });
+
+    module('on phones: opening range and edge chips', function (nested) {
+        const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const around = (offset) => { const d = new Date(); d.setDate(d.getDate() + offset); return iso(d); };
+
+        nested.beforeEach(function () {
+            this.viewport.isPhone = true;
+            const issue = (id, number, from, to) => ({
+                id, issueNumber: number, subject: `Subject ${number}`, status: 'new', priority: 'high',
+                startDate: around(from), endDate: around(to), projectShortcode: 'APROM',
+                modifiedBy: { name: `Modifier ${number}` }
+            });
+            this.timelineStart = around(-120);
+            this.timelineEnd = around(120);
+            this.milestones = [{
+                id: 'm1', name: 'Alpha', startDate: around(-100), endDate: around(100),
+                issues: [issue('1', 1, 0, 1), issue('2', 2, -90, -85), issue('3', 3, 80, 85)]
+            }];
+            this.state.ids = new Set(['m1']);
+            // the desktop remembers Weeks; a phone must still open on Days
+            window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'weeks' }));
+        });
+
+        const settleFrames = async () => {
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            await settled();
+        };
+
+        test('opens on Days with today in view, and a scale change does not replace the desktop preference', async function (assert) {
+            await renderChart();
+            await settleFrames();
+            assert.dom('[data-test-gantt-scale-button="days"]').hasClass('btn-primary');
+            assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 80px/);
+            const container = document.querySelector('.gantt-timeline-container').getBoundingClientRect();
+            const line = document.querySelector('[data-test-gantt-today-line]').getBoundingClientRect();
+            assert.ok(line.left >= container.left, 'the today line is right of the visible left edge');
+            assert.ok(line.left <= container.right, 'the today line is left of the visible right edge');
+
+            await click('[data-test-gantt-scale-button="months"]');
+            assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).scale, 'weeks', 'the desktop scale is kept');
+        });
+
+        test('the toolbar shows the visible date range and updates it while scrolling', async function (assert) {
+            await renderChart();
+            await settleFrames();
+            const range = /^\d{1,2}( [A-Z][a-z]{2})? . \d{1,2} [A-Z][a-z]{2}$/;
+            assert.dom('[data-test-gantt-visible-range]').hasText(range);
+            const before = document.querySelector('[data-test-gantt-visible-range]').textContent.trim();
+            document.querySelector('.gantt-timeline-container').scrollLeft += 80 * 10;
+            await settleFrames();
+            const after = document.querySelector('[data-test-gantt-visible-range]').textContent.trim();
+            assert.notEqual(after, before, 'the range follows the scroll');
+            assert.ok(range.test(after));
+        });
+
+        test('a bar off screen gets an edge chip that scrolls to it and selects the issue', async function (assert) {
+            await renderChart();
+            await settleFrames();
+            assert.dom(`${barRow('1')} [data-test-gantt-edge-chip]`).doesNotExist('today\'s bar is in view');
+            assert.dom(`${barRow('2')} [data-test-gantt-edge-chip="left"]`).exists();
+            assert.dom(`${barRow('2')} [data-test-gantt-edge-chip="left"] .fa-angle-left`).exists();
+            assert.dom(`${barRow('3')} [data-test-gantt-edge-chip="right"] .fa-angle-right`).exists();
+
+            const container = document.querySelector('.gantt-timeline-container');
+            const before = container.scrollLeft;
+            await click(`${barRow('3')} [data-test-gantt-edge-chip="right"]`);
+            assert.strictEqual(this.selected.id, '3', 'the issue is selected');
+            await waitUntil(() => !document.querySelector(`${barRow('3')} [data-test-gantt-edge-chip]`), { timeout: 4000 }).catch(() => {});
+            await settled();
+            assert.ok(container.scrollLeft > before, 'scrolled towards the bar');
+            assert.dom(`${barRow('3')} [data-test-gantt-edge-chip]`).doesNotExist('the bar is in view, so no chip');
+        });
     });
 
     test('the layout follows the viewport live and keeps the selection', async function (assert) {

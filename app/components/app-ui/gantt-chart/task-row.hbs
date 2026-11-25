@@ -57,6 +57,14 @@
       @tooltipElement={{@tooltipElement}}
       @onTooltipIssue={{@onTooltipIssue}}
     />
+    {{#if this.edgeChip}}
+      <button type="button" class="gantt-edge-chip gantt-edge-chip-{{this.edgeChip}}" style={{this.edgeChipStyle}} data-test-gantt-edge-chip={{this.edgeChip}}
+        {{on "click" this.handleChipSelect}}>
+        {{#if (eq this.edgeChip "left")}}<i class="fa fa-angle-left" aria-hidden="true"></i>{{/if}}
+        {{this.edgeChipDate}}
+        {{#if (eq this.edgeChip "right")}}<i class="fa fa-angle-right" aria-hidden="true"></i>{{/if}}
+      </button>
+    {{/if}}
     {{else}}
       <span class="text-muted gantt-no-dates" data-test-gantt-no-dates>{{t "components.gantt.grid.noDates"}}</span>
     {{/if}}

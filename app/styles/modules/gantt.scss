@@ -903,3 +903,25 @@ $gantt-phone-grid-width: 124px;
     right: 1px;
   }
 }
+
+/* Phones: the visible date range on the toolbar's right, and the chips for bars off screen */
+.gantt-toolbar .gantt-visible-range {
+  margin-left: auto;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.gantt-timeline-row .gantt-edge-chip {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 18px;
+  white-space: nowrap;
+  color: #333;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+}
