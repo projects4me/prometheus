@@ -12,7 +12,7 @@ function hexOf(color) {
  * The column headers of the first milestone on the board.
  */
 function columnHeaders() {
-    return [...document.querySelector('div.milestone.box-body').querySelectorAll('.box-header[data-field-status]')];
+    return [...document.querySelector('.lane-header-strip').querySelectorAll('.box-header[data-field-status]')];
 }
 
 function columnHeader(name) {

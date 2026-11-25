@@ -538,7 +538,7 @@ export default class AppProjectBoardController extends ProjectRelated {
         Logger.debug('The element that was dragged is', issueEl);
         let _self = this;
         let laneMilestoneId = elTo.getAttribute('data-field-milestone-id');
-        let status = elTo.parentElement.children[0].getAttribute('data-field-status');
+        let status = elTo.getAttribute('data-field-status');
         let newStatusId = elTo.getAttribute('data-issue-status-id');
         let issueId = issueEl.getAttribute('data-field-issue-id');
         let issueMilestoneId = issueEl.getAttribute('data-field-issue-milestone');

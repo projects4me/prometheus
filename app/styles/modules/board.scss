@@ -108,6 +108,30 @@
     display: none;
   }
 
+  // Lane headers sit in a strip of their own above the board. The strip is natively sticky (its top is set to the
+  // navbar's height by the sticky-lane-headers modifier); the row inside follows the board's horizontal scroll.
+  .lane-header-strip {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    // Clip the row sideways only, so a collapsed lane's title can hang below the strip
+    overflow-x: clip;
+    background-color: $backgroundColor;
+
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  .lane-header-row {
+    display: flex;
+    will-change: transform;
+  }
+
+  .lane-head {
+    flex: 0 0 auto;
+  }
+
   @media (max-width: 767px) {
     .lane-status-bar {
       display: flex;
@@ -142,7 +166,7 @@
     }
   }
 
-  .lane {
+  .lane, .lane-head {
     height: inherit;
     width: 22rem;
     margin-right: 0.4rem;
@@ -166,7 +190,7 @@
 
     .milestone, .box-body {
       min-height: 45rem;
-      height: calc(100% - 4rem);
+      height: 100%;
       padding: 0rem;
       border: 0.25rem solid $backgroundColor;
     }
