@@ -3031,14 +3031,6 @@
             "title": "Agents, workflows, tools and skills",
             "tools": "Tools",
             "skills": "Skills"
-          },
-          "whoCanManage": {
-            "title": "Who Can Manage This",
-            "workspace": "edit the workspace details",
-            "members": "add and remove members",
-            "projects": "change the projects",
-            "agents": "manage the agents",
-            "other": "Everything else follows the project permissions as today"
           }
         },
         "detail": {
