@@ -1,9 +1,16 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import NotificationsStub from '../../../stub-services/notifications-stub';
 import CurrentUserStub from '../../../stub-services/current-user-stub';
+
+/**
+ * Current user stub with the id the recipient records below belong to
+ */
+class SignedInUserStub extends CurrentUserStub {
+	user = { id: '1', name: 'Rana Nouman' };
+}
 
 module(
 	'Integration | Component | app-ui/notifications/notification',
@@ -13,7 +20,7 @@ module(
 		hooks.beforeEach(function () {
 			this.owner.register('service:notifications', NotificationsStub);
 			this.notifications = this.owner.lookup('service:notifications');
-			this.owner.register('service:current-user', CurrentUserStub);
+			this.owner.register('service:current-user', SignedInUserStub);
 		});
 
 		test('it renders notification correctly', async function (assert) {
@@ -95,6 +102,41 @@ module(
 			assert
 				.dom('[data-notification]')
 				.hasClass('unread-notification', 'Unread class is applied');
+		});
+
+		test("it shows the current user's read state when there are several recipients", async function (assert) {
+			this.set('notificationItem', {
+				id: '3',
+				description: 'Shared notification',
+				context: { relatedTo: 'project', projectShortcode: 'TEST' },
+				recipientRecords: [
+					{ userId: '2', isRead: '1' },
+					{ userId: '1', isRead: '0' }
+				],
+				dateCreated: new Date(),
+				createdUser: 'user1'
+			});
+
+			await render(
+				hbs`<AppUi::Notifications::Notification @notification={{this.notificationItem}} />`
+			);
+
+			assert
+				.dom('[data-notification]')
+				.hasClass('unread-notification', "the current user's record is unread");
+
+			this.set('notificationItem', {
+				...this.notificationItem,
+				recipientRecords: [
+					{ userId: '2', isRead: '0' },
+					{ userId: '1', isRead: '1' }
+				]
+			});
+			await settled();
+
+			assert
+				.dom('[data-notification]')
+				.doesNotHaveClass('unread-notification', "another user's unread record does not count");
 		});
 
 		test('it generates the correct link for issue notifications', async function (assert) {
