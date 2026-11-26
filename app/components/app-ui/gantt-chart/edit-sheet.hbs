@@ -1,0 +1,72 @@
+<AppUi::Modal
+  @title="views.app.gantt.editSheet.title"
+  @titleParams={{hash number=@issue.issueNumber}}
+  @closeLabel="global.form.cancel"
+  @confirmLabel="views.app.gantt.editSheet.save"
+  @confirm={{this.save}}
+  @disableSaveBtn={{this.cannotSave}}
+  @leftLabel="views.app.gantt.editSheet.openIssue"
+  @leftAction={{this.openIssue}}
+  @onClose={{@onClose}}
+  @containerClass="gantt-edit-sheet"
+  data-test-gantt-edit-sheet
+>
+  <div class="gantt-edit-sheet-head">
+    <AppUi::StatusLabel @status={{@issue.status}} />
+    {{#if this.progress}}
+      <span class="text-muted" data-test-gantt-edit-progress>{{t "views.app.gantt.editSheet.done" percent=this.progress}}</span>
+    {{/if}}
+    <div class="gantt-edit-sheet-subject" data-test-gantt-edit-subject>{{@issue.subject}}</div>
+  </div>
+
+  {{#if this.error}}
+    <p class="text-red" data-test-gantt-edit-error>{{this.error}}</p>
+  {{/if}}
+
+  <div class="gantt-edit-sheet-dates">
+    <FormFields::FieldDate @value={{this.startDate}} @update={{this.setStart}} @label={{t "views.app.gantt.editSheet.start"}} @data-field="ganttEdit.startDate" />
+    <FormFields::FieldDate @value={{this.endDate}} @update={{this.setEnd}} @label={{t "views.app.gantt.editSheet.end"}} @data-field="ganttEdit.endDate" />
+  </div>
+  <div class="gantt-edit-sheet-shift">
+    {{#each this.shifts as |shift|}}
+      <button type="button" class="btn btn-default" data-test-gantt-edit-shift={{shift.days}} {{on "click" (fn this.shift shift.days)}}>{{t (concat "views.app.gantt.editSheet." shift.key)}}</button>
+    {{/each}}
+  </div>
+  <p class="text-muted" data-test-gantt-edit-duration>{{this.duration}}</p>
+
+  <div class="box box-default gantt-edit-sheet-depends">
+    <div class="box-header with-border">
+      <h3 class="box-title">{{t "views.app.gantt.editSheet.dependsOn"}}</h3>
+    </div>
+    <div class="box-body">
+      {{#each this.blockers key="link.id" as |row|}}
+        <div class="gantt-edit-sheet-link" data-test-gantt-edit-blocker={{row.issue.id}}>
+          <span><strong>{{call this.label row.issue}}</strong> {{row.issue.subject}}</span>
+          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.gantt.editSheet.removeDependency"}} data-test-gantt-edit-remove={{row.issue.id}} {{on "click" (fn this.remove row.link)}}><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+      {{else}}
+        <p class="text-muted" data-test-gantt-edit-no-blockers>{{t "views.app.gantt.editSheet.noBlockers"}}</p>
+      {{/each}}
+      <button type="button" class="btn btn-default" data-test-gantt-edit-add {{on "click" this.openLink}}>{{t "views.app.gantt.editSheet.addDependency"}}</button>
+    </div>
+  </div>
+
+  {{#if this.blocked.length}}
+    <div class="box box-default gantt-edit-sheet-blocks">
+      <div class="box-header with-border">
+        <h3 class="box-title">{{t "views.app.gantt.editSheet.blocks"}}</h3>
+      </div>
+      <div class="box-body">
+        {{#each this.blocked as |issue|}}
+          <div class="gantt-edit-sheet-link" data-test-gantt-edit-blocked={{issue.id}}>
+            <span><strong>{{call this.label issue}}</strong> {{issue.subject}}</span>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+</AppUi::Modal>
+
+{{#if this.showLink}}
+  <Issue::LinkIssueModal @issue={{@issue}} @relation="blockedBy" @onLinked={{this.linked}} @onClose={{this.closeLink}} />
+{{/if}}

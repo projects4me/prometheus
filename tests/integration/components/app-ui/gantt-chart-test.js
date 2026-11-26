@@ -329,6 +329,26 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom(GRID).exists();
     });
 
+    test('tapping a bar asks to edit the issue on phones, not on desktop', async function (assert) {
+        const edited = [];
+        this.onEditIssue = (i) => edited.push(i.id);
+        const tap = async () => {
+            await render(hbs`<AppUi::GanttChart
+                @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+                @timeTotals={{this.timeTotals}}
+                @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+                @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}} @onEditIssue={{this.onEditIssue}}
+                @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}}
+                @onCloseIssuePanel={{this.noop}} />`);
+            await click(`${barRow('1')} [data-test-gantt-bar]`);
+        };
+        await tap();
+        assert.deepEqual(edited, [], 'desktop: no sheet');
+        this.viewport.isPhone = true;
+        await tap();
+        assert.deepEqual(edited, ['1'], 'phone: the sheet opens for the tapped bar');
+    });
+
     test('phones get Timeline | List tabs under the search, opening on Timeline', async function (assert) {
         this.viewport.isPhone = true;
         await renderChart();

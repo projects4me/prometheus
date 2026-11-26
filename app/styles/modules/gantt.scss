@@ -1112,3 +1112,54 @@ $gantt-phone-grid-width: 124px;
   opacity: 0.8;
   z-index: 2;
 }
+
+// The phone edit sheet (AppUi::GanttChart::EditSheet): an AppUi::Modal pinned to the bottom of the screen.
+.gantt-edit-sheet {
+  .modal-dialog {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: 90vh;
+    margin: 0;
+    overflow-y: auto;
+  }
+
+  .modal-content {
+    border-radius: 0;
+  }
+
+  .gantt-edit-sheet-subject {
+    margin-top: 5px;
+    font-weight: 600;
+  }
+
+  .gantt-edit-sheet-dates {
+    display: flex;
+    gap: 10px;
+
+    .form-field {
+      flex: 1;
+    }
+  }
+
+  .gantt-edit-sheet-shift {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0 5px;
+
+    .btn {
+      flex: 1;
+      padding-right: 4px;
+      padding-left: 4px;
+    }
+  }
+
+  .gantt-edit-sheet-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+}
