@@ -88,11 +88,6 @@
       "count": 1
     }
   },
-  "app/components/app-ui/task-board.js": {
-    "no-undef": {
-      "count": 1
-    }
-  },
   "app/components/conversation-ui/comment-composer.js": {
     "no-undef": {
       "count": 1

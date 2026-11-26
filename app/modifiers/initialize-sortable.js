@@ -309,6 +309,18 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
+     * The key of the open milestone tab (its id, or `backlog`), set by the task board. The open tab
+     * isn't a drop target.
+     *
+     * @property activeMilestoneId
+     * @type String
+     * @public
+     */
+    get activeMilestoneId() {
+        return this.named.activeMilestoneId;
+    }
+
+    /**
      * This property is used to keep in track the old highlighted lane.
      *
      * @property oldLane
@@ -372,8 +384,6 @@ export default class InitializeSortable extends Modifier {
      */
     _install() {
         this._attachSortableToLanes();
-        this._setupMilestoneTabsAsSortable();
-        this._setupTabSwitching();
     }
 
     /**
@@ -392,7 +402,6 @@ export default class InitializeSortable extends Modifier {
         });
 
         _self._setupMilestoneTabsAsSortable();
-        _self._setupTabSwitching();
     }
 
     /**
@@ -453,9 +462,9 @@ export default class InitializeSortable extends Modifier {
             this.milestoneCount = milestoneCount;
             this._attachSortableToLanes();
         }
-        this._cleanupMilestoneTabSortables();
+        // Rebuilds the tab drop zones on every run, so a change of the open tab (activeMilestoneId)
+        // moves the drop zones with it.
         this._setupMilestoneTabsAsSortable();
-        this._setupTabSwitching();
     }
 
     /**
@@ -639,97 +648,50 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
-     * This function sets up milestone tabs as SortableJS instances so they can accept
-     * dropped issue cards from other lanes.
-     * 
+     * Whether a milestone tab is the open one: from the activeMilestoneId argument, else the
+     * tab's active class.
+     *
+     * @method _isActiveTab
+     * @param {HTMLElement} tab
+     * @return {Boolean}
+     * @private
+     */
+    _isActiveTab(tab) {
+        let activeId = this.activeMilestoneId;
+        if (activeId !== undefined && activeId !== null) {
+            return tab.getAttribute('data-milestone-id') === String(activeId);
+        }
+        return tab.classList.contains('active');
+    }
+
+    /**
+     * This function sets up the drop zones of the milestone tabs as SortableJS instances so they can
+     * accept dropped issue cards from other lanes. The open tab gets none: it isn't a drop target.
+     *
      * @method _setupMilestoneTabsAsSortable
      * @private
      */
     _setupMilestoneTabsAsSortable() {
         let _self = this;
-        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
-        
+        let milestoneTabs = _self.element.querySelectorAll('[data-milestone-tab]');
+
         milestoneTabs.forEach((tab) => {
             let dropZoneArea = tab.querySelector('.drop-zone-area');
+            if (!dropZoneArea) {
+                return;
+            }
             if (dropZoneArea.sortable) {
                 dropZoneArea.sortable.destroy();
                 dropZoneArea.sortable = null;
             }
-            
-            if (!tab.classList.contains('active')) {
-                dropZoneArea.sortable = new Sortable(tab, {
+
+            if (!_self._isActiveTab(tab)) {
+                dropZoneArea.sortable = new Sortable(dropZoneArea, {
                     group: _self.groupName,
                     scroll: _self.scroll,
                     scrollSensitivity: _self.scrollSensitivity,
                     scrollSpeed: _self.scrollSpeed,
                     sort: false, // Don't allow sorting within tabs
-                    forceFallback: _self.forceFallback,
-                    disabled: !!_self.disableSortable,
-                    fallbackTolerance: FALLBACK_TOLERANCE,
-                    delay: TOUCH_DRAG_DELAY,
-                    delayOnTouchOnly: true,
-                    touchStartThreshold: FALLBACK_TOLERANCE,
-                    animation: _self.animationSpeed,
-                    dragClass: _self.dragClass,
-                    chosenClass: _self.chosenClass,
-                    filter: '.not-draggable'
-                });
-            }
-        });
-    }
-
-    /**
-     * This function sets up event listeners for tab switching to update sortable instances
-     * when the active tab changes.
-     * 
-     * @method _setupTabSwitching
-     * @private
-     */
-    _setupTabSwitching() {
-        let _self = this;
-        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
-        
-        milestoneTabs.forEach((tab) => {
-            let tabLink = tab.querySelector('a');
-            if (tabLink) {
-                tabLink.addEventListener('click', () => {
-                    // Small delay to allow tab switching to complete
-                    setTimeout(() => {
-                        _self._updateSortableInstances();
-                    }, 100);
-                });
-            }
-        });
-    }
-
-    /**
-     * This function updates sortable instances when tab switching occurs.
-     * It removes sortable from the newly active tab and adds it to the previously active tab.
-     * 
-     * @method _updateSortableInstances
-     * @private
-     */
-    _updateSortableInstances() {
-        let _self = this;
-        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
-        
-        milestoneTabs.forEach((tab) => {
-            let isActive = tab.classList.contains('active');
-            let dropZoneArea = tab.querySelector('.drop-zone-area');
-            let hasSortable = dropZoneArea.sortable;
-            
-            if (hasSortable) {
-                dropZoneArea.sortable.destroy();
-                dropZoneArea.sortable = null;
-            }
-            if (!isActive) {
-                tab = dropZoneArea;
-                dropZoneArea.sortable = new Sortable(tab, {
-                    group: _self.groupName,
-                    scroll: _self.scroll,
-                    scrollSensitivity: _self.scrollSensitivity,
-                    scrollSpeed: _self.scrollSpeed,
-                    sort: false,
                     forceFallback: _self.forceFallback,
                     disabled: !!_self.disableSortable,
                     fallbackTolerance: FALLBACK_TOLERANCE,

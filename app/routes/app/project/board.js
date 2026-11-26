@@ -31,6 +31,10 @@ export default class BoardRoute extends App {
         },
         searchId: {
             refreshModel: false
+        },
+        milestone: {
+            refreshModel: false,
+            replace: true
         }
     };
 
@@ -259,6 +263,7 @@ export default class BoardRoute extends App {
         controller.set('milestones', model.milestones);
         controller.set('issueStatuses', model.issueStatuses);
         controller.set('blockers', model.blockers);
+        controller.syncActiveMilestone();
         controller.set('querySchema', this.searchData?.schema ?? null);
         controller.set('savedsearches', this.searchData?.savedsearches ?? []);
         if (!controller.newSavedsearch) {
@@ -284,6 +289,7 @@ export default class BoardRoute extends App {
             controller.unregisterIssuePreview();
             controller.query = null;
             controller.searchId = null;
+            controller.milestone = null;
             controller.projectData = null;
             controller.isLoadingIssueDetails = false;
             controller.selectedIssue = null;

@@ -112,13 +112,36 @@ module('Unit | Modifier | initialize-sortable', function () {
         let fake = {
             element: board,
             getSortableOptions: () => ({}),
-            _setupMilestoneTabsAsSortable: () => {},
-            _setupTabSwitching: () => {}
+            _setupMilestoneTabsAsSortable: () => {}
         };
         InitializeSortable.prototype._attachSortableToLanes.call(fake);
         let body = board.querySelector('.lane.box-body');
         assert.ok(Sortable.get(body), 'the hidden card area has its Sortable');
         Sortable.get(body).destroy();
+        board.remove();
+    });
+
+    test('every milestone tab but the open one is a drop target, and the drop zones follow the open tab', function (assert) {
+        let board = document.createElement('div');
+        board.innerHTML = ['backlog', '5', '6'].map((id) =>
+            `<li data-milestone-tab data-milestone-id="${id}"><a></a><div class="drop-zone-area"></div></li>`).join('');
+        document.body.appendChild(board);
+        let fake = { element: board, named: { activeMilestoneId: '5' } };
+        Object.defineProperty(fake, 'activeMilestoneId', { get: () => read('activeMilestoneId', fake) });
+        fake._isActiveTab = InitializeSortable.prototype._isActiveTab;
+        let zone = (id) => board.querySelector(`[data-milestone-id="${id}"] .drop-zone-area`);
+
+        InitializeSortable.prototype._setupMilestoneTabsAsSortable.call(fake);
+        assert.notOk(zone('5').sortable, 'the open tab is not a drop target');
+        assert.ok(zone('backlog').sortable, 'the backlog tab is a drop target');
+        assert.ok(zone('6').sortable, 'the other milestone tab is one');
+
+        fake.named = { activeMilestoneId: 'backlog' };
+        InitializeSortable.prototype._setupMilestoneTabsAsSortable.call(fake);
+        assert.notOk(zone('backlog').sortable, 'the newly open tab stops being a drop target');
+        assert.ok(zone('5').sortable, 'the previously open tab becomes one');
+
+        ['backlog', '5', '6'].forEach((id) => zone(id).sortable?.destroy());
         board.remove();
     });
 });
