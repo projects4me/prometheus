@@ -69,4 +69,18 @@ module('Integration | Component | form-fields/field-checkbox labelled', function
         assert.dom('input').hasAttribute('data-test-x', 'y');
         assert.dom('input').isDisabled();
     });
+
+    test('the crimson root class does not need a .form-field parent', async function (assert) {
+        await render(hbs`<FormFields::FieldCheckbox @label="Mine" />`);
+
+        assert.dom('.form-field').doesNotExist();
+        assert.dom('div.checkbox.checkbox-primary.form-checkbox').exists();
+        assert.dom('.form-checkbox-sm').doesNotExist();
+    });
+
+    test('@size="sm" adds the small class', async function (assert) {
+        await render(hbs`<FormFields::FieldCheckbox @label="Mine" @size="sm" />`);
+
+        assert.dom('div.form-checkbox.form-checkbox-sm').exists();
+    });
 });

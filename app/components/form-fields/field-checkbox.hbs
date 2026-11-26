@@ -1,6 +1,6 @@
 <AccessControl @aclContext={{@aclContext}}>
   {{#if @label}}
-    <div class="checkbox checkbox-primary">
+    <div class="checkbox checkbox-primary form-checkbox {{if this.isSmall "form-checkbox-sm"}}">
       <input
         type="checkbox"
         id={{this.inputId}}
