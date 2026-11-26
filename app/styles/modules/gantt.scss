@@ -858,6 +858,44 @@ $gantt-phone-grid-width: 124px;
   display: none !important;
 }
 
+/* Phones: the selected issue's link summary and actions, fixed at the bottom of the panel */
+.gantt-selection-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  padding: 8px 10px;
+  background: #fff;
+  border-top: 1px solid #d2d6de;
+
+  .gantt-selection-bar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .gantt-selection-bar-subject {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gantt-selection-bar-summary {
+    font-size: 12px;
+    margin: 2px 0 8px;
+  }
+
+  .gantt-selection-bar-actions {
+    display: flex;
+    gap: 6px;
+
+    .btn {
+      flex: 1;
+    }
+  }
+}
+
 .gantt-swipe-hint {
   padding: 4px 10px;
   font-size: 12px;

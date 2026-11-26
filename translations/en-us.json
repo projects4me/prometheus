@@ -369,6 +369,13 @@
       "ghost": {
         "heading": "Other projects in this workspace"
       },
+      "selection": {
+        "conflict": "{count, plural, one {# conflict} other {# conflicts}}",
+        "summary": "Blocked by {blockedBy} · Blocks {blocks} · Relates {relates}",
+        "edit": "Edit dates",
+        "link": "Link",
+        "details": "Details"
+      },
       "conflict": {
         "blocker": "Starts before {blocker} ends{others, plural, =0 {} one { and # more} other { and # more}}"
       },

@@ -1155,7 +1155,7 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Action to handle a bar click: selects the issue (on phones it also opens the edit sheet through `@onEditIssue`); the list scrolls to and marks it through `@activeId`
+	 * Action to handle a bar click: selects the issue (on phones the selection bar then offers the edit sheet); the list scrolls to and marks it through `@activeId`
 	 *
 	 * @method handleIssueClick
 	 * @param {Object} issue The issue that was clicked
@@ -1164,9 +1164,80 @@ export default class GanttChartComponent extends AppComponent {
 	@action
 	handleIssueClick(issue) {
 		this.args.onIssueClick?.(issue);
-		if (this.viewport.isPhone) {
-			this.args.onEditIssue?.(issue);
+	}
+
+	/**
+	 * Whether the phone selection bar shows: a phone with an issue selected
+	 *
+	 * @property showSelectionBar
+	 * @type Boolean
+	 * @public
+	 */
+	get showSelectionBar() {
+		return this.viewport.isPhone && Boolean(this.args.selectedIssue);
+	}
+
+	/**
+	 * Selection bar: opens the edit sheet for the selected issue
+	 *
+	 * @method editSelected
+	 * @public
+	 */
+	@action
+	editSelected() {
+		this.args.onEditIssue?.(this.args.selectedIssue);
+	}
+
+	/**
+	 * Selection bar: opens Link issue for the selected issue
+	 *
+	 * @method linkSelected
+	 * @public
+	 */
+	@action
+	linkSelected() {
+		this.args.onLinkIssue?.(this.args.selectedIssue);
+	}
+
+	/**
+	 * Selection bar: opens the quick view of the selected issue
+	 *
+	 * @method detailsSelected
+	 * @public
+	 */
+	@action
+	detailsSelected() {
+		this.handleOpenIssuePanel(this.args.selectedIssue);
+	}
+
+	/**
+	 * Clears the selection (the bar's close button)
+	 *
+	 * @method deselect
+	 * @public
+	 */
+	@action
+	deselect() {
+		this.args.onIssueClick?.(null);
+	}
+
+	/**
+	 * A tap on empty space of the timeline or the grid clears the selection on phones; taps on bars and rows
+	 * (buttons, links) keep it
+	 *
+	 * @method handleEmptyTap
+	 * @param {Event} event
+	 * @public
+	 */
+	@action
+	handleEmptyTap(event) {
+		if (!this.viewport.isPhone || !this.args.selectedIssue) {
+			return;
 		}
+		if (event.target.closest?.('[data-test-gantt-bar], button, a, .gantt-grid-row, .gantt-bar')) {
+			return;
+		}
+		this.deselect();
 	}
 
 	/**
@@ -1465,6 +1536,7 @@ export default class GanttChartComponent extends AppComponent {
 	@action registerTimelineContainer(element) {
 		this.timelineContainerElement = element;
 		element.addEventListener('scroll', this.handleTimelineScroll, { passive: true });
+		element.addEventListener('click', this.handleEmptyTap);
 		// the container has its size after layout; phones then open with today in view
 		requestAnimationFrame(() => {
 			if (this.isDestroying || this.isDestroyed || this.timelineContainerElement !== element) {
@@ -1485,6 +1557,7 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action unregisterTimelineContainer() {
 		this.timelineContainerElement?.removeEventListener('scroll', this.handleTimelineScroll);
+		this.timelineContainerElement?.removeEventListener('click', this.handleEmptyTap);
 		if (this.visibleFrameId !== null) {
 			cancelAnimationFrame(this.visibleFrameId);
 			this.visibleFrameId = null;
