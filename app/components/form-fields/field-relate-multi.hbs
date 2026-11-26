@@ -4,20 +4,25 @@
       <AppUi::Select
         @renderInPlace={{@renderInPlace}}
         @multiple={{true}}
-        @options={{@options}}
+        @options={{this.options}}
         @placeholder={{@placeholder}}
         @selected={{@selected}}
         @searchField={{@searchField}}
         @searchEnabled={{@searchEnabled}}
-        @search={{@search}}
-        @onChange={{@onchange}}
+        @search={{this.search}}
+        @onChange={{this.handleChange}}
+        @onInput={{this.handleInput}}
         @onKeydown={{this.handleSelectKeydown}}
-        @matcher={{@matcher}}
+        @matcher={{this.matcher}}
         @closeOnSelect={{@closeOnSelect}}
         @onFocus={{this.enableValidation}}
         @onBlur={{this.validate}}
         @onClose={{this.validate}} as |data|>
-        {{component (concat 'related-fields/'@relateType) data=data}}
+        {{#if data.__create}}
+          <span class="field-relate-multi-add" data-field-relate-multi-add>{{t "global.form.addText" text=data.text}}</span>
+        {{else}}
+          {{component (concat 'related-fields/'@relateType) data=data}}
+        {{/if}}
       </AppUi::Select>
     </div>
     <span class="highlight"></span>

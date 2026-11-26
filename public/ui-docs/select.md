@@ -49,6 +49,7 @@ Callers pass nothing for this: the FormFields relate and multi-select fields and
 | `@onFocus` | `(select, event)` |
 | `@onBlur` | `(select, event)` |
 | `@onKeydown` | `(select, event)`; return `false` to stop the default handling |
+| `@onInput` | `(text, select, event)`; the search box text changed |
 
 ## Do and Avoid
 

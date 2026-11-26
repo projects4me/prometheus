@@ -75,6 +75,7 @@
       "close": "Close",
       "delete": "Delete",
       "remove": "Remove",
+      "addText": "Add “{text}”",
       "search": "Search",
       "export": "Export",
       "searchPlaceholder": "Search ...",
