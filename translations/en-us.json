@@ -1955,7 +1955,7 @@
         "spent": "Spent",
         "estimated": "Estimated",
         "savedSearches": "Saved Searches",
-        "searchExcludedMilestone": "Use the milestone tabs.",
+        "searchExcluded": "Not available on the board. Use the milestone tabs to pick a milestone.",
         "infoTags": {
           "blocked": "Blocked",
           "reopened": "Reopened",

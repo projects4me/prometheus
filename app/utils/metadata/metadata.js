@@ -500,8 +500,8 @@ export default class MetadataMetadata extends EmberObject {
         TaskBoard: {
             search: {
                 extends: 'Issue',
-                exclude: ['issuemilestone.name'],
-                excludeReason: 'views.app.board.searchExcludedMilestone'
+                exclude: ['issuemilestone.name', 'tag.tag'],
+                excludeReason: 'views.app.board.searchExcluded'
             }
         },
         Idea: {

@@ -114,7 +114,7 @@ module('Unit | Service | query-schema', function (hooks) {
         }
     });
 
-    test('TaskBoard extends Issue without the milestone field', async function (assert) {
+    test('TaskBoard extends Issue without the milestone and tag fields', async function (assert) {
         let schema = await this.service.load('TaskBoard', { projectId: this.project.id });
         let issue = await this.service.load('Issue', { projectId: this.project.id });
         let field = schema.resolveField('milestone');
@@ -123,11 +123,15 @@ module('Unit | Service | query-schema', function (hooks) {
         assert.strictEqual(schema.textField, 'Issue.subject');
         assert.deepEqual(
             schema.fields.map((f) => f.id),
-            issue.fields.map((f) => f.id).filter((id) => id !== 'issuemilestone.name'),
-            'the milestone is not a field'
+            issue.fields.map((f) => f.id).filter((id) => id !== 'issuemilestone.name' && id !== 'tag.tag'),
+            'the milestone and tag are not fields'
         );
         assert.true(field.excluded, 'the milestone still resolves, as excluded');
-        assert.strictEqual(field.reason, 'Use the milestone tabs.');
+        assert.strictEqual(field.reason, 'Not available on the board. Use the milestone tabs to pick a milestone.');
+        let tag = schema.resolveField('tag');
+
+        assert.true(tag.excluded, 'the tag still resolves, as excluded');
+        assert.strictEqual(tag.reason, field.reason);
         assert.strictEqual(schema.resolveField('status').id, 'Issue.status', 'the other fields are kept');
     });
 
