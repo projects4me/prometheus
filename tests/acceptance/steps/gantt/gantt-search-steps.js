@@ -47,6 +47,11 @@ export const given = function () {
 export const when = function () {
     return [
         {
+            'User collapses the first gantt milestone': () => async function () {
+                await click('[data-test-gantt-grid] [data-test-gantt-milestone-toggle]');
+            }
+        },
+        {
             'User types "$text" in the gantt search bar and presses Enter': (assert) => async function (text) {
                 await type(text);
                 await enter();

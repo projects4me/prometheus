@@ -373,7 +373,6 @@ export default class GanttRoute extends App {
 		controller.set('savedsearches', this.searchData?.savedsearches ?? []);
 		controller.set('selectedIssue', null);
 		controller.set('isIssuePanelOpen', false);
-		controller.autoExpandFirstMilestone();
 		controller.registerHermesIntents(this.trackedProject.getProjectId());
 		controller.registerIssuePreview();
 		controller.showIssueFromUrl(controller.urlState.values.issue);
@@ -385,9 +384,10 @@ export default class GanttRoute extends App {
 	 * @method resetController
 	 * @param {Prometheus.Controllers.Gantt} controller The controller object for this route
 	 * @param {boolean} isExiting Whether the route is exiting
+	 * @param {Transition} transition The transition that leaves the route
 	 * @private
 	 */
-	resetController(controller, isExiting) {
+	resetController(controller, isExiting, transition) {
 		if (isExiting) {
 			controller.unregisterHermesIntents();
 			controller.unregisterIssuePreview();
@@ -395,6 +395,10 @@ export default class GanttRoute extends App {
 			controller.searchId = null;
 			this.searchData = null;
 			controller.selectedIssue = null;
+			// a search refreshes the model through the gantt_loading substate, which also exits the route: keep the collapses then
+			if (!transition?.targetName?.startsWith(this.routeName)) {
+				controller.collapsedMilestones = new Set();
+			}
 			controller.scrollRequest = null;
 			UrlState.resetController(controller);
 			this.query = null;

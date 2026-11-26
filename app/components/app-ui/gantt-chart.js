@@ -1550,8 +1550,8 @@ export default class GanttChartComponent extends AppComponent {
 		if (this.args.isMilestoneExpanded) {
 			return this.args.isMilestoneExpanded(milestoneId);
 		}
-		// Default to collapsed if backlog, expanded otherwise
-		return milestoneId !== null && milestoneId !== 'backlog';
+		// Every milestone starts expanded
+		return true;
 	}
 
 	/**
