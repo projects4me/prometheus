@@ -3510,6 +3510,8 @@
         },
         "gantt": {
           "label": "Gantt Cal",
+          "loadError": "The milestones could not be loaded.",
+          "lanesFailed": "Some milestones could not be loaded.",
           "issue": {
             "updating": "Updating issue #{issueNumber} dates...",
             "updated": "Issue #{issueNumber} dates updated to {startDate} - {endDate}",
