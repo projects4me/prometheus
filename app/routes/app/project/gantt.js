@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import UrlState from 'prometheus/utils/state/url-state';
 import App from 'prometheus/routes/app';
 import { hash, hashSettled } from 'rsvp';
 import { service } from '@ember/service';
@@ -47,6 +48,9 @@ export default class GanttRoute extends App {
 			refreshModel: true
 		},
 		searchId: {
+			refreshModel: false
+		},
+		issue: {
 			refreshModel: false
 		}
 	};
@@ -349,6 +353,7 @@ export default class GanttRoute extends App {
 		controller.autoExpandFirstMilestone();
 		controller.registerHermesIntents(this.trackedProject.getProjectId());
 		controller.registerIssuePreview();
+		controller.showIssueFromUrl(controller.urlState.values.issue);
 	}
 
 	/**
@@ -367,6 +372,8 @@ export default class GanttRoute extends App {
 			controller.searchId = null;
 			this.searchData = null;
 			controller.selectedIssue = null;
+			controller.scrollRequest = null;
+			UrlState.resetController(controller);
 			this.query = null;
 		}
 	}

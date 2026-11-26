@@ -12,6 +12,7 @@ import { refreshView } from 'prometheus/utils/live/reload';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 import { sumTimelogs } from 'prometheus/utils/gantt-progress';
+import UrlState from 'prometheus/utils/state/url-state';
 
 /**
  * Gantt chart controller, including Hermes live handlers for dates,
@@ -180,7 +181,82 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @type Array
 	 * @for AppProjectGanttController
 	 */
-	queryParams = ['query', 'searchId'];
+	queryParams = ['query', 'searchId', 'issue'];
+
+	/**
+	 * The number of the issue whose quick view is open, 0 for none. Kept in the URL so a refresh reopens it.
+	 *
+	 * @property issue
+	 * @type Number
+	 * @for AppProjectGanttController
+	 */
+	@tracked issue = 0;
+
+	/**
+	 * The typed URL state of the open quick view.
+	 *
+	 * @property urlState
+	 * @type UrlState
+	 * @for AppProjectGanttController
+	 */
+	urlState = new UrlState(this, {
+		schema: { issue: { default: 0, type: 'number' } },
+		routeName: 'app.project.gantt'
+	});
+
+	constructor() {
+		super(...arguments);
+		this.urlState.onChange((values) => this.showIssueFromUrl(values.issue));
+	}
+
+	/**
+	 * Finds a loaded issue by its number.
+	 *
+	 * @method findIssueByNumber
+	 * @param {Number} number The issue number
+	 * @returns {Prometheus.Models.Issue|null}
+	 * @private
+	 */
+	findIssueByNumber(number) {
+		for (let milestone of this.milestones || []) {
+			let issue = milestone.issues?.find((item) => Number(item.issueNumber) === number);
+			if (issue) {
+				return issue;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Opens (or closes, for 0) the quick view for the number in the URL, without writing the URL again.
+	 * A number that is not on the chart is dropped from the URL.
+	 *
+	 * @method showIssueFromUrl
+	 * @param {Number} number The issue number, 0 for none
+	 * @public
+	 */
+	showIssueFromUrl(number) {
+		if (!number) {
+			this.closeIssuePanel(false);
+			return;
+		}
+		let issue = this.findIssueByNumber(number);
+		if (issue) {
+			this.openIssuePanel(issue, false);
+			this.scrollRequest = issue;
+		} else if (this.milestones?.length) {
+			this.urlState.set({ issue: 0 });
+		}
+	}
+
+	/**
+	 * The issue the chart should scroll into view, set when the URL opened it.
+	 *
+	 * @property scrollRequest
+	 * @type Prometheus.Models.Issue
+	 * @for AppProjectGanttController
+	 */
+	@tracked scrollRequest = null;
 
 	/**
 	 * This is the query that is used to filter the issues.
@@ -581,9 +657,12 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @param {Prometheus.Models.Issue} issue The issue to display in the panel
 	 * @public
 	 */
-	@action openIssuePanel(issue) {
+	@action openIssuePanel(issue, writeUrl = true) {
 		Logger.debug('AppProjectGanttController::openIssuePanel');
 		if (issue) {
+			if (writeUrl !== false) {
+				this.urlState.set({ issue: Number(issue.issueNumber) || 0 });
+			}
 			this.panelIssue = issue;
 			this.isIssuePanelOpen = true;
 			this.selectedIssue = issue;
@@ -597,10 +676,14 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @method closeIssuePanel
 	 * @public
 	 */
-	@action closeIssuePanel() {
+	@action closeIssuePanel(writeUrl = true) {
 		Logger.debug('AppProjectGanttController::closeIssuePanel');
+		if (writeUrl !== false) {
+			this.urlState.set({ issue: 0 });
+		}
 		this.isIssuePanelOpen = false;
 		this.panelIssue = null;
+		this.scrollRequest = null;
 		Logger.debug('-AppProjectGanttController::closeIssuePanel');
 	}
 
