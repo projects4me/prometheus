@@ -9,6 +9,12 @@ export const given = function () {
                 setModel(table[0], model);
                 assert.ok(true, `${modelName} has following details`);
             }
+        },
+        {
+            "The project has the tag \"$name\"": (assert, ctx) => async function (name) {
+                server.create('tag', { tag: name, projectId: ctx.get('currentProject').id });
+                assert.ok(true, `The project has the tag ${name}`);
+            }
         }
     ];
 }

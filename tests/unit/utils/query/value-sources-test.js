@@ -33,7 +33,7 @@ module('Unit | Utility | query/value-sources', function (hooks) {
     });
 
     test('the registry names the sources and nothing else', function (assert) {
-        assert.deepEqual(Object.keys(VALUE_SOURCES).sort(), ['issueStatuses', 'issueTypes', 'members', 'milestones', 'translation', 'users']);
+        assert.deepEqual(Object.keys(VALUE_SOURCES).sort(), ['issueStatuses', 'issueTypes', 'members', 'milestones', 'tags', 'translation', 'users']);
         assert.strictEqual(valueSource('members'), VALUE_SOURCES.members);
         assert.strictEqual(valueSource('nope'), null);
         assert.strictEqual(valueSource('toString'), null, 'inherited names are not sources');
@@ -55,6 +55,17 @@ module('Unit | Utility | query/value-sources', function (hooks) {
     test('milestones lists the project milestones', async function (assert) {
         assert.deepEqual((await VALUE_SOURCES.milestones({}, this.context())).map((v) => v.value), ['Sprint 1']);
         assert.deepEqual(await VALUE_SOURCES.milestones({}, this.context(null)), []);
+    });
+
+    test('tags lists the project tags sorted by name', async function (assert) {
+        this.server.create('tag', { tag: 'zeta', projectId: this.project.id });
+        this.server.create('tag', { tag: 'alpha', projectId: this.project.id });
+
+        let tags = await VALUE_SOURCES.tags({}, this.context());
+
+        assert.deepEqual(tags.map((t) => t.value), ['alpha', 'zeta']);
+        assert.ok(tags.every((t) => t.value === t.label));
+        assert.deepEqual(await VALUE_SOURCES.tags({}, this.context(null)), [], 'no project, no tags');
     });
 
     test('issueTypes lists the project issue types', async function (assert) {

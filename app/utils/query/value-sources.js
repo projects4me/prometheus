@@ -144,6 +144,24 @@ export const VALUE_SOURCES = Object.freeze({
     },
 
     /**
+     * The tags of the project, sorted by name.
+     */
+    async tags(params, context) {
+        if (context.projectId === null || context.projectId === undefined) {
+            return [];
+        }
+
+        let tags = await context.store.query('tag', {
+            query: `(Tag.projectId : ${context.projectId})`,
+            sort: 'Tag.tag',
+            order: 'ASC',
+            limit: -1,
+        });
+
+        return tags.slice().map((tag) => ({ value: tag.tag, label: tag.tag }));
+    },
+
+    /**
      * The members of the project, with their avatars. Takes the user options `value: 'id'` and
      * `currentUserFirst: true`.
      */

@@ -467,6 +467,12 @@ export default class MetadataMetadata extends EmberObject {
                         aliases: ['priority', 'prio'],
                         values: { source: 'translation', key: 'views.app.issue.lists.priority' }
                     },
+                    'tag.tag': {
+                        label: 'views.app.issue.fields.tag',
+                        type: 'enum',
+                        aliases: ['tag'],
+                        values: { source: 'tags' }
+                    },
                     'Issue.startDate': { label: 'views.app.issue.fields.startDate', type: 'date', aliases: ['start'] },
                     'Issue.endDate': { label: 'views.app.issue.fields.endDate', type: 'date', aliases: ['end'] },
                     'parentissue.issueNumber': { label: 'views.app.issue.fields.parent', type: 'number', aliases: ['parent'] },
@@ -543,6 +549,12 @@ export default class MetadataMetadata extends EmberObject {
                         type: 'user',
                         aliases: ['creator', 'author'],
                         values: { source: 'members' }
+                    },
+                    'tag.tag': {
+                        label: 'views.app.conversation.fields.tag',
+                        type: 'enum',
+                        aliases: ['tag'],
+                        values: { source: 'tags' }
                     },
                     'votes.createdUser': {
                         label: 'views.app.conversation.fields.likedBy',
