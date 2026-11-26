@@ -60,9 +60,9 @@ export const when = function () {
             }
         },
         {
-            'User removes the first applied filter of the gantt search': (assert) => async function () {
+            'User clears the gantt search': (assert) => async function () {
                 let before = currentURL();
-                await click(`${BAR} [data-ez-chip]`);
+                await click(`${BAR} [data-ez-search-clear]`);
                 await waitUntil(() => currentURL() !== before, { timeout: 3000 });
                 await settled();
             }

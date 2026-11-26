@@ -31,6 +31,7 @@
     <:search>
       {{#if this.querySchema}}
         <SavedSearch::CompactBar
+          @linear={{true}}
           @schema={{this.querySchema}}
           @query={{this.query}}
           @savedSearches={{this.savedsearches}}

@@ -30,11 +30,11 @@ Feature: Gantt | search the task list with ezSearch
     Then The gantt issues were requested with "Issue.subject" and the milestone and project
     And The gantt url keeps the search
 
-  Scenario: Removing a chip runs the search again
+  Scenario: Clearing the search runs it again
 
     When User navigates to app/project/project_1/gantt
     And User types "subject ~ task" in the gantt search bar and presses Enter
-    And User removes the first applied filter of the gantt search
+    And User clears the gantt search
     Then The last gantt issue request has no search
 
   Scenario: Applying a saved search shows its name

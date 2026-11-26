@@ -111,10 +111,11 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom(barRow('1')).exists();
     });
 
-    test('is one panel with the search on top, the grid beside the timeline in one scroll container', async function (assert) {
+    test('is one panel with the search in the toolbar row, the grid beside the timeline in one scroll container', async function (assert) {
         await renderChart();
         assert.dom('.gantt-chart.box.box-primary').exists({ count: 1 });
-        assert.dom('.gantt-chart > .gantt-search [data-test-search]').exists();
+        assert.dom('.gantt-chart > .gantt-toolbar > .gantt-search [data-test-search]').exists('the search is in the one toolbar row');
+        assert.dom('.gantt-chart > .gantt-search').doesNotExist('no separate search band on desktop');
         assert.dom('[data-test-gantt-issue-list]').doesNotExist('the issue list is the phone List tab only');
         assert.dom(`.gantt-timeline-container ${GRID}`).exists({ count: 1 });
         assert.dom('[data-test-gantt-grid-header]').hasText(/Milestone \/ Issue\s+Who\s+Start\s+End/);

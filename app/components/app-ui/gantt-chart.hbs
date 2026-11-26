@@ -1,5 +1,5 @@
 <div class="gantt-chart box box-primary" style={{this.rootStyle}}>
-  {{#if (has-block "search")}}
+  {{#if (and (has-block "search") this.viewport.isPhone)}}
     <div class="gantt-search" data-gantt-search>
       {{yield to="search"}}
     </div>
@@ -28,39 +28,51 @@
   {{/if}}
   {{#if (or (not this.viewport.isPhone) (eq this.phoneTab "timeline"))}}
     <div class="gantt-toolbar" data-test-gantt-toolbar>
-      <div class="btn-group btn-group-sm" data-test-gantt-scale>
-        {{#each this.scales as |scale|}}
-          <button type="button" class="btn {{if (eq this.timeScale scale) 'btn-primary' 'btn-default'}}" data-test-gantt-scale-button={{scale}} {{on "click" (fn this.setTimeScale scale)}}>{{t (concat "components.gantt.scale." scale)}}</button>
-        {{/each}}
-      </div>
-      <button type="button" class="btn btn-default btn-sm gantt-today-button" data-test-gantt-today {{on "click" this.scrollToToday}}>{{t "components.gantt.toolbar.today"}}</button>
-      {{#if this.viewport.isPhone}}
-        <span class="gantt-visible-range text-muted" data-test-gantt-visible-range>{{this.visibleRangeLabel}}</span>
+      {{#if (and (has-block "search") (not this.viewport.isPhone))}}
+        <div class="gantt-search" data-gantt-search>
+          {{yield to="search"}}
+        </div>
       {{/if}}
+      <div class="gantt-toolbar-group gantt-scale-group">
+        <div class="btn-group btn-group-sm" data-test-gantt-scale>
+          {{#each this.scales as |scale|}}
+            <button type="button" class="btn {{if (eq this.timeScale scale) 'btn-primary' 'btn-default'}}" data-test-gantt-scale-button={{scale}} {{on "click" (fn this.setTimeScale scale)}}>{{t (concat "components.gantt.scale." scale)}}</button>
+          {{/each}}
+        </div>
+        <button type="button" class="btn btn-default btn-sm gantt-today-button" data-test-gantt-today {{on "click" this.scrollToToday}}>{{t "components.gantt.toolbar.today"}}</button>
+        {{#if this.viewport.isPhone}}
+          <span class="gantt-visible-range text-muted" data-test-gantt-visible-range>{{this.visibleRangeLabel}}</span>
+        {{/if}}
+      </div>
       {{#unless this.viewport.isPhone}}
-        <AppUi::Dropdown @title={{t "components.gantt.links.label"}} class="gantt-links-filter" data-test-gantt-links>
-          <:button><span data-test-gantt-links-label>{{t "components.gantt.links.label"}}: {{this.linksSummary}}</span></:button>
-          <:content>
-            <div class="gantt-links-menu">
-              {{#each this.linkTypeOptions as |type|}}
-                <FormFields::FieldCheckbox @label={{t (concat "components.gantt.links." type)}} @checked={{includes type this.linkTypes}} @select={{fn this.toggleLinkType type}} @data-select={{concat "gantt-links-" type}} />
-              {{/each}}
-            </div>
-          </:content>
-        </AppUi::Dropdown>
-        <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-other-projects" />
-        <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
+        <div class="gantt-toolbar-group">
+          <AppUi::Dropdown @title={{t "components.gantt.links.label"}} class="gantt-links-filter" data-test-gantt-links>
+            <:button><span data-test-gantt-links-label>{{t "components.gantt.links.label"}}: {{this.linksSummary}}</span></:button>
+            <:content>
+              <div class="gantt-links-menu">
+                {{#each this.linkTypeOptions as |type|}}
+                  <FormFields::FieldCheckbox @label={{t (concat "components.gantt.links." type)}} @checked={{includes type this.linkTypes}} @select={{fn this.toggleLinkType type}} @data-select={{concat "gantt-links-" type}} />
+                {{/each}}
+              </div>
+            </:content>
+          </AppUi::Dropdown>
+        </div>
+        <div class="gantt-toolbar-group">
+          <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-other-projects" />
+          <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
+        </div>
+        <div class="gantt-toolbar-group gantt-legend-info" data-test-gantt-legend-info>
+          <button type="button" class="btn btn-link btn-sm gantt-legend-icon" aria-label={{t "components.gantt.links.legend.title"}}><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+          <div class="gantt-line-legend text-muted" data-test-gantt-line-legend>
+            <span class="gantt-line-legend-item"><i class="gantt-line-sample is-blocks"></i>{{t "components.gantt.links.legend.blocks"}}</span>
+            <span class="gantt-line-legend-item"><i class="gantt-line-sample is-splits"></i>{{t "components.gantt.links.legend.splits"}}</span>
+            <span class="gantt-line-legend-item"><i class="gantt-line-sample is-relates"></i>{{t "components.gantt.links.legend.relates"}}</span>
+            <span class="gantt-line-legend-item"><i class="gantt-line-sample is-conflict"></i>{{t "components.gantt.links.legend.conflict"}}</span>
+            <span class="gantt-line-legend-item"><i class="gantt-swatch-other"></i>{{t "components.gantt.links.legend.otherProject"}}</span>
+          </div>
+        </div>
       {{/unless}}
     </div>
-    {{#unless this.viewport.isPhone}}
-      <div class="gantt-line-legend text-muted" data-test-gantt-line-legend>
-        <span class="gantt-line-legend-item"><i class="gantt-line-sample is-blocks"></i>{{t "components.gantt.links.legend.blocks"}}</span>
-        <span class="gantt-line-legend-item"><i class="gantt-line-sample is-splits"></i>{{t "components.gantt.links.legend.splits"}}</span>
-        <span class="gantt-line-legend-item"><i class="gantt-line-sample is-relates"></i>{{t "components.gantt.links.legend.relates"}}</span>
-        <span class="gantt-line-legend-item"><i class="gantt-line-sample is-conflict"></i>{{t "components.gantt.links.legend.conflict"}}</span>
-        <span class="gantt-line-legend-item"><i class="gantt-swatch-other"></i>{{t "components.gantt.links.legend.otherProject"}}</span>
-      </div>
-    {{/unless}}
   {{/if}}
   <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}" data-test-gantt-container {{observe-width this.setContainerWidth}}>
 
