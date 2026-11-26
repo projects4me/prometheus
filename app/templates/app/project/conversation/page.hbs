@@ -22,6 +22,7 @@
       {{else}}
         <Conversation::LinkedIssueBox @issue={{this.model.issue}} @thread={{this.model}} />
       {{/if}}
+      <Conversation::TagsBox @tags={{this.threadTags.records}} @suggest={{this.suggestTags}} @onAdd={{this.addTag}} @onRemove={{this.removeTag}} />
       <Conversation::ParticipantsBox @participants={{this.participants}} />
       <Conversation::ActivityBox @activities={{this.threadActivities}} @roomType={{this.model.roomType}} />
     </div>

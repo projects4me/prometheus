@@ -39,6 +39,7 @@ module("Unit | Controller | app/project/conversation/page", function (hooks) {
     Object.defineProperty(controller, "store", { configurable: true, get: () => store });
     controller.threadComments = new ThreadComments({ store, pageSize: 2, owner: controller });
     Object.defineProperty(controller, "hermes", { configurable: true, get: () => ({ register: () => () => {} }) });
+    controller.threadTags = { open: () => Promise.resolve() };
     return controller;
   }
 

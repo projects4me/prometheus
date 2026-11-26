@@ -1,0 +1,33 @@
+{{!-- The tags of a thread: chips, and the field that adds one when the user may tag --}}
+<div class="box box-primary" data-tags-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.conversation.thread.tags"}}</h3>
+  </div>
+  <div class="box-body">
+    {{#if this.items.length}}
+      <div data-tags-list>
+        {{#each this.items as |item|}}
+          <AppUi::Tag @colorKey={{item.name}} @onRemove={{if this.canEdit (fn this.remove item.record)}} data-tag-chip>{{item.name}}</AppUi::Tag>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="text-muted" data-tags-empty>{{t "views.app.conversation.thread.noTags"}}</p>
+    {{/if}}
+    {{#if this.canEdit}}
+      <div data-tags-edit>
+        <FormFields::FieldRelateMulti
+          @data-field="thread-tags"
+          @label={{t "views.app.conversation.thread.addTag"}}
+          @relateType="relate-simple"
+          @searchField="label"
+          @searchEnabled={{true}}
+          @search={{@suggest}}
+          @selected={{this.noSelection}}
+          @onchange={{this.addPicked}}
+          @onCreate={{this.add}}
+          @renderInPlace={{true}}
+        />
+      </div>
+    {{/if}}
+  </div>
+</div>
