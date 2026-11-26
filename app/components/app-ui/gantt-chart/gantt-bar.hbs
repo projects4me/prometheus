@@ -62,9 +62,14 @@
       </span>
     {{/if}}
   {{/if}}
-  {{#if this.showLabel}}
-    {{! After the bar: the issue number, or the milestone's "name · %" }}
-    <span class="bar-label {{if this.isCompleted 'completed'}} {{if (and (eq @type "task") this.viewport.isPhone) 'after-avatar'}}" data-test-gantt-bar-label>{{this.displayLabel}}</span>
+  {{#if this.showInnerLabel}}
+    {{! Inside a task bar, pinned to the visible part of the bar: the issue number and subject }}
+    <span class="bar-label-clip" aria-hidden="true">
+      <span class="bar-label bar-label-inner {{if this.isCompleted 'completed'}}" data-test-gantt-bar-label>{{this.innerLabel}}</span>
+    </span>
+  {{else if this.showAfterLabel}}
+    {{! After the bar: the milestone's "name · %" }}
+    <span class="bar-label {{if this.isCompleted 'completed'}}" data-test-gantt-bar-label>{{this.displayLabel}}</span>
   {{/if}}
   {{#if this.isKeyboardOperable}}
     <span id="gantt-bar-hint-{{@issue.id}}" class="sr-only">{{t 'views.app.gantt.bar.keyboardHint'}}</span>

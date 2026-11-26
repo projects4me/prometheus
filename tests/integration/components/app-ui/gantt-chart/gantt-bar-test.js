@@ -47,6 +47,37 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
             @updateDependencyPositions={{this.noop}}
         /></div>`, context);
 
+    test('a task bar carries "#number subject" inside the bar, on one line with an ellipsis', async function (assert) {
+        await renderTaskBar(this);
+        const label = this.element.querySelector('[data-test-gantt-bar-label]');
+        assert.dom(label).hasText('#42 Fix login');
+        assert.notStrictEqual(label.closest('[data-test-gantt-bar]'), null, 'the label is inside the bar');
+        const style = getComputedStyle(label);
+        assert.strictEqual(style.textOverflow, 'ellipsis');
+        assert.strictEqual(style.whiteSpace, 'nowrap');
+        assert.strictEqual(style.position, 'sticky', 'pinned to the visible part of the bar');
+        const bar = this.element.querySelector('[data-test-gantt-bar]').getBoundingClientRect();
+        const box = label.getBoundingClientRect();
+        assert.true(box.left >= bar.left - 1, 'starts inside the bar');
+        assert.true(box.right <= bar.right + 1, 'ends inside the bar');
+    });
+
+    test('a task bar narrower than 28px shows no label', async function (assert) {
+        this.rootStyle = htmlSafe('--gantt-day-width: 8px');
+        await render(hbs`<div class="gantt-chart" style={{this.rootStyle}}><AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42"
+            @startDate="2026-11-10"
+            @endDate="2026-11-12"
+            @timelineStart="2026-11-01"
+            @dayWidth={{8}}
+            @updateDependencyPositions={{this.noop}}
+        /></div>`);
+        assert.dom('[data-test-gantt-bar]').exists();
+        assert.dom('[data-test-gantt-bar-label]').doesNotExist();
+    });
+
     test('a task bar is a focusable group named after its issue', async function (assert) {
         await renderTaskBar(this);
         assert.dom('[data-test-gantt-bar]').hasAttribute('role', 'group');

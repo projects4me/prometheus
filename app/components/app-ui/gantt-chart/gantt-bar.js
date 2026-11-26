@@ -432,6 +432,53 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
+     * Task bars wider than this many pixels carry their label inside; narrower ones leave it to the tooltip
+     *
+     * @property minInnerLabelWidth
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    minInnerLabelWidth = 28;
+
+    /**
+     * Whether the label sits inside the bar: tasks only, when the labels are on and the bar is wide enough
+     *
+     * @property showInnerLabel
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get showInnerLabel() {
+        return this.args.type === 'task' && this.showLabel && this.effectiveBarWidth >= this.minInnerLabelWidth;
+    }
+
+    /**
+     * Whether the label sits after the bar: milestones only
+     *
+     * @property showAfterLabel
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get showAfterLabel() {
+        return this.args.type !== 'task' && this.showLabel;
+    }
+
+    /**
+     * The label inside a task bar: "#number subject"
+     *
+     * @property innerLabel
+     * @type String
+     * @for GanttBar
+     * @public
+     */
+    get innerLabel() {
+        const issue = this.args.issue;
+        return issue ? `#${issue.issueNumber} ${issue.subject ?? ''}`.trim() : this.displayLabel;
+    }
+
+    /**
      * Check if the issue is completed (status is 'done')
      *
      * @property isCompleted
