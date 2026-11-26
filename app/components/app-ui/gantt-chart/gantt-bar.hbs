@@ -1,7 +1,8 @@
 <div 
-  class="{{this.effectiveBarClass}} {{if this.shouldShowConnectors 'show-connectors'}} {{if @isSelected 'selected'}}" 
+  class="{{this.effectiveBarClass}} {{if this.shouldShowConnectors 'show-connectors'}} {{if @isSelected 'selected'}} {{if this.isLinkTarget 'link-target'}}" 
   style={{this.positionStyle}}
   {{on "mousedown" this.handleMouseDown}}
+  {{on "mouseup" this.handleLinkMouseUp}}
   {{on "mousemove" this.handleBarMouseMove}}
   {{on "click" this.handleClick}}
   {{on "keydown" this.handleKeyDown}}
@@ -16,6 +17,7 @@
   aria-label={{this.accessibleLabel}}
   aria-describedby={{if this.isKeyboardOperable (concat "gantt-bar-hint-" @issue.id)}}
   data-test-gantt-bar
+  data-test-gantt-link-target={{if this.isLinkTarget "true"}}
   {{initialize-tooltip contentElement=@tooltipElement interactive=true theme="gantt-issue-tooltip"}}
 >
   {{#if this.hasProgress}}
@@ -37,7 +39,8 @@
             class="connector-dot connector-dot-start"
             data-connector="start"
             aria-label="Dependency start connector"
-            {{on "click" (fn this.handleConnectorClick "start")}}
+            data-test-gantt-link-dot="start"
+            {{on "click" (fn this.handleConnectorKeyActivate "start")}}
           ></button>
         {{/if}}
       </div>
@@ -51,7 +54,8 @@
             class="connector-dot connector-dot-end"
             data-connector="end"
             aria-label="Dependency end connector"
-            {{on "click" (fn this.handleConnectorClick "end")}}
+            data-test-gantt-link-dot="end"
+            {{on "click" (fn this.handleConnectorKeyActivate "end")}}
           ></button>
         {{/if}}
       </div>
