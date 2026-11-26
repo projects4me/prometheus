@@ -412,6 +412,7 @@
         "splits": "Splits",
         "relates": "Relates",
         "legend": {
+          "title": "Line legend",
           "blocks": "Blocks",
           "splits": "Splits into",
           "relates": "Relates to (on select)",

@@ -1009,6 +1009,36 @@ $gantt-link-dot-active-color: $highlightColor;
     margin: 0;
   }
 
+  /* Desktop: the linear search takes the remaining width; it wraps onto its own row when the controls don't fit */
+  .gantt-search {
+    flex: 1 1 240px;
+    min-width: 240px;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .gantt-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+
+    & + .gantt-toolbar-group {
+      padding-left: 10px;
+      border-left: 1px solid #e0e0e0;
+    }
+  }
+
+  .gantt-legend-info {
+    position: relative;
+    color: #777;
+    cursor: help;
+
+    &:hover .gantt-line-legend,
+    &:focus-within .gantt-line-legend {
+      display: flex;
+    }
+  }
 }
 
 /* Visible resize handles at both ends of the selected bar (the edge zones still do the resizing) */
@@ -1090,13 +1120,20 @@ $gantt-link-dot-active-color: $highlightColor;
   white-space: nowrap;
 }
 
+/* The legend is the info icon's tooltip: shown on hover and focus */
 .gantt-line-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 4px 10px;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1100;
+  gap: 6px;
+  padding: 8px 12px;
   font-size: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid #d2d6de;
 
   .gantt-line-legend-item {
     display: inline-flex;
