@@ -358,6 +358,28 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Whether a phone draws only the selected issue's links: the Dependency lines option is off
+	 *
+	 * @property showSelectedLinksOnly
+	 * @type Boolean
+	 * @public
+	 */
+	get showSelectedLinksOnly() {
+		return this.viewport.isPhone && !this.showDependencies;
+	}
+
+	/**
+	 * Whether the dependency layer is rendered: lines are on, or a phone has an issue selected
+	 *
+	 * @property showDependencyLayer
+	 * @type Boolean
+	 * @public
+	 */
+	get showDependencyLayer() {
+		return this.showDependencies || (this.showSelectedLinksOnly && Boolean(this.args.selectedIssue));
+	}
+
+	/**
 	 * The chosen types' names joined ("Blocks, Splits"), the Links dropdown's label
 	 *
 	 * @property linksSummary
@@ -985,6 +1007,8 @@ export default class GanttChartComponent extends AppComponent {
 		let issueMap = this.issueMap;
 		let ghostMap = this.ghostMap;
 		let deps = [];
+		// phones with the option off: every type, but only the selected issue's links
+		let selectedOnly = this.showSelectedLinksOnly;
 
 		lookup.links.forEach((link) => {
 			let fromId = link.belongsTo('sourceIssue').id();
@@ -992,7 +1016,15 @@ export default class GanttChartComponent extends AppComponent {
 			let from = issueMap[fromId] || ghostMap[fromId];
 			let to = issueMap[toId];
 
-			if (!from || !to || !this.linkTypes.includes(link.type)) {
+			if (!from || !to) {
+				return;
+			}
+			if (selectedOnly) {
+				let touches = selectedId !== undefined && selectedId !== null && (String(fromId) === String(selectedId) || String(toId) === String(selectedId));
+				if (!touches) {
+					return;
+				}
+			} else if (!this.linkTypes.includes(link.type)) {
 				return;
 			}
 			deps.push({
