@@ -30,5 +30,15 @@ export default class FieldCheckboxComponent extends Component {
     return this.args.select ?? (() => {});
   }
 
+  /**
+   * Whether the compact size (@size="sm") is asked for.
+   *
+   * @property isSmall
+   * @type Boolean
+   */
+  get isSmall() {
+    return this.args.size === 'sm';
+  }
+
   inputId = `${guidFor(this)}-checkbox`;
 }

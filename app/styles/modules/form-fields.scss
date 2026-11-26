@@ -180,6 +180,59 @@
   }
 }
 
+/* FormFields::FieldCheckbox (labelled): crimson and square, with or without a .form-field ancestor */
+.form-checkbox {
+  input[type="checkbox"]:checked + label::before {
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+  }
+
+  input[type="checkbox"]:focus + label::before {
+    outline: 1px solid $primaryColor;
+    outline-offset: 1px;
+  }
+
+  input[type="checkbox"]:disabled + label {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  label::before {
+    border-radius: 0;
+  }
+
+  /* @size="sm": a 14px box, matching the list checkboxes (fa-square-o) */
+  &.form-checkbox-sm {
+    min-height: 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    label {
+      min-height: 14px;
+      line-height: 14px;
+      padding-left: 4px;
+    }
+
+    label::before {
+      width: 14px;
+      height: 14px;
+      margin-left: -20px;
+      top: 0;
+    }
+
+    label::after {
+      width: 14px;
+      height: 14px;
+      font-size: 9px;
+      line-height: 14px;
+      padding: 0;
+      text-align: center;
+      margin-left: -20px;
+      top: 0;
+    }
+  }
+}
+
 .field-group {
   display: inline-flex;
   width: 100%;

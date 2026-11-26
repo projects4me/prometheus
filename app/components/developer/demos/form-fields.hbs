@@ -28,7 +28,7 @@
           @format="YYYY-MM-DD" @singleDatePicker={{true}} @showDropdowns={{true}} @autoApply={{true}}
           @validate={{fn this.validate log}} @message={{this.message}} @update={{fn this.onDate log}} />
       {{else if (eq this.field "FieldCheckbox")}}
-        <FormFields::FieldCheckbox @label="Checkbox label" @disabled={{this.disabled}} @checked={{this.checked}} @select={{fn this.onCheck log}} data-select="demo-checkbox" />
+        <FormFields::FieldCheckbox @label="Checkbox label" @size={{this.checkboxSize}} @disabled={{this.disabled}} @checked={{this.checked}} @select={{fn this.onCheck log}} data-select="demo-checkbox" />
       {{else if (eq this.field "FieldSwitch")}}
         <FormFields::FieldSwitch @checkedValue={{this.checked}} @callBack={{fn this.onCheck log}} />
       {{else if (eq this.field "FieldUpload")}}
@@ -48,6 +48,9 @@
     <div class="form-group">
       <Developer::StateSwitch @states={{this.fields}} @value={{this.field}} @onChange={{this.pick}} />
     </div>
+    {{#if (eq this.field "FieldCheckbox")}}
+      <FormFields::FieldCheckbox @label="Small size" @checked={{this.smallCheckbox}} @select={{fn this.toggle "smallCheckbox"}} data-control="size" />
+    {{/if}}
     <FormFields::FieldCheckbox @label="Disabled" @checked={{this.disabled}} @select={{fn this.toggle "disabled"}} data-control="disabled" />
     <FormFields::FieldCheckbox @label="Read-only" @checked={{this.readonly}} @select={{fn this.toggle "readonly"}} data-control="readonly" />
     <FormFields::FieldCheckbox @label="Validation error" @checked={{this.showError}} @select={{fn this.toggle "showError"}} data-control="error" />

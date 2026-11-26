@@ -80,9 +80,15 @@ export default class DeveloperDemosFormFieldsComponent extends Component {
 
 	@tracked checked = false;
 
+	@tracked smallCheckbox = false;
+
 	@tracked fileName = null;
 
 	@tracked searchText = '';
+
+	get checkboxSize() {
+		return this.smallCheckbox ? 'sm' : undefined;
+	}
 
 	get message() {
 		return this.showError ? 'This field is invalid' : null;
@@ -130,6 +136,7 @@ export default class DeveloperDemosFormFieldsComponent extends Component {
 		this.disabled = false;
 		this.readonly = false;
 		this.showError = false;
+		this.smallCheckbox = false;
 		this.searchEnabled = true;
 		this.placeholder = 'Type here';
 	}
