@@ -80,6 +80,7 @@
     <div class="gantt-timeline-wrapper">
       <div class="gantt-timeline-container"
         {{did-insert this.registerTimelineContainer}}
+        {{on-update @scrollTarget this.showScrollTarget}}
         {{will-destroy this.unregisterTimelineContainer}}>
       <div class="gantt-scroll-header">
         <div class="gantt-grid-header" data-test-gantt-grid-header>

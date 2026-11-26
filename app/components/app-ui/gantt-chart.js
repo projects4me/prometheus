@@ -1324,6 +1324,19 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Selects and scrolls to the issue the page asked to show (an issue opened from the URL).
+	 *
+	 * @method showScrollTarget
+	 * @public
+	 */
+	@action
+	showScrollTarget() {
+		if (this.args.scrollTarget) {
+			this.handleListSelect(this.args.scrollTarget);
+		}
+	}
+
+	/**
 	 * Scroll the timeline to show the specified issue
 	 * Scrolls both horizontally (to the bar position) and vertically (to the row position)
 	 *
@@ -1566,7 +1579,9 @@ export default class GanttChartComponent extends AppComponent {
 			if (this.isDestroying || this.isDestroyed || this.timelineContainerElement !== element) {
 				return;
 			}
-			if (this.viewport.isPhone) {
+			if (this.args.scrollTarget) {
+				this.showScrollTarget();
+			} else if (this.viewport.isPhone) {
 				this.scrollToToday();
 			}
 			this.updateVisibleRange();
