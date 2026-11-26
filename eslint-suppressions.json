@@ -816,12 +816,12 @@
   },
   "mirage/route-handlers/tag.js": {
     "no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "mirage/route-handlers/tagged.js": {
     "no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "mirage/route-handlers/timelog.js": {

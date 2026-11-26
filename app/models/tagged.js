@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr, hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 /**
  * The tagged model. This model is used to maint the relationship between tags
@@ -46,6 +46,16 @@ export default class TaggedModel extends Model {
     @attr('string') tagId;
 
     /**
+     * The project of the tag the record is tagged with
+     *
+     * @property projectId
+     * @type String
+     * @for Tagged
+     * @private
+     */
+    @attr('string') projectId;
+
+    /**
      * The tag this tagged is associated with
      *
      * @property tag
@@ -53,7 +63,7 @@ export default class TaggedModel extends Model {
      * @for Tagged
      * @private
      */
-    @hasMany('tag', { async: true, inverse: null }) tag;
+    @belongsTo('tag', { async: true, inverse: null }) tag;
     
     /**
      * The project this tagged is associated with

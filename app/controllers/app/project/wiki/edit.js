@@ -159,7 +159,8 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
         this.validate(newTag, 'tagCreate').then((validation) => {
 
             if (validation.isValid) {
-                // Save it
+                // Save it, in the project the wiki belongs to
+                newTag.set('projectId', _self.trackedProject.getProjectId());
                 newTag.save().then(function (tag) {
 
                     // Then save the relationship

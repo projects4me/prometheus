@@ -25,6 +25,16 @@ export default class TagModel extends Model {
     @attr('string') tag;
 
     /**
+     * The identifier of the project the tag belongs to
+     *
+     * @property projectId
+     * @type String
+     * @for Tag
+     * @private
+     */
+    @attr('string') projectId;
+
+    /**
      * The date on which the tag was created
      *
      * @property dateCreated
