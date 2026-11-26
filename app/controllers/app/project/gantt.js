@@ -346,13 +346,14 @@ export default class AppProjectGanttController extends PrometheusController {
 	@tracked isIssuePanelOpen = false;
 
 	/**
-	 * Tracking expanded milestones - stores IDs of expanded milestones
+	 * Ids of the milestones the user collapsed; empty by default, so every milestone (also one that
+	 * appears later through a search, the URL or a live update) starts expanded
 	 *
-	 * @property expandedMilestones
+	 * @property collapsedMilestones
 	 * @type Set
 	 * @for AppProjectGanttController
 	 */
-	@tracked expandedMilestones = new Set();
+	@tracked collapsedMilestones = new Set();
 
 	/**
 	 * Registers the gantt's Hermes intents for the tracked project.
@@ -597,21 +598,6 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
-	 * Auto-expand the first milestone (latest/top one) if no milestones are expanded
-	 *
-	 * @method autoExpandFirstMilestone
-	 * @public
-	 */
-	autoExpandFirstMilestone() {
-		if (this.expandedMilestones.size === 0 && this.milestones && this.milestones.length > 0) {
-			const firstMilestone = this.milestones[0];
-			if (firstMilestone && firstMilestone.id) {
-				this.expandedMilestones = new Set([firstMilestone.id]);
-			}
-		}
-	}
-
-	/**
 	 * This action selects an issue in both the list and the timeline. Selecting an issue that is already
 	 * selected keeps it selected.
 	 *
@@ -696,16 +682,15 @@ export default class AppProjectGanttController extends PrometheusController {
 	 */
 	@action toggleMilestone(milestoneId) {
 		Logger.debug('AppProjectGanttController::toggleMilestone');
-		let expanded = this.expandedMilestones;
+		let collapsed = new Set(this.collapsedMilestones);
 
-		if (expanded.has(milestoneId)) {
-			expanded.delete(milestoneId);
+		if (collapsed.has(milestoneId)) {
+			collapsed.delete(milestoneId);
 		} else {
-			expanded.add(milestoneId);
+			collapsed.add(milestoneId);
 		}
 
-		// Trigger reactivity
-		this.expandedMilestones = new Set(expanded);
+		this.collapsedMilestones = collapsed;
 		Logger.debug('-AppProjectGanttController::toggleMilestone');
 	}
 
@@ -744,7 +729,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @public
 	 */
 	@action isMilestoneExpanded(milestoneId) {
-		return this.expandedMilestones.has(milestoneId);
+		return !this.collapsedMilestones.has(milestoneId);
 	}
 
 	/**

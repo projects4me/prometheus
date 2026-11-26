@@ -61,6 +61,16 @@ export const when = function () {
 export const then = function () {
     return [
         {
+            'The gantt has $count collapsed milestone': (assert) => async function (count) {
+                assert.dom('[data-test-gantt-grid] [data-test-gantt-milestone-toggle][aria-expanded="false"]').exists({ count: Number(count) });
+            }
+        },
+        {
+            'The gantt shows $count issue rows': (assert) => async function (count) {
+                assert.dom('[data-test-gantt-grid] [data-test-gantt-grid-row]').exists({ count: Number(count) });
+            }
+        },
+        {
             'The gantt shows $count milestone rows': (assert) => async function (count) {
                 assert.dom('[data-test-gantt-grid] .milestone-row').exists({ count: Number(count) });
             }
