@@ -983,12 +983,13 @@ export default class GanttChartComponent extends AppComponent {
 		// Read the selection so the list is recomputed, and the layer redraws, when it changes (relates links show for it)
 		let selectedId = this.args.selectedIssue?.id;
 		let issueMap = this.issueMap;
+		let ghostMap = this.ghostMap;
 		let deps = [];
 
 		lookup.links.forEach((link) => {
 			let fromId = link.belongsTo('sourceIssue').id();
 			let toId = link.belongsTo('targetIssue').id();
-			let from = issueMap[fromId];
+			let from = issueMap[fromId] || ghostMap[fromId];
 			let to = issueMap[toId];
 
 			if (!from || !to || !this.linkTypes.includes(link.type)) {
@@ -1005,6 +1006,52 @@ export default class GanttChartComponent extends AppComponent {
 		});
 
 		return deps;
+	}
+
+	/**
+	 * The blockers from other projects of the workspace to show as ghost rows: the issues of another project that
+	 * block a shown issue (a `blocks` link whose source is not in this project). Empty while Other projects is off.
+	 *
+	 * @property ghostIssues
+	 * @type Issue[]
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get ghostIssues() {
+		let lookup = this.args.links;
+		if (!lookup || !this.showOtherProjects) {
+			return [];
+		}
+		let issueMap = this.issueMap;
+		let found = new Map();
+		let projectId = String(lookup.projectId);
+
+		lookup.links.forEach((link) => {
+			if (link.type !== 'blocks' || !issueMap[link.belongsTo('targetIssue').id()]) {
+				return;
+			}
+			let source = link.belongsTo('sourceIssue').value?.();
+			if (source && String(source.projectId) !== projectId && !issueMap[source.id]) {
+				found.set(String(source.id), source);
+			}
+		});
+		return [...found.values()];
+	}
+
+	/**
+	 * The ghost issues by id.
+	 *
+	 * @property ghostMap
+	 * @type Object
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	get ghostMap() {
+		let map = Object.create(null);
+		this.ghostIssues.forEach((issue) => {
+			map[issue.id] = issue;
+		});
+		return map;
 	}
 
 	/**

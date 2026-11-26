@@ -120,6 +120,9 @@
               @selectedIssue={{@selectedIssue}}
             />
           {{/each}}
+          {{#if this.ghostIssues.length}}
+            <AppUi::GanttChart::GhostSection @part="grid" @issues={{this.ghostIssues}} />
+          {{/if}}
         </div>
       <div class="gantt-timeline-body gantt-timeline-column" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
         <svg
@@ -208,6 +211,14 @@
             @onTooltipIssue={{this.showTooltipIssue}}
           />
         {{/each}}
+        {{#if this.ghostIssues.length}}
+          <AppUi::GanttChart::GhostSection
+            @issues={{this.ghostIssues}}
+            @timelineStart={{@timelineStart}}
+            @registerBar={{this.registerIssueBar}}
+            @unregisterBar={{this.unregisterIssueBar}}
+          />
+        {{/if}}
       </div>
       </div>
       </div>

@@ -1,0 +1,32 @@
+{{#if (eq @part "grid")}}
+  <div class="gantt-grid-row gantt-ghost-heading text-muted" data-test-gantt-ghost-heading>
+    <div class="gantt-grid-cell gantt-grid-name">{{t "components.gantt.ghost.heading"}}</div>
+  </div>
+  {{#each this.rows as |row|}}
+    <div class="gantt-grid-row gantt-ghost-row" data-issue-id={{row.issue.id}} data-test-gantt-ghost-row>
+      <div class="gantt-grid-cell gantt-grid-name">
+        <span class="gantt-grid-text">
+          <LinkTo @route="app.project.issue.page" @models={{array row.shortcode row.issue.issueNumber}} class="gantt-ghost-code" data-test-gantt-ghost-code>{{row.code}}</LinkTo>
+          {{row.issue.subject}}
+        </span>
+      </div>
+      <div class="gantt-grid-cell gantt-grid-who">
+        {{#if row.issue.assignedTo}}
+          <AppUi::Avatar @user={{row.issue.assignedTo}} @size="xs" />
+        {{/if}}
+      </div>
+      <div class="gantt-grid-cell gantt-grid-date">{{if row.hasDates (format-date date=row.issue.startDate format="D MMM") "—"}}</div>
+      <div class="gantt-grid-cell gantt-grid-date">{{if row.hasDates (format-date date=row.issue.endDate format="D MMM") "—"}}</div>
+    </div>
+  {{/each}}
+{{else}}
+  <div class="gantt-timeline-row gantt-ghost-heading"></div>
+  {{#each this.rows as |row|}}
+    <div class="gantt-timeline-row gantt-ghost-row" data-issue-id={{row.issue.id}}>
+      {{#if row.hasDates}}
+        <div class="gantt-bar gantt-ghost-bar" style={{row.barStyle}} data-issue-id={{row.issue.id}} data-test-gantt-ghost-bar
+          {{register-bar row.issue.id @registerBar @unregisterBar}}></div>
+      {{/if}}
+    </div>
+  {{/each}}
+{{/if}}
