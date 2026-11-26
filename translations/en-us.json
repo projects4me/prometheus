@@ -363,8 +363,7 @@
       "toolbar": {
         "today": "Today",
         "otherProjects": "Other projects",
-        "weekends": "Weekends",
-        "dependenciesLines": "Dependency lines"
+        "weekends": "Weekends"
       },
       "ghost": {
         "heading": "Other projects in this workspace"
@@ -422,7 +421,8 @@
       },
       "options": {
         "label": "Chart options",
-        "barLabels": "Bar labels"
+        "barLabels": "Bar labels",
+        "show": "Show"
       },
       "issueList": {
         "title": "Issues",

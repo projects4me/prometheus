@@ -18,9 +18,14 @@
         <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
         <:content>
           <div class="gantt-options-menu" data-test-gantt-options-menu>
-            <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.dependenciesLines"}} @checked={{this.showDependencies}} @select={{this.toggleDependencies}} @data-select="gantt-options-dependencies" />
-            <FormFields::FieldCheckbox @label={{t "components.gantt.options.barLabels"}} @checked={{this.showLabels}} @select={{this.toggleLabels}} @data-select="gantt-options-labels" />
-            <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-options-weekends" />
+            <div class="gantt-options-heading" data-test-gantt-options-heading="links">{{t "components.gantt.links.label"}}</div>
+            {{#each this.linkTypeOptions as |type|}}
+              <FormFields::FieldCheckbox @size="sm" @label={{t (concat "components.gantt.links." type)}} @checked={{includes type this.linkTypes}} @select={{fn this.toggleLinkType type}} @data-select={{concat "gantt-options-" type}} />
+            {{/each}}
+            <div class="gantt-options-heading" data-test-gantt-options-heading="show">{{t "components.gantt.options.show"}}</div>
+            <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.options.barLabels"}} @checked={{this.showLabels}} @select={{this.toggleLabels}} @data-select="gantt-options-labels" />
+            <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-options-other-projects" />
+            <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-options-weekends" />
           </div>
         </:content>
       </AppUi::Dropdown>
@@ -46,20 +51,22 @@
       </div>
       {{#unless this.viewport.isPhone}}
         <div class="gantt-toolbar-group">
-          <AppUi::Dropdown @title={{t "components.gantt.links.label"}} class="gantt-links-filter" data-test-gantt-links>
-            <:button><span data-test-gantt-links-label>{{t "components.gantt.links.label"}}: {{this.linksSummary}}</span></:button>
-            <:content>
-              <div class="gantt-links-menu">
-                {{#each this.linkTypeOptions as |type|}}
-                  <FormFields::FieldCheckbox @label={{t (concat "components.gantt.links." type)}} @checked={{includes type this.linkTypes}} @select={{fn this.toggleLinkType type}} @data-select={{concat "gantt-links-" type}} />
-                {{/each}}
-              </div>
-            </:content>
-          </AppUi::Dropdown>
+          <div class="gantt-links-field" data-test-gantt-links>
+            <FormFields::FieldRelateMulti
+              @placeholder={{t "components.gantt.links.label"}}
+              @options={{this.linkOptions}}
+              @selected={{this.selectedLinkOptions}}
+              @searchField="label"
+              @searchEnabled={{false}}
+              @onchange={{this.selectLinkTypes}}
+              @relateType="relate-simple"
+              @data-field="gantt-links"
+            />
+          </div>
         </div>
         <div class="gantt-toolbar-group">
-          <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-other-projects" />
-          <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
+          <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-other-projects" />
+          <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
         </div>
         <div class="gantt-toolbar-group gantt-legend-info" data-test-gantt-legend-info>
           <button type="button" class="btn btn-link btn-sm gantt-legend-icon" aria-label={{t "components.gantt.links.legend.title"}}><i class="fa fa-info-circle" aria-hidden="true"></i></button>
