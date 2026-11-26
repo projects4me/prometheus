@@ -25,6 +25,18 @@ import { toArray } from 'prometheus/utils/array/to-array';
 import { LINK_TYPES, DEFAULT_LINK_TYPES, loadToolbarPreferences, saveToolbarPreferences, loadPhonePreferences, savePhonePreferences } from 'prometheus/utils/gantt/toolbar-preferences';
 
 /**
+ * The narrowest Gantt container (in px) that shows the issue quick view as a side column: the grid (~430px)
+ * and a usable stretch of timeline next to a panel of at least 360px. Below it the quick view opens as the
+ * bottom sheet. The container, not the viewport, decides: side panels (the navigation sidebar, a browser side
+ * panel) squeeze the content while the viewport stays wide.
+ *
+ * @property QUICK_VIEW_SIDE_PANEL_MIN_WIDTH
+ * @type Number
+ * @final
+ */
+export const QUICK_VIEW_SIDE_PANEL_MIN_WIDTH = 900;
+
+/**
  * This component renders the main Gantt chart view with timeline and milestones/issues
  *
  * @class GanttChartComponent
@@ -80,6 +92,45 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@tracked phoneTab = 'timeline';
+
+	/**
+	 * The measured width of the Gantt container, in px; 0 until it is measured
+	 *
+	 * @property containerWidth
+	 * @type Number
+	 * @default 0
+	 * @public
+	 */
+	@tracked containerWidth = 0;
+
+	/**
+	 * Records the Gantt container's width (the `observe-width` callback)
+	 *
+	 * @method setContainerWidth
+	 * @param {Number} width
+	 * @public
+	 */
+	@action
+	setContainerWidth(width) {
+		if (!this.isDestroying && !this.isDestroyed) {
+			this.containerWidth = width;
+		}
+	}
+
+	/**
+	 * Whether the issue quick view opens as the bottom sheet rather than the side column: on phones, and when
+	 * the Gantt container is narrower than QUICK_VIEW_SIDE_PANEL_MIN_WIDTH
+	 *
+	 * @property quickViewAsSheet
+	 * @type Boolean
+	 * @public
+	 */
+	get quickViewAsSheet() {
+		if (this.viewport.isPhone) {
+			return true;
+		}
+		return this.containerWidth > 0 && this.containerWidth < QUICK_VIEW_SIDE_PANEL_MIN_WIDTH;
+	}
 
 	/**
 	 * Action to switch the phone tab

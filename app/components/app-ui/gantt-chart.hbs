@@ -62,7 +62,7 @@
       </div>
     {{/unless}}
   {{/if}}
-  <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}">
+  <div class="gantt-container {{if this.viewport.isPhone (concat 'gantt-phone gantt-phone-' this.phoneTab)}}" data-test-gantt-container {{observe-width this.setContainerWidth}}>
 
     {{! Phones - the List tab's issue list }}
     {{#if this.viewport.isPhone}}
@@ -77,7 +77,7 @@
     {{/if}}
 
     {{! The grid (desktop) and the timeline, row for row in one scroll container }}
-    <div class="gantt-timeline-wrapper {{if (and @isIssuePanelOpen (not this.viewport.isPhone)) 'gantt-panel-open'}}">
+    <div class="gantt-timeline-wrapper">
       <div class="gantt-timeline-container"
         {{did-insert this.registerTimelineContainer}}
         {{will-destroy this.unregisterTimelineContainer}}>
@@ -221,8 +221,8 @@
       </div>
     </div>
 
-    {{! Issue Details: a bottom sheet on phones, a side panel otherwise }}
-    {{#if this.viewport.isPhone}}
+    {{! Issue quick view: a side column next to the chart, or the bottom sheet on phones and narrow containers }}
+    {{#if this.quickViewAsSheet}}
       {{#if (and @isIssuePanelOpen @panelIssue)}}
         <AppUi::Modal
           @title="views.app.board.quickView"

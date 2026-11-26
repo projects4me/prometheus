@@ -3,11 +3,13 @@
  */
 
 import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { next } from '@ember/runloop';
 
 /**
- * This component renders the issue details side panel in the Gantt chart
+ * This component renders the issue quick view as a side column next to the Gantt chart, with the Task Board's
+ * divider to collapse it. The chart decides when to use it instead of the bottom sheet.
  *
  * @class IssueDetailsPanel
  * @namespace Prometheus.Components.AppUi.GanttChart
@@ -17,6 +19,28 @@ import { next } from '@ember/runloop';
 export default class IssueDetailsPanelComponent extends Component {
 	panelElement = null;
 	previousIssueId = null;
+
+	/**
+	 * The id of the issue whose quick view the divider collapsed. Opening another issue shows its details again.
+	 *
+	 * @property collapsedIssueId
+	 * @type String|null
+	 * @for IssueDetailsPanel
+	 * @private
+	 */
+	@tracked collapsedIssueId = null;
+
+	/**
+	 * Whether the divider has collapsed the quick view of the open issue
+	 *
+	 * @property isCollapsed
+	 * @type Boolean
+	 * @for IssueDetailsPanel
+	 * @public
+	 */
+	get isCollapsed() {
+		return this.collapsedIssueId !== null && this.collapsedIssueId === this.args.issue?.id;
+	}
 
 	/**
 	 * Check if the panel is open
@@ -37,7 +61,10 @@ export default class IssueDetailsPanelComponent extends Component {
 	 * @private
 	 */
 	scrollToTop() {
-		if (this.panelElement) {
+		if (this.isDestroying || this.isDestroyed) {
+			return;
+		}
+		if (this.panelElement?.isConnected) {
 			this.panelElement.scrollTo({
 				top: 0,
 				behavior: 'smooth'
@@ -81,6 +108,17 @@ export default class IssueDetailsPanelComponent extends Component {
 	}
 
 	/**
+	 * The divider: collapses the quick view to a strip so the chart takes the width, or expands it again
+	 *
+	 * @method toggleCollapse
+	 * @public
+	 */
+	@action
+	toggleCollapse() {
+		this.collapsedIssueId = this.isCollapsed ? null : (this.args.issue?.id ?? null);
+	}
+
+	/**
 	 * Action to handle panel close
 	 *
 	 * @method handleClose
@@ -88,6 +126,7 @@ export default class IssueDetailsPanelComponent extends Component {
 	 */
 	@action
 	handleClose() {
+		this.collapsedIssueId = null;
 		this.args.onClose?.();
 	}
 }
