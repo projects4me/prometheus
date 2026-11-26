@@ -172,6 +172,13 @@ Fixed surfaces: page background `#ecf0f5`, sidebar `#f9fafc`, boxes and header `
 amber `#f7bf65`; `done` is green `#5ac594`; `closed` is salmon `#e98a7e`. Use these classes, and don't
 introduce new status colours.
 
+**Gantt bar colours** (`$gantt-bar-colours` in `styles/modules/gantt.scss`): Gantt bars use their own, stronger
+colours, derived from the palette (`new` `$secondaryColor`, `in_progress` `$primaryColor`, `in_review`
+`$highlightColor`, `feedback`/`done` darkened `$warningColor`/`$successColor`, `closed` `$dangerColor`,
+`deferred` and unknown statuses a darkened `$mediumColor`). They are Gantt-only: status labels elsewhere keep
+the classes above. Bar labels are white, 11px semibold, so every colour keeps at least 4.5:1 contrast with white
+(checked by `tests/unit/gantt/bar-colours-test.js`).
+
 **Priority** is shown as an icon and the word: use `AppUi::PriorityIcon` (for example, a red up arrow for
 High, a crimson target for Medium).
 
