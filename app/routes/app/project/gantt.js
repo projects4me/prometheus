@@ -138,9 +138,12 @@ export default class GanttRoute extends App {
 		let milestones = await _self.store
 			.query('milestone', _milestoneOptions)
 			.catch((error) => {
-				_self.errorManager.handleError(error, {
+				// 401/403 still run their handlers; any other failure shows the empty Gantt with an error message
+				_self.errorManager.handleLoadError(error, {
 					moduleName: 'milestone'
 				});
+				_self.notify('error', 'views.nav.menu.gantt.loadError');
+				return [];
 			});
 
 		// Fetch the issues of every milestone lane in one bulk request
@@ -164,16 +167,23 @@ export default class GanttRoute extends App {
 				})
 			);
 
+			let failedIds = [];
 			milestones.forEach((milestone) => {
 				let lane = lanes[`milestone-${milestone.id}`];
-				if (lane.error) {
+				if (!lane || lane.error) {
 					// a failed lane stays empty
-					_self.errorManager.handleError(lane.error);
-					replaceRecords(milestone.issues, undefined);
+					failedIds.push(milestone.id);
+					_self.errorManager.handleLoadError(lane?.error, { moduleName: 'issue' });
+					replaceRecords(milestone.issues, []);
 				} else {
 					replaceRecords(milestone.issues, lane.records);
 				}
 			});
+			if (failedIds.length > 0) {
+				Logger.error('Gantt: the issues of these milestones could not be loaded', failedIds);
+				// one warning per load, not per lane
+				_self.notify('warning', 'views.nav.menu.gantt.lanesFailed');
+			}
 		}
 
 		// Convert milestones to array
@@ -193,6 +203,18 @@ export default class GanttRoute extends App {
 		});
 
 		return model;
+	}
+
+	/**
+	 * Posts a translated Messenger message.
+	 *
+	 * @method notify
+	 * @param {String} type The Messenger type (error, warning)
+	 * @param {String} key The translation key
+	 * @private
+	 */
+	notify(type, key) {
+		new Messenger().post({ message: this.intl.t(key), type, showCloseButton: true });
 	}
 
 	/**
@@ -243,7 +265,8 @@ export default class GanttRoute extends App {
 		return chunks.flatMap((ids, index) => {
 			let result = results[`timelogs-${index}`];
 			if (!result || result.error) {
-				this.errorManager.handleError(result?.error, { moduleName: 'timelog' });
+				this.errorManager.handleLoadError(result?.error, { moduleName: 'timelog' });
+				Logger.error('Gantt: the time logs of a chunk of issues could not be loaded', ids);
 				return [];
 			}
 			return toArray(result.records);
