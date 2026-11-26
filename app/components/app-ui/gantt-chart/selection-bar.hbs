@@ -1,0 +1,14 @@
+<div class="gantt-selection-bar" data-test-gantt-selection-bar>
+  <div class="gantt-selection-bar-head">
+    <span class="gantt-selection-bar-subject text-bold" data-test-gantt-selection-subject>#{{@issue.issueNumber}} {{@issue.subject}}</span>
+    <button type="button" class="btn btn-box-tool" aria-label={{t "global.form.close"}} data-test-gantt-selection-close {{on "click" @onClose}}><i class="fa fa-times" aria-hidden="true"></i></button>
+  </div>
+  <div class="gantt-selection-bar-summary text-muted" data-test-gantt-selection-summary>
+    {{#if this.counts.conflict}}<span class="text-red" data-test-gantt-selection-conflict><i class="fa fa-ban" aria-hidden="true"></i> {{t "components.gantt.selection.conflict" count=this.counts.conflict}} · </span>{{/if}}{{t "components.gantt.selection.summary" blockedBy=this.counts.blockedBy blocks=this.counts.blocks relates=this.counts.relates}}
+  </div>
+  <div class="gantt-selection-bar-actions">
+    <button type="button" class="btn btn-default" data-test-gantt-selection-edit {{on "click" @onEdit}}>{{t "components.gantt.selection.edit"}}</button>
+    <button type="button" class="btn btn-default" data-test-gantt-selection-link {{on "click" @onLink}}>{{t "components.gantt.selection.link"}}</button>
+    <button type="button" class="btn btn-primary" data-test-gantt-selection-details {{on "click" @onDetails}}>{{t "components.gantt.selection.details"}}</button>
+  </div>
+</div>

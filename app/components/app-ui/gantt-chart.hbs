@@ -259,6 +259,9 @@
       />
     {{/if}}
   </div>
+  {{#if this.showSelectionBar}}
+    <AppUi::GanttChart::SelectionBar @issue={{@selectedIssue}} @links={{@links}} @onEdit={{this.editSelected}} @onLink={{this.linkSelected}} @onDetails={{this.detailsSelected}} @onClose={{this.deselect}} />
+  {{/if}}
   {{#if (and this.viewport.isPhone (eq this.phoneTab "timeline"))}}
     <div class="gantt-swipe-hint text-muted" data-test-gantt-swipe-hint>{{t "components.gantt.footer.swipeHint"}}</div>
   {{/if}}

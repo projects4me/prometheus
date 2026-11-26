@@ -329,24 +329,52 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom(GRID).exists();
     });
 
-    test('tapping a bar asks to edit the issue on phones, not on desktop', async function (assert) {
-        const edited = [];
+    test('tapping a bar selects the issue on phones and shows the bar with the link counts', async function (assert) {
+        const edited = [], linked = [];
         this.onEditIssue = (i) => edited.push(i.id);
+        this.onLinkIssue = (i) => linked.push(i.id);
+        const link = (type, source, target) => ({
+            id: `${type}-${source}-${target}`, type,
+            belongsTo: (rel) => ({ id: () => (rel === 'sourceIssue' ? source : target), value: () => null })
+        });
+        const all = [link('blocks', '2', '1'), link('blocks', '1', '3'), link('relates', '1', '3')];
+        const of = (type, side, id) => all.filter((l) => l.type === type && l.belongsTo(`${side}Issue`).id() === id);
+        this.links = {
+            links: all, projectId: 'p', isOpen: () => true, externalIssues: [],
+            blockedBy: (id) => of('blocks', 'target', id), blocks: (id) => of('blocks', 'source', id),
+            splitFrom: () => [], splitInto: () => [],
+            relates: (id) => [...of('relates', 'source', id), ...of('relates', 'target', id)]
+        };
         const tap = async () => {
             await render(hbs`<AppUi::GanttChart
                 @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
-                @timeTotals={{this.timeTotals}}
+                @timeTotals={{this.timeTotals}} @links={{this.links}}
                 @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
                 @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}} @onEditIssue={{this.onEditIssue}}
+                @onLinkIssue={{this.onLinkIssue}}
                 @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}}
                 @onCloseIssuePanel={{this.noop}} />`);
             await click(`${barRow('1')} [data-test-gantt-bar]`);
         };
         await tap();
-        assert.deepEqual(edited, [], 'desktop: no sheet');
+        assert.dom('[data-test-gantt-selection-bar]').doesNotExist('desktop: no bar');
+        this.set('selected', null);
         this.viewport.isPhone = true;
         await tap();
-        assert.deepEqual(edited, ['1'], 'phone: the sheet opens for the tapped bar');
+        assert.deepEqual(edited, [], 'the tap does not open the sheet');
+        assert.dom('[data-test-gantt-selection-subject]').hasText('#1 Subject 1');
+        assert.dom('[data-test-gantt-selection-summary]').hasText(/Blocked by 1.*Blocks 1.*Relates 1/);
+        assert.dom('[data-test-gantt-selection-conflict]').doesNotExist('no conflict: the dates do not overlap a blocker');
+
+        await click('[data-test-gantt-selection-edit]');
+        await click('[data-test-gantt-selection-link]');
+        assert.deepEqual(edited, ['1'], 'Edit dates opens the sheet');
+        assert.deepEqual(linked, ['1'], 'Link opens Link issue');
+        await click('[data-test-gantt-selection-details]');
+        assert.deepEqual(this.panel, ['1'], 'Details opens the quick view');
+
+        await click('[data-test-gantt-selection-close]');
+        assert.dom('[data-test-gantt-selection-bar]').doesNotExist('closing hides the bar');
     });
 
     test('phones get Timeline | List tabs under the search, opening on Timeline', async function (assert) {
@@ -453,7 +481,8 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         const link = (type, from, to) => ({ type, belongsTo: (name) => end(name === 'sourceIssue' ? from : to) });
         this.links = {
             links: [link('blocks', '1', '2'), link('splits', '2', '1'), link('relates', '1', '2')],
-            isOpen: () => true
+            isOpen: () => true,
+            blockedBy: () => [], blocks: () => [], relates: () => []
         };
         this.selected = { id: '1' };
         await render(hbs`<AppUi::GanttChart
@@ -484,6 +513,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             this.links = {
                 projectId: '1',
                 isOpen: () => true,
+                blockedBy: () => [], blocks: () => [], relates: () => [],
                 links: [{
                     type: 'blocks',
                     belongsTo: (name) => (name === 'sourceIssue' ? end('90', this.ghost) : end('1', null))
@@ -813,7 +843,8 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             const link = (type, from, to) => ({ type, belongsTo: (name) => end(name === 'sourceIssue' ? from : to) });
             this.links = {
                 links: [link('blocks', '1', '2'), link('blocks', '2', '3'), link('relates', '1', '2')],
-                isOpen: () => true
+                isOpen: () => true,
+                blockedBy: () => [], blocks: () => [], relates: () => []
             };
             return render(hbs`<AppUi::GanttChart
                 @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}

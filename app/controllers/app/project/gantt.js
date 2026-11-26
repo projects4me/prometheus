@@ -853,6 +853,38 @@ export default class AppProjectGanttController extends PrometheusController {
 	}
 
 	/**
+	 * The issue whose Link issue modal is open (from the phone selection bar), or null.
+	 *
+	 * @property linkIssue
+	 * @type Prometheus.Models.Issue|null
+	 * @public
+	 */
+	@tracked linkIssue = null;
+
+	/**
+	 * Opens Link issue for an issue.
+	 *
+	 * @method openLinkIssue
+	 * @param {Prometheus.Models.Issue} issue
+	 * @public
+	 */
+	@action
+	openLinkIssue(issue) {
+		this.linkIssue = issue;
+	}
+
+	/**
+	 * Closes Link issue.
+	 *
+	 * @method closeLinkIssue
+	 * @public
+	 */
+	@action
+	closeLinkIssue() {
+		this.linkIssue = null;
+	}
+
+	/**
 	 * Closes the phone edit sheet.
 	 *
 	 * @method closeEditSheet

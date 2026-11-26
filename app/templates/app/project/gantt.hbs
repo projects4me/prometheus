@@ -14,6 +14,7 @@
     @onOpenIssuePanel={{this.openIssuePanel}}
     @selectedIssue={{this.selectedIssue}}
     @onEditIssue={{this.openEditSheet}}
+    @onLinkIssue={{this.openLinkIssue}}
     @onIssueDragEnd={{this.updateIssueDates}}
     @onIssueResizeEnd={{this.updateIssueDates}}
     @isMilestoneExpanded={{this.isMilestoneExpanded}}
@@ -51,6 +52,9 @@
       @onSelect={{this.saveLink}}
       @onCancel={{this.cancelLinkPicker}}
     />
+  {{/if}}
+  {{#if this.linkIssue}}
+    <Issue::LinkIssueModal @issue={{this.linkIssue}} @onLinked={{this.reloadLinks}} @onClose={{this.closeLinkIssue}} />
   {{/if}}
   {{#if this.editIssue}}
     <AppUi::GanttChart::EditSheet
