@@ -9,6 +9,9 @@
 
 $gantt-grid-width: 440px;
 $gantt-phone-grid-width: 124px;
+$gantt-selected-row-bg: rgba($primaryColor, 0.08);
+$gantt-link-dot-color: $primaryColor;
+$gantt-link-dot-active-color: $highlightColor;
 
 .gantt-view {
   width: 100%;
@@ -155,14 +158,14 @@ $gantt-phone-grid-width: 124px;
 
   &.year-row {
     height: 32px;
-    background: #eef4ff;
+    background: rgba($primaryColor, 0.06);
     font-weight: 600;
     font-size: 13px;
   }
 
   &.week-row {
     height: 30px;
-    background: #f8fbff;
+    background: rgba($primaryColor, 0.03);
     font-size: 12px;
   }
 }
@@ -191,19 +194,19 @@ $gantt-phone-grid-width: 124px;
     }
 
     &.current-week {
-      background: #e8f4fd;
+      background: rgba($primaryColor, 0.1);
     }
 
     &.current-week-first {
-      border-left: 2px solid #3498db;
+      border-left: 2px solid $primaryColor;
     }
 
     &.current-week-last {
-      border-right: 2px solid #3498db;
+      border-right: 2px solid $primaryColor;
     }
 
     &.current-day {
-      background: #3498db;
+      background: $primaryColor;
       color: #fff;
       font-weight: 600;
       position: relative;
@@ -215,7 +218,7 @@ $gantt-phone-grid-width: 124px;
         left: 0;
         right: 0;
         height: 3px;
-        background: #2980b9;
+        background: $highlightColor;
       }
     }
   }
@@ -312,7 +315,7 @@ $gantt-phone-grid-width: 124px;
 
   &:hover,
   &.selected {
-    background: rgba(29, 78, 216, 0.08);
+    background: $gantt-selected-row-bg;
   }
 
   .gantt-grid-open {
@@ -501,7 +504,7 @@ $gantt-phone-grid-width: 124px;
   transition: background-color 0.2s;
 
   &.selected {
-    background: rgba(29, 78, 216, 0.08);
+    background: $gantt-selected-row-bg;
   }
 
   &.milestone-row {
@@ -721,7 +724,7 @@ $gantt-phone-grid-width: 124px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #4dabf7;
+  border: 2px solid $gantt-link-dot-color;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   pointer-events: auto;
@@ -732,8 +735,8 @@ $gantt-phone-grid-width: 124px;
   flex-shrink: 0;
 
   &:hover {
-    background: #4dabf7;
-    border-color: #1c7ed6;
+    background: $gantt-link-dot-color;
+    border-color: $gantt-link-dot-active-color;
     transform: scale(1.1);
   }
 
