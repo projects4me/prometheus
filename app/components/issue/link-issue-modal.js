@@ -38,6 +38,7 @@ export default class IssueLinkIssueModalComponent extends Component {
 	@service intl;
 	@service issueRelations;
 	@service querySchema;
+	@service viewport;
 
 	/** The ticked results, kept across searches. */
 	selection = new Selection();
@@ -54,7 +55,7 @@ export default class IssueLinkIssueModalComponent extends Component {
 	@tracked isReady = false;
 
 	/** Relation chosen last; a new row starts with it. */
-	lastRelation = null;
+	@tracked lastRelation = null;
 	searchId = 0;
 
 	/**
@@ -74,6 +75,59 @@ export default class IssueLinkIssueModalComponent extends Component {
 			{ key: 'status', label: t('status') },
 			{ key: 'assignee', label: t('assignee') }
 		];
+	}
+
+	/**
+	 * The relation applied to every selected issue in the phone layout.
+	 *
+	 * @property phoneRelation
+	 * @type String
+	 */
+	get phoneRelation() {
+		return this.lastRelation || this.args.relation || DEFAULT_RELATION;
+	}
+
+	/**
+	 * The phone relation buttons: `{ value, label, active, disabled }`. "is child of" is off when the issue has a parent.
+	 *
+	 * @property phoneRelations
+	 * @type Array
+	 */
+	get phoneRelations() {
+		let current = this.phoneRelation;
+		return this.relationOptions.map((option) => ({
+			...option,
+			active: option.value === current,
+			disabled: option.value === 'childOf' && !!this.args.issue.parentId
+		}));
+	}
+
+	/**
+	 * Whether an issue of the results is selected, and its error from the last save.
+	 *
+	 * @method phoneRows
+	 * @property phoneResults
+	 * @type Array
+	 */
+	get phoneResults() {
+		return this.results.map((issue) => {
+			let row = this.rows.find((item) => String(item.issue.id) === String(issue.id));
+			return { issue, checked: !!row, error: row?.error };
+		});
+	}
+
+	/**
+	 * "Searching A Prometheus and A Gaia (same workspace)": the projects the search covers.
+	 *
+	 * @property scopeLine
+	 * @type String
+	 */
+	get scopeLine() {
+		let issue = this.args.issue;
+		let project = this.store.peekRecord('project', String(issue.projectId));
+		let projects = project?.workspaceId ? this.store.peekAll('project').filter((item) => item.workspaceId === project.workspaceId) : [project];
+		let names = projects.map((item) => item?.name).filter(Boolean);
+		return names.length ? this.intl.t('views.app.issue.detail.linkedIssues.linkModal.scope', { projects: names.join(', ') }) : '';
 	}
 
 	/**
@@ -236,6 +290,32 @@ export default class IssueLinkIssueModalComponent extends Component {
 		}
 		this.lastRelation = option.value;
 		this.rows = this.rows.map((item) => (item === row ? { ...item, relation: option, error: null } : item));
+	}
+
+	/**
+	 * Phone layout: one relation for every selected issue.
+	 *
+	 * @method setPhoneRelation
+	 * @param {String} value
+	 */
+	@action
+	setPhoneRelation(value) {
+		let option = this.relationOptions.find((item) => item.value === value);
+		this.lastRelation = value;
+		this.rows = this.rows.map((item) => ({ ...item, relation: option, error: null }));
+	}
+
+	/**
+	 * Phone layout: a result's checkbox changed.
+	 *
+	 * @method togglePhoneResult
+	 * @param {Object} issue
+	 * @param {Event} event
+	 */
+	@action
+	togglePhoneResult(issue, event) {
+		this.selection.set([issue.id], event.target.checked);
+		this.onSelectionChange();
 	}
 
 	@action

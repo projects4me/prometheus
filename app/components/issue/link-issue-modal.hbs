@@ -1,16 +1,23 @@
 <AppUi::Modal
-  @title="views.app.issue.detail.linkedIssues.linkModal.title"
-  @titleParams={{hash number=@issue.issueNumber}}
+  @title={{if this.viewport.isPhone "views.app.issue.detail.linkedIssues.linkModal.phoneTitle" "views.app.issue.detail.linkedIssues.linkModal.title"}}
+  @titleParams={{hash number=@issue.issueNumber subject=@issue.subject}}
   @confirmParams={{hash count=this.rows.length}}
   @closeLabel="global.form.cancel"
   @confirmLabel="views.app.issue.detail.linkedIssues.linkModal.save"
   @confirm={{this.save}}
   @disableSaveBtn={{this.cannotSave}}
   @onClose={{@onClose}}
-  @containerClass="link-issue-modal"
+  @containerClass={{if this.viewport.isPhone "link-issue-modal link-issue-modal-phone" "link-issue-modal"}}
   data-test-link-issue-modal
   {{on-insert this.setup}}
 >
+  {{#if this.viewport.isPhone}}
+    <div class="link-issue-phone-relations" role="group" data-test-link-issue-relations>
+      {{#each this.phoneRelations as |relation|}}
+        <button type="button" class="btn btn-default {{if relation.active "active"}}" aria-pressed={{if relation.active "true" "false"}} disabled={{relation.disabled}} data-test-link-issue-relation={{relation.value}} {{on "click" (fn this.setPhoneRelation relation.value)}}>{{relation.label}}</button>
+      {{/each}}
+    </div>
+  {{/if}}
   {{#if this.schema}}
     <div class="link-issue-search" data-test-link-issue-search>
       <EzSearchCompact
@@ -24,6 +31,27 @@
     </div>
   {{/if}}
 
+  {{#if this.viewport.isPhone}}
+    <p class="text-muted small" data-test-link-issue-scope>{{this.scopeLine}}</p>
+    <ul class="list-unstyled link-issue-phone-results" data-test-link-issue-results>
+      {{#each this.phoneResults key="issue.id" as |item|}}
+        <li class="link-issue-phone-result">
+          <label data-test-link-issue-result={{item.issue.id}}>
+            <input type="checkbox" checked={{item.checked}} data-select={{item.issue.id}} {{on "change" (fn this.togglePhoneResult item.issue)}} />
+            <span class="link-issue-phone-result-info">
+              <strong>{{this.label item.issue}}</strong>
+              <AppUi::StatusLabel @status={{item.issue.status}} />
+              {{#if item.issue.project.name}}<span class="text-muted small">{{item.issue.project.name}}</span>{{/if}}
+              <span class="link-issue-phone-result-subject">{{item.issue.subject}}</span>
+            </span>
+          </label>
+          {{#if item.error}}
+            <div class="text-red small" data-test-link-issue-error>{{item.error}}</div>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
   <AppUi::DataTable
     @columns={{this.columns}}
     @rows={{this.results}}
@@ -44,12 +72,14 @@
       {{/if}}
     </:cell>
   </AppUi::DataTable>
+  {{/if}}
   {{#if this.searchFailed}}
     <p class="text-red" data-test-link-issue-search-error>{{t "views.app.issue.detail.linkedIssues.linkModal.searchFailed"}}</p>
   {{else if this.countLine}}
     <p class="text-muted small" data-test-link-issue-count>{{this.countLine}}</p>
   {{/if}}
 
+  {{#unless this.viewport.isPhone}}
   <div class="box box-default link-issue-rows" data-test-link-issue-rows>
     <div class="box-header with-border">
       <h3 class="box-title">{{t "views.app.issue.detail.linkedIssues.linkModal.toLink"}}</h3>
@@ -81,4 +111,5 @@
       {{/each}}
     </div>
   </div>
+  {{/unless}}
 </AppUi::Modal>

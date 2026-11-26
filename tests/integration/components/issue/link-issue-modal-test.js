@@ -238,4 +238,51 @@ module('Integration | Component | issue/link-issue-modal', function (hooks) {
 		assert.strictEqual(this.changed, 1);
 		assert.strictEqual(this.closed, 1, 'the modal closed');
 	});
+
+	module('phone layout', function (nested) {
+		nested.beforeEach(function () {
+			this.owner.register(
+				'service:viewport',
+				class extends Service {
+					isPhone = true;
+				}
+			);
+			this.issue = { ...this.issue, subject: 'Parent subject' };
+		});
+
+		test('shows the relation buttons, the scope line and no per-row relation', async function (assert) {
+			await show();
+			assert.dom('.modal-title').hasText('Link #1 Parent subject');
+			assert.dom('[data-test-link-issue-relations] button').exists({ count: 7 });
+			assert.dom('[data-test-link-issue-relation="relates"]').hasClass('active');
+			assert.dom('[data-test-link-issue-scope]').exists();
+			assert.dom('[data-test-link-issue-rows]').doesNotExist();
+			assert.dom('[data-btn="save"]').isDisabled();
+		});
+
+		test('one relation applies to all selected issues', async function (assert) {
+			await show();
+			await tick(2);
+			await tick(3);
+			await click('[data-test-link-issue-relation="blocks"]');
+			assert.dom('[data-test-link-issue-relation="blocks"]').hasClass('active');
+			assert.dom('[data-btn="save"]').hasText('Link 2 issues');
+			await click('[data-btn="save"]');
+			assert.deepEqual(this.linkCalls, [['2:blocks', '3:blocks']]);
+			await waitUntil(() => this.closed === 1);
+			assert.strictEqual(this.closed, 1);
+		});
+
+		test('a refused row shows its message under the result and stays selected', async function (assert) {
+			this.refusals = { 3: { errors: [{ detail: 'It would make a cycle' }] } };
+			await show();
+			await tick(2);
+			await tick(3);
+			await click('[data-btn="save"]');
+			assert.dom('[data-test-link-issue-result="3"]').exists();
+			assert.dom('[data-test-link-issue-error]').exists({ count: 1 }).hasText('It would make a cycle');
+			assert.dom('[data-test-link-issue-result="2"]').doesNotExist('linked rows leave the list');
+			assert.strictEqual(this.closed, 0);
+		});
+	});
 });
