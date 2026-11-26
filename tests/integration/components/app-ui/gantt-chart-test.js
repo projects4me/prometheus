@@ -454,6 +454,65 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.dependency-line-splits').doesNotExist();
     });
 
+    module('ghost rows', function (hooks) {
+        hooks.beforeEach(function () {
+            const end = (id, value) => ({ id: () => id, value: () => value });
+            this.ghost = {
+                id: '90', issueNumber: 4836, subject: 'Other blocker', status: 'new', projectId: '9', projectShortcode: 'agaia',
+                startDate: '2026-11-05', endDate: '2026-11-08'
+            };
+            this.links = {
+                projectId: '1',
+                isOpen: () => true,
+                links: [{
+                    type: 'blocks',
+                    belongsTo: (name) => (name === 'sourceIssue' ? end('90', this.ghost) : end('1', null))
+                }]
+            };
+        });
+
+        const renderWithLinks = (otherProjects) => {
+            window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'days', otherProjects }));
+            return render(hbs`<AppUi::GanttChart
+                @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+                @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+                @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
+                @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}} @links={{this.links}}
+                @onCloseIssuePanel={{this.noop}} />`);
+        };
+
+        test('a cross-project blocker is a read-only ghost row with its code, and its line connects', async function (assert) {
+            await renderWithLinks(true);
+            assert.dom('[data-test-gantt-ghost-heading]').hasText('Other projects in this workspace');
+            assert.dom('[data-test-gantt-ghost-row]').exists({ count: 1 });
+            assert.dom('[data-test-gantt-ghost-code]').hasText('AGAIA-4836');
+            assert.dom('[data-test-gantt-ghost-row] .gantt-grid-name').includesText('Other blocker');
+            assert.dom('[data-test-gantt-ghost-row] .gantt-grid-date').exists({ count: 2 });
+            assert.dom('[data-test-gantt-ghost-bar]').exists({ count: 1 });
+            assert.dom('[data-test-gantt-ghost-row] [data-test-gantt-grid-open]').doesNotExist('no eye');
+            assert.dom('[data-test-gantt-ghost-bar] .connector-dot').doesNotExist('no link dot');
+            assert.dom('[data-test-gantt-ghost-bar] .gantt-bar-resize-handle').doesNotExist('no resize');
+            assert.dom('.dependency-line-blocks').exists('the blocks line reaches the ghost bar');
+        });
+
+        test('ghost rows are hidden while Other projects is off', async function (assert) {
+            await renderWithLinks(false);
+            assert.dom('[data-test-gantt-ghost-row]').doesNotExist();
+            assert.dom('[data-test-gantt-ghost-heading]').doesNotExist();
+        });
+
+        test('a ghost bar is not draggable', async function (assert) {
+            await renderWithLinks(true);
+            const bar = document.querySelector('[data-test-gantt-ghost-bar]');
+            const before = bar.getBoundingClientRect().left;
+            await triggerEvent(bar, 'mousedown', { clientX: 10, clientY: 10 });
+            await triggerEvent(document, 'mousemove', { clientX: 200, clientY: 10 });
+            await triggerEvent(document, 'mouseup', { clientX: 200, clientY: 10 });
+            assert.strictEqual(bar.getBoundingClientRect().left, before);
+            assert.notOk(bar.classList.contains('draggable'));
+        });
+    });
+
     test('the legend explains every line style', async function (assert) {
         await renderChart();
         assert.dom('[data-test-gantt-line-legend] .gantt-line-legend-item').exists({ count: 5 });

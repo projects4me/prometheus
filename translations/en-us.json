@@ -366,6 +366,9 @@
         "weekends": "Weekends",
         "dependenciesLines": "Dependency lines"
       },
+      "ghost": {
+        "heading": "Other projects in this workspace"
+      },
       "links": {
         "label": "Links",
         "none": "None",

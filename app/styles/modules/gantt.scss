@@ -1061,3 +1061,39 @@ $gantt-phone-grid-width: 124px;
     background: repeating-linear-gradient(45deg, #ddd, #ddd 3px, #fff 3px, #fff 6px);
   }
 }
+
+/* Ghost rows: blockers from other projects of the workspace, read-only */
+.gantt-ghost-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.gantt-grid-row.gantt-ghost-row {
+  color: #999;
+  cursor: default;
+  background: repeating-linear-gradient(45deg, #f4f4f4, #f4f4f4 3px, #fff 3px, #fff 6px);
+
+  &:hover {
+    background: repeating-linear-gradient(45deg, #f4f4f4, #f4f4f4 3px, #fff 3px, #fff 6px);
+  }
+
+  .gantt-ghost-code {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
+.gantt-bar.gantt-ghost-bar {
+  height: 14px;
+  min-width: 20px;
+  border: 1px dashed $primaryColor;
+  border-radius: 0;
+  background: #f4f4f4;
+  box-shadow: none;
+  box-sizing: border-box;
+  cursor: default;
+  opacity: 0.8;
+  z-index: 2;
+}
