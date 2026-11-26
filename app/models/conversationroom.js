@@ -214,4 +214,24 @@ export default class ConversationroomModel extends Model {
      */
     @hasMany('vote', { async: true, inverse: 'conversationroom' }) votes;
 
+    /**
+     * The tags of this room
+     *
+     * @property tag
+     * @type TagModel
+     * @for Conversationroom
+     * @private
+     */
+    @hasMany('tag', { async: true, inverse: null }) tag;
+
+    /**
+     * The tag links of this room
+     *
+     * @property tagged
+     * @type TaggedModel
+     * @for Conversationroom
+     * @private
+     */
+    @hasMany('tagged', { async: true, inverse: null }) tagged;
+
 }

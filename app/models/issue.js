@@ -451,6 +451,26 @@ export default class IssueModel extends Model {
     @hasMany("issuewatcher", { async: true, inverse: null }) watchers;
 
     /**
+     * The tags of this issue
+     *
+     * @property tag
+     * @type TagModel
+     * @for Issue
+     * @private
+     */
+    @hasMany("tag", { async: true, inverse: null }) tag;
+
+    /**
+     * The tag links of this issue
+     *
+     * @property tagged
+     * @type TaggedModel
+     * @for Issue
+     * @private
+     */
+    @hasMany("tagged", { async: true, inverse: null }) tagged;
+
+    /**
      * The constructor for the issue model. In this we're setting the default status of the issue
      * to new if new issue is being created, project has issue statuses and status is not set.
      */

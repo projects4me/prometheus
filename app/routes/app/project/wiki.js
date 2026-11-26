@@ -66,6 +66,7 @@ export default class WikiRoute extends App {
         let projectId = this.trackedProject.getProjectId();
 
         let tagOptions = {
+            query: '(Tag.projectId : ' + projectId + ')',
             fields: 'Tag.tag,Tag.id',
             sort: 'Tag.tag',
             order: 'ASC',
