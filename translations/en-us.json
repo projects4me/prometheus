@@ -1340,6 +1340,8 @@
             "unlink": "Unlink",
             "linkModal": {
               "title": "Link issues to #{number}",
+              "phoneTitle": "Link #{number} {subject}",
+              "scope": "Searching {projects} (same workspace)",
               "save": "Link {count, plural, one {# issue} other {# issues}}",
               "count": "{shown, plural, one {# issue} other {# issues}}",
               "refine": "Showing {shown}. Refine the search to see others.",

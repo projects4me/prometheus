@@ -745,3 +745,50 @@
 		}
 	}
 }
+
+// Phones: the Link issue modal is full screen, one relation for every selected issue
+@media (max-width: 767px) {
+	dialog.app-modal.link-issue-modal-phone .modal-dialog {
+		height: 100vh;
+		height: 100dvh;
+	}
+
+	.link-issue-phone-relations {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		margin-bottom: 10px;
+	}
+
+	.link-issue-phone-results {
+		margin: 0;
+	}
+
+	.link-issue-phone-result {
+		padding: 8px 0;
+		border-bottom: 1px solid #f4f4f4;
+
+		label {
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			margin: 0;
+			font-weight: normal;
+		}
+
+		input[type="checkbox"] {
+			flex: 0 0 auto;
+			margin-top: 3px;
+		}
+	}
+
+	.link-issue-phone-result-info {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.link-issue-phone-result-subject {
+		display: block;
+		overflow-wrap: anywhere;
+	}
+}
