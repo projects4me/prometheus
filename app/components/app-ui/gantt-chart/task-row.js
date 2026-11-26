@@ -8,6 +8,8 @@ import * as dates from 'prometheus/utils/date';
 import { htmlSafe } from '@ember/template';
 import { hasValidDates, calculateBarPosition, calculateBarWidth } from 'prometheus/utils/gantt-helpers';
 import { getIssueProgress } from 'prometheus/utils/gantt-progress';
+import { conflictingBlockers, blockerName } from 'prometheus/utils/gantt/conflicts';
+import { service } from '@ember/service';
 
 /**
  * This component renders a single task/issue row in the Gantt chart
@@ -18,6 +20,43 @@ import { getIssueProgress } from 'prometheus/utils/gantt-progress';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class TaskRowComponent extends Component {
+    @service intl;
+
+    /**
+     * The text of the schedule-conflict flag ("Starts before #12 ends and 1 more"), or null when the issue does not
+     * start before an open blocker ends. Reads the dates and statuses, so it updates when they change.
+     *
+     * @property conflictText
+     * @type String|null
+     * @for TaskRow
+     * @public
+     */
+    get conflictText() {
+        const lookup = this.args.links;
+        const blockers = conflictingBlockers(this.args.issue, lookup);
+        if (!blockers.length) {
+            return null;
+        }
+        return this.intl.t('components.gantt.conflict.blocker', {
+            blocker: blockerName(blockers[0], lookup.projectId),
+            others: blockers.length - 1
+        });
+    }
+
+    /**
+     * Places the conflict flag after the bar (and after its label when bar labels show)
+     *
+     * @property conflictStyle
+     * @type SafeString
+     * @for TaskRow
+     * @public
+     */
+    get conflictStyle() {
+        const left = calculateBarPosition(this.args.timelineStart, this.args.issue.startDate, this.args.dayWidth);
+        const width = calculateBarWidth(this.args.issue.startDate, this.args.issue.endDate, this.args.dayWidth);
+        return htmlSafe(`left: ${left + width + (this.args.showBarLabels ? 64 : 6)}px`);
+    }
+
     /**
      * Get the issue subject for display
      *

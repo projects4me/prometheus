@@ -429,7 +429,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
     });
 
     test('each link type toggles its own lines', async function (assert) {
-        const end = (id) => ({ id: () => id });
+        const end = (id) => ({ id: () => id, value: () => null });
         const link = (type, from, to) => ({ type, belongsTo: (name) => end(name === 'sourceIssue' ? from : to) });
         this.links = {
             links: [link('blocks', '1', '2'), link('splits', '2', '1'), link('relates', '1', '2')],

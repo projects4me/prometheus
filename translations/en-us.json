@@ -369,6 +369,9 @@
       "ghost": {
         "heading": "Other projects in this workspace"
       },
+      "conflict": {
+        "blocker": "Starts before {blocker} ends{others, plural, =0 {} one { and # more} other { and # more}}"
+      },
       "links": {
         "label": "Links",
         "none": "None",

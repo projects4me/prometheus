@@ -118,6 +118,7 @@
               @onIssueClick={{this.handleGridSelect}}
               @onOpenIssuePanel={{this.handleOpenIssuePanel}}
               @selectedIssue={{@selectedIssue}}
+              @links={{@links}}
             />
           {{/each}}
           {{#if this.ghostIssues.length}}
@@ -209,6 +210,7 @@
             @timelineWidth={{this.timelineWidth}}
             @tooltipElement={{this.tooltipElement}}
             @onTooltipIssue={{this.showTooltipIssue}}
+            @links={{@links}}
           />
         {{/each}}
         {{#if this.ghostIssues.length}}

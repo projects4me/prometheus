@@ -43,3 +43,37 @@ export function isConflict(blocker, blocked, isOpen = () => true) {
 	let blockerEnd = dayOf(blocker.endDate);
 	return Boolean(blockedStart && blockerEnd && blockedStart <= blockerEnd);
 }
+
+/**
+ * The open blockers an issue starts before, latest-ending first (from the `blocks` links that target it).
+ *
+ * @method conflictingBlockers
+ * @param {Issue} issue the blocked issue
+ * @param {IssueLinkLookup} lookup the project's links
+ * @return {Issue[]}
+ */
+export function conflictingBlockers(issue, lookup) {
+	if (!issue || !lookup) {
+		return [];
+	}
+	return lookup.links
+		.filter((link) => link.type === 'blocks' && String(link.belongsTo('targetIssue').id()) === String(issue.id))
+		.map((link) => link.belongsTo('sourceIssue').value())
+		.filter((blocker) => blocker && isConflict(blocker, issue, (item) => lookup.isOpen(item)))
+		.sort((a, b) => (dayOf(b.endDate) < dayOf(a.endDate) ? -1 : 1));
+}
+
+/**
+ * How to name a blocker in the flag: `#number` in the same project, the project code otherwise.
+ *
+ * @method blockerName
+ * @param {Issue} blocker
+ * @param {String|Number} projectId the project of the chart
+ * @return {String}
+ */
+export function blockerName(blocker, projectId) {
+	if (!blocker.projectShortcode || String(blocker.projectId) === String(projectId)) {
+		return `#${blocker.issueNumber}`;
+	}
+	return String(blocker.projectShortcode).toUpperCase();
+}
