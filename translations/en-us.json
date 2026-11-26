@@ -362,9 +362,23 @@
       },
       "toolbar": {
         "today": "Today",
-        "dependencies": "Dependencies",
+        "otherProjects": "Other projects",
         "weekends": "Weekends",
         "dependenciesLines": "Dependency lines"
+      },
+      "links": {
+        "label": "Links",
+        "none": "None",
+        "blocks": "Blocks",
+        "splits": "Splits",
+        "relates": "Relates",
+        "legend": {
+          "blocks": "Blocks",
+          "splits": "Splits into",
+          "relates": "Relates to (on select)",
+          "conflict": "Starts before its blocker ends",
+          "otherProject": "Issue in another project"
+        }
       },
       "options": {
         "label": "Chart options",
