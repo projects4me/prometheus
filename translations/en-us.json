@@ -947,6 +947,9 @@
           "noLinkedIssue": "No linked issue",
           "createIssue": "Create issue from thread",
           "participants": "Participants",
+          "tags": "Tags",
+          "noTags": "No tags yet",
+          "addTag": "Add a tag",
           "activity": {
             "title": "Activity",
             "empty": "No activity yet",

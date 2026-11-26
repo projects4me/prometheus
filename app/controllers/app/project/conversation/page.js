@@ -11,6 +11,7 @@ import ThreadComments from 'prometheus/utils/state/thread-comments';
 import ThreadVotes from 'prometheus/utils/state/thread-votes';
 import ThreadParticipants, { buildParticipants } from 'prometheus/utils/state/thread-participants';
 import ThreadActivities from 'prometheus/utils/state/thread-activities';
+import ThreadTags from 'prometheus/utils/state/thread-tags';
 
 /**
  * The controller of one open thread: it owns the thread's comments (their own paged query, replies and the live
@@ -40,6 +41,15 @@ export default class AppProjectConversationPageController extends Controller {
      * @private
      */
     @service hermes;
+
+    /**
+     * The tags service, used by the thread's tags
+     *
+     * @property tags
+     * @type Ember.Service
+     * @private
+     */
+    @service tags;
 
     /**
      * The layout controller that owns the thread actions and the members of the project
@@ -87,6 +97,15 @@ export default class AppProjectConversationPageController extends Controller {
     threadActivities = new ThreadActivities({ store: this.store, owner: this, limit: 5 });
 
     /**
+     * The tags of the open thread, for the Tags box
+     *
+     * @property threadTags
+     * @type ThreadTags
+     * @public
+     */
+    threadTags = new ThreadTags({ tags: this.tags, owner: this });
+
+    /**
      * The participants of the open thread: its creator, then the distinct authors of its comments or votes
      *
      * @property participants
@@ -121,6 +140,7 @@ export default class AppProjectConversationPageController extends Controller {
     openThread(room, projectId) {
         this.closeThread();
         this.threadActivities.open(room?.id ?? null);
+        this.threadTags.open(room?.id ?? null, projectId ?? null);
         this.threadParticipants.open(room?.roomType === 'discussion' ? room.id : null);
         if (room?.roomType === 'vote') {
             this.threadComments.open(null);
@@ -171,6 +191,42 @@ export default class AppProjectConversationPageController extends Controller {
         if (!this.isDestroying && !this.isDestroyed) {
             this.threadActivities.reload();
         }
+    }
+
+    /**
+     * Tags the open thread with the text, reusing the project's tag of that name or creating it
+     *
+     * @method addTag
+     * @param {String} text
+     * @returns {Promise}
+     * @public
+     */
+    @action addTag(text) {
+        return this.threadTags.add(text);
+    }
+
+    /**
+     * Removes a tag from the open thread
+     *
+     * @method removeTag
+     * @param {Tagged} tagged
+     * @returns {Promise}
+     * @public
+     */
+    @action removeTag(tagged) {
+        return this.threadTags.remove(tagged);
+    }
+
+    /**
+     * Suggests the project's tags for the typed text
+     *
+     * @method suggestTags
+     * @param {String} text
+     * @returns {Promise<Array>}
+     * @public
+     */
+    @action suggestTags(text) {
+        return this.threadTags.suggest(text);
     }
 
     /**
