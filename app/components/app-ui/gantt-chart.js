@@ -22,7 +22,7 @@ import {
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
-import { loadToolbarPreferences, saveToolbarPreferences, loadPhonePreferences, savePhonePreferences } from 'prometheus/utils/gantt/toolbar-preferences';
+import { LINK_TYPES, DEFAULT_LINK_TYPES, loadToolbarPreferences, saveToolbarPreferences, loadPhonePreferences, savePhonePreferences } from 'prometheus/utils/gantt/toolbar-preferences';
 
 /**
  * This component renders the main Gantt chart view with timeline and milestones/issues
@@ -46,7 +46,8 @@ export default class GanttChartComponent extends AppComponent {
 		this.timeScale = this.viewport.isPhone ? 'days' : saved.scale;
 		// phones keep their own layer options: lines and labels off until turned on
 		const layers = this.viewport.isPhone ? loadPhonePreferences() : saved;
-		this.showDependencies = layers.dependencies;
+		this.linkTypes = this.viewport.isPhone ? (layers.dependencies ? [...DEFAULT_LINK_TYPES] : []) : layers.links;
+		this.showOtherProjects = this.viewport.isPhone ? true : layers.otherProjects;
 		this.showWeekends = layers.weekends;
 		this.showLabels = this.viewport.isPhone ? layers.labels : true;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
@@ -319,13 +320,54 @@ export default class GanttChartComponent extends AppComponent {
 	scales = ['days', 'weeks', 'months'];
 
 	/**
-	 * Whether the dependency layer is drawn; remembered per user
+	 * The link types drawn (`blocks`, `splits`, `relates`); none hides the line layer. Remembered per user.
+	 *
+	 * @property linkTypes
+	 * @type Array
+	 * @public
+	 */
+	@tracked linkTypes = [...DEFAULT_LINK_TYPES];
+
+	/**
+	 * Whether issues of other projects show (the ghost rows); remembered per user
+	 *
+	 * @property showOtherProjects
+	 * @type Boolean
+	 * @public
+	 */
+	@tracked showOtherProjects = true;
+
+	/**
+	 * The link types the Links dropdown offers
+	 *
+	 * @property linkTypeOptions
+	 * @type Array
+	 * @public
+	 */
+	linkTypeOptions = LINK_TYPES;
+
+	/**
+	 * Whether any line is drawn; the layer is left out when no link type is chosen
 	 *
 	 * @property showDependencies
 	 * @type Boolean
 	 * @public
 	 */
-	@tracked showDependencies = true;
+	get showDependencies() {
+		return this.linkTypes.length > 0;
+	}
+
+	/**
+	 * The chosen types' names joined ("Blocks, Splits"), the Links dropdown's label
+	 *
+	 * @property linksSummary
+	 * @type String
+	 * @public
+	 */
+	get linksSummary() {
+		let names = this.linkTypes.map((type) => this.intl.t(`components.gantt.links.${type}`));
+		return names.length ? names.join(', ') : this.intl.t('components.gantt.links.none');
+	}
 
 	/**
 	 * Whether the weekend columns are shaded; remembered per user
@@ -502,20 +544,47 @@ export default class GanttChartComponent extends AppComponent {
 		}
 		saveToolbarPreferences({
 			scale: this.timeScale,
-			dependencies: this.showDependencies,
+			links: this.linkTypes,
+			otherProjects: this.showOtherProjects,
 			weekends: this.showWeekends
 		});
 	}
 
 	/**
-	 * Shows or hides the dependency lines
+	 * Shows or hides the dependency lines: the phone menu's toggle, mapped to the Links filter
+	 * (on = Blocks and Splits, off = none)
 	 *
 	 * @method toggleDependencies
 	 * @public
 	 */
 	@action
 	toggleDependencies() {
-		this.showDependencies = !this.showDependencies;
+		this.linkTypes = this.showDependencies ? [] : [...DEFAULT_LINK_TYPES];
+		this.savePreferences();
+	}
+
+	/**
+	 * Adds or removes one link type from the Links filter
+	 *
+	 * @method toggleLinkType
+	 * @param {String} type `blocks`, `splits` or `relates`
+	 * @public
+	 */
+	@action
+	toggleLinkType(type) {
+		this.linkTypes = LINK_TYPES.filter((option) => (option === type ? !this.linkTypes.includes(type) : this.linkTypes.includes(option)));
+		this.savePreferences();
+	}
+
+	/**
+	 * Shows or hides the issues of other projects
+	 *
+	 * @method toggleOtherProjects
+	 * @public
+	 */
+	@action
+	toggleOtherProjects() {
+		this.showOtherProjects = !this.showOtherProjects;
 		this.savePreferences();
 	}
 
@@ -922,7 +991,7 @@ export default class GanttChartComponent extends AppComponent {
 			let from = issueMap[fromId];
 			let to = issueMap[toId];
 
-			if (!from || !to) {
+			if (!from || !to || !this.linkTypes.includes(link.type)) {
 				return;
 			}
 			deps.push({

@@ -1013,3 +1013,51 @@ $gantt-phone-grid-width: 124px;
     }
   }
 }
+
+/* Links filter dropdown and the line legend under the toolbar */
+.gantt-links-filter .gantt-links-menu {
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.gantt-line-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .gantt-line-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .gantt-line-sample {
+    display: inline-block;
+    width: 24px;
+    height: 0;
+    border-top: 2px solid #777;
+
+    &.is-splits {
+      border-top-style: dashed;
+    }
+
+    &.is-relates {
+      border-top-style: dotted;
+    }
+
+    &.is-conflict {
+      border-top-color: #d9534f;
+    }
+  }
+
+  .gantt-swatch-other {
+    display: inline-block;
+    width: 24px;
+    height: 10px;
+    border: 1px solid #999;
+    background: repeating-linear-gradient(45deg, #ddd, #ddd 3px, #fff 3px, #fff 6px);
+  }
+}
