@@ -131,6 +131,20 @@
                   @validate={{fn this.validateField "issueCreate" (hash name="priority" value=this.model.priority)}}
                   @message={{this.message.issueCreate.priority}}
               />
+
+              <FormFields::FieldRelateMulti
+                  @label={{t "views.app.issue.create.tags"}}
+                  @placeholder={{t "views.app.issue.create.selecttags"}}
+                  @selected={{this.pendingTags}}
+                  @search={{this.searchTags}}
+                  @searchEnabled={{true}}
+                  @searchField="label"
+                  @onchange={{this.setPendingTags}}
+                  @onCreate={{this.addPendingTag}}
+                  @relateType="relate-simple"
+                  @data-field="issue.tags"
+                  @aclContext="tagged.create"
+              />
             </div>
 
           </div>

@@ -1365,6 +1365,12 @@
           "parent": "Parent",
           "files": "Files",
           "conversation": "Thread",
+          "tags": {
+            "title": "Tags",
+            "add": "Add a tag",
+            "failed": "The tag could not be saved. Please try again.",
+            "loadFailed": "The tags could not be loaded."
+          },
           "linkedIssues": {
             "blockedBy": "Blocked by",
             "title": "Linked issues",
@@ -1493,6 +1499,9 @@
           "parentIssue": "Parent Issue",
           "parent": "Parent",
           "selectparent": "Select the issue parent",
+          "tags": "Tags",
+          "selecttags": "Add tags",
+          "tagsFailed": "The issue was saved, but these tags could not be added: {tags}",
           "fromThread": "Created from the thread",
           "people": "People",
           "estimates": "Estimates",

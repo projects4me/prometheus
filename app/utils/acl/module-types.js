@@ -96,6 +96,7 @@ export const MODULE_SCOPE = {
         'upload',
         'activity',
         'tag',
+        'tagged',
         'issuewatcher',
         'vote',
         'issueplanning',

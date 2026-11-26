@@ -11,6 +11,7 @@ import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
+import { service } from '@ember/service';
 
 /**
  * This is the controller for issue create page
@@ -22,6 +23,56 @@ import { toArray } from 'prometheus/utils/array/to-array';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectIssueCreateController extends ProjectRelated {
+
+    @service tags;
+
+    /**
+     * The tags typed or picked on the form, as select options ({ label }). They are attached to the issue once it is
+     * saved.
+     *
+     * @property pendingTags
+     * @type Array
+     * @protected
+     */
+    @tracked pendingTags = [];
+
+    /**
+     * The tags of the project that contain the text, as options of the tags select.
+     *
+     * @method searchTags
+     * @param {String} text
+     * @return {Promise<Array>}
+     */
+    @action
+    async searchTags(text) {
+        let found = await this.tags.suggest(this.project?.id, text);
+        let chosen = this.pendingTags.map((option) => option.label.toLowerCase());
+        return found.filter((tag) => !chosen.includes(String(tag.tag).toLowerCase())).map((tag) => ({ label: tag.tag, value: tag.id }));
+    }
+
+    /**
+     * Sets the tags picked in the select (the select hands over the whole selection, removals included).
+     *
+     * @method setPendingTags
+     * @param {Array} selected
+     */
+    @action
+    setPendingTags(selected) {
+        this.pendingTags = [...(selected ?? [])];
+    }
+
+    /**
+     * Adds the typed text as a tag of the form, unless it is there already (any letter case).
+     *
+     * @method addPendingTag
+     * @param {String} text
+     */
+    @action
+    addPendingTag(text) {
+        if (!this.pendingTags.some((option) => option.label.toLowerCase() === text.toLowerCase())) {
+            this.pendingTags = [...this.pendingTags, { label: text, value: null }];
+        }
+    }
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 
@@ -409,6 +460,27 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
      * @protected
      */
     async afterSave(model) {
+        let tagError = null;
+        try {
+            await this.attachPendingTags(model);
+        } catch (error) {
+            tagError = error;
+        }
+        await this.linkSourceThread(model);
+        if (tagError) {
+            throw tagError;
+        }
+    }
+
+    /**
+     * Links the thread the issue was created from, if any, to the saved issue.
+     *
+     * @method linkSourceThread
+     * @param {Prometheus.Models.Issue} model the saved issue
+     * @return {Promise}
+     * @protected
+     */
+    async linkSourceThread(model) {
         let room = this.sourceThread;
         if (!room) {
             return;
@@ -422,6 +494,29 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
             throw error;
         }
         room.issue = model;
+    }
+
+    /**
+     * Attaches the tags of the form to the saved issue. A tag that fails is skipped and reported, the issue stays saved.
+     *
+     * @method attachPendingTags
+     * @param {Prometheus.Models.Issue} model the saved issue
+     * @return {Promise}
+     * @protected
+     */
+    async attachPendingTags(model) {
+        let failed = [];
+        for (let option of this.pendingTags) {
+            try {
+                await this.tags.attach(model.projectId ?? this.project?.id, 'issue', model.id, option.label);
+            } catch {
+                failed.push(option.label);
+            }
+        }
+        this.pendingTags = [];
+        if (failed.length) {
+            throw new Error(this.intl.t('views.app.issue.create.tagsFailed', { tags: failed.join(', ') }));
+        }
     }
 
     /**
