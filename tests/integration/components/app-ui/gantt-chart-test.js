@@ -449,9 +449,38 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         this.timelineEnd = iso(new Date(today.getFullYear(), today.getMonth() + 6, 28));
         await renderChart();
         const container = document.querySelector('.gantt-timeline-container');
-        assert.strictEqual(container.scrollLeft, 0);
+        const before = container.scrollLeft;
         await click('[data-test-gantt-today]');
+        assert.notStrictEqual(container.scrollLeft, before, 'scrolled towards today');
         assert.ok(container.scrollLeft > 0, 'scrolled towards today');
+    });
+
+    const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    test('the first render scrolls the timeline to the first issue bar', async function (assert) {
+        this.milestones[0].issues[0].startDate = '2026-11-20';
+        this.milestones[0].issues[0].endDate = '2026-11-22';
+        await renderChart();
+        await nextFrame();
+        const container = document.querySelector('.gantt-timeline-container');
+        const bar = document.querySelector(`${barRow('1')} .gantt-bar, ${barRow('1')} [data-test-gantt-bar]`) || document.querySelector(barRow('1'));
+        assert.ok(container.scrollLeft > 0, 'scrolled sideways');
+        assert.strictEqual(container.scrollTop, 0, 'rows stay at the top');
+        assert.ok(bar, 'the first issue has a row');
+    });
+
+    test('a search that changes the first issue scrolls to the new one', async function (assert) {
+        this.milestones[0].issues[0].startDate = '2026-11-05';
+        this.milestones[0].issues[1].startDate = '2026-11-25';
+        this.milestones[0].issues[1].endDate = '2026-11-27';
+        await renderChart();
+        await nextFrame();
+        const container = document.querySelector('.gantt-timeline-container');
+        const first = container.scrollLeft;
+        this.set('milestones', [{ ...this.milestones[0], issues: [this.milestones[0].issues[1]] }]);
+        await settled();
+        await nextFrame();
+        assert.ok(container.scrollLeft > first, 'scrolled on to the new first issue');
     });
 
     test('the toggles hide and show the dependency layer and weekend shading, and persist', async function (assert) {

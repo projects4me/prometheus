@@ -1583,9 +1583,56 @@ export default class GanttChartComponent extends AppComponent {
 				this.showScrollTarget();
 			} else if (this.viewport.isPhone) {
 				this.scrollToToday();
+			} else {
+				this.scrollToFirstIssue();
 			}
 			this.updateVisibleRange();
 		});
+	}
+
+	/**
+	 * The first issue with a start date in grid order (milestone by milestone, as filtered), or null.
+	 *
+	 * @property firstDatedIssue
+	 * @type Prometheus.Models.Issue
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get firstDatedIssue() {
+		return this.allIssues.find((issue) => issue?.startDate) || null;
+	}
+
+	/**
+	 * Identifies the first dated issue; when it changes (a search changed the shown issues) the timeline scrolls to it.
+	 *
+	 * @property firstIssueKey
+	 * @type String
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get firstIssueKey() {
+		return this.firstDatedIssue?.id ?? '';
+	}
+
+	/**
+	 * Scrolls the timeline sideways so the first dated issue starts near the left edge (rows stay at the top).
+	 * Phones open around today and an issue asked for by the URL wins, so both skip this.
+	 *
+	 * @method scrollToFirstIssue
+	 * @public
+	 */
+	@action
+	scrollToFirstIssue() {
+		if (this.viewport.isPhone || this.args.scrollTarget || !this.timelineContainerElement) {
+			return;
+		}
+		const issue = this.firstDatedIssue;
+		if (!issue) {
+			return;
+		}
+		const barLeft = calculateBarPosition(this.args.timelineStart, issue.startDate, this.dayWidth);
+		const margin = this.timeScale === 'days' ? this.dayWidth : 4;
+		this.timelineContainerElement.scrollTo({ left: Math.max(0, barLeft - margin), behavior: 'auto' });
 	}
 
 	/**
