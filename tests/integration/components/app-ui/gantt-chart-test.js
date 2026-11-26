@@ -807,6 +807,52 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).dependencies, undefined, 'desktop key untouched');
         });
 
+        const renderWithLinks = function () {
+            this.state.ids = new Set(['m1', 'm2']);
+            const end = (id) => ({ id: () => id, value: () => null });
+            const link = (type, from, to) => ({ type, belongsTo: (name) => end(name === 'sourceIssue' ? from : to) });
+            this.links = {
+                links: [link('blocks', '1', '2'), link('blocks', '2', '3'), link('relates', '1', '2')],
+                isOpen: () => true
+            };
+            return render(hbs`<AppUi::GanttChart
+                @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+                @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+                @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
+                @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}} @links={{this.links}}
+                @onCloseIssuePanel={{this.noop}} />`);
+        };
+
+        test('phones draw only the links of the selected issue; none selected draws no lines', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderWithLinks.call(this);
+            assert.dom('.gantt-dependency-layer').doesNotExist('nothing selected');
+
+            this.set('selected', { id: '3' });
+            await settled();
+            assert.dom('.dependency-line-blocks').exists({ count: 1 }, 'only 2 -> 3');
+            assert.dom('.dependency-line-relates').doesNotExist();
+
+            this.set('selected', { id: '1' });
+            await settled();
+            assert.dom('.dependency-line-blocks').exists({ count: 1 }, 'only 1 -> 2');
+            assert.dom('.dependency-line-relates').exists({ count: 1 }, 'its relates link too');
+
+            this.set('selected', null);
+            await settled();
+            assert.dom('.gantt-dependency-layer').doesNotExist();
+        });
+
+        test('the Dependency lines option shows all lines on phones', async function (assert) {
+            this.viewport.isPhone = true;
+            this.selected = { id: '3' };
+            await renderWithLinks.call(this);
+            assert.dom('.dependency-line-blocks').exists({ count: 1 });
+            await openMenu();
+            await click('[data-select="gantt-options-dependencies"]');
+            assert.dom('.dependency-line-blocks').exists({ count: 2 }, 'both blocks links');
+        });
+
         test('desktop is unaffected: labels show and there is no options menu', async function (assert) {
             await renderChart();
             assert.dom('[data-test-gantt-options]').doesNotExist();

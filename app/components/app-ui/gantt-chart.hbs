@@ -160,7 +160,7 @@
         {{#if this.todayLineStyle}}
           <div class="gantt-today-line" style={{this.todayLineStyle}} data-test-gantt-today-line></div>
         {{/if}}
-        {{#if this.showDependencies}}
+        {{#if this.showDependencyLayer}}
         <AppUi::GanttChart::DependencyLayer
           @dependencies={{this.dependencies}}
           @barRegistry={{this.barRegistry}}
