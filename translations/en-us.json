@@ -379,6 +379,32 @@
       "conflict": {
         "blocker": "Starts before {blocker} ends{others, plural, =0 {} one { and # more} other { and # more}}"
       },
+      "tooltip": {
+        "assignee": "Assignee",
+        "unassigned": "Unassigned",
+        "dates": "Dates",
+        "milestone": "Milestone",
+        "time": "Time",
+        "noDates": "No dates",
+        "dateRange": "{start} – {end} · {days, plural, one {# day} other {# days}}",
+        "duration": "{hours, plural, =0 {{minutes}m} other {#h{minutes, plural, =0 {} other { {minutes}m}}}}",
+        "timeOf": "{spent} spent of {estimated} · {percent}%",
+        "timeSpent": "{spent} spent",
+        "noTime": "No time logged",
+        "linksTitle": "Links",
+        "conflict": "Starts before {blocker} ends ({date}){others, plural, =0 {} other { and # more}}",
+        "more": "and {count} more",
+        "modified": "Modified by {name} · {date}",
+        "links": {
+          "blockedBy": "Blocked by",
+          "blocks": "Blocks",
+          "splitFrom": "Split from",
+          "splitInto": "Splits into",
+          "relates": "Relates to",
+          "parent": "Child of",
+          "children": "Parent of"
+        }
+      },
       "links": {
         "label": "Links",
         "none": "None",
@@ -2645,12 +2671,6 @@
         },
         "bar": {
           "keyboardHint": "Press Enter to open the issue. Arrow keys move it by a day; Shift and the arrow keys change its end date."
-        },
-        "tooltip": {
-          "estimatedHours": "Estimated hours",
-          "spentHours": "Spent hours",
-          "modifiedBy": "Modified by",
-          "at": "at"
         }
       },
       "notifications": {

@@ -74,9 +74,12 @@ export default class InitializeTooltipModifier extends Modifier {
 				placement: placement,
 				theme: theme,
 				interactive: interactive,
-				// An element shared by several hosts can sit in one tooltip at a time: move it in when this one shows
+				// An element shared by several hosts can sit in one tooltip at a time: move it in when this one shows.
+				// Tippy re-renders content only when it differs from the last one set, so a host showing the shared
+				// element again (after another host took it) would stay empty: clear it first to force the move.
 				onShow: (instance) => {
-					if (contentElement) {
+					if (contentElement && !instance.popper.contains(contentElement)) {
+						instance.setContent('');
 						instance.setContent(contentElement);
 					}
 				}

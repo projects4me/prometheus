@@ -733,11 +733,29 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         const bars = this.element.querySelectorAll('.task-row [data-test-gantt-bar]');
         await triggerEvent(bars[1], 'mouseenter');
         assert.dom('[data-test-gantt-tooltip]', document.body).exists({ count: 1 }, 'host after hover');
-        assert.dom('[data-test-gantt-tooltip] .issue-title', document.body).includesText('#2 - Subject 2');
+        assert.dom('[data-test-gantt-tooltip] [data-test-gantt-tooltip-number]', document.body).hasText('#2');
+        assert.dom('[data-test-gantt-tooltip] [data-test-gantt-tooltip-subject]', document.body).hasText('Subject 2');
         assert.dom('[data-test-gantt-tooltip]', document.body).includesText('Modifier 2');
 
         await triggerEvent(bars[0], 'mouseenter');
-        assert.dom('[data-test-gantt-tooltip] .issue-title', document.body).includesText('#1 - Subject 1');
+        assert.dom('[data-test-gantt-tooltip] [data-test-gantt-tooltip-number]', document.body).hasText('#1');
+    });
+
+    test('a bar shown again after another bar took the shared tooltip is not empty', async function (assert) {
+        await renderChart();
+        const bars = this.element.querySelectorAll('.task-row [data-test-gantt-bar]');
+        const hover = (bar) => triggerEvent(bar, 'mouseenter');
+
+        await hover(bars[1]);
+        bars[1]._tippy.hide();
+        await hover(bars[0]);
+        bars[0]._tippy.hide();
+        await hover(bars[1]);
+
+        const popper = bars[1]._tippy.popper;
+        assert.true(bars[1]._tippy.state.isVisible, 'the tooltip of the bar shows');
+        assert.dom('[data-test-gantt-tooltip]', popper).exists('the shared content moved back into it');
+        assert.dom('[data-test-gantt-tooltip-number]', popper).hasText('#2');
     });
 
     test('a task bar shows its % done fill and its label inside the bar', async function (assert) {
@@ -779,8 +797,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         this.timeTotals = new Map([['1', { spent: 90, estimated: 240 }]]);
         await renderChart();
         await triggerEvent(this.element.querySelectorAll('.task-row [data-test-gantt-bar]')[0], 'mouseenter');
-        assert.dom('[data-test-gantt-tooltip]', document.body).includesText('4 hrs 0 min');
-        assert.dom('[data-test-gantt-tooltip]', document.body).includesText('1 hrs 30 min');
+        assert.dom('[data-test-gantt-tooltip] [data-test-gantt-tooltip-time]', document.body).hasText('1h 30m spent of 4h · 38%');
     });
 
     module('linking by dragging a dot', function (linkHooks) {

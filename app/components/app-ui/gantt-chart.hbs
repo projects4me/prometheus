@@ -273,7 +273,7 @@
   {{! One tooltip content for every bar; the bar under the pointer or focus fills it }}
   <div hidden>
     <div data-test-gantt-tooltip {{register-element this.registerTooltipElement}}>
-      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} @timeTotals={{@timeTotals}} />
+      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} @timeTotals={{@timeTotals}} @links={{@links}} @issues={{this.allIssues}} />
     </div>
   </div>
 </div>
