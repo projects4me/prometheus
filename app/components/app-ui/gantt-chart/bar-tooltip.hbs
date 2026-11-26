@@ -1,18 +1,61 @@
 {{#if @issue}}
-  <LinkTo @route="app.project.issue.page" @models={{array (lowercase @issue.projectShortcode) @issue.issueNumber}} class="issue-title">
-    #{{@issue.issueNumber}} - {{@issue.subject}}
-  </LinkTo>
-  <br>
-  <ion class="ion-md-stopwatch"></ion>
-  <strong>
-    {{t 'views.app.gantt.tooltip.estimatedHours'}}:</strong> {{this.estimated}}
-  <br>
-  <ion class="ion-md-stopwatch"></ion>
-  <strong>
-    {{t 'views.app.gantt.tooltip.spentHours'}}:</strong> {{this.spent}}
-  <br>
-  <strong>{{t 'views.app.gantt.tooltip.modifiedBy'}}:</strong> {{@issue.modifiedBy.name}}
-  {{#let (format-date-time date=@issue.dateModified) as |modifiedAt|}}
-    {{t 'views.app.gantt.tooltip.at'}} {{modifiedAt}}
-  {{/let}}
+  <div class="gantt-tooltip" data-test-gantt-tooltip-content>
+    <div class="gantt-tooltip-head">
+      <LinkTo @route="app.project.issue.page" @models={{array (lowercase @issue.projectShortcode) @issue.issueNumber}} class="gantt-tooltip-number" data-test-gantt-tooltip-number>#{{@issue.issueNumber}}</LinkTo>
+      <AppUi::StatusLabel @status={{@issue.status}} data-test-gantt-tooltip-status />
+      {{#if @issue.priority}}
+        <span class="gantt-tooltip-priority" data-test-gantt-tooltip-priority><AppUi::PriorityIcon @priority={{@issue.priority}} /> {{t (concat "views.app.issue.lists.priority." @issue.priority)}}</span>
+      {{/if}}
+      {{#if this.typeLabel}}
+        <span class="text-muted" data-test-gantt-tooltip-type>{{this.typeLabel}}</span>
+      {{/if}}
+      <div class="gantt-tooltip-subject text-bold" data-test-gantt-tooltip-subject>{{@issue.subject}}</div>
+    </div>
+    <dl class="gantt-tooltip-facts" data-test-gantt-tooltip-facts>
+      <dt>{{t "components.gantt.tooltip.assignee"}}</dt>
+      <dd data-test-gantt-tooltip-assignee>
+        {{#if @issue.assignedTo.name}}
+          <AppUi::Avatar @user={{@issue.assignedTo}} @size="xs" /> {{@issue.assignedTo.name}}
+        {{else}}
+          <span class="text-muted">{{t "components.gantt.tooltip.unassigned"}}</span>
+        {{/if}}
+      </dd>
+      <dt>{{t "components.gantt.tooltip.dates"}}</dt>
+      <dd data-test-gantt-tooltip-dates>{{this.dates}}</dd>
+      {{#if @issue.issuemilestone.name}}
+        <dt>{{t "components.gantt.tooltip.milestone"}}</dt>
+        <dd data-test-gantt-tooltip-milestone>{{@issue.issuemilestone.name}}</dd>
+      {{/if}}
+      <dt>{{t "components.gantt.tooltip.time"}}</dt>
+      <dd data-test-gantt-tooltip-time>{{this.time}}</dd>
+    </dl>
+    {{#if this.hasLinks}}
+      <div class="gantt-tooltip-links" data-test-gantt-tooltip-links>
+        <div class="gantt-tooltip-section-title text-muted">{{t "components.gantt.tooltip.linksTitle"}}</div>
+        {{#if this.conflict}}
+          <div class="text-red" data-test-gantt-tooltip-conflict><i class="fa fa-ban" aria-hidden="true"></i> {{this.conflict}}</div>
+        {{/if}}
+        {{#each this.linkGroups as |group|}}
+          {{#each group.rows as |row|}}
+            <div class="gantt-tooltip-link" data-test-gantt-tooltip-link={{group.key}}>
+              <span class="text-muted">{{group.label}}</span>
+              <LinkTo @route="app.project.issue.page" @models={{array (lowercase row.issue.projectShortcode) row.issue.issueNumber}}>{{row.name}}</LinkTo>
+              <span class="gantt-tooltip-link-subject">{{row.issue.subject}}</span>
+              {{#if row.withStatus}}
+                <AppUi::StatusLabel @status={{row.issue.status}} />
+              {{/if}}
+            </div>
+          {{/each}}
+          {{#if group.more}}
+            <div class="gantt-tooltip-more text-muted" data-test-gantt-tooltip-more={{group.key}}>{{t "components.gantt.tooltip.more" count=group.more}}</div>
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if (or @issue.modifiedBy.name @issue.dateModified)}}
+      <div class="gantt-tooltip-footer text-muted" data-test-gantt-tooltip-footer>
+        {{t "components.gantt.tooltip.modified" name=(or @issue.modifiedBy.name "—") date=(format-date-time date=@issue.dateModified format="D MMM, HH:mm")}}
+      </div>
+    {{/if}}
+  </div>
 {{/if}}

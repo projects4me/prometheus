@@ -1,11 +1,81 @@
 // This file contains the styles for the tooltip themes
 
+// The Gantt bar tooltip: a white box with a primary top border, square edges, about 330px wide
 .tippy-box[data-theme~="gantt-issue-tooltip"] {
-    padding: 1rem;
-    line-height: 1.8;
+    width: 330px;
+    max-width: 330px;
+    background-color: $backgroundColor;
+    color: $darkColor;
+    border: 1px solid #ddd;
+    border-top: 3px solid $primaryColor;
+    border-radius: 0;
+    text-align: left;
 
-    .issue-title {
-        font-size: 1.6rem;
-        line-height: normal;
+    > .tippy-content {
+        padding: 0;
+    }
+
+    > .tippy-arrow {
+        display: none;
+    }
+
+    .gantt-tooltip-head,
+    .gantt-tooltip-facts,
+    .gantt-tooltip-links,
+    .gantt-tooltip-footer {
+        padding: 6px 10px;
+    }
+
+    .gantt-tooltip-head {
+        line-height: 1.8;
+    }
+
+    .gantt-tooltip-number {
+        font-size: 1.5rem;
+        color: $secondaryColor;
+    }
+
+    .gantt-tooltip-subject {
+        line-height: 1.4;
+        font-size: 1.5rem;
+    }
+
+    .gantt-tooltip-facts {
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        row-gap: 4px;
+        margin: 0;
+        border-top: 1px solid $borderColor;
+
+        dt {
+            font-weight: normal;
+            color: $mediumColor;
+        }
+
+        dd {
+            margin: 0;
+        }
+    }
+
+    .gantt-tooltip-links {
+        border-top: 1px solid $borderColor;
+        line-height: 1.9;
+    }
+
+    .gantt-tooltip-section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .gantt-tooltip-link {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .gantt-tooltip-footer {
+        border-top: 1px solid $borderColor;
+        font-size: 1.1rem;
     }
 }
