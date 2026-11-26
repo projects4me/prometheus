@@ -8,6 +8,7 @@ import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { render, click, settled, triggerEvent, waitUntil, getRootElement } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { chooseOption, removeSelectedOption, selectedOptionTexts } from 'prometheus/tests/helpers/select';
 import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 import EmberObject from '@ember/object';
 import AclStub from '../../stub-services/acl-stub';
@@ -423,10 +424,9 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         await renderChart();
         assert.dom('[data-test-gantt-scale-button="weeks"]').hasClass('btn-primary');
         assert.dom('[data-test-gantt-scale-button="days"]').doesNotHaveClass('btn-primary');
-        assert.dom('[data-test-gantt-links-label]').hasText('Links: Blocks, Splits');
-        assert.dom('[data-select="gantt-links-blocks"]').isChecked();
-        assert.dom('[data-select="gantt-links-splits"]').isChecked();
-        assert.dom('[data-select="gantt-links-relates"]').isNotChecked();
+        assert.deepEqual(selectedOptionTexts('[data-test-gantt-links]'), ['Blocks', 'Splits']);
+        assert.dom('[data-test-gantt-links] [data-field="gantt-links"]').exists('the Links form field');
+        assert.dom('.gantt-toolbar .form-checkbox-sm').exists({ count: 2 }, 'Other projects and Weekends use the small checkbox');
         assert.dom('[data-select="gantt-other-projects"]').isChecked();
         assert.dom('[data-select="gantt-weekends"]').isChecked();
         assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
@@ -488,20 +488,20 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         await renderChart();
         assert.dom('.gantt-dependency-layer').exists();
         assert.dom('[data-test-gantt-grid-weekend]').exists();
-        await click('[data-select="gantt-links-blocks"]');
+        await removeSelectedOption('[data-test-gantt-links]', 'Blocks');
         assert.dom('.gantt-dependency-layer').exists('Splits is still on');
-        await click('[data-select="gantt-links-splits"]');
+        await removeSelectedOption('[data-test-gantt-links]', 'Splits');
         await click('[data-select="gantt-weekends"]');
         await click('[data-select="gantt-other-projects"]');
         assert.dom('.gantt-dependency-layer').doesNotExist('no link type hides the layer');
-        assert.dom('[data-test-gantt-links-label]').hasText('Links: None');
+        assert.deepEqual(selectedOptionTexts('[data-test-gantt-links]'), []);
         assert.dom('[data-test-gantt-grid-weekend]').doesNotExist();
         assert.deepEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')), { scale: 'days', links: [], otherProjects: false, weekends: false });
         await click('[data-test-gantt-scale-button="months"]');
         assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).scale, 'months');
-        await click('[data-select="gantt-links-relates"]');
+        await chooseOption('[data-test-gantt-links]', 'Relates');
         assert.dom('.gantt-dependency-layer').exists();
-        assert.dom('[data-test-gantt-links-label]').hasText('Links: Relates');
+        assert.deepEqual(selectedOptionTexts('[data-test-gantt-links]'), ['Relates']);
     });
 
     test('each link type toggles its own lines', async function (assert) {
@@ -522,12 +522,12 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.dependency-line-blocks').exists();
         assert.dom('.dependency-line-splits').exists();
         assert.dom('.dependency-line-relates').doesNotExist('relates is off by default');
-        await click('[data-select="gantt-links-blocks"]');
+        await removeSelectedOption('[data-test-gantt-links]', 'Blocks');
         assert.dom('.dependency-line-blocks').doesNotExist();
         assert.dom('.dependency-line-splits').exists();
-        await click('[data-select="gantt-links-relates"]');
+        await chooseOption('[data-test-gantt-links]', 'Relates');
         assert.dom('.dependency-line-relates').exists('shown for the selected issue');
-        await click('[data-select="gantt-links-splits"]');
+        await removeSelectedOption('[data-test-gantt-links]', 'Splits');
         assert.dom('.dependency-line-splits').doesNotExist();
     });
 
@@ -602,15 +602,14 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'months', links: ['relates'], otherProjects: false, weekends: false }));
         await renderChart();
         assert.dom('[data-test-gantt-scale-button="months"]').hasClass('btn-primary');
-        assert.dom('[data-select="gantt-links-blocks"]').isNotChecked();
-        assert.dom('[data-select="gantt-links-relates"]').isChecked();
+        assert.deepEqual(selectedOptionTexts('[data-test-gantt-links]'), ['Relates']);
         assert.dom('[data-select="gantt-other-projects"]').isNotChecked();
     });
 
     test('a saved old Dependencies-off preference hides every link type', async function (assert) {
         window.localStorage.setItem('gantt-toolbar', JSON.stringify({ scale: 'days', dependencies: false }));
         await renderChart();
-        assert.dom('[data-test-gantt-links-label]').hasText('Links: None');
+        assert.deepEqual(selectedOptionTexts('[data-test-gantt-links]'), []);
         assert.dom('.gantt-dependency-layer').doesNotExist();
     });
 
@@ -992,9 +991,31 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.dom('.gantt-dependency-layer').doesNotExist();
             assert.dom(LABEL).doesNotExist();
             await openMenu();
-            assert.dom('[data-select="gantt-options-dependencies"]').isNotChecked();
-            assert.dom('[data-select="gantt-options-labels"]').isNotChecked();
+            ['blocks', 'splits', 'relates', 'labels'].forEach((name) => assert.dom(`[data-select="gantt-options-${name}"]`).isNotChecked());
+            assert.dom('[data-select="gantt-options-other-projects"]').isChecked();
             assert.dom('[data-select="gantt-options-weekends"]').isChecked();
+        });
+
+        test('the menu has Links and Show sections of small crimson checkboxes', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderChart();
+            await openMenu();
+            assert.dom('[data-test-gantt-options-heading="links"]').hasText('Links');
+            assert.dom('[data-test-gantt-options-heading="show"]').hasText('Show');
+            assert.dom('[data-test-gantt-options-menu] .form-checkbox.checkbox-primary.form-checkbox-sm').exists({ count: 6 });
+        });
+
+        test('the Links checkboxes toggle the same state as the desktop field', async function (assert) {
+            this.viewport.isPhone = true;
+            await renderChart();
+            await openMenu();
+            await click('[data-select="gantt-options-blocks"]');
+            await click('[data-select="gantt-options-relates"]');
+            assert.dom('.gantt-dependency-layer').exists();
+            assert.deepEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar-phone')).links, ['blocks', 'relates']);
+            await click('[data-select="gantt-options-blocks"]');
+            await click('[data-select="gantt-options-relates"]');
+            assert.dom('.gantt-dependency-layer').doesNotExist();
         });
 
         test('each checkbox shows its layer and is remembered apart from desktop', async function (assert) {
@@ -1003,12 +1024,14 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             await openMenu();
             await click('[data-select="gantt-options-labels"]');
             assert.dom(LABEL).exists();
-            await click('[data-select="gantt-options-dependencies"]');
+            await click('[data-select="gantt-options-blocks"]');
+            await click('[data-select="gantt-options-splits"]');
             assert.dom('.gantt-dependency-layer').exists();
+            await click('[data-select="gantt-options-other-projects"]');
             await click('[data-select="gantt-options-weekends"]');
             assert.dom('[data-test-gantt-grid-weekend]').doesNotExist();
             const saved = JSON.parse(window.localStorage.getItem('gantt-toolbar-phone'));
-            assert.deepEqual(saved, { dependencies: true, labels: true, weekends: false });
+            assert.deepEqual(saved, { links: ['blocks', 'splits'], otherProjects: false, labels: true, weekends: false });
             assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).dependencies, undefined, 'desktop key untouched');
         });
 
@@ -1049,13 +1072,13 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.dom('.gantt-dependency-layer').doesNotExist();
         });
 
-        test('the Dependency lines option shows all lines on phones', async function (assert) {
+        test('the Blocks option shows all lines on phones', async function (assert) {
             this.viewport.isPhone = true;
             this.selected = { id: '3' };
             await renderWithLinks.call(this);
             assert.dom('.dependency-line-blocks').exists({ count: 1 });
             await openMenu();
-            await click('[data-select="gantt-options-dependencies"]');
+            await click('[data-select="gantt-options-blocks"]');
             assert.dom('.dependency-line-blocks').exists({ count: 2 }, 'both blocks links');
         });
 

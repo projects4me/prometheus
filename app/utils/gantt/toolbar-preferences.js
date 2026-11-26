@@ -80,7 +80,7 @@ export function saveToolbarPreferences(preferences) {
 
 /**
  * The localStorage key of the phone's layer options, kept apart from the desktop toolbar's.
- * Its value is JSON: `{ dependencies, labels, weekends }`.
+ * Its value is JSON: `{ links, otherProjects, labels, weekends }`.
  *
  * @property GANTT_PHONE_KEY
  * @type String
@@ -88,10 +88,10 @@ export function saveToolbarPreferences(preferences) {
 export const GANTT_PHONE_KEY = 'gantt-toolbar-phone';
 
 /**
- * Reads the phone's saved layer options; dependency lines and bar labels are off until turned on
+ * Reads the phone's saved layer options; link lines and bar labels are off until turned on (an old `dependencies` flag reads as the default link types)
  *
  * @function loadPhonePreferences
- * @return {Object} `{ dependencies, labels, weekends }`
+ * @return {Object} `{ links, otherProjects, labels, weekends }`
  */
 export function loadPhonePreferences() {
 	let saved = {};
@@ -101,7 +101,8 @@ export function loadPhonePreferences() {
 		saved = {};
 	}
 	return {
-		dependencies: saved.dependencies === true,
+		links: Array.isArray(saved.links) ? savedLinkTypes(saved) : (saved.dependencies === true ? [...DEFAULT_LINK_TYPES] : []),
+		otherProjects: saved.otherProjects !== false,
 		labels: saved.labels === true,
 		weekends: saved.weekends !== false
 	};
@@ -111,7 +112,7 @@ export function loadPhonePreferences() {
  * Saves the phone's layer options; when storage is unavailable they stay for this session only
  *
  * @function savePhonePreferences
- * @param {Object} preferences `{ dependencies, labels, weekends }`
+ * @param {Object} preferences `{ links, otherProjects, labels, weekends }`
  */
 export function savePhonePreferences(preferences) {
 	try {

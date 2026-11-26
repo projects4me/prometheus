@@ -37,7 +37,7 @@ $gantt-link-dot-active-color: $highlightColor;
   overflow: hidden;
 
   .nav-tabs-custom {
-    margin-bottom: 0;
+    margin: 0;
   }  
 }
 
@@ -932,7 +932,7 @@ $gantt-link-dot-active-color: $highlightColor;
 /* Phones: List | Timeline tabs under the search, one column at full width */
 @media (max-width: 767px) {
   .gantt-phone-tabs {
-    margin-bottom: 0;
+    margin: 0;
     position: relative;
 
     .gantt-options {
@@ -950,6 +950,22 @@ $gantt-link-dot-active-color: $highlightColor;
     .gantt-options-menu {
       padding: 6px 12px;
       white-space: nowrap;
+
+      .form-checkbox {
+        padding: 4px 0;
+      }
+    }
+
+    .gantt-options-heading {
+      margin: 6px 0 2px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #999;
+
+      &:first-child {
+        margin-top: 0;
+      }
     }
 
   }
@@ -1114,10 +1130,13 @@ $gantt-link-dot-active-color: $highlightColor;
   }
 }
 
-/* Links filter dropdown and the line legend under the toolbar */
-.gantt-links-filter .gantt-links-menu {
-  padding: 6px 12px;
-  white-space: nowrap;
+/* Links field in the toolbar: the form field, compact (no form margin, about 210px) */
+.gantt-links-field {
+  width: 210px;
+
+  .form-field {
+    margin: 0;
+  }
 }
 
 /* The legend is the info icon's tooltip: shown on hover and focus */

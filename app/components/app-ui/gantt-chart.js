@@ -58,8 +58,8 @@ export default class GanttChartComponent extends AppComponent {
 		this.timeScale = this.viewport.isPhone ? 'days' : saved.scale;
 		// phones keep their own layer options: lines and labels off until turned on
 		const layers = this.viewport.isPhone ? loadPhonePreferences() : saved;
-		this.linkTypes = this.viewport.isPhone ? (layers.dependencies ? [...DEFAULT_LINK_TYPES] : []) : layers.links;
-		this.showOtherProjects = this.viewport.isPhone ? true : layers.otherProjects;
+		this.linkTypes = layers.links;
+		this.showOtherProjects = layers.otherProjects;
 		this.showWeekends = layers.weekends;
 		this.showLabels = this.viewport.isPhone ? layers.labels : true;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
@@ -422,15 +422,25 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * The chosen types' names joined ("Blocks, Splits"), the Links dropdown's label
+	 * The link types as the Links field's options (value and translated label)
 	 *
-	 * @property linksSummary
-	 * @type String
+	 * @property linkOptions
+	 * @type Array
 	 * @public
 	 */
-	get linksSummary() {
-		let names = this.linkTypes.map((type) => this.intl.t(`components.gantt.links.${type}`));
-		return names.length ? names.join(', ') : this.intl.t('components.gantt.links.none');
+	get linkOptions() {
+		return LINK_TYPES.map((type) => ({ value: type, label: this.intl.t(`components.gantt.links.${type}`) }));
+	}
+
+	/**
+	 * The chosen link types, as the Links field's chips
+	 *
+	 * @property selectedLinkOptions
+	 * @type Array
+	 * @public
+	 */
+	get selectedLinkOptions() {
+		return this.linkOptions.filter((option) => this.linkTypes.includes(option.value));
 	}
 
 	/**
@@ -582,7 +592,8 @@ export default class GanttChartComponent extends AppComponent {
 	savePreferences() {
 		if (this.viewport.isPhone) {
 			savePhonePreferences({
-				dependencies: this.showDependencies,
+				links: this.linkTypes,
+				otherProjects: this.showOtherProjects,
 				labels: this.showLabels,
 				weekends: this.showWeekends
 			});
@@ -597,15 +608,16 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Shows or hides the dependency lines: the phone menu's toggle, mapped to the Links filter
-	 * (on = Blocks and Splits, off = none)
+	 * Sets the link types from the Links field's chips
 	 *
-	 * @method toggleDependencies
+	 * @method selectLinkTypes
+	 * @param {Array} selected the chosen options
 	 * @public
 	 */
 	@action
-	toggleDependencies() {
-		this.linkTypes = this.showDependencies ? [] : [...DEFAULT_LINK_TYPES];
+	selectLinkTypes(selected) {
+		let types = (selected || []).map((option) => option.value);
+		this.linkTypes = LINK_TYPES.filter((type) => types.includes(type));
 		this.savePreferences();
 	}
 
