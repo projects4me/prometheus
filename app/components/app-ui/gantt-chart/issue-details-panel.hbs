@@ -1,18 +1,32 @@
-<div 
-  class="gantt-issue-panel {{if this.isOpen 'gantt-issue-panel-visible'}}"
-  {{did-insert this.registerPanel}}
-  {{did-update this.handleIssueChange @issue.id @isOpen}}
->
-  {{#if this.isOpen}}
-    <Issue::IssueDetails
-      @issue={{@issue}}
-      @selectStatic={{@selectStatic}}
-      @projectController={{@projectController}}
-      @issueTypes={{@issueTypes}}
-      @quickView={{true}}
-      @renderSingleColumn={{false}}
-      @closeIssueDetails={{this.handleClose}}
-    />
-  {{/if}}
-</div>
-
+{{#if this.isOpen}}
+  <div class="gantt-quick-view {{if this.isCollapsed 'gantt-quick-view-collapsed'}}" data-test-gantt-quick-view>
+    <button
+      class="board-panel-divider"
+      type="button"
+      title={{if this.isCollapsed (t "components.gantt.quickView.expand") (t "components.gantt.quickView.collapse")}}
+      aria-expanded={{if this.isCollapsed "false" "true"}}
+      data-test-gantt-quick-view-divider
+      {{on "click" this.toggleCollapse}}
+    >
+      <span class="divider-handle">
+        <i class="fa fa-angle-{{if this.isCollapsed 'left' 'right'}}" aria-hidden="true"></i>
+      </span>
+    </button>
+    {{#unless this.isCollapsed}}
+      <div
+        class="gantt-issue-panel"
+        {{on-insert this.registerPanel}}
+        {{on-update @issue.id this.handleIssueChange}}
+      >
+        <Issue::IssueDetails
+          @issue={{@issue}}
+          @selectStatic={{@selectStatic}}
+          @projectController={{@projectController}}
+          @issueTypes={{@issueTypes}}
+          @quickView={{true}}
+          @closeIssueDetails={{this.handleClose}}
+        />
+      </div>
+    {{/unless}}
+  </div>
+{{/if}}

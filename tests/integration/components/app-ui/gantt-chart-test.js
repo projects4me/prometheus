@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { render, click, settled, triggerEvent, waitUntil } from '@ember/test-helpers';
+import { render, click, settled, triggerEvent, waitUntil, getRootElement } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { GANTT_ROW_HEIGHT } from 'prometheus/utils/gantt-helpers';
 import EmberObject from '@ember/object';
@@ -691,6 +691,16 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             this.closePanel = () => { this.panelState.issue = null; this.panelState.open = false; };
         });
 
+        hooks.afterEach(function () {
+            getRootElement().style.width = '';
+        });
+
+        // The quick view mode follows the Gantt container's measured width, so the tests size the test root
+        const sizeRoot = (width) => { getRootElement().style.width = `${width}px`; };
+        const measured = () => waitUntil(() => document.querySelector('[data-test-gantt-container]')?.getBoundingClientRect().width > 0)
+            .then(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+            .then(() => settled());
+
         const renderWithPanel = () => render(hbs`<AppUi::GanttChart
             @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
             @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
@@ -714,14 +724,51 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
             assert.dom('.gantt-quick-view-modal').doesNotExist();
         });
 
-        test('on desktop the eye opens the side panel beside the grid, not the modal', async function (assert) {
+        test('a wide container opens the quick view as a side panel next to the chart, which stays visible', async function (assert) {
+            sizeRoot(1400);
             await renderWithPanel();
+            await measured();
+            const container = document.querySelector('.gantt-timeline-container');
+            container.scrollLeft = 120;
+            const scrolled = container.scrollLeft;
             await click(`${gridRow('1')} [data-test-gantt-grid-open]`);
-            assert.dom('.gantt-issue-panel-visible').exists();
+            await measured();
+            assert.dom('[data-test-gantt-quick-view]').exists();
+            assert.dom('.gantt-issue-panel').exists();
             assert.dom('.gantt-quick-view-modal').doesNotExist();
-            assert.dom('.gantt-timeline-wrapper').hasClass('gantt-panel-open');
             assert.dom(GRID).isVisible();
-            assert.dom('.gantt-timeline-body').isNotVisible();
+            assert.dom('.gantt-timeline-body').isVisible('the timeline stays next to the panel');
+            assert.strictEqual(document.querySelector('.gantt-timeline-container'), container, 'the timeline is not re-rendered');
+            assert.strictEqual(container.scrollLeft, scrolled, 'the timeline keeps its scroll position');
+            const panel = document.querySelector('[data-test-gantt-quick-view]').getBoundingClientRect();
+            const timeline = document.querySelector('.gantt-timeline-wrapper').getBoundingClientRect();
+            assert.ok(panel.left >= timeline.right - 1, 'the panel sits to the right of the chart');
+        });
+
+        test('a narrow container on a wide viewport opens the quick view as the bottom sheet', async function (assert) {
+            sizeRoot(700);
+            await renderWithPanel();
+            await measured();
+            await click(`${gridRow('1')} [data-test-gantt-grid-open]`);
+            assert.dom('.gantt-quick-view-modal').exists();
+            assert.dom('[data-test-gantt-quick-view]').doesNotExist();
+            assert.dom('.gantt-timeline-body').isVisible();
+        });
+
+        test('the divider collapses the side panel and expands it again', async function (assert) {
+            sizeRoot(1400);
+            await renderWithPanel();
+            await measured();
+            await click(`${gridRow('1')} [data-test-gantt-grid-open]`);
+            const chartWidth = document.querySelector('.gantt-timeline-wrapper').getBoundingClientRect().width;
+            await click('[data-test-gantt-quick-view-divider]');
+            assert.dom('[data-test-gantt-quick-view]').hasClass('gantt-quick-view-collapsed');
+            assert.dom('.gantt-issue-panel').doesNotExist();
+            assert.dom('[data-test-gantt-quick-view-divider]').hasAttribute('aria-expanded', 'false');
+            assert.ok(document.querySelector('.gantt-timeline-wrapper').getBoundingClientRect().width > chartWidth, 'the chart takes the width');
+            await click('[data-test-gantt-quick-view-divider]');
+            assert.dom('[data-test-gantt-quick-view]').doesNotHaveClass('gantt-quick-view-collapsed');
+            assert.dom('.gantt-issue-panel').exists();
         });
     });
 

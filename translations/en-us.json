@@ -444,6 +444,10 @@
         "overdue": "Overdue",
         "done": "Done",
         "noDates": "No dates"
+      },
+      "quickView": {
+        "collapse": "Collapse issue details",
+        "expand": "Expand issue details"
       }
     },
     "quickList": {
