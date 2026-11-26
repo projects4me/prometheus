@@ -694,7 +694,10 @@ export default class GanttBarComponent extends AppComponent {
             return;
         }
 
-        if (event.target.closest('.connector-dot')) {
+        // A press on a link dot starts a link, not a move
+        const dot = event.target.closest('.connector-dot');
+        if (dot) {
+            this.handleConnectorMouseDown(dot.dataset.connector, event);
             return;
         }
 
@@ -940,38 +943,76 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
-     * Handle clicking on a connector dot
-     * If linking state exists, complete the connection
-     * Otherwise, start a new connection
+     * Start a link from a press on a link dot (called from handleMouseDown); the chart draws the
+     * preview line and the link completes on a mouse-up over another bar.
      *
-     * @method handleConnectorClick
-     * @param {String} position
-     * @param {Event} event
-     * @public
+     * @method handleConnectorMouseDown
+     * @param {String} position `start` or `end`
+     * @param {MouseEvent} event
+     * @private
      */
-    @action handleConnectorClick(position, event) {
-        if (event.button !== 0 && event.button !== undefined) {
-            return;
-        }
-
+    handleConnectorMouseDown(position, event) {
         event.preventDefault();
         event.stopPropagation();
 
-        if (!this.args.issue) {
+        if (this.args.issue && this.args.onStartDependencyLink) {
+            this.args.onStartDependencyLink(this.args.issue, position, event);
+        }
+    }
+
+    /**
+     * Keyboard path for linking: Enter or Space on a focused link dot starts a link, and on
+     * another bar's dot completes it. A mouse links by dragging (handleConnectorMouseDown),
+     * so a mouse click (`detail` above 0) on the dot is only kept from selecting the bar.
+     *
+     * @method handleConnectorKeyActivate
+     * @param {String} position `start` or `end`
+     * @param {MouseEvent} event The click the browser fires for Enter or Space
+     * @public
+     */
+    @action handleConnectorKeyActivate(position, event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.detail !== 0 || !this.args.issue) {
             return;
         }
 
-        // If there's an active linking state, try to complete the connection
-        if (this.args.linkingState && this.args.linkingState.sourceIssue) {
-            if (this.args.onCompleteDependencyLink) {
-                this.args.onCompleteDependencyLink(this.args.issue, position, event);
-            }
+        if (this.args.linkingState?.sourceIssue) {
+            this.args.onCompleteDependencyLink?.(this.args.issue, event);
         } else {
-            // Start a new connection
-            if (this.args.onStartDependencyLink) {
-                this.args.onStartDependencyLink(this.args.issue, position, event);
-            }
+            this.args.onStartDependencyLink?.(this.args.issue, position, event);
         }
+    }
+
+    /**
+     * Complete a pending link when the mouse is released over any part of this bar
+     *
+     * @method handleLinkMouseUp
+     * @param {MouseEvent} event
+     * @public
+     */
+    @action handleLinkMouseUp(event) {
+        if (!this.args.linkingState || !this.args.issue) {
+            return;
+        }
+
+        if (this.args.onCompleteDependencyLink) {
+            this.args.onCompleteDependencyLink(this.args.issue, event);
+        }
+    }
+
+    /**
+     * Whether this bar is under the pointer while a link from another bar is pending
+     *
+     * @property isLinkTarget
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get isLinkTarget() {
+        let sourceId = this.args.linkingState?.sourceIssue?.id;
+        return Boolean(sourceId) && this.isHovering && sourceId !== this.args.issue?.id;
     }
 
     /**

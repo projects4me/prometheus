@@ -785,6 +785,89 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-tooltip]', document.body).includesText('1 hrs 30 min');
     });
 
+    module('linking by dragging a dot', function (linkHooks) {
+        const BAR = (id) => `${barRow(id)} [data-test-gantt-bar]`;
+        const DOT = (id, end) => `${BAR(id)} [data-test-gantt-link-dot="${end}"]`;
+        const middleOf = (selector) => {
+            const rect = document.querySelector(selector).getBoundingClientRect();
+            return { button: 0, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+        };
+
+        linkHooks.beforeEach(async function () {
+            this.created = [];
+            this.onCreateDependency = (predecessor, successor) => this.created.push([predecessor.id, successor.id]);
+            await render(hbs`<AppUi::GanttChart
+                @milestones={{this.milestones}} @timelineStart={{this.timelineStart}} @timelineEnd={{this.timelineEnd}}
+                @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
+                @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
+                @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}}
+                @onCloseIssuePanel={{this.noop}} @onCreateDependency={{this.onCreateDependency}} />`);
+        });
+
+        const dragFrom = async (end) => {
+            await triggerEvent(BAR('1'), 'mouseenter');
+            await triggerEvent(DOT('1', end), 'mousedown', middleOf(DOT('1', end)));
+            await triggerEvent(document.body, 'mousemove', middleOf(BAR('2')));
+            await triggerEvent(BAR('1'), 'mouseleave');
+            await triggerEvent(BAR('2'), 'mouseenter');
+        };
+
+        test('from the end dot onto the middle of another bar opens the picker with this issue first', async function (assert) {
+            await dragFrom('end');
+            assert.dom(BAR('2')).hasClass('link-target', 'the bar under the pointer is the target');
+            assert.dom(BAR('2')).hasAttribute('data-test-gantt-link-target');
+            assert.dom(BAR('1')).doesNotHaveClass('link-target', 'the source is never the target');
+
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+            assert.deepEqual(this.created, [['1', '2']], 'issue 1 comes before issue 2');
+            assert.dom('.link-target').doesNotExist('the highlight goes with the link');
+        });
+
+        test('from the start dot the other issue comes first', async function (assert) {
+            await dragFrom('start');
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+            assert.deepEqual(this.created, [['2', '1']]);
+        });
+
+        test('Escape cancels the link', async function (assert) {
+            await dragFrom('end');
+            await triggerEvent(document.body, 'keydown', { key: 'Escape' });
+            assert.dom('.link-target').doesNotExist();
+
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+            assert.deepEqual(this.created, [], 'nothing is linked after the cancel');
+        });
+
+        test('a mouse-up away from a bar, or on the bar it started from, cancels the link', async function (assert) {
+            await dragFrom('end');
+            await triggerEvent(document.body, 'mouseup', { button: 0 });
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+
+            await triggerEvent(BAR('1'), 'mouseenter');
+            await triggerEvent(DOT('1', 'end'), 'mousedown', middleOf(DOT('1', 'end')));
+            await triggerEvent(BAR('1'), 'mouseup', middleOf(BAR('1')));
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+            assert.deepEqual(this.created, [], 'no link was made');
+        });
+
+        test('Enter on a dot, then on another bar\'s dot, links them from the keyboard', async function (assert) {
+            await triggerEvent(BAR('1'), 'mouseenter');
+            await triggerEvent(DOT('1', 'end'), 'click', { detail: 0 });
+            await triggerEvent(BAR('1'), 'mouseleave');
+            assert.dom(DOT('2', 'start')).exists('every bar shows its dots while a link is pending');
+
+            await triggerEvent(DOT('2', 'start'), 'click', { detail: 0 });
+            assert.deepEqual(this.created, [['1', '2']]);
+        });
+
+        test('a mouse click on a dot does not start a link', async function (assert) {
+            await triggerEvent(BAR('1'), 'mouseenter');
+            await triggerEvent(DOT('1', 'end'), 'click', { detail: 1 });
+            await triggerEvent(BAR('2'), 'mouseup', middleOf(BAR('2')));
+            assert.deepEqual(this.created, []);
+        });
+    });
+
     test('the footer shows the hints, the range and the counts, and updates with the milestones', async function (assert) {
         await renderChart();
         assert.dom('[data-test-gantt-footer-hints]').includesText('Drag a bar to move it');

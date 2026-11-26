@@ -1630,13 +1630,14 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Begin creating a dependency by clicking on a connector
-	 * Sets up linking state and tracks mouse movement for preview line
+	 * Begin creating a dependency by pressing the mouse on a bar's link dot.
+	 * Sets up the linking state, draws the preview line while the pointer moves,
+	 * and cancels on a mouse-up away from a bar or on Escape.
 	 *
 	 * @method startDependencyLink
-	 * @param {Object} issue
-	 * @param {String} anchor
-	 * @param {Event} event
+	 * @param {Object} issue The issue whose dot was pressed
+	 * @param {String} anchor `start` or `end`: the dot that was pressed
+	 * @param {MouseEvent} event
 	 * @public
 	 */
 	@action startDependencyLink(issue, anchor, event) {
@@ -1646,6 +1647,9 @@ export default class GanttChartComponent extends AppComponent {
 
 		event.preventDefault();
 		event.stopPropagation();
+
+		// A second press while a link is pending starts over
+		this.resetLinkingState();
 
 		let startPoint = this.getConnectorPoint(issue.id, anchor);
 
@@ -1670,62 +1674,74 @@ export default class GanttChartComponent extends AppComponent {
 			pointer: startPoint
 		};
 
-		// Track mouse movement for preview line visualization
-		// Connection will be completed via click
+		// The target bar completes the link on its own mouse-up, which reaches the bar
+		// before it bubbles to the document; a mouse-up anywhere else cancels.
 		document.addEventListener('mousemove', this.handleGlobalMouseMove);
+		document.addEventListener('mouseup', this.handleGlobalMouseUp);
+		document.addEventListener('keydown', this.handleGlobalKeyDown);
 	}
 
 	/**
-	 * Complete the dependency link if user drops on another connector
+	 * Complete the pending link on a mouse-up over any part of another bar.
+	 * The pressed dot gives the direction: from the end dot the source issue comes
+	 * first (predecessor); from the start dot the target issue comes first.
+	 * Opens the link-type picker through `@onCreateDependency`.
 	 *
 	 * @method completeDependencyLink
-	 * @param {Object} issue
-	 * @param {String} anchor
-	 * @param {Event} event
+	 * @param {Object} issue The issue of the bar the mouse was released on
+	 * @param {MouseEvent} event
 	 * @public
 	 */
-	@action completeDependencyLink(issue, anchor, event) {
+	@action completeDependencyLink(issue, event) {
 		if (!this.linkingState || !issue) {
 			return;
 		}
 
 		event.preventDefault();
-		event.stopPropagation();
 
-		let sourceIssue = this.linkingState.sourceIssue;
+		let { sourceIssue, sourceAnchor } = this.linkingState;
+		this.resetLinkingState();
 
-		// Ignore same issue connections
-		if (sourceIssue.id === issue.id) {
-			this.resetLinkingState();
+		// Released on the bar it started from: nothing to link
+		if (sourceIssue.id === issue.id || !this.args.onCreateDependency) {
 			return;
 		}
 
-		let dependency = null;
+		let [predecessor, successor] =
+			sourceAnchor === 'start' ? [issue, sourceIssue] : [sourceIssue, issue];
 
-		if (this.linkingState.sourceAnchor === 'end' && anchor === 'start') {
-			dependency = {
-				predecessor: sourceIssue,
-				successor: issue
-			};
-		} else if (
-			this.linkingState.sourceAnchor === 'start' &&
-			anchor === 'end'
-		) {
-			dependency = {
-				predecessor: issue,
-				successor: sourceIssue
-			};
+		// A keyboard-made click has no pointer position: open the picker at the dot instead
+		let point = { x: event.clientX, y: event.clientY };
+		if (event.type === 'click' && event.detail === 0 && event.target?.getBoundingClientRect) {
+			let rect = event.target.getBoundingClientRect();
+			point = { x: rect.right, y: rect.bottom };
 		}
 
-		if (dependency && this.args.onCreateDependency) {
-			this.args.onCreateDependency(
-				dependency.predecessor,
-				dependency.successor,
-				{ x: event.clientX, y: event.clientY }
-			);
-		}
+		this.args.onCreateDependency(predecessor, successor, point);
+	}
 
+	/**
+	 * Cancel a pending link when the mouse is released away from a bar
+	 *
+	 * @method handleGlobalMouseUp
+	 * @public
+	 */
+	@action handleGlobalMouseUp() {
 		this.resetLinkingState();
+	}
+
+	/**
+	 * Cancel a pending link on Escape
+	 *
+	 * @method handleGlobalKeyDown
+	 * @param {KeyboardEvent} event
+	 * @public
+	 */
+	@action handleGlobalKeyDown(event) {
+		if (event.key === 'Escape' && this.linkingState) {
+			event.preventDefault();
+			this.resetLinkingState();
+		}
 	}
 
 	/**
@@ -1777,7 +1793,11 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	resetLinkingState() {
 		document.removeEventListener('mousemove', this.handleGlobalMouseMove);
-		this.linkingState = null;
+		document.removeEventListener('mouseup', this.handleGlobalMouseUp);
+		document.removeEventListener('keydown', this.handleGlobalKeyDown);
+		if (this.linkingState) {
+			this.linkingState = null;
+		}
 		this.stopAutoScroll();
 	}
 

@@ -605,6 +605,12 @@ $gantt-phone-grid-width: 124px;
     outline-offset: 0;
   }
 
+  /* The bar under the pointer while a link is dragged onto it */
+  &.link-target {
+    outline: 2px solid $primaryColor;
+    outline-offset: 0;
+  }
+
   &.draggable {
     cursor: grab;
     user-select: none;
@@ -677,6 +683,8 @@ $gantt-phone-grid-width: 124px;
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* The link dots stay hit-testable above the fill, the label and the resize handles */
+  z-index: 1;
 }
 
 .hover-zone {
