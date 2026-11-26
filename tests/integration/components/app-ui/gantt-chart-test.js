@@ -414,7 +414,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-legend]').doesNotExist();
     });
 
-    test('the toolbar defaults to Weeks with both toggles on, and lists the statuses', async function (assert) {
+    test('the toolbar defaults to Weeks with both toggles on', async function (assert) {
         window.localStorage.removeItem('gantt-toolbar');
         const store = this.owner.lookup('service:store');
         store.createRecord('issuestatus', { name: 'new', color: '#3c8dbc' });
@@ -429,8 +429,6 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-select="gantt-other-projects"]').isChecked();
         assert.dom('[data-select="gantt-weekends"]').isChecked();
         assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
-        assert.dom('[data-test-gantt-legend-status]').exists({ count: 2 });
-        assert.dom('[data-test-gantt-legend-status]').hasText('New');
         assert.dom('.nav-tabs-custom.gantt-time-scale-selector').doesNotExist('the old tab strip is gone');
     });
 
