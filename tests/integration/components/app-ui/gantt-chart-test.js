@@ -790,11 +790,11 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-footer-hints]').includesText('Drag a bar to move it');
         assert.dom('[data-test-gantt-footer-hints]').includesText('Drag either end to change dates');
         assert.dom('[data-test-gantt-footer-hints]').includesText('Drag the dot onto another bar to link them');
-        assert.dom('[data-test-gantt-footer-summary]').hasText('1 Nov – 31 Dec · 2 milestones · 3 issues shown');
+        assert.dom('[data-test-gantt-footer-summary]').hasText('1 Nov â€“ 31 Dec Â· 2 milestones Â· 3 issues shown');
         // a search leaves one milestone with one dated and one undated issue
         this.set('milestones', [{ ...this.milestones[0], issues: [this.milestones[0].issues[0], { id: '9', issueNumber: 9, subject: 'No dates' }] }]);
         await settled();
-        assert.dom('[data-test-gantt-footer-summary]').hasText('1 Nov – 31 Dec · 1 milestone · 1 issue shown · 1 without dates');
+        assert.dom('[data-test-gantt-footer-summary]').hasText('1 Nov â€“ 31 Dec Â· 1 milestone Â· 1 issue shown Â· 1 without dates');
     });
 
     test('the footer is hidden on phones', async function (assert) {

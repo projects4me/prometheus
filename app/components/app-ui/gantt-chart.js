@@ -429,7 +429,7 @@ export default class GanttChartComponent extends AppComponent {
 
 	/**
 	 * The footer's right side: the timeline's date range and the counts of what the chart shows
-	 * ("16 Nov – 10 Jan · 3 milestones · 4 issues shown · 1 without dates"). The undated part is left out at 0.
+	 * ("16 Nov â€“ 10 Jan Â· 3 milestones Â· 4 issues shown Â· 1 without dates"). The undated part is left out at 0.
 	 *
 	 * @property footerSummary
 	 * @type String
@@ -441,7 +441,7 @@ export default class GanttChartComponent extends AppComponent {
 		const parts = [];
 		if (this.args.timelineStart && this.args.timelineEnd) {
 			parts.push(
-				`${dates.format(this.args.timelineStart, 'D MMM')} – ${dates.format(this.args.timelineEnd, 'D MMM')}`
+				`${dates.format(this.args.timelineStart, 'D MMM')} â€“ ${dates.format(this.args.timelineEnd, 'D MMM')}`
 			);
 		}
 		const shown = milestones.reduce((total, milestone) => total + getValidIssues(milestone).length, 0);
@@ -451,7 +451,7 @@ export default class GanttChartComponent extends AppComponent {
 		if (undated > 0) {
 			parts.push(this.intl.t('components.gantt.footer.withoutDates', { count: undated }));
 		}
-		return parts.join(' · ');
+		return parts.join(' Â· ');
 	}
 
 	/**
