@@ -742,24 +742,24 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('[data-test-gantt-tooltip] .issue-title', document.body).includesText('#1 - Subject 1');
     });
 
-    test('a task bar shows its % done fill and only its number after the bar', async function (assert) {
+    test('a task bar shows its % done fill and its label inside the bar', async function (assert) {
         this.milestones[0].issues[0].issuestatus = { done: '0' };
         this.milestones[0].issues[1].issuestatus = { done: '1' };
         this.milestones[0].issues[1].status = 'done';
         // issue 1: 1h of 4h spent; issue 2 has no time but its status counts as done
         this.timeTotals = new Map([['1', { spent: 60, estimated: 240 }]]);
         await renderChart();
-        assert.dom(`${barRow('1')} [data-test-gantt-bar-label]`).hasText('#1');
+        assert.dom(`${barRow('1')} [data-test-gantt-bar-label]`).hasText('#1 Subject 1');
         assert.dom(`${barRow('1')} [data-test-gantt-bar-fill]`).hasAttribute('style', '--bar-progress: 25');
         assert.dom(`${barRow('2')} [data-test-gantt-bar-fill]`).hasAttribute('style', '--bar-progress: 100');
         assert.dom(`${barRow('2')} [data-test-gantt-bar-label]`).hasClass('completed');
         assert.dom(`${barRow('1')} [data-test-gantt-bar]`).hasAttribute('aria-label', '#1 - Subject 1', 'the subject stays in the accessible name');
         const label = document.querySelector(`${barRow('1')} [data-test-gantt-bar-label]`).getBoundingClientRect();
         const bar = document.querySelector(`${barRow('1')} [data-test-gantt-bar]`).getBoundingClientRect();
-        const row = document.querySelector(barRow('1')).getBoundingClientRect();
-        assert.true(label.left >= bar.right, 'the label sits after the bar');
-        assert.true(label.top >= row.top, 'the label starts inside its row');
-        assert.true(label.bottom <= row.bottom, 'the label ends inside its row');
+        assert.true(label.left >= bar.left - 1, 'the label starts inside the bar');
+        assert.true(label.right <= bar.right + 1, 'the label ends inside the bar');
+        assert.dom(`${barRow('1')} [data-test-gantt-bar-label]`).hasText('#1 Subject 1');
+        assert.dom(`${barRow('1')} [data-test-gantt-bar] ~ [data-test-gantt-bar-label]`).doesNotExist('no label after the bar');
     });
 
     test('a task bar without an estimate has no fill', async function (assert) {
