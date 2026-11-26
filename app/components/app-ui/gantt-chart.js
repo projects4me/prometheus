@@ -1123,7 +1123,7 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Action to handle a bar click: selects the issue; the list scrolls to and marks it through `@activeId`
+	 * Action to handle a bar click: selects the issue (on phones it also opens the edit sheet through `@onEditIssue`); the list scrolls to and marks it through `@activeId`
 	 *
 	 * @method handleIssueClick
 	 * @param {Object} issue The issue that was clicked
@@ -1132,6 +1132,9 @@ export default class GanttChartComponent extends AppComponent {
 	@action
 	handleIssueClick(issue) {
 		this.args.onIssueClick?.(issue);
+		if (this.viewport.isPhone) {
+			this.args.onEditIssue?.(issue);
+		}
 	}
 
 	/**

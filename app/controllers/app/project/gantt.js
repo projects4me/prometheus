@@ -830,4 +830,66 @@ export default class AppProjectGanttController extends PrometheusController {
 			});
 		}
 	}
+
+	/**
+	 * The issue whose phone edit sheet is open, or null.
+	 *
+	 * @property editIssue
+	 * @type Prometheus.Models.Issue|null
+	 * @public
+	 */
+	@tracked editIssue = null;
+
+	/**
+	 * Opens the phone edit sheet (dates and dependencies) for an issue.
+	 *
+	 * @method openEditSheet
+	 * @param {Prometheus.Models.Issue} issue
+	 * @public
+	 */
+	@action
+	openEditSheet(issue) {
+		this.editIssue = issue;
+	}
+
+	/**
+	 * Closes the phone edit sheet.
+	 *
+	 * @method closeEditSheet
+	 * @public
+	 */
+	@action
+	closeEditSheet() {
+		this.editIssue = null;
+	}
+
+	/**
+	 * Goes to the issue page.
+	 *
+	 * @method openIssuePage
+	 * @param {Prometheus.Models.Issue} issue
+	 * @public
+	 */
+	@action
+	openIssuePage(issue) {
+		this.router.transitionTo('app.project.issue.page', issue.issueNumber);
+	}
+
+	/**
+	 * Reloads the project's links lookup, after the edit sheet added dependencies.
+	 *
+	 * @method reloadLinks
+	 * @public
+	 */
+	@action
+	async reloadLinks() {
+		try {
+			let links = await this.issueRelations.linksOfProject(this.trackedProject.id);
+			if (!this.isDestroying && !this.isDestroyed) {
+				this.links = links;
+			}
+		} catch (error) {
+			Logger.error('AppProjectGanttController::reloadLinks - Error:', error);
+		}
+	}
 }

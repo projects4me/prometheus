@@ -2597,6 +2597,24 @@
           "updated": "Issue <strong>{issueNumber}</strong> updated. New dates: <strong>{startDate}</strong> - <strong>{endDate}</strong>",
           "updateError": "Failed to update issue dates"
         },
+        "editSheet": {
+          "title": "#{number}",
+          "done": "{percent}% done",
+          "start": "Start date",
+          "end": "End date",
+          "minusWeek": "-1 week",
+          "minusDay": "-1 day",
+          "plusDay": "+1 day",
+          "plusWeek": "+1 week",
+          "duration": "{count, plural, one {# day} other {# days}} long",
+          "dependsOn": "Depends on",
+          "blocks": "Blocks",
+          "noBlockers": "Nothing blocks this issue.",
+          "addDependency": "Add dependency",
+          "removeDependency": "Remove dependency",
+          "openIssue": "Open issue",
+          "save": "Save dates"
+        },
         "linkPicker": {
           "title": "Link #{source} to #{target}",
           "blocks": "#{source} blocks #{target}",

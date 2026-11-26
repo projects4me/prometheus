@@ -204,14 +204,14 @@ export default class IssueLinkIssueModalComponent extends Component {
 	}
 
 	/**
-	 * The relation of a new row: the first is "relates to", the next ones the one picked last. "is child of" falls
+	 * The relation of a new row: the first is `@relation` (default "relates to"), the next ones the one picked last. "is child of" falls
 	 * back to the default when it is not available.
 	 *
 	 * @method nextRelation
 	 * @return {Object}
 	 */
 	nextRelation() {
-		let value = this.lastRelation || DEFAULT_RELATION;
+		let value = this.lastRelation || this.args.relation || DEFAULT_RELATION;
 		let option = this.relationOptions.find((item) => item.value === value);
 		let taken = value === 'childOf' && (this.args.issue.parentId || this.rows.some((row) => row.relation.value === 'childOf'));
 		return taken ? this.relationOptions.find((item) => item.value === DEFAULT_RELATION) : option;
