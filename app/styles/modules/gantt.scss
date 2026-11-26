@@ -595,7 +595,7 @@ $gantt-phone-grid-width: 124px;
 }
 
 .gantt-bar-task {
-  height: 14px;
+  height: var(--gantt-task-bar-height, 20px);
   z-index: 2;
 
   /* Selected or keyboard-focused: a square ring, with the resize handles and link dot kept visible */
@@ -1139,7 +1139,7 @@ $gantt-phone-grid-width: 124px;
 }
 
 .gantt-bar.gantt-ghost-bar {
-  height: 14px;
+  height: var(--gantt-task-bar-height, 20px);
   min-width: 20px;
   border: 1px dashed $primaryColor;
   border-radius: 0;
