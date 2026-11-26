@@ -50,11 +50,6 @@
         </AppUi::Dropdown>
         <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.otherProjects"}} @checked={{this.showOtherProjects}} @select={{this.toggleOtherProjects}} @data-select="gantt-other-projects" />
         <FormFields::FieldCheckbox @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
-        <div class="gantt-legend" data-test-gantt-legend>
-          {{#each this.legendStatuses as |status|}}
-            <span class="label gantt-legend-status" style={{status-style status.name}} data-test-gantt-legend-status>{{status-label status.name}}</span>
-          {{/each}}
-        </div>
       {{/unless}}
     </div>
     {{#unless this.viewport.isPhone}}

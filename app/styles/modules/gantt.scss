@@ -1007,7 +1007,7 @@ $gantt-link-dot-active-color: $highlightColor;
   }
 }
 
-/* One toolbar row under the search band: scale, Today, the two toggles and, on the right, the status legend */
+/* One toolbar row under the search band: scale, Today and the two toggles */
 .gantt-toolbar {
   display: flex;
   align-items: center;
@@ -1020,17 +1020,6 @@ $gantt-link-dot-active-color: $highlightColor;
     margin: 0;
   }
 
-  .gantt-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-left: auto;
-  }
-
-  .gantt-legend-status {
-    font-size: 11px;
-    border-radius: 0;
-  }
 }
 
 /* Visible resize handles at both ends of the selected bar (the edge zones still do the resizing) */

@@ -63,15 +63,6 @@ export default class GanttChartComponent extends AppComponent {
 	@service viewport;
 
 	/**
-	 * The store, for the status legend
-	 *
-	 * @property store
-	 * @type StoreService
-	 * @public
-	 */
-	@service store;
-
-	/**
 	 * The intl service, for the footer's plural texts
 	 *
 	 * @property intl
@@ -408,24 +399,6 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@tracked showLabels = true;
-
-	/**
-	 * The project's issue statuses for the legend, one per name, in the order the store holds them
-	 *
-	 * @property legendStatuses
-	 * @type Array
-	 * @public
-	 */
-	get legendStatuses() {
-		const seen = new Set();
-		return this.store.peekAll('issuestatus').filter((status) => {
-			if (!status.name || seen.has(status.name)) {
-				return false;
-			}
-			seen.add(status.name);
-			return true;
-		});
-	}
 
 	/**
 	 * The footer's right side: the timeline's date range and the counts of what the chart shows
