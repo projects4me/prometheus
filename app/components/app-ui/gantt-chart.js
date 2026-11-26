@@ -961,7 +961,7 @@ export default class GanttChartComponent extends AppComponent {
 					week,
 					year,
 					startDate: day.date,
-					label: dates.format(day.date, 'D MMM'),
+					label: dates.format(day.date, 'D'),
 					days: 0
 				};
 				groups.push(current);

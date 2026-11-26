@@ -225,18 +225,33 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 35px/);
         assert.dom('.gantt-bar-task[data-issue-id="1"]').hasAttribute('style', /--bar-start: 9; --bar-days: 3;/);
         assert.deepEqual(barBox('1'), { left: '315px', width: '105px' }, 'Weeks: same days at 35px');
-        assert.strictEqual(getComputedStyle(document.querySelector('.day-cell')).width, '35px');
+        assert.strictEqual(getComputedStyle(document.querySelector('.week-cell:nth-child(2)')).width, `${7 * 35}px`, 'Weeks: a full week cell is seven days wide');
         assert.strictEqual(getComputedStyle(document.querySelector('.month-cell')).width, `${30 * 35}px`, 'November spans 30 days');
         assert.dom('.gantt-timeline-container .loader').doesNotExist('no scale-conversion overlay');
     });
 
-    test('the Weeks scale labels each week by its first day', async function (assert) {
+    test('the header is two rows in Days, Weeks and Months, with the labels of each scale', async function (assert) {
         this.timelineStart = '2026-11-02';
-        this.timelineEnd = '2026-11-29';
+        this.timelineEnd = '2026-12-06';
         await renderChart();
+        const texts = (selector) => [...document.querySelectorAll(selector)].map((cell) => cell.textContent.trim().replace(/\s+/g, ' '));
+        const rowHeights = () => [...document.querySelectorAll('.gantt-header-row')].map((row) => row.offsetHeight);
+
+        assert.dom('.gantt-header-row').exists({ count: 2 }, 'Days: two rows');
+        assert.deepEqual(texts('[data-test-gantt-header-top] .gantt-header-cell'), ['November 2026', 'December 2026']);
+        assert.deepEqual(texts('[data-test-gantt-header-bottom] .gantt-header-cell').slice(0, 3), ['M 2', 'T 3', 'W 4']);
+        assert.deepEqual(rowHeights(), [26, 26]);
+        assert.strictEqual(document.querySelector('[data-test-gantt-grid-header]').offsetHeight, document.querySelector('[data-test-gantt-timeline-header]').offsetHeight, 'grid header lines up with the timeline header');
+
         await click('[data-test-gantt-scale-button="weeks"]');
-        const labels = [...document.querySelectorAll('.week-cell')].map((cell) => cell.textContent.trim());
-        assert.deepEqual(labels, ['2 Nov', '9 Nov', '16 Nov', '23 Nov']);
+        assert.dom('.gantt-header-row').exists({ count: 2 }, 'Weeks: two rows');
+        assert.deepEqual(texts('[data-test-gantt-header-top] .gantt-header-cell'), ['November 2026', 'December 2026']);
+        assert.deepEqual(texts('[data-test-gantt-header-bottom] .gantt-header-cell'), ['2', '9', '16', '23', '30']);
+
+        await click('[data-test-gantt-scale-button="months"]');
+        assert.dom('.gantt-header-row').exists({ count: 2 }, 'Months: two rows');
+        assert.deepEqual(texts('[data-test-gantt-header-top] .gantt-header-cell'), ['2026']);
+        assert.deepEqual(texts('[data-test-gantt-header-bottom] .gantt-header-cell'), ['Nov', 'Dec']);
     });
 
     test('the today line sits at today offset, in Days and Weeks', async function (assert) {
@@ -244,20 +259,25 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         this.timelineStart = day(-10);
         this.timelineEnd = day(30);
         await renderChart();
-        const centreOffsets = () => {
-            const line = document.querySelector('[data-test-gantt-today-line]').getBoundingClientRect();
-            const cell = document.querySelector('.day-cell.current-day').getBoundingClientRect();
-            return { line: line.left + line.width / 2, cell: cell.left + cell.width / 2, width: getComputedStyle(document.querySelector('[data-test-gantt-today-line]')).width };
+        const line = () => {
+            const box = document.querySelector('[data-test-gantt-today-line]').getBoundingClientRect();
+            return box.left + box.width / 2;
         };
+        const lineWidth = () => getComputedStyle(document.querySelector('[data-test-gantt-today-line]')).width;
         assert.dom('[data-test-gantt-today-line]').exists({ count: 1 }).hasAttribute('style', /--today-start: 1\d/);
-        for (const scale of ['days', 'weeks']) {
-            if (scale === 'weeks') {
-                await click('[data-test-gantt-scale-button="weeks"]');
-            }
-            const { line, cell, width } = centreOffsets();
-            assert.strictEqual(width, '2px', `${scale}: 2px wide`);
-            assert.ok(Math.abs(line - cell) < 1, `${scale}: centred on today's day cell (${line} vs ${cell})`);
-        }
+
+        const cell = document.querySelector('.day-cell.current-day').getBoundingClientRect();
+        assert.strictEqual(lineWidth(), '2px', 'days: 2px wide');
+        assert.ok(Math.abs(line() - (cell.left + cell.width / 2)) < 1, "days: centred on today's day cell");
+
+        // Weeks has no day cells: the line sits inside the week cell that holds today
+        await click('[data-test-gantt-scale-button="weeks"]');
+        const inWeek = [...document.querySelectorAll('.week-cell')].some((week) => {
+            const box = week.getBoundingClientRect();
+            return line() >= box.left && line() <= box.right;
+        });
+        assert.strictEqual(lineWidth(), '2px', 'weeks: 2px wide');
+        assert.true(inWeek, 'weeks: inside a week cell');
     });
 
     test('there is no today line when today is outside the timeline', async function (assert) {

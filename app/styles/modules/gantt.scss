@@ -8,6 +8,7 @@
  */
 
 $gantt-grid-width: 440px;
+$gantt-header-row-height: 26px;
 $gantt-phone-grid-width: 124px;
 $gantt-selected-row-bg: rgba($primaryColor, 0.08);
 $gantt-link-dot-color: $primaryColor;
@@ -139,36 +140,23 @@ $gantt-link-dot-active-color: $highlightColor;
   }
 }
 
+/* Two rows in every scale: the header is 2 x $gantt-header-row-height, the grid header matches it */
 .gantt-header-row {
   display: flex;
   align-items: center;
-  height: 40px;
+  box-sizing: border-box;
+  height: $gantt-header-row-height;
   border-bottom: 1px solid #e0e0e0;
 
-  &.month-row {
-    height: 35px;
+  &.top-row {
     background: #f9f9f9;
     font-weight: 600;
     font-size: 13px;
   }
 
-  &.day-row {
-    height: 30px;
+  &.bottom-row {
     background: #fff;
     font-size: 11px;
-  }
-
-  &.year-row {
-    height: 32px;
-    background: rgba($primaryColor, 0.06);
-    font-weight: 600;
-    font-size: 13px;
-  }
-
-  &.week-row {
-    height: 30px;
-    background: rgba($primaryColor, 0.03);
-    font-size: 12px;
   }
 }
 
@@ -176,7 +164,8 @@ $gantt-link-dot-active-color: $highlightColor;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
+  box-sizing: border-box;
+  padding: 0 5px;
   border-right: 1px solid #e0e0e0;
 
   &.month-cell {
@@ -283,6 +272,8 @@ $gantt-link-dot-active-color: $highlightColor;
 
 .gantt-grid-header {
   z-index: 11;
+  box-sizing: border-box;
+  height: $gantt-header-row-height * 2 + 2px;
   display: flex;
   align-items: flex-end;
   padding-bottom: 6px;
