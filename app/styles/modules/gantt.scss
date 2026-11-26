@@ -14,6 +14,18 @@ $gantt-selected-row-bg: rgba($primaryColor, 0.08);
 $gantt-link-dot-color: $primaryColor;
 $gantt-link-dot-active-color: $highlightColor;
 
+// Gantt bar colours per status: derived from the palette, each one gives white text at least 4.5:1 contrast
+// (guarded by tests/unit/gantt/bar-colours-test.js). Gantt-only: status labels elsewhere keep issue-status.scss.
+$gantt-bar-colours: (
+  'new': $secondaryColor,
+  'in_progress': $primaryColor,
+  'in_review': $highlightColor,
+  'feedback': darken($warningColor, 14%),
+  'done': darken($successColor, 22%),
+  'closed': $dangerColor,
+  'deferred': darken($mediumColor, 16%),
+);
+
 .gantt-view {
   width: 100%;
   overflow: hidden;
@@ -576,7 +588,7 @@ $gantt-link-dot-active-color: $highlightColor;
   &.selected,
   &:focus-visible {
     outline: 2px solid $highlightColor;
-    outline-offset: 0;
+    outline-offset: 2px;
   }
 
   /* The bar under the pointer while a link is dragged onto it */
@@ -647,9 +659,38 @@ $gantt-link-dot-active-color: $highlightColor;
     }
   }
 
-  /* White on the one dark status colour; the others are light and keep the dark text */
-  &.in_progress .bar-label.bar-label-inner {
-    color: #fff;
+  /* Every bar colour is dark enough for white labels, 11px semibold */
+  .bar-label.bar-label-inner {
+    color: $backgroundColor;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Status colours, scoped to the Gantt. Unknown statuses fall back to the deferred colour. */
+  background-color: map-get($gantt-bar-colours, 'deferred') !important;
+
+  @each $status, $colour in $gantt-bar-colours {
+    &.#{$status} {
+      background-color: $colour !important;
+    }
+  }
+
+  &.complete {
+    background-color: map-get($gantt-bar-colours, 'done') !important;
+  }
+
+  &.pending {
+    background-color: map-get($gantt-bar-colours, 'deferred') !important;
+  }
+
+  /* The plum bar would hide the dark % done fill, so it gets a light one */
+  &.in_review .gantt-bar-fill {
+    background: rgba($backgroundColor, 0.3);
+  }
+
+  /* Ghost rows (other projects) keep their own look */
+  &.gantt-ghost-bar .bar-label.bar-label-inner {
+    color: $darkColor;
   }
 }
 
@@ -1207,7 +1248,7 @@ $gantt-link-dot-active-color: $highlightColor;
   min-width: 20px;
   border: 1px dashed $primaryColor;
   border-radius: 0;
-  background: #f4f4f4;
+  background: #f4f4f4 !important;
   box-shadow: none;
   box-sizing: border-box;
   cursor: default;
