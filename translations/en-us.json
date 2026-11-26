@@ -996,7 +996,8 @@
           "dateCreated": "Created",
           "dateModified": "Updated",
           "creator": "Created by",
-          "likedBy": "Liked by"
+          "likedBy": "Liked by",
+          "tag": "Tag"
         },
         "lists": {
           "roomType": {
@@ -1286,6 +1287,7 @@
           "typeId": "Type",
           "priority": "Priority",
           "milestoneId": "Milestone",
+          "tag": "Tag",
           "owner": "Owner",
           "createdBy": "Created By",
           "modifiedBy": "Modified By",

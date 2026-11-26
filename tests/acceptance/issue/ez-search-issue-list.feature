@@ -21,6 +21,15 @@ Feature: Issue | ezSearch on the issue list
     And the issue list was queried with "((Issue.priority : high) AND (Issue.status !: done))" and the project
     And the url has a query
 
+  Scenario: Filtering the list by tag
+
+    Given The project has the tag "urgent"
+    When User navigates to app/project/project_1/issue
+    And User types "tag = urgent" in the issue search bar and presses Enter
+    Then the issue search bar shows "((tag.tag : urgent))"
+    And the issue list was queried with "((tag.tag : urgent))" and the project
+    And the url has a query
+
   Scenario: Accepting a suggestion with Down and Tab
 
     When User navigates to app/project/project_1/issue
