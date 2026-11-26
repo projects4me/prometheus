@@ -88,6 +88,8 @@ export default class TimelineHeaderComponent extends Component {
 			
 			return {
 				...date,
+				weekdayInitial: dates.format(date.date, 'dd').charAt(0),
+				dayNumber: dates.part(date.date, 'date'),
 				isToday: date.date === today,
 				isCurrentWeek,
 				isCurrentWeekFirst: false, // Will be set correctly after we know all indices
@@ -104,45 +106,63 @@ export default class TimelineHeaderComponent extends Component {
 		return datesWithFlags;
 	}
 	/**
-	 * Check if the year row should be shown
+	 * Whether the Days scale is shown
 	 *
-	 * @property showYearRow
+	 * @property isDays
 	 * @type Boolean
 	 * @for TimelineHeaderComponent
 	 * @public
 	 */
-	get showYearRow() {
-		return (
-			this.args.timeScale === 'weeks' &&
-			(this.args.yearGroups?.length || 0) > 0
-		);
+	get isDays() {
+		return this.args.timeScale !== 'weeks' && this.args.timeScale !== 'months';
 	}
 
 	/**
-	 * The months scale has month columns only; the day row would be a few pixels per cell
+	 * Whether the Weeks scale is shown
 	 *
-	 * @property showDayRow
+	 * @property isWeeks
 	 * @type Boolean
 	 * @for TimelineHeaderComponent
 	 * @public
 	 */
-	get showDayRow() {
-		return this.args.timeScale !== 'months';
+	get isWeeks() {
+		return this.args.timeScale === 'weeks';
 	}
 
 	/**
-	 * Check if the week row should be shown
+	 * The top row: the year in Months, the month and year in Days and Weeks
 	 *
-	 * @property showWeekRow
-	 * @type Boolean
+	 * @property topGroups
+	 * @type Array
 	 * @for TimelineHeaderComponent
 	 * @public
 	 */
-	get showWeekRow() {
-		return (
-			this.args.timeScale === 'weeks' &&
-			(this.args.weekGroups?.length || 0) > 0
-		);
+	get topGroups() {
+		if (this.args.timeScale === 'months') {
+			return (this.args.yearGroups || []).map((group) => ({ ...group, label: group.year }));
+		}
+		const range = this.args.dateRange || [];
+		let offset = 0;
+		return (this.args.monthGroups || []).map((group) => {
+			const first = range[offset];
+			offset += group.days;
+			return {
+				...group,
+				label: first ? dates.format(first.date, 'MMMM YYYY') : `${group.month} ${group.year}`
+			};
+		});
+	}
+
+	/**
+	 * Cell class of the top row
+	 *
+	 * @property topCellClass
+	 * @type String
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get topCellClass() {
+		return this.args.timeScale === 'months' ? 'year-cell' : 'month-cell';
 	}
 
 	/**

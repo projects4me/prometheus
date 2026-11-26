@@ -1,30 +1,26 @@
-<div class="gantt-timeline-header">
-  {{#if this.showYearRow}}
-    <div class="gantt-header-row year-row">
-      {{#each @yearGroups as |yearGroup|}}
-        <div
-          class="gantt-header-cell year-cell"
-          style={{call (fn this.spanStyle yearGroup)}}
-        >
-          {{yearGroup.year}}
-        </div>
-      {{/each}}
-    </div>
-  {{/if}}
-
-  <div class="gantt-header-row month-row">
-    {{#each @monthGroups as |monthGroup|}}
+<div class="gantt-timeline-header" data-test-gantt-timeline-header>
+  <div class="gantt-header-row top-row" data-test-gantt-header-top>
+    {{#each this.topGroups as |group|}}
       <div
-        class="gantt-header-cell month-cell"
-        style={{call (fn this.spanStyle monthGroup)}}
+        class="gantt-header-cell {{this.topCellClass}}"
+        style={{call (fn this.spanStyle group)}}
       >
-        {{monthGroup.month}} {{monthGroup.year}}
+        {{group.label}}
       </div>
     {{/each}}
   </div>
 
-  {{#if this.showWeekRow}}
-    <div class="gantt-header-row week-row">
+  <div class="gantt-header-row bottom-row" data-test-gantt-header-bottom>
+    {{#if this.isDays}}
+      {{#each this.dateRangeWithFlags as |date|}}
+        <div
+          class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}} {{if date.isCurrentWeek 'current-week'}} {{if date.isCurrentWeekFirst 'current-week-first'}} {{if date.isCurrentWeekLast 'current-week-last'}} {{if date.isToday 'current-day'}}"
+          title="{{date.dayOfWeek}}, {{date.month}} {{date.day}}, {{date.year}}"
+        >
+          {{date.weekdayInitial}} {{date.dayNumber}}
+        </div>
+      {{/each}}
+    {{else if this.isWeeks}}
       {{#each @weekGroups as |weekGroup|}}
         <div
           class="gantt-header-cell week-cell"
@@ -33,19 +29,15 @@
           {{weekGroup.label}}
         </div>
       {{/each}}
-    </div>
-  {{/if}}
-
-  {{#if this.showDayRow}}
-  <div class="gantt-header-row day-row">
-    {{#each this.dateRangeWithFlags as |date|}}
-      <div
-        class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}} {{if date.isCurrentWeek 'current-week'}} {{if date.isCurrentWeekFirst 'current-week-first'}} {{if date.isCurrentWeekLast 'current-week-last'}} {{if date.isToday 'current-day'}}"
-        title="{{date.dayOfWeek}}, {{date.month}} {{date.day}}, {{date.year}}"
-      >
-        {{date.day}}
-      </div>
-    {{/each}}
+    {{else}}
+      {{#each @monthGroups as |monthGroup|}}
+        <div
+          class="gantt-header-cell month-cell"
+          style={{call (fn this.spanStyle monthGroup)}}
+        >
+          {{monthGroup.month}}
+        </div>
+      {{/each}}
+    {{/if}}
   </div>
-  {{/if}}
 </div>
