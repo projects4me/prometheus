@@ -11,47 +11,47 @@
     font-style: normal;
   }
   .fa-ban {
-    color: #d33724;
+    color: var(--p4m-color-danger);
   }
   .fa-angle-double-up {
-    color: #d33724;
+    color: var(--p4m-color-danger);
     font-weight: bold;
   }
   .fa-arrow-up {
-    color: #e98a7e;
+    color: var(--p4m-color-status-closed);
   }
   .fa-dot-circle-o {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
   .fa-arrow-down {
-    color: #5ac594;
+    color: var(--p4m-color-status-done);
   }
   .fa-angle-double-down {
-    color: #00a65a;
+    color: var(--p4m-green-675);
     font-weight: bold;
   }
 
   .done,
   .complete {
-    background-color: #5ac594 !important;
+    background-color: var(--p4m-color-status-done) !important;
   }
 
   .closed {
-    background-color: #e98a7e;
+    background-color: var(--p4m-color-status-closed);
   }
 
   .deferred,
   .pending,
   .feedback {
-    background-color: #f7bf65;
+    background-color: var(--p4m-color-status-feedback);
   }
 
   .new {
-    background-color: #80b5d3;
+    background-color: var(--p4m-color-status-new);
   }
 
   .in_progress {
-    background-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
   }
 
   .issue-details-assignee-row {
@@ -97,7 +97,7 @@
     border-radius: 3px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-    background: #fff;
+    background: var(--p4m-grey-0);
     padding-bottom: 0;
     margin-bottom: 0.5rem;
   }
@@ -125,17 +125,17 @@
     right: 0;
     margin-right: 2rem;
     font-size: 1.4rem;
-    color: $lightColor;
+    color: var(--p4m-color-text-disabled);
     cursor: pointer;
     &:hover {
-      color: $dangerColor;
+      color: var(--p4m-color-danger);
     }
   }
 
   .no-entry {
     text-align: center;
     margin: 2rem;
-    color: $lightColor;
+    color: var(--p4m-color-text-disabled);
     font-style: italic;
   }
 
@@ -144,7 +144,7 @@
 
     .log-description {
       display: block;
-      color: $darkColor;
+      color: var(--p4m-color-text);
       max-height: 150px;
       overflow-y: auto;
       overflow-x: hidden;
@@ -194,8 +194,8 @@
 .time-log-in-box > .item {
   -webkit-box-shadow: none;
   box-shadow: none;
-  border-radius: 0;
-  border-bottom: 1px solid #f4f4f4;
+  border-radius: var(--p4m-radius-none);
+  border-bottom: 1px solid var(--p4m-grey-45);
 }
 
 .filePreviewModal {
@@ -208,7 +208,7 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
       .modal-body {
         flex: 1 1 auto;
         min-height: 0;
@@ -235,7 +235,7 @@
 
 .issue-conversation-section {
   .box-comments .box-footer {
-    background: #fff;
+    background: var(--p4m-grey-0);
   }
   margin-top: 0rem;
 }
@@ -247,7 +247,7 @@
     }
 
     a:hover {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     .search-name {
@@ -267,22 +267,22 @@
     }
   }
   .btn-group > .btn-box-tool:hover > .fa {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
 
   .dropdown-menu > li > a:hover {
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
   }
 
   .dropdown-menu li + li {
-    border-top: 0.1rem solid $borderColor;
+    border-top: 0.1rem solid var(--p4m-color-border);
   }  
 }
 
 .create-issue {
   [data-form-field="label"] {
     label {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
 }
@@ -302,7 +302,7 @@
 // Issue Planning Modal Styles
 [data-btn="ai-plan"] {
   i {
-    color: $warningColor;
+    color: var(--p4m-color-warning);
   }
 }
 
@@ -315,7 +315,7 @@
   border-radius: 6px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  background: #fafbfc;
+  background: var(--p4m-slate-15);
 
   .task-total-estimated {
     text-align: end;
@@ -362,13 +362,13 @@
 
 .issue-plan-task-desc {
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--p4m-color-text);
 }
 
 .issue-plan-task-dependency {
   margin-top: 0.25rem;
   font-size: 90%;
-  color: #B3244F;
+  color: var(--p4m-color-brand);
 }
 
 .dependency-disabled {
@@ -400,12 +400,12 @@
 
 .issue-plan-test-case-pre {
   white-space: pre-wrap;
-  background: #f5f5f5;
+  background: var(--p4m-grey-40);
   padding: 0.5rem;
   border-radius: 4px;
   font-size: 0.95em;
   margin: 0.25rem 0;
-  color: #222;
+  color: var(--p4m-grey-865);
 }
 
 .issue-plan-modal {
@@ -453,12 +453,12 @@
   margin-left: 1rem;
   .issue-block{
       padding-left: 0.5rem;
-      border-left: 0.4rem solid $warningColor;
+      border-left: 0.4rem solid var(--p4m-color-warning);
   }
 }
 
 .current-issue {
-  border-left: 0.4rem solid $primaryColor;
+  border-left: 0.4rem solid var(--p4m-color-brand);
 }
 
 .issue-plan-issue-child {
@@ -500,19 +500,19 @@
         display: flex;
         align-items: center;
         padding: 0.5rem 1rem;
-        color: $darkColor;
+        color: var(--p4m-color-text);
         text-decoration: none;
         cursor: pointer;
 
         &:hover,
         &:focus {
-          background-color: $primaryColor;
-          color: white;
+          background-color: var(--p4m-color-brand);
+          color: var(--p4m-grey-0);
           outline: none;
         }
 
         &:focus-visible {
-          outline: 2px solid $primaryColor;
+          outline: 2px solid var(--p4m-color-brand);
           outline-offset: -2px;
         }
       }
@@ -557,7 +557,7 @@
     position: relative;
     top: 0;
     right: 8px;
-    border-radius: 50%;
+    border-radius: var(--p4m-radius-round);
   }
 }
 
@@ -585,11 +585,11 @@
 
 .issue-details-container {
   > .box > .box-body {
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
   }
   
   position: relative;
-  border-left: 0.2rem solid $borderColor;
+  border-left: 0.2rem solid var(--p4m-color-border);
 
   &.col-md-12 .board-panel-divider {
     left: 0.2rem;
@@ -614,8 +614,8 @@
   .divider-handle {
     width: 1.6rem;
     height: 3.2rem;
-    background-color: $primaryColor;
-    border: 0.1rem solid $primaryColor;
+    background-color: var(--p4m-color-brand);
+    border: 0.1rem solid var(--p4m-color-brand);
     border-radius: 0.4rem;
     display: flex;
     align-items: center;
@@ -624,14 +624,14 @@
 
     i {
       font-size: 1rem;
-      color: $backgroundColor;
+      color: var(--p4m-color-surface);
       transition: color 0.2s ease;
     }
   }
 
   &:hover .divider-handle {
-    background-color: darken($primaryColor, 10%);
-    border-color: darken($primaryColor, 10%);
+    background-color: var(--p4m-color-brand-pressed);
+    border-color: var(--p4m-color-brand-pressed);
   }
 }
 
@@ -643,19 +643,19 @@
 
   .dropdown-menu {
     padding: 0;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
 
     li {
       display: flex;
       align-items: center;
       padding: 0.5rem 1rem;
-      color: $darkColor;
+      color: var(--p4m-color-text);
       cursor: pointer;
 
       &:hover,
       &:focus {
-        background-color: $primaryColor;
-        color: white;
+        background-color: var(--p4m-color-brand);
+        color: var(--p4m-grey-0);
         outline: none;
       }
     }
@@ -669,7 +669,7 @@
 
       .fa-caret-down {
         margin-left: 0.2rem;
-        color: $darkColor;
+        color: var(--p4m-color-text);
       }
     }
   }
@@ -701,7 +701,7 @@
 		height: 1.5em;
 		margin-left: 4px;
 		vertical-align: middle;
-		border-left: 2px solid #ddd;
+		border-left: 2px solid var(--p4m-grey-135);
 	}
 
 	.linked-issue-assignee .app-ui-avatar {
@@ -766,7 +766,7 @@
 
 	.link-issue-phone-result {
 		padding: 8px 0;
-		border-bottom: 1px solid #f4f4f4;
+		border-bottom: 1px solid var(--p4m-grey-45);
 
 		label {
 			display: flex;
