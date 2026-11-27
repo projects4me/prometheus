@@ -377,7 +377,7 @@
         "details": "Details"
       },
       "conflict": {
-        "blocker": "Starts before {blocker} ends{others, plural, =0 {} one { and # more} other { and # more}}"
+        "blocker": "Runs past its end date (blocked by {blocker}){others, plural, =0 {} one { and # more} other { and # more}}"
       },
       "tooltip": {
         "assignee": "Assignee",
@@ -392,7 +392,6 @@
         "timeSpent": "{spent} spent",
         "noTime": "No time logged",
         "linksTitle": "Links",
-        "conflict": "Starts before {blocker} ends ({date}){others, plural, =0 {} other { and # more}}",
         "more": "and {count} more",
         "modified": "Modified by {name} · {date}",
         "links": {
@@ -416,7 +415,7 @@
           "blocks": "Blocks",
           "splits": "Splits into",
           "relates": "Relates to (on select)",
-          "conflict": "Starts before its blocker ends",
+          "conflict": "Pushed past its end date by a blocker",
           "otherProject": "Issue in another project"
         }
       },

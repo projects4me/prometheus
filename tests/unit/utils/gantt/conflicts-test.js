@@ -4,31 +4,66 @@
 
 import { module, test } from 'qunit';
 import { isConflict, conflictingBlockers, blockerName } from 'prometheus/utils/gantt/conflicts';
+import { schedule } from 'prometheus/utils/gantt/schedule';
+
+const issueOf = (id, startDate, endDate, estimateHours = null) => ({ id, startDate, endDate, estimateHours });
+const planOf = (issues, links) => schedule(issues, links.map(([sourceId, targetId]) => ({ sourceId, targetId })));
 
 module('Unit | Utility | gantt/conflicts', function () {
-	const blocker = { endDate: '2026-03-10' };
 	const open = () => true;
 	const done = () => false;
 
-	test('an open blocker conflicts when the blocked issue starts before its end', function (assert) {
-		assert.true(isConflict(blocker, { startDate: '2026-03-05' }, open));
+	test('an open blocker conflicts when it pushes the blocked issue past its end date', function (assert) {
+		let blocker = issueOf('1', '2026-03-02', '2026-03-10');
+		let blocked = issueOf('2', '2026-03-05', '2026-03-06', 4);
+		let plan = planOf([blocker, blocked], [['1', '2']]);
+		assert.true(plan.get('2').pushed, 'the schedule pushes it');
+		assert.true(isConflict(blocker, blocked, open, plan));
 	});
 
-	test('an open blocker conflicts when the blocked issue starts on its end day', function (assert) {
-		assert.true(isConflict(blocker, { startDate: '2026-03-10T08:00:00' }, open));
+	test('a same-day chain that fits its window is not a conflict', function (assert) {
+		let blocker = issueOf('1', '2026-03-05', '2026-03-05', 3);
+		let blocked = issueOf('2', '2026-03-05', '2026-03-05', 3);
+		let plan = planOf([blocker, blocked], [['1', '2']]);
+		assert.false(plan.get('2').pushed);
+		assert.false(isConflict(blocker, blocked, open, plan));
 	});
 
-	test('no conflict when the blocked issue starts after the blocker ends', function (assert) {
-		assert.false(isConflict(blocker, { startDate: '2026-03-11' }, open));
+	test('a same-day chain that overflows its window is a conflict', function (assert) {
+		let blocker = issueOf('1', '2026-03-05', '2026-03-05', 6);
+		let blocked = issueOf('2', '2026-03-05', '2026-03-05', 6);
+		let plan = planOf([blocker, blocked], [['1', '2']]);
+		assert.true(isConflict(blocker, blocked, open, plan));
+	});
+
+	test('a blocker that ends before the blocked issue starts is not a conflict', function (assert) {
+		let blocker = issueOf('1', '2026-03-02', '2026-03-04');
+		let blocked = issueOf('2', '2026-03-05', '2026-03-06');
+		let plan = planOf([blocker, blocked], [['1', '2']]);
+		assert.false(isConflict(blocker, blocked, open, plan));
 	});
 
 	test('a done blocker never conflicts', function (assert) {
-		assert.false(isConflict(blocker, { startDate: '2026-03-05' }, done));
+		let blocker = issueOf('1', '2026-03-02', '2026-03-10');
+		let blocked = issueOf('2', '2026-03-05', '2026-03-06', 4);
+		let plan = planOf([blocker, blocked], [['1', '2']]);
+		assert.false(isConflict(blocker, blocked, done, plan));
 	});
 
-	test('missing dates never conflict', function (assert) {
-		assert.false(isConflict({ endDate: null }, { startDate: '2026-03-05' }, open));
-		assert.false(isConflict(blocker, {}, open));
+	test('missing dates or no schedule never conflict', function (assert) {
+		let blocker = issueOf('1', '2026-03-02', '2026-03-10');
+		assert.false(isConflict(blocker, issueOf('2', null, null), open, planOf([blocker], [])));
+		assert.false(isConflict(blocker, issueOf('2', '2026-03-05', '2026-03-06'), open));
+	});
+
+	test('a blocker off the chart counts by its end date', function (assert) {
+		let blocker = issueOf('9', '2026-03-02', '2026-03-10');
+		let blocked = issueOf('2', '2026-03-05', '2026-03-06', 4);
+		let plan = planOf([blocked], []);
+		assert.false(isConflict(blocker, blocked, open, plan), 'not pushed without it');
+		plan = planOf([blocked], []);
+		plan.get('2').pushed = true;
+		assert.true(isConflict(blocker, blocked, open, plan));
 	});
 });
 
@@ -38,18 +73,21 @@ module('Unit | Utility | gantt/conflicts blockers', function () {
 		links: blockers.map(link),
 		isOpen
 	});
-	const blocked = { id: '1', startDate: '2026-03-05' };
+	const blocked = { id: '1', startDate: '2026-03-05', endDate: '2026-03-06', estimateHours: 4 };
+	const planFor = (blockers) => planOf([blocked, ...blockers], blockers.map((b) => [b.id, '1']));
 
 	test('lists the open late blockers, latest-ending first', function (assert) {
-		let early = { id: '2', endDate: '2026-03-06' };
-		let late = { id: '3', endDate: '2026-03-09' };
-		let before = { id: '4', endDate: '2026-03-01' };
-		let result = conflictingBlockers(blocked, lookupOf([early, before, late]));
+		let early = issueOf('2', '2026-03-02', '2026-03-06');
+		let late = issueOf('3', '2026-03-02', '2026-03-09');
+		let before = issueOf('4', '2026-03-01', '2026-03-01');
+		let all = [early, before, late];
+		let result = conflictingBlockers(blocked, lookupOf(all), planFor(all));
 		assert.deepEqual(result.map((b) => b.id), ['3', '2']);
 	});
 
 	test('skips done blockers', function (assert) {
-		let result = conflictingBlockers(blocked, lookupOf([{ id: '2', endDate: '2026-03-09' }], () => false));
+		let late = issueOf('2', '2026-03-02', '2026-03-09');
+		let result = conflictingBlockers(blocked, lookupOf([late], () => false), planFor([late]));
 		assert.deepEqual(result, []);
 	});
 

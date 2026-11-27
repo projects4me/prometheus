@@ -1069,7 +1069,7 @@ export default class GanttChartComponent extends AppComponent {
 				type: link.type,
 				selectedId,
 				link,
-				conflict: link.type === 'blocks' && isConflict(from, to, (issue) => lookup.isOpen(issue))
+				conflict: link.type === 'blocks' && isConflict(from, to, (issue) => lookup.isOpen(issue), this.args.schedule)
 			});
 		});
 
