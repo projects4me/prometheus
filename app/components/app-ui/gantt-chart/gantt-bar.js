@@ -7,8 +7,6 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import {
-    calculateBarWidth,
-    calculateBarPosition,
     getDaysBetween,
     getPositionInDays,
     toFiniteNumber
@@ -254,11 +252,7 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get barWidth() {
-        return calculateBarWidth(
-            this.args.startDate,
-            this.args.endDate,
-            this.args.dayWidth
-        );
+        return this.spanDays * this.args.dayWidth;
     }
 
     /**
@@ -270,15 +264,12 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get barLeft() {
-        return calculateBarPosition(
-            this.args.timelineStart,
-            this.args.startDate,
-            this.args.dayWidth
-        );
+        return this.startDay * this.args.dayWidth;
     }
 
     /**
-     * Days from the timeline start to the bar's start date
+     * Day columns from the timeline start to the bar's start: `@span.start` (planned times, the Hours axis) when
+     * given, else the calendar days to the start date
      *
      * @property startDay
      * @type Number
@@ -286,11 +277,14 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get startDay() {
+        if (this.args.span) {
+            return toFiniteNumber(this.args.span.start);
+        }
         return getPositionInDays(this.args.timelineStart, this.args.startDate);
     }
 
     /**
-     * Number of days the bar covers, start and end inclusive, at least one
+     * Day columns the bar covers: `@span.days` when given, else its days, start and end inclusive, at least one
      *
      * @property spanDays
      * @type Number
@@ -298,6 +292,9 @@ export default class GanttBarComponent extends AppComponent {
      * @public
      */
     get spanDays() {
+        if (this.args.span) {
+            return toFiniteNumber(this.args.span.days);
+        }
         return Math.max(1, getDaysBetween(this.args.startDate, this.args.endDate) + 1);
     }
 
@@ -344,6 +341,21 @@ export default class GanttBarComponent extends AppComponent {
             `--bar-start: ${toFiniteNumber(this.startDay)}; --bar-days: ${toFiniteNumber(this.spanDays)}; ` +
             `--bar-shift: ${toFiniteNumber(this.liveShift)}px; --bar-stretch: ${toFiniteNumber(this.liveStretch)}px`
         );
+    }
+
+    /**
+     * A date moved by whole day columns of `@timeAxis` (working days in Hours), or by calendar days without one
+     *
+     * @method shiftDate
+     * @param {String} date `YYYY-MM-DD`
+     * @param {Number} columns
+     * @return {String}
+     * @private
+     */
+    shiftDate(date, columns) {
+        return this.args.timeAxis
+            ? this.args.timeAxis.shiftDate(date, columns)
+            : dates.format(dates.add(date, columns, 'days'), 'YYYY-MM-DD');
     }
 
     /**
@@ -1149,23 +1161,16 @@ export default class GanttBarComponent extends AppComponent {
                 let newEndDate = this.originalEndDate;
 
                 if (this.resizeHandle === 'left') {
-                    // Resizing from left: adjust start date
-                    newStartDate = dates.format(dates.add(this.originalStartDate, daysOffset, 'days'), 'YYYY-MM-DD');
+                    // Resizing from left: adjust start date by whole day columns
+                    newStartDate = this.shiftDate(this.originalStartDate, daysOffset);
                     
                     // Ensure start date doesn't exceed end date
                     if (dates.isAfter(newStartDate, this.originalEndDate)) {
                         newStartDate = this.originalEndDate;
                     }
                 } else if (this.resizeHandle === 'right') {
-                    // Resizing from right: calculate end date from the right edge position
-                    // The bar width is inclusive, so we need to account for that
-                    // Calculate the new width in days (inclusive)
-                    const newWidth = this.originalWidth + this.resizeOffset;
-                    const newWidthInDays = Math.max(1, Math.round(newWidth / this.args.dayWidth));
-                    
-                    // End date = start date + (width in days - 1) because width is inclusive
-                    // For example: start Oct 15, width 5 days = Oct 15, 16, 17, 18, 19 (end = Oct 19)
-                    newEndDate = dates.format(dates.add(this.originalStartDate, newWidthInDays - 1, 'days'), 'YYYY-MM-DD');
+                    // Resizing from right: move the end date by whole day columns
+                    newEndDate = this.shiftDate(this.originalEndDate, daysOffset);
                     
                     // Ensure end date doesn't go before start date
                     if (dates.isBefore(newEndDate, this.originalStartDate)) {

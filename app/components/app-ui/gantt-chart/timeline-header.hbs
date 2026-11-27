@@ -4,6 +4,7 @@
       <div
         class="gantt-header-cell {{this.topCellClass}}"
         style={{call (fn this.spanStyle group)}}
+        data-test-gantt-header-top-cell
       >
         {{group.label}}
       </div>
@@ -11,7 +12,11 @@
   </div>
 
   <div class="gantt-header-row bottom-row" data-test-gantt-header-bottom>
-    {{#if this.isDays}}
+    {{#if this.isHours}}
+      {{#each this.hourCells as |cell|}}
+        <div class="gantt-header-cell hour-cell {{if cell.isDayStart 'day-start'}}" data-test-gantt-header-hour={{cell.date}}>{{cell.label}}</div>
+      {{/each}}
+    {{else if this.isDays}}
       {{#each this.dateRangeWithFlags as |date|}}
         <div
           class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}} {{if date.isCurrentWeek 'current-week'}} {{if date.isCurrentWeekFirst 'current-week-first'}} {{if date.isCurrentWeekLast 'current-week-last'}} {{if date.isToday 'current-day'}}"

@@ -4,14 +4,14 @@
 
 /**
  * The one localStorage key of the Gantt toolbar. Its value is JSON: `{ scale, links, otherProjects, weekends }`.
- * `scale` is `days`, `weeks` or `months`; `links` lists the shown link types; the two flags are booleans. The key is per browser, so per user.
+ * `scale` is `hours`, `days`, `weeks` or `months`; `links` lists the shown link types; the two flags are booleans. The key is per browser, so per user.
  *
  * @property GANTT_TOOLBAR_KEY
  * @type String
  */
 export const GANTT_TOOLBAR_KEY = 'gantt-toolbar';
 
-const SCALES = ['days', 'weeks', 'months'];
+const SCALES = ['hours', 'days', 'weeks', 'months'];
 
 /**
  * The link types the Links filter offers, in menu order

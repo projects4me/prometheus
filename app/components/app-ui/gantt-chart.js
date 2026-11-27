@@ -4,15 +4,15 @@
 
 import { isConflict } from 'prometheus/utils/gantt/conflicts';
 import AppComponent from 'prometheus/components/app';
-import { tracked } from '@glimmer/tracking';
+import { tracked, cached } from '@glimmer/tracking';
+import { TimeAxis, HOURS_SCALE } from 'prometheus/utils/gantt/time-axis';
+import { WORK_HOURS_PER_DAY } from 'prometheus/utils/gantt/working-time';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import {
 	generateDateRange,
 	groupDatesByMonth,
-	getTotalDays,
-	calculateBarPosition,
 	getMilestoneKey,
 	GANTT_ROW_HEIGHT,
 	toFiniteNumber,
@@ -174,6 +174,9 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get dayWidth() {
+		if (this.timeScale === HOURS_SCALE) {
+			return this.hourWidth * WORK_HOURS_PER_DAY;
+		}
 		if (this.timeScale === 'months') {
 			return this.monthDayWidth;
 		}
@@ -189,6 +192,42 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	monthDayWidth = 4;
+
+	/**
+	 * Width of one working hour in pixels for the hours view
+	 *
+	 * @property hourWidth
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	hourWidth = 40;
+
+	/**
+	 * Whether the Hours scale (the working-time axis) is shown
+	 *
+	 * @property isHours
+	 * @type Boolean
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get isHours() {
+		return this.timeScale === HOURS_SCALE;
+	}
+
+	/**
+	 * The timeline's axis for the scale: where dates and planned moments lie, in day columns. Rows, bars,
+	 * the today line and scrolling all position through it.
+	 *
+	 * @property timeAxis
+	 * @type TimeAxis
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	@cached
+	get timeAxis() {
+		return new TimeAxis(this.args.timelineStart, this.args.timelineEnd, this.timeScale);
+	}
 
 	/**
 	 * Registry of rendered task bars so we can calculate dependency positions
@@ -359,7 +398,7 @@ export default class GanttChartComponent extends AppComponent {
 	 * @type Array
 	 * @public
 	 */
-	scales = ['days', 'weeks', 'months'];
+	scales = [HOURS_SCALE, 'days', 'weeks', 'months'];
 
 	/**
 	 * The link types drawn (`blocks`, `splits`, `relates`); none hides the line layer. Remembered per user.
@@ -542,8 +581,10 @@ export default class GanttChartComponent extends AppComponent {
 		if (this.visibleWidth <= 0 || !this.args.timelineStart || !this.dayWidth) {
 			return '';
 		}
-		const first = dates.add(this.args.timelineStart, Math.floor(this.visibleStart / this.dayWidth), 'days');
-		const last = dates.add(first, Math.max(0, Math.ceil(this.visibleWidth / this.dayWidth) - 1), 'days');
+		const axis = this.timeAxis;
+		const firstColumn = Math.floor(this.visibleStart / this.dayWidth);
+		const first = axis.dateAt(firstColumn);
+		const last = axis.dateAt(firstColumn + Math.max(0, Math.ceil(this.visibleWidth / this.dayWidth) - 1));
 		const from = dates.isSame(first, last, { unit: 'month' }) ? 'D' : 'D MMM';
 		return `${dates.format(first, from)} \u2013 ${dates.format(last, 'D MMM')}`;
 	}
@@ -681,15 +722,28 @@ export default class GanttChartComponent extends AppComponent {
 		if (!this.timelineContainerElement || !this.args.timelineStart) {
 			return;
 		}
-		const today = dates.format(dates.now(), 'YYYY-MM-DD');
-		const todayLeft = calculateBarPosition(this.args.timelineStart, today, this.dayWidth);
-		const left = Math.max(0, todayLeft - (this.timelineViewportWidth / 2) + (this.dayWidth / 2));
+		const todayLeft = (this.todayOffset ?? this.timeAxis.dayOffset(dates.now()) ?? 0) * this.dayWidth;
+		const left = Math.max(0, todayLeft - (this.timelineViewportWidth / 2));
 		this.timelineContainerElement.scrollTo({ left, behavior: 'auto' });
 		this.updateVisibleRange();
 	}
 
 	/**
-	 * Computed property that generates the date range for the timeline
+	 * Where an issue's bar starts on the axis, in day columns: its planned start, else its start date
+	 *
+	 * @method barStartOffset
+	 * @param {Object} issue
+	 * @return {Number}
+	 * @private
+	 */
+	barStartOffset(issue) {
+		const planned = this.args.schedule?.get(String(issue.id))?.plannedStart;
+		const offset = planned ? this.timeAxis.momentOffset(planned) : this.timeAxis.dayOffset(issue.startDate);
+		return toFiniteNumber(offset);
+	}
+
+	/**
+	 * Computed property that generates the date range for the timeline: its day columns (working days only in Hours)
 	 *
 	 * @property dateRange
 	 * @type Array
@@ -700,14 +754,20 @@ export default class GanttChartComponent extends AppComponent {
 		if (!this.args.timelineStart || !this.args.timelineEnd) {
 			return [];
 		}
-		return generateDateRange(
+		const range = generateDateRange(
 			this.args.timelineStart,
 			this.args.timelineEnd
 		);
+		if (!this.isHours) {
+			return range;
+		}
+		const columns = new Set(this.timeAxis.columns);
+		return range.filter((day) => columns.has(day.date));
 	}
 
 	/**
-	 * The index of today in the date range (its day count from the timeline start), or null when today is outside it.
+	 * Where now lies on the axis, in (fractional) day columns: 09:00 is the left edge of today's column and 18:00
+	 * its right edge (on a weekend in Hours, the next working day's left edge). Null when now is outside the timeline.
 	 * The today line positions itself from this with the root `--gantt-day-width`.
 	 *
 	 * @property todayOffset
@@ -716,14 +776,12 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get todayOffset() {
-		const today = dates.format(dates.now(), 'YYYY-MM-DD');
-		const index = this.dateRange.findIndex((day) => day.date === today);
-		return index === -1 ? null : index;
+		const offset = this.timeAxis.momentOffset(dates.now());
+		return offset === null || offset < 0 || offset > this.totalDays ? null : offset;
 	}
 
 	/**
-	 * The today line's position as a CSS custom property in days; the SCSS centres it in today's day column.
-	 * Empty when today is outside the timeline.
+	 * The today line's position as a CSS custom property in day columns. Empty when today is outside the timeline.
 	 *
 	 * @property todayLineStyle
 	 * @type SafeString|null
@@ -757,10 +815,7 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get totalDays() {
-		if (!this.args.timelineStart || !this.args.timelineEnd) {
-			return 0;
-		}
-		return getTotalDays(this.args.timelineStart, this.args.timelineEnd);
+		return this.timeAxis.columns.length;
 	}
 
 	/**
@@ -797,6 +852,7 @@ export default class GanttChartComponent extends AppComponent {
 		return htmlSafe(
 			`--gantt-row-height: ${toFiniteNumber(this.rowHeight)}px; ` +
 			`--gantt-day-width: ${toFiniteNumber(this.dayWidth)}px; ` +
+			`--gantt-hours-per-day: ${toFiniteNumber(WORK_HOURS_PER_DAY)}; ` +
 			`--gantt-timeline-width: ${toFiniteNumber(this.timelineWidth)}px`
 		);
 	}
@@ -822,7 +878,8 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get gridPatternWidth() {
-		return this.gridDayWidth * 7;
+		// Hours: one working day of hour columns; the others: one week of day columns
+		return this.isHours ? this.gridDayWidth : this.gridDayWidth * 7;
 	}
 
 	/**
@@ -834,7 +891,7 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get gridPatternX() {
-		if (!this.args.timelineStart) {
+		if (!this.args.timelineStart || this.isHours) {
 			return 0;
 		}
 		const mondayIndex = (dates.part(this.args.timelineStart, 'day') + 6) % 7;
@@ -879,10 +936,30 @@ export default class GanttChartComponent extends AppComponent {
 			return '';
 		}
 		const lines = [];
+		if (this.isHours) {
+			// the hour lines inside a day; the dashed day separator is gridDaySeparatorPath
+			const hourWidth = this.gridDayWidth / WORK_HOURS_PER_DAY;
+			for (let hour = 1; hour < WORK_HOURS_PER_DAY; hour++) {
+				lines.push(`M ${hour * hourWidth} 0 V ${this.rowHeight}`);
+			}
+			return lines.join(' ');
+		}
 		for (let day = 1; day <= 7; day++) {
 			lines.push(`M ${day * this.gridDayWidth} 0 V ${this.rowHeight}`);
 		}
 		return lines.join(' ');
+	}
+
+	/**
+	 * The dashed line between two working days in Hours (at the pattern's left edge); empty in the other scales
+	 *
+	 * @property gridDaySeparatorPath
+	 * @type String
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	get gridDaySeparatorPath() {
+		return this.isHours ? `M 0 0 V ${this.rowHeight}` : '';
 	}
 
 	/**
@@ -1364,11 +1441,7 @@ export default class GanttChartComponent extends AppComponent {
 		}
 
 		// Calculate horizontal scroll position (x-axis)
-		const barLeft = calculateBarPosition(
-			this.args.timelineStart,
-			issue.startDate,
-			this.dayWidth
-		);
+		const barLeft = this.barStartOffset(issue) * this.dayWidth;
 
 		const containerWidth = this.timelineViewportWidth;
 		const scrollLeft = Math.max(0, barLeft - (containerWidth / 2) + (this.dayWidth * 2));
@@ -1642,7 +1715,7 @@ export default class GanttChartComponent extends AppComponent {
 		if (!issue) {
 			return;
 		}
-		const barLeft = calculateBarPosition(this.args.timelineStart, issue.startDate, this.dayWidth);
+		const barLeft = this.barStartOffset(issue) * this.dayWidth;
 		const margin = this.timeScale === 'days' ? this.dayWidth : 4;
 		this.timelineContainerElement.scrollTo({ left: Math.max(0, barLeft - margin), behavior: 'auto' });
 	}

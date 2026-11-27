@@ -162,7 +162,7 @@
               patternUnits="userSpaceOnUse"
               data-test-gantt-grid-pattern
             >
-              {{#if this.showWeekends}}
+              {{#if (and this.showWeekends (not this.isHours))}}
                 <rect
                   x={{this.gridWeekendX}}
                   width={{this.gridWeekendWidth}}
@@ -172,6 +172,9 @@
                 />
               {{/if}}
               <path d={{this.gridVerticalPath}} class="grid-line-vertical" vector-effect="non-scaling-stroke" />
+              {{#if this.isHours}}
+                <path d={{this.gridDaySeparatorPath}} class="grid-line-day" vector-effect="non-scaling-stroke" data-test-gantt-grid-day-separator />
+              {{/if}}
               <path d={{this.gridHorizontalPath}} class="grid-line-horizontal" vector-effect="non-scaling-stroke" />
             </pattern>
           </defs>
@@ -215,6 +218,7 @@
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}
+            @timeAxis={{this.timeAxis}}
             @chipWindow={{this.chipWindow}}
             @onChipSelect={{this.handleGridSelect}}
             @registerBar={{this.registerIssueBar}}
@@ -238,6 +242,7 @@
           <AppUi::GanttChart::GhostSection
             @issues={{this.ghostIssues}}
             @timelineStart={{@timelineStart}}
+            @timeAxis={{this.timeAxis}}
             @registerBar={{this.registerIssueBar}}
             @unregisterBar={{this.unregisterIssueBar}}
           />

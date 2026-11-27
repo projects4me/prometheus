@@ -357,6 +357,7 @@
         "timeline": "Timeline"
       },
       "scale": {
+        "hours": "Hours",
         "days": "Days",
         "weeks": "Weeks",
         "months": "Months"
