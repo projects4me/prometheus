@@ -74,22 +74,24 @@ export default class RolePermissionsComponent extends Component {
     @service intl;
 
     /**
-     * The open tab, `actions` or `fields`.
+     * The open tab, `actions` or `fields`, owned by the parent through `@activeTab`.
      *
      * @property activeTab
      * @type {string}
      */
-    @tracked activeTab = 'actions';
+    get activeTab() {
+        return this.args.activeTab ?? 'actions';
+    }
 
     /**
-     * Opens a tab.
+     * Asks the parent to open a tab.
      *
      * @method setActiveTab
      * @param {string} name
      */
     @action
     setActiveTab(name) {
-        this.activeTab = name;
+        this.args.onTabChange?.(name);
     }
 
     /**
