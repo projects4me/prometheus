@@ -134,7 +134,6 @@ add|ember-template-lint|no-curly-component-invocation|38|25|38|25|b1b6417b923830
 add|ember-template-lint|no-curly-component-invocation|47|25|47|25|97d87fef30eaa229b7c60168c8f87c7f45e88778|1794614400000|||tests/integration/helpers/format-date-time-test.js
 add|ember-template-lint|no-curly-component-invocation|55|25|55|25|a517378647665256a52f8b948cc5af0465984ef2|1794614400000|||tests/integration/helpers/format-date-time-test.js
 add|ember-template-lint|no-curly-component-invocation|64|25|64|25|97d87fef30eaa229b7c60168c8f87c7f45e88778|1794614400000|||tests/integration/helpers/format-date-time-test.js
-add|ember-template-lint|no-inline-styles|16|17|16|17|14dac5e0c278853762494faab65427f6140fb91d|1794614400000|||tests/integration/modifiers/initialize-slimscroll-test.js
 add|ember-template-lint|no-builtin-form-components|27|12|27|12|4b5c3c1d1f9552d58c289651125c41f7d94da1b9|1794614400000|||tests/integration/modifiers/apply-mask-test.js
 add|ember-template-lint|link-rel-noopener|25|4|25|4|a439b35d50ed5af7689942a343b0c4ea9b2ae755|1794614400000|||tests/integration/modifiers/modify-links-test.js
 add|ember-template-lint|no-at-ember-render-modifiers|4|4|4|4|52b27d8d7ebb1b5b1e483450f59d8ba9bf9cabc7|1794614400000|||app/components/app-ui/gantt-chart/dependency-layer.hbs

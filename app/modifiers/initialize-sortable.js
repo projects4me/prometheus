@@ -468,21 +468,6 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
-     * This function apply slim scroll to element.
-     * 
-     * @method _applySlimScroll
-     * @param {HTMLElement} el
-     * @private
-     */
-    _applySlimScroll(el) {
-        let p = el.querySelector('p.description');
-        $(p).slimScroll({
-            height: p.getBoundingClientRect().height,
-            size: 3,
-        });
-    }
-
-    /**
      * This function is bind with onStart function of the sortablejs. This function
      * will be triggered when user will start the dragging of an item from taskboard.
      * 
@@ -583,25 +568,6 @@ export default class InitializeSortable extends Modifier {
 
         document.querySelectorAll('.lane.lane-collapsed').forEach((lane) => {
             lane.classList.remove('lane-droppable');
-        });
-    }
-
-    /**
-     * This function applies slim scroll to the items in the milestone container.
-     * 
-     * @method applySlimScrollToMilestoneItems
-     * @param {HTMLElement} milestoneEl
-     * @private
-     */
-    applySlimScrollToMilestoneItems(milestoneEl) {
-        let _self = this;
-        let lanes = [...milestoneEl.children];
-        lanes.forEach((lane) => {
-            let laneBody = lane.querySelector('div.lane.box-body');
-            let laneItems = [...laneBody.children];
-            laneItems.forEach((item) => {
-                _self._applySlimScroll(item);
-            });            
         });
     }
 

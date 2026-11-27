@@ -144,9 +144,6 @@
   "app/components/infinite-scroll.js": {
     "ember/no-runloop": {
       "count": 2
-    },
-    "no-undef": {
-      "count": 1
     }
   },
   "app/components/issue/file-preview.js": {
@@ -488,15 +485,7 @@
       "count": 10
     }
   },
-  "app/modifiers/initialize-slimscroll.js": {
-    "ember/no-jquery": {
-      "count": 1
-    }
-  },
   "app/modifiers/initialize-sortable.js": {
-    "no-undef": {
-      "count": 1
-    },
     "no-unused-vars": {
       "count": 1
     }

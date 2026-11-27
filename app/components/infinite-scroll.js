@@ -287,21 +287,6 @@ export default class InfiniteScrollComponent extends Component {
 	}
 
 	/**
-	 * Initializes slimscroll on the container element
-	 * @method initializeSlimScroll
-	 * @param {HTMLElement} e - The container element
-	 * @public
-	 */
-	@action
-	initializeSlimScroll(e) {
-		$(e).slimscroll({
-			height: e.clientHeight,
-			allowVisible: false,
-			size: 5
-		});
-	}
-
-	/**
 	 * Cleanup when component is destroyed
 	 * @method willDestroy
 	 * @public

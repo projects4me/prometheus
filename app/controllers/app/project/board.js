@@ -936,8 +936,8 @@ export default class AppProjectBoardController extends ProjectRelated {
      * then we should have to only adjust the height of one parent container only. And if
      * they are not same, meaning that the item is dragged from one milestone box
      * and dropped into some other milestone box, then we should have to adjust/recalculate the height
-     * of both milestone containers. After that applying slim scroll to updated issue item. All of the re adjusting
-     * of heights and applying slimscroll is done by the callback 'reRenderViewCb'.
+     * of both milestone containers. All of the re adjusting
+     * of heights is done by the callback 'reRenderViewCb'.
      * @method postUpdateProcessing
      * @param {String} issueId Id of updated issue
      * @param {HTMLElement} elTo Lane from which issue is dragged

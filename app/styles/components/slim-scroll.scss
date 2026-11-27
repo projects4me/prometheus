@@ -1,0 +1,49 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+// Native replacement for the jQuery slimscroll plugin: a thin scrollbar on an element that already
+// has its height (or max-height) set, hidden until the pointer is over the element. It matches
+// slimscroll's defaults: 3px wide (5px with .slim-scroll-wide), black at 40% opacity. The thumb is
+// square (design system: square edges), where slimscroll rounded it.
+//
+// Usage: <div class="recent-activities slim-scroll">, <ul class="... slim-scroll slim-scroll-wide">
+.slim-scroll {
+  --slim-scroll-size: 3px;
+  --slim-scroll-thumb: color-mix(in srgb, var(--p4m-grey-1000) 40%, transparent);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.slim-scroll-wide {
+    --slim-scroll-size: 5px;
+  }
+
+  // Chromium, Safari and Edge: the WebKit pseudo-elements give the exact width.
+  &::-webkit-scrollbar {
+    width: var(--slim-scroll-size);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: var(--slim-scroll-thumb);
+  }
+
+  // Firefox has no WebKit pseudo-elements. Chromium ignores them once scrollbar-width or
+  // scrollbar-color is set, so the standard properties only apply where they are missing.
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+      scrollbar-color: var(--slim-scroll-thumb) transparent;
+    }
+  }
+}
