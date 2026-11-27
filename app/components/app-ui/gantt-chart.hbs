@@ -1,4 +1,4 @@
-<div class="gantt-chart box box-primary" style={{this.rootStyle}}>
+<div class="gantt-chart box box-primary {{this.gridColumnsClass}}" style={{this.rootStyle}}>
   {{#if (and (has-block "search") this.viewport.isPhone)}}
     <div class="gantt-search" data-gantt-search>
       {{yield to="search"}}
@@ -250,6 +250,10 @@
       </div>
       </div>
       </div>
+      {{#unless this.viewport.isPhone}}
+        <AppUi::GanttChart::GridResizer @width={{this.listWidth}} @min={{this.gridMinWidth}} @max={{this.gridMaxWidth}}
+          @onResize={{this.setGridWidth}} @onResizeEnd={{this.saveGridWidth}} @onReset={{this.resetGridWidth}} />
+      {{/unless}}
     </div>
 
     {{! Issue quick view: a side column next to the chart, or the bottom sheet on phones and narrow containers }}

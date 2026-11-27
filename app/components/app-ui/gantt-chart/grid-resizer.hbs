@@ -1,0 +1,10 @@
+{{! Pointer capture needs the pointer-down event; the drag ends on pointer up or cancel }}
+{{! template-lint-disable no-pointer-down-event-binding }}
+<div class="gantt-grid-resizer {{if this.isDragging 'is-dragging'}}" role="separator" aria-orientation="vertical" tabindex="0"
+  aria-label={{t "components.gantt.gridResizer.label"}} aria-valuenow={{@width}} aria-valuemin={{@min}} aria-valuemax={{@max}}
+  data-test-gantt-grid-resizer
+  {{on "pointerdown" this.start}} {{on "keydown" this.keydown}} {{on "dblclick" this.reset}}>
+  {{#if this.isDragging}}
+    <span class="gantt-grid-resizer-tip" data-test-gantt-grid-resizer-tip>{{t "components.gantt.gridResizer.width" width=@width}}{{#if this.tipLimit}} · {{t (concat "components.gantt.gridResizer." this.tipLimit)}}{{/if}}</span>
+  {{/if}}
+</div>

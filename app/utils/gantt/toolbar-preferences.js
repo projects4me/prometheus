@@ -3,8 +3,8 @@
  */
 
 /**
- * The one localStorage key of the Gantt toolbar. Its value is JSON: `{ scale, links, otherProjects, weekends }`.
- * `scale` is `hours`, `days`, `weeks` or `months`; `links` lists the shown link types; the two flags are booleans. The key is per browser, so per user.
+ * The one localStorage key of the Gantt toolbar. Its value is JSON: `{ scale, links, otherProjects, weekends, gridWidth }`.
+ * `gridWidth` is the issue list's width in px (desktop only). `scale` is `hours`, `days`, `weeks` or `months`; `links` lists the shown link types; the two flags are booleans. The key is per browser, so per user.
  *
  * @property GANTT_TOOLBAR_KEY
  * @type String
@@ -47,7 +47,7 @@ function savedLinkTypes(saved) {
  * Reads the saved toolbar state; anything missing or invalid falls back to Weeks, Blocks and Splits, other projects and weekends on
  *
  * @function loadToolbarPreferences
- * @return {Object} `{ scale, links, otherProjects, weekends }`
+ * @return {Object} `{ scale, links, otherProjects, weekends, gridWidth }` (`gridWidth` is null until the user resizes the list)
  */
 export function loadToolbarPreferences() {
 	let saved = {};
@@ -60,7 +60,8 @@ export function loadToolbarPreferences() {
 		scale: SCALES.includes(saved.scale) ? saved.scale : 'weeks',
 		links: savedLinkTypes(saved),
 		otherProjects: saved.otherProjects !== false,
-		weekends: saved.weekends !== false
+		weekends: saved.weekends !== false,
+		gridWidth: Number.isFinite(saved.gridWidth) ? saved.gridWidth : null
 	};
 }
 
@@ -68,11 +69,11 @@ export function loadToolbarPreferences() {
  * Saves the toolbar state; when storage is unavailable the state stays for this session only
  *
  * @function saveToolbarPreferences
- * @param {Object} preferences `{ scale, links, otherProjects, weekends }`
+ * @param {Object} preferences `{ scale, links, otherProjects, weekends, gridWidth }`
  */
 export function saveToolbarPreferences(preferences) {
 	try {
-		window.localStorage.setItem(GANTT_TOOLBAR_KEY, JSON.stringify(preferences));
+		window.localStorage.setItem(GANTT_TOOLBAR_KEY, JSON.stringify({ ...preferences, gridWidth: preferences.gridWidth ?? undefined }));
 	} catch {
 		// storage unavailable
 	}
