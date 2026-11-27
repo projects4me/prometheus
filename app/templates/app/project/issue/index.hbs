@@ -100,6 +100,14 @@
                           <div class="data-block">
                             <span class="subject"><LinkTo data-field="issue.number" @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn this.selectIssue issue)}}>{{issue.issueNumber}}</LinkTo> - <span data-field="issue.subject"> {{issue.subject}} </span></span>
                             <AppUi::StatusLabel @status={{issue.status}} data-field="issue.status" />
+                            {{#each (call this.visibleTags issue) as |tag|}}
+                              <AppUi::Tag @colorKey={{tag.tag}} role="button" data-test-issue-list-tag={{tag.tag}} {{on "click" (fn this.filterByTag tag.tag)}}>{{tag.tag}}</AppUi::Tag>
+                            {{/each}}
+                            {{#let (call this.hiddenTags issue) as |hidden|}}
+                              {{#if hidden.length}}
+                                <AppUi::Tag @variant="default" title={{call this.hiddenTitle issue}} data-test-issue-list-tag-more>+{{hidden.length}}</AppUi::Tag>
+                              {{/if}}
+                            {{/let}}
                           </div>
                         </div>
                       </li>
