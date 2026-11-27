@@ -8,8 +8,8 @@
   
   .tippy-box {
     position: relative;
-    background-color: $backgroundColor;
-    color: $darkColor;
+    background-color: var(--p4m-color-surface);
+    color: var(--p4m-color-text);
     border-radius: 4px;
     font-size: 14px;
     line-height: 1.4;

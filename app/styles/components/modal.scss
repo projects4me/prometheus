@@ -42,7 +42,7 @@ dialog.app-modal {
   }
 
   &::backdrop {
-    background: rgb(0 0 0 / 0%);
+    background: color-mix(in srgb, var(--p4m-grey-1000) 0%, transparent);
     backdrop-filter: blur(0);
     transition:
       background-color 0.15s linear,
@@ -52,7 +52,7 @@ dialog.app-modal {
   }
 
   &[open]::backdrop {
-    background: rgb(0 0 0 / 50%);
+    background: color-mix(in srgb, var(--p4m-grey-1000) 50%, transparent);
     backdrop-filter: blur(0.5rem);
   }
 }
@@ -67,7 +67,7 @@ dialog.app-modal {
   }
 
   dialog.app-modal[open]::backdrop {
-    background: rgb(0 0 0 / 0%);
+    background: color-mix(in srgb, var(--p4m-grey-1000) 0%, transparent);
     backdrop-filter: blur(0);
   }
 }

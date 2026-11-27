@@ -11,8 +11,8 @@
  * app/styles/components/app-ui-avatar.scss.
  */
 
-// Dark palette colours that keep white text readable. Mirrors app/styles/variables.scss:
-// $primaryColor, $highlightColor, $secondaryColor, $dangerColor, $warningColor, $darkColor.
+// Dark palette colours that keep white text readable. Mirrors app/styles/tokens.scss:
+// --p4m-color-brand, --p4m-color-brand-strong, --p4m-color-link, --p4m-color-danger, --p4m-color-warning, --p4m-color-text.
 export const COLORS = ['#B3244F', '#640C44', '#1B7BBA', '#D33724', '#DB8B0B', '#333333'];
 
 // half-bottom, half-left, corner circle top-right, corner circle bottom-left, ring.
