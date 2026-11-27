@@ -1,0 +1,63 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+  The p4m tippy theme, used by the {{tooltip}} modifier (modifiers/tooltip.js).
+  It copies the Bootstrap 3 tooltip: black at 90% opacity, white 12px text, 3px 8px padding, 200px wide at most
+  (set by the modifier's maxWidth), a 5px arrow, and a 3px gap between the arrow and the element (the modifier's
+  offset of 13px = 5px arrow + 5px Bootstrap padding + 3px margin). Corners are square (design-system rule 1).
+*/
+
+$p4m-tooltip-arrow: 5px;
+// The tippy arrow element is 16px wide; centre the 10px wide arrow in it.
+$p4m-tooltip-arrow-inset: 3px;
+
+.tippy-box[data-theme~="p4m"] {
+  background-color: var(--p4m-grey-1000);
+  color: var(--p4m-grey-0);
+  border-radius: var(--p4m-radius-none);
+  box-shadow: var(--p4m-shadow-none);
+  font-family: var(--p4m-font-family);
+  font-size: var(--p4m-font-size-sm);
+  font-weight: var(--p4m-font-weight-regular);
+  line-height: var(--p4m-line-height-base);
+  text-align: center;
+  word-wrap: normal;
+
+  &[data-state="visible"] {
+    opacity: 0.9;
+  }
+
+  > .tippy-content {
+    padding: 3px 8px;
+  }
+
+  > .tippy-arrow {
+    color: var(--p4m-grey-1000);
+  }
+
+  &[data-placement^="top"] > .tippy-arrow::before {
+    bottom: -$p4m-tooltip-arrow;
+    left: $p4m-tooltip-arrow-inset;
+    border-width: $p4m-tooltip-arrow $p4m-tooltip-arrow 0;
+  }
+
+  &[data-placement^="bottom"] > .tippy-arrow::before {
+    top: -$p4m-tooltip-arrow;
+    left: $p4m-tooltip-arrow-inset;
+    border-width: 0 $p4m-tooltip-arrow $p4m-tooltip-arrow;
+  }
+
+  &[data-placement^="left"] > .tippy-arrow::before {
+    right: -$p4m-tooltip-arrow;
+    top: $p4m-tooltip-arrow-inset;
+    border-width: $p4m-tooltip-arrow 0 $p4m-tooltip-arrow $p4m-tooltip-arrow;
+  }
+
+  &[data-placement^="right"] > .tippy-arrow::before {
+    left: -$p4m-tooltip-arrow;
+    top: $p4m-tooltip-arrow-inset;
+    border-width: $p4m-tooltip-arrow $p4m-tooltip-arrow $p4m-tooltip-arrow 0;
+  }
+}
