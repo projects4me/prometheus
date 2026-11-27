@@ -1,5 +1,5 @@
 <div 
-  class="{{this.effectiveBarClass}} {{if this.shouldShowConnectors 'show-connectors'}} {{if @isSelected 'selected'}} {{if this.isLinkTarget 'link-target'}}" 
+  class="{{this.effectiveBarClass}} {{if this.showAssigneePhoto 'has-assignee-photo'}} {{if this.shouldShowConnectors 'show-connectors'}} {{if @isSelected 'selected'}} {{if this.isLinkTarget 'link-target'}}" 
   style={{this.positionStyle}}
   {{on "mousedown" this.handleMouseDown}}
   {{on "mouseup" this.handleLinkMouseUp}}
@@ -60,11 +60,6 @@
         {{/if}}
       </div>
     </div>
-    {{#if this.viewport.isPhone}}
-      <span class="assignee-avatar">
-        <AppUi::Avatar @user={{@issue.assignedTo}} @size="s" {{initialize-tooltip content=@issue.assignedTo.name placement="right"}} />
-      </span>
-    {{/if}}
   {{/if}}
   {{#if this.showInnerLabel}}
     {{! Inside a task bar, pinned to the visible part of the bar: the issue number and subject }}
@@ -74,6 +69,11 @@
   {{else if this.showAfterLabel}}
     {{! After the bar: the milestone's "name · %" }}
     <span class="bar-label {{if this.isCompleted 'completed'}}" data-test-gantt-bar-label>{{this.displayLabel}}</span>
+  {{/if}}
+  {{#if this.showAssigneePhoto}}
+    <span class="assignee-avatar" data-test-gantt-bar-assignee>
+      <AppUi::Avatar @user={{@issue.assignedTo}} @size="xs" />
+    </span>
   {{/if}}
   {{#if this.isKeyboardOperable}}
     <span id="gantt-bar-hint-{{@issue.id}}" class="sr-only">{{t 'views.app.gantt.bar.keyboardHint'}}</span>

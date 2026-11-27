@@ -590,10 +590,17 @@ $gantt-bar-colours: (
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
-  /* Phones only: desktop shows the assignee in the grid's Who column */
+  /* The assignee's photo at the bar's right end, where the grid has no Who column; the label ends before it */
   .assignee-avatar {
     position: absolute;
-    right: -3.5rem;
+    right: 0;
+    top: 0;
+    line-height: 0;
+    pointer-events: none;
+  }
+
+  &.has-assignee-photo .bar-label-clip {
+    right: 24px;
   }
 }
 
