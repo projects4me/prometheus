@@ -22,6 +22,7 @@ import {
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
+import { GRID_DEFAULT_WIDTH, GRID_MIN_WIDTH, clampGridWidth, maxGridWidth, visibleColumns } from 'prometheus/utils/gantt/grid-width';
 import { LINK_TYPES, DEFAULT_LINK_TYPES, loadToolbarPreferences, saveToolbarPreferences, loadPhonePreferences, savePhonePreferences } from 'prometheus/utils/gantt/toolbar-preferences';
 
 /**
@@ -62,6 +63,7 @@ export default class GanttChartComponent extends AppComponent {
 		this.showOtherProjects = layers.otherProjects;
 		this.showWeekends = layers.weekends;
 		this.showLabels = this.viewport.isPhone ? layers.labels : true;
+		this.storedGridWidth = saved.gridWidth ?? null;
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
 	}
 
@@ -115,6 +117,87 @@ export default class GanttChartComponent extends AppComponent {
 		if (!this.isDestroying && !this.isDestroyed) {
 			this.containerWidth = width;
 		}
+	}
+
+	/**
+	 * The issue list's width the user chose, in px, before it is limited to the container; null until the user resizes it
+	 *
+	 * @property storedGridWidth
+	 * @type Number
+	 * @private
+	 */
+	@tracked storedGridWidth = null;
+
+	/**
+	 * The issue list's width in px: the chosen width, limited to 240px and half the container (so it follows the container as it shrinks)
+	 *
+	 * @property listWidth
+	 * @type Number
+	 * @public
+	 */
+	get listWidth() {
+		return clampGridWidth(this.storedGridWidth, this.containerWidth);
+	}
+
+	get gridMinWidth() {
+		return GRID_MIN_WIDTH;
+	}
+
+	get gridMaxWidth() {
+		return maxGridWidth(this.containerWidth);
+	}
+
+	/**
+	 * How many optional grid columns fit the width, as a class the styles hide the rest by
+	 *
+	 * @property gridColumnsClass
+	 * @type String
+	 * @public
+	 */
+	get gridColumnsClass() {
+		return `gantt-grid-cols-${visibleColumns(this.listWidth)}`;
+	}
+
+	/**
+	 * Sets the issue list's width (limited) and remembers it
+	 *
+	 * @method setGridWidth
+	 * @param {Number} width
+	 * @public
+	 */
+	@action
+	setGridWidth(width) {
+		if (this.isDestroying || this.isDestroyed) {
+			return;
+		}
+		// only the minimum is applied here: listWidth limits it to the container when read, so a narrow container never overwrites the choice
+		this.storedGridWidth = Math.max(GRID_MIN_WIDTH, Math.round(Number(width)) || GRID_DEFAULT_WIDTH);
+	}
+
+	/**
+	 * Remembers the issue list's width once the user stops resizing it
+	 *
+	 * @method saveGridWidth
+	 * @public
+	 */
+	@action
+	saveGridWidth() {
+		if (this.isDestroying || this.isDestroyed) {
+			return;
+		}
+		this.savePreferences();
+	}
+
+	/**
+	 * Puts the issue list back to its default width
+	 *
+	 * @method resetGridWidth
+	 * @public
+	 */
+	@action
+	resetGridWidth() {
+		this.storedGridWidth = null;
+		this.savePreferences();
 	}
 
 	/**
@@ -644,7 +727,8 @@ export default class GanttChartComponent extends AppComponent {
 			scale: this.timeScale,
 			links: this.linkTypes,
 			otherProjects: this.showOtherProjects,
-			weekends: this.showWeekends
+			weekends: this.showWeekends,
+			gridWidth: this.storedGridWidth
 		});
 	}
 
@@ -853,7 +937,8 @@ export default class GanttChartComponent extends AppComponent {
 			`--gantt-row-height: ${toFiniteNumber(this.rowHeight)}px; ` +
 			`--gantt-day-width: ${toFiniteNumber(this.dayWidth)}px; ` +
 			`--gantt-hours-per-day: ${toFiniteNumber(WORK_HOURS_PER_DAY)}; ` +
-			`--gantt-timeline-width: ${toFiniteNumber(this.timelineWidth)}px`
+			`--gantt-timeline-width: ${toFiniteNumber(this.timelineWidth)}px; ` +
+			`--gantt-grid-width: ${toFiniteNumber(this.listWidth)}px`
 		);
 	}
 

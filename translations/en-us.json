@@ -425,6 +425,12 @@
         "barLabels": "Bar labels",
         "show": "Show"
       },
+      "gridResizer": {
+        "label": "Resize the issue list",
+        "width": "{width} px",
+        "minimum": "minimum",
+        "maximum": "maximum"
+      },
       "issueList": {
         "title": "Issues",
         "open": "Open issue"
