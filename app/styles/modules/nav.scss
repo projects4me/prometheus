@@ -11,7 +11,7 @@
 
 
 .sidebar-menu>li.active>a{
-  border-left-color: $primaryColor;
+  border-left-color: var(--p4m-color-brand);
 }
 
 .sidebar-menu .treeview > a .fa-angle-left {
@@ -41,7 +41,7 @@
     font-weight: 600;
 
     &.nav-project-none {
-      color: #8aa4af;
+      color: var(--p4m-slate-385);
       text-transform: none;
       font-weight: normal;
     }
@@ -58,7 +58,7 @@
   display: none;
   height: 1px;
   margin: 6px 10px;
-  background: rgba(255, 255, 255, 0.15);
+  background: color-mix(in srgb, var(--p4m-grey-0) 15%, transparent);
 }
 
 .sidebar-mini.sidebar-collapse .sidebar-menu > li.nav-divider {

@@ -8,7 +8,7 @@
   This contains the CSS related to the wiki pages of the application.
 */
 .ui-datepicker{
-  background-color: #fff;
+  background-color: var(--p4m-color-surface);
   z-index: 1000;
   min-width: 160px;
   padding: 5px 0;
@@ -16,8 +16,8 @@
   list-style: none;
   font-size: 14px;
   text-align: left;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--p4m-grey-200);
+  border: 1px solid color-mix(in srgb, var(--p4m-grey-1000) 15%, transparent);
   border-radius: 4px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -31,9 +31,8 @@
   left: 0;
   top: 0rem;
   height: 0.4rem;
-  background: $color_maroon_flush_approx;
-  background: linear-gradient(to right, $color_maroon_flush_approx 0, $color_pompadour_approx 100%);
-  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$color_maroon_flush_approx, endcolorstr=$color_pompadour_approx, gradienttype=1 );
+  background: var(--p4m-color-brand);
+  background: linear-gradient(to right, var(--p4m-color-brand) 0, var(--p4m-color-brand-strong) 100%);
 }
 
 .ui-datepicker {
@@ -155,7 +154,7 @@
   }
 
   a {
-    color: #000;
+    color: var(--p4m-grey-1000);
   }
 
   .ui-datepicker-title {
@@ -164,10 +163,10 @@
   }
 
   .ui-state-active {
-    border: 0.1rem solid $primaryColor;
+    border: 0.1rem solid var(--p4m-color-brand);
     border-radius: 0.3rem;
     outline: none;
-    box-shadow: 0 0 1rem $primaryColor;
+    box-shadow: 0 0 1rem var(--p4m-color-brand);
   }
 
   .ui-state-default:hover {
