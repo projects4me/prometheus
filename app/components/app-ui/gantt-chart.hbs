@@ -135,6 +135,7 @@
               @onOpenIssuePanel={{this.handleOpenIssuePanel}}
               @selectedIssue={{@selectedIssue}}
               @links={{@links}}
+              @schedule={{@schedule}}
             />
           {{/each}}
           {{#if this.ghostIssues.length}}
@@ -227,6 +228,7 @@
             @tooltipElement={{this.tooltipElement}}
             @onTooltipIssue={{this.showTooltipIssue}}
             @links={{@links}}
+            @schedule={{@schedule}}
           />
         {{/each}}
         {{#if this.ghostIssues.length}}
@@ -276,7 +278,7 @@
     {{/if}}
   </div>
   {{#if this.showSelectionBar}}
-    <AppUi::GanttChart::SelectionBar @issue={{@selectedIssue}} @links={{@links}} @onEdit={{this.editSelected}} @onLink={{this.linkSelected}} @onDetails={{this.detailsSelected}} @onClose={{this.deselect}} />
+    <AppUi::GanttChart::SelectionBar @issue={{@selectedIssue}} @links={{@links}} @schedule={{@schedule}} @onEdit={{this.editSelected}} @onLink={{this.linkSelected}} @onDetails={{this.detailsSelected}} @onClose={{this.deselect}} />
   {{/if}}
   {{#if (and this.viewport.isPhone (eq this.phoneTab "timeline"))}}
     <div class="gantt-swipe-hint text-muted" data-test-gantt-swipe-hint>{{t "components.gantt.footer.swipeHint"}}</div>
@@ -294,7 +296,7 @@
   {{! One tooltip content for every bar; the bar under the pointer or focus fills it }}
   <div hidden>
     <div data-test-gantt-tooltip {{register-element this.registerTooltipElement}}>
-      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} @timeTotals={{@timeTotals}} @links={{@links}} @issues={{this.allIssues}} />
+      <AppUi::GanttChart::BarTooltip @issue={{this.tooltipIssue}} @timeTotals={{@timeTotals}} @links={{@links}} @schedule={{@schedule}} @issues={{this.allIssues}} />
     </div>
   </div>
 </div>

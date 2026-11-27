@@ -32,7 +32,7 @@ export default class AppUiGanttChartSelectionBarComponent extends Component {
             return { conflict: 0, blockedBy: 0, blocks: 0, relates: 0 };
         }
         return {
-            conflict: conflictingBlockers(this.args.issue, lookup).length,
+            conflict: conflictingBlockers(this.args.issue, lookup, this.args.schedule).length,
             blockedBy: lookup.blockedBy(id).length,
             blocks: lookup.blocks(id).length,
             relates: lookup.relates(id).length

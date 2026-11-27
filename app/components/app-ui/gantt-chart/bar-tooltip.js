@@ -100,21 +100,20 @@ export default class BarTooltipComponent extends Component {
   }
 
   /**
-   * The schedule-conflict line ("Starts before #12 ends (5 Dec)"), or null when the issue does not start before an
-   * open blocker ends.
+   * The schedule-conflict line ("Runs past its end date (blocked by #12)"), or null when no open blocker pushes the
+   * issue past its end date.
    *
    * @property conflict
    * @type String|null
    */
   get conflict() {
     let lookup = this.args.links;
-    let blockers = conflictingBlockers(this.args.issue, lookup);
+    let blockers = conflictingBlockers(this.args.issue, lookup, this.args.schedule);
     if (!blockers.length) {
       return null;
     }
-    return this.intl.t('components.gantt.tooltip.conflict', {
+    return this.intl.t('components.gantt.conflict.blocker', {
       blocker: blockerName(blockers[0], lookup.projectId),
-      date: format(parse(String(blockers[0].endDate).slice(0, 10)), 'D MMM'),
       others: blockers.length - 1,
     });
   }

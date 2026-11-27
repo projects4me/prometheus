@@ -23,8 +23,8 @@ export default class TaskRowComponent extends Component {
     @service intl;
 
     /**
-     * The text of the schedule-conflict flag ("Starts before #12 ends and 1 more"), or null when the issue does not
-     * start before an open blocker ends. Reads the dates and statuses, so it updates when they change.
+     * The text of the schedule-conflict flag ("Runs past its end date (blocked by #12) and 1 more"), or null when no open
+     * blocker pushes the issue past its end date. Reads the dates and statuses, so it updates when they change.
      *
      * @property conflictText
      * @type String|null
@@ -33,7 +33,7 @@ export default class TaskRowComponent extends Component {
      */
     get conflictText() {
         const lookup = this.args.links;
-        const blockers = conflictingBlockers(this.args.issue, lookup);
+        const blockers = conflictingBlockers(this.args.issue, lookup, this.args.schedule);
         if (!blockers.length) {
             return null;
         }

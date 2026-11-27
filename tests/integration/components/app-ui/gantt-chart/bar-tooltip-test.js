@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { schedule } from 'prometheus/utils/gantt/schedule';
 import IssueLinkLookup from 'prometheus/utils/gantt/issue-link-lookup';
 import CurrentUserStub from '../../../stub-services/current-user-stub';
 
@@ -40,7 +41,7 @@ module('Integration | Component | app-ui/gantt-chart/bar-tooltip', function (hoo
     });
 
     const renderTooltip = () => render(hbs`<AppUi::GanttChart::BarTooltip @issue={{this.issue}} @timeTotals={{this.timeTotals}}
-        @links={{this.links}} @issues={{this.issues}} />`);
+        @links={{this.links}} @schedule={{this.schedule}} @issues={{this.issues}} />`);
 
     test('shows the header, the facts and who modified it', async function (assert) {
         await renderTooltip();
@@ -108,13 +109,31 @@ module('Integration | Component | app-ui/gantt-chart/bar-tooltip', function (hoo
         assert.dom('[data-test-gantt-tooltip-conflict]').doesNotExist('the blocker ends before the start');
     });
 
-    test('shows the conflict line in red for an open blocker ending after the start', async function (assert) {
-        const blocker = issue('2', 4954, { endDate: '2026-12-05' });
+    test('shows the conflict line in red for an open blocker that pushes the issue past its end date', async function (assert) {
+        const blocker = issue('2', 4954, { startDate: '2026-12-01', endDate: '2026-12-05' });
         this.links = new IssueLinkLookup([link('blocks', blocker, this.issue)], { projectId: '5' });
+        this.schedule = schedule(
+            [this.issue, blocker].map((item) => ({ id: item.id, startDate: item.startDate, endDate: item.endDate, estimateHours: null })),
+            [{ sourceId: '2', targetId: '1' }]
+        );
         await renderTooltip();
-        assert.dom('[data-test-gantt-tooltip-conflict]').hasText('Starts before #4954 ends (5 Dec)');
+        assert.dom('[data-test-gantt-tooltip-conflict]').hasText('Runs past its end date (blocked by #4954)');
         assert.dom('[data-test-gantt-tooltip-conflict]').hasClass('text-red');
         assert.dom('[data-test-gantt-tooltip-conflict] .fa-ban').exists();
+    });
+
+    test('no conflict line for a same-day chain that fits its window', async function (assert) {
+        const day = { startDate: '2026-12-02', endDate: '2026-12-02' };
+        this.issue.startDate = day.startDate;
+        this.issue.endDate = day.endDate;
+        const blocker = issue('2', 4954, day);
+        this.links = new IssueLinkLookup([link('blocks', blocker, this.issue)], { projectId: '5' });
+        this.schedule = schedule(
+            [this.issue, blocker].map((item) => ({ id: item.id, ...day, estimateHours: 2 })),
+            [{ sourceId: '2', targetId: '1' }]
+        );
+        await renderTooltip();
+        assert.dom('[data-test-gantt-tooltip-conflict]').doesNotExist();
     });
 
     test('shows at most 3 rows per group, then "and N more"', async function (assert) {
