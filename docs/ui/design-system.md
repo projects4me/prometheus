@@ -530,10 +530,28 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Tables | `AppUi::Table` and `components/table.scss` |
 | Toolbars | `AppUi::Toolbar` and `components/toolbar.scss` |
 | Modals | `AppUi::Modal` (native `<dialog>`, square) |
-| Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
+| Tooltips | `{{tooltip}}` modifier for a plain-text tooltip (see "Adding a tooltip" below); rich tooltips (Gantt bars) use `{{initialize-tooltip}}` with a tippy theme in `components/tooltip-themes.scss` |
 | Reply / comment box | `AppUi::Editor` without label (bare box, with mentions, issue links and Ctrl/⌘+Enter `@onSubmit`) (the target for `ConversationUi::CommentComposer`, not yet migrated); never a plain textarea |
 | Record boxes | Plain `box box-*`, with no extra shadow or border |
 | Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` in the Component Library (section 14) |
+
+### Adding a tooltip
+
+Put the `{{tooltip}}` modifier on the element, with the translated text:
+
+```hbs
+<button type="button" class="btn btn-default" {{tooltip (t "views.app.project.list.add")}}>
+  <i class="fa fa-plus"></i>
+</button>
+<span {{tooltip this.label placement="bottom"}}>…</span>
+```
+
+- The text is plain text, never HTML; it updates when the value changes, and an empty value shows no tooltip.
+- `placement` is optional (`top` by default; `bottom`, `left`, `right`).
+- It draws the standard dark tooltip (tippy theme `p4m` in `components/tooltip.scss`, the look of the Bootstrap 3
+  tooltip with square corners). Don't add `data-toggle="tooltip"` to new markup: those tooltips are being moved to
+  the modifier.
+- For HTML content or a shared element (Gantt bar details), use `{{initialize-tooltip}}` with its own theme.
 
 ## 10. Rounded corners already in the code (don't copy)
 
