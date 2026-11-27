@@ -18,12 +18,13 @@
 
 ## UI and design system (read before any UI change)
 - Read `docs/ui/design-system.md` first. Extend the existing UI; never build a new or "modern" one.
-- AdminLTE 2 + Bootstrap 3, skin `skin-black-light`. Group content in `.box` with `.box-header with-border` + `.box-title`; pick the box variant by section type (design-system.md §4).
+- **Same look, new foundation:** Bootstrap 3 / AdminLTE 2 (skin `skin-black-light`) are being replaced by our own CSS (aprom-4999). Their markup and CSS may be replaced as long as the page looks the same, checked with the before/after baseline tool; any visible change needs its own issue. See `docs/ui/design-system.md` §1a and the `--p4m-` tokens in §4a.
+- Group content in `.box` with `.box-header with-border` + `.box-title`; pick the box variant by section type (design-system.md §4).
 - **Square edges only.** No `border-radius` anywhere except `50%` on avatars and status dots. Existing rounded corners are legacy; don't copy them.
 - **Use the existing component, always.** If a component for the job exists (`components/form-fields`, `components/app-ui`, `components/widgets`, or one listed in `docs/ui/design-system.md`), use it. Never build your own markup, styling or component for the same purpose. Forms use `FormFields::*` only: a select is `FormFields::FieldRelate` (`@relateType="relate-simple"`), never a bare `<PowerSelect>`, `<select>` or hand-written `<label>`. Search `app/components` and the design system before writing UI.
 - **If it's unclear which component fits, or none quite does, ask before building** (headless: finish with `needs_input` and propose the options). Don't invent a new component or a variant of an existing one.
-- Reuse Bootstrap/AdminLTE classes. Add a new class only when nothing existing works, scoped under the module class in `app/styles/modules/<module>.scss`.
-- Colours only from `app/styles/variables.scss` (crimson `$primaryColor`, plum `$highlightColor`, link blue `$secondaryColor`). No new colours, fonts (Source Sans Pro only), shadows, gradients or UI/icon libraries (Font Awesome 4 only).
+- Reuse the existing classes. Add a new class only when nothing existing works, scoped under the module class in `app/styles/modules/<module>.scss`.
+- Colours only from `app/styles/variables.scss` (crimson `$primaryColor`, plum `$highlightColor`, link blue `$secondaryColor`). No new colours, fonts (Source Sans Pro only), shadows, gradients or third-party UI/icon libraries (Font Awesome 4 only; our own foundation CSS is fine).
 - Follow the page patterns: list = one full-width `box-primary` with search toolbar, table and pagination; detail = `col-md-8` record box + `col-md-4` side boxes; create/edit = `col-md-8` form box + `col-md-4` side boxes, Save/Cancel below the boxes.
 - **Composing components:** follow rules R1–R7 in `docs/ui/design-system.md` §13 (rule of three, blocks before args, data in/events out, change only with a benefit, `data-test-*` selectors only, ship docs + manifest + tests, `app-ui/` vs domain folders).
 - Before calling a UI change done, open it in the running app (`https://app.local-projects4.me`) next to an existing screen of the same type and compare.
