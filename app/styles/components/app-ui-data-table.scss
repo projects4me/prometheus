@@ -20,28 +20,28 @@
     .data-table-check {
       background: transparent;
       border: 0;
-      border-radius: 0;
-      color: $mediumColor;
+      border-radius: var(--p4m-radius-none);
+      color: var(--p4m-color-text-muted);
       padding: 0;
 
       .fa-check-square {
-        color: $primaryColor;
+        color: var(--p4m-color-brand);
       }
     }
   }
 
   .data-table-row--selected {
-    background-color: #f9fafc;
+    background-color: var(--p4m-slate-20);
   }
 
   // Tree rows: the pinned current row uses the selected-row background, bold, with a top and bottom border.
   .table > tbody > tr.data-table-row--current {
-    background-color: #f9fafc;
+    background-color: var(--p4m-slate-20);
     font-weight: bold;
 
     > td {
-      border-top: 1px solid $borderColor;
-      border-bottom: 1px solid $borderColor;
+      border-top: 1px solid var(--p4m-color-border);
+      border-bottom: 1px solid var(--p4m-color-border);
     }
   }
 
@@ -64,14 +64,14 @@
   .data-table-toggle {
     background: transparent;
     border: 0;
-    border-radius: 0;
-    color: $mediumColor;
+    border-radius: var(--p4m-radius-none);
+    color: var(--p4m-color-text-muted);
     padding: 0;
     cursor: pointer;
 
     &:hover,
     &:focus {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     &[disabled] {
@@ -81,10 +81,10 @@
 
   .data-table-sort {
     padding: 0 4px;
-    color: #999;
+    color: var(--p4m-color-text-muted);
 
     &.active {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
 
@@ -118,9 +118,9 @@
     .app-dropdown-btn {
       background: transparent;
       border: 0;
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
       box-shadow: none;
-      color: #97a0b3;
+      color: var(--p4m-slate-355);
       font-size: 12px;
       height: auto;
       line-height: 1.5;
@@ -131,7 +131,7 @@
       > i,
       > .fa,
       i.fa {
-        color: #97a0b3;
+        color: var(--p4m-slate-355);
         font-size: 1.2rem;
         line-height: 1.5;
       }
@@ -141,7 +141,7 @@
       &:hover i.fa,
       &:focus i.fa {
         background: transparent;
-        color: $primaryColor;
+        color: var(--p4m-color-brand);
       }
     }
   }
@@ -152,7 +152,7 @@
 
   .data-table-group > td {
     padding: 0;
-    background: #f4f4f4;
+    background: var(--p4m-grey-45);
   }
 
   .data-table-group-heading {
@@ -160,8 +160,8 @@
     width: 100%;
     text-align: left;
     border: 0;
-    border-radius: 0;
-    background: #f4f4f4;
+    border-radius: var(--p4m-radius-none);
+    background: var(--p4m-grey-45);
     padding: 6px 10px;
     font-size: 12px;
     font-weight: bold;

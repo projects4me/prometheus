@@ -14,9 +14,9 @@
 
 	// QuickList demo: the initials square in the leading column of each row.
 	.quick-list-demo-initials {
-		background-color: $primaryColor;
-		border-radius: 0;
-		color: #fff;
+		background-color: var(--p4m-color-brand);
+		border-radius: var(--p4m-radius-none);
+		color: var(--p4m-grey-0);
 		display: inline-block;
 		font-size: 12px;
 		font-weight: 600;
@@ -31,7 +31,7 @@
 		display: flex;
 		min-height: 120px;
 		padding: 10px;
-		border: 1px dashed #ccc;
+		border: 1px dashed var(--p4m-grey-200);
 
 		&.is-left { justify-content: flex-start; }
 		&.is-right { justify-content: flex-end; }

@@ -12,12 +12,12 @@
   }
 
   .toast-ui-editor {
-    border: 1px solid $borderColor;
-    border-radius: 0;
+    border: 1px solid var(--p4m-color-border);
+    border-radius: var(--p4m-radius-none);
   }
 
   &.app-ui-editor-invalid .toast-ui-editor {
-    border-color: $dangerColor;
+    border-color: var(--p4m-color-danger);
   }
 
   &.app-ui-editor-disabled {
@@ -30,8 +30,8 @@
   }
 
   .app-ui-editor-viewer {
-    border: 1px solid $borderColor;
-    border-radius: 0;
+    border: 1px solid var(--p4m-color-border);
+    border-radius: var(--p4m-radius-none);
     padding: 8px 10px;
   }
 }
