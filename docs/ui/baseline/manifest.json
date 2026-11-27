@@ -1,0 +1,512 @@
+{
+  "capturedAt": "2026-11-27T13:24:50.852Z",
+  "appUrl": "https://app.local-projects4.me",
+  "project": "aprom",
+  "issue": "3980",
+  "prometheus": {
+    "branch": "dev",
+    "commit": "2b8ab093"
+  },
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 900
+    },
+    "phone": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "results": [
+    {
+      "viewport": "desktop",
+      "page": "signin",
+      "path": "/signin",
+      "file": "desktop/signin.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "dashboard",
+      "path": "/app",
+      "file": "desktop/dashboard.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "projects",
+      "path": "/app/project",
+      "file": "desktop/projects.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "project-overview",
+      "path": "/app/project/{project}",
+      "file": "desktop/project-overview.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "issue-list",
+      "path": "/app/project/{project}/issue",
+      "file": "desktop/issue-list.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "issue-detail",
+      "path": "/app/project/{project}/issue/{issue}",
+      "file": "desktop/issue-detail.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "issue-create",
+      "path": "/app/project/{project}/issue/create",
+      "file": "desktop/issue-create.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "issue-edit",
+      "path": "/app/project/{project}/issue/edit/{issue}",
+      "file": "desktop/issue-edit.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "task-board",
+      "path": "/app/project/{project}/board",
+      "file": "desktop/task-board.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "gantt",
+      "path": "/app/project/{project}/gantt",
+      "file": "desktop/gantt.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "calendar",
+      "path": "/app/project/{project}/calendar",
+      "file": "desktop/calendar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "threads",
+      "path": "/app/project/{project}/conversations",
+      "file": "desktop/threads.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "ideas",
+      "path": "/app/project/{project}/idea",
+      "file": "desktop/ideas.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "wiki",
+      "path": "/app/project/{project}/wiki",
+      "file": "desktop/wiki.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "agents",
+      "path": "/app/agent",
+      "file": "desktop/agents.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "workflows",
+      "path": "/app/workflow",
+      "file": "desktop/workflows.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "settings-users",
+      "path": "/app/settings/users",
+      "file": "desktop/settings-users.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "settings-issue-types",
+      "path": "/app/settings/issue-types",
+      "file": "desktop/settings-issue-types.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "settings-issue-statuses",
+      "path": "/app/settings/issue-statuses",
+      "file": "desktop/settings-issue-statuses.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-quick-list",
+      "path": "/app/developer/components/quick-list",
+      "file": "desktop/lib-quick-list.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-list-toolbar",
+      "path": "/app/developer/components/list-toolbar",
+      "file": "desktop/lib-list-toolbar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-data-table",
+      "path": "/app/developer/components/data-table",
+      "file": "desktop/lib-data-table.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-pager",
+      "path": "/app/developer/components/pager",
+      "file": "desktop/lib-pager.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-ez-search",
+      "path": "/app/developer/components/ez-search",
+      "file": "desktop/lib-ez-search.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-form-fields",
+      "path": "/app/developer/components/form-fields",
+      "file": "desktop/lib-form-fields.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-select",
+      "path": "/app/developer/components/select",
+      "file": "desktop/lib-select.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-modal",
+      "path": "/app/developer/components/modal",
+      "file": "desktop/lib-modal.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-dropdown",
+      "path": "/app/developer/components/dropdown",
+      "file": "desktop/lib-dropdown.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-tabs",
+      "path": "/app/developer/components/tabs",
+      "file": "desktop/lib-tabs.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-box",
+      "path": "/app/developer/components/box",
+      "file": "desktop/lib-box.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-empty-state",
+      "path": "/app/developer/components/empty-state",
+      "file": "desktop/lib-empty-state.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-avatar",
+      "path": "/app/developer/components/avatar",
+      "file": "desktop/lib-avatar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-status-label",
+      "path": "/app/developer/components/status-label",
+      "file": "desktop/lib-status-label.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-tag",
+      "path": "/app/developer/components/tag",
+      "file": "desktop/lib-tag.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "desktop",
+      "page": "lib-editor",
+      "path": "/app/developer/components/editor",
+      "file": "desktop/lib-editor.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "signin",
+      "path": "/signin",
+      "file": "phone/signin.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "dashboard",
+      "path": "/app",
+      "file": "phone/dashboard.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "projects",
+      "path": "/app/project",
+      "file": "phone/projects.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "project-overview",
+      "path": "/app/project/{project}",
+      "file": "phone/project-overview.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "issue-list",
+      "path": "/app/project/{project}/issue",
+      "file": "phone/issue-list.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "issue-detail",
+      "path": "/app/project/{project}/issue/{issue}",
+      "file": "phone/issue-detail.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "issue-create",
+      "path": "/app/project/{project}/issue/create",
+      "file": "phone/issue-create.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "issue-edit",
+      "path": "/app/project/{project}/issue/edit/{issue}",
+      "file": "phone/issue-edit.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "task-board",
+      "path": "/app/project/{project}/board",
+      "file": "phone/task-board.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "gantt",
+      "path": "/app/project/{project}/gantt",
+      "file": "phone/gantt.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "calendar",
+      "path": "/app/project/{project}/calendar",
+      "file": "phone/calendar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "threads",
+      "path": "/app/project/{project}/conversations",
+      "file": "phone/threads.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "ideas",
+      "path": "/app/project/{project}/idea",
+      "file": "phone/ideas.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "wiki",
+      "path": "/app/project/{project}/wiki",
+      "file": "phone/wiki.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "agents",
+      "path": "/app/agent",
+      "file": "phone/agents.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "workflows",
+      "path": "/app/workflow",
+      "file": "phone/workflows.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "settings-users",
+      "path": "/app/settings/users",
+      "file": "phone/settings-users.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "settings-issue-types",
+      "path": "/app/settings/issue-types",
+      "file": "phone/settings-issue-types.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "settings-issue-statuses",
+      "path": "/app/settings/issue-statuses",
+      "file": "phone/settings-issue-statuses.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-quick-list",
+      "path": "/app/developer/components/quick-list",
+      "file": "phone/lib-quick-list.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-list-toolbar",
+      "path": "/app/developer/components/list-toolbar",
+      "file": "phone/lib-list-toolbar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-data-table",
+      "path": "/app/developer/components/data-table",
+      "file": "phone/lib-data-table.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-pager",
+      "path": "/app/developer/components/pager",
+      "file": "phone/lib-pager.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-ez-search",
+      "path": "/app/developer/components/ez-search",
+      "file": "phone/lib-ez-search.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-form-fields",
+      "path": "/app/developer/components/form-fields",
+      "file": "phone/lib-form-fields.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-select",
+      "path": "/app/developer/components/select",
+      "file": "phone/lib-select.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-modal",
+      "path": "/app/developer/components/modal",
+      "file": "phone/lib-modal.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-dropdown",
+      "path": "/app/developer/components/dropdown",
+      "file": "phone/lib-dropdown.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-tabs",
+      "path": "/app/developer/components/tabs",
+      "file": "phone/lib-tabs.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-box",
+      "path": "/app/developer/components/box",
+      "file": "phone/lib-box.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-empty-state",
+      "path": "/app/developer/components/empty-state",
+      "file": "phone/lib-empty-state.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-avatar",
+      "path": "/app/developer/components/avatar",
+      "file": "phone/lib-avatar.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-status-label",
+      "path": "/app/developer/components/status-label",
+      "file": "phone/lib-status-label.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-tag",
+      "path": "/app/developer/components/tag",
+      "file": "phone/lib-tag.png",
+      "status": "ok"
+    },
+    {
+      "viewport": "phone",
+      "page": "lib-editor",
+      "path": "/app/developer/components/editor",
+      "file": "phone/lib-editor.png",
+      "status": "ok"
+    }
+  ]
+}
