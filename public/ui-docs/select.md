@@ -21,6 +21,7 @@ In a form, use the FormFields fields, not `AppUi::Select`: they add the label, v
 | `@allowClear` | boolean | `false` | Shows a clear button on a single select |
 | `@disabled` | boolean | `false` | Disables the select |
 | `@closeOnSelect` | boolean | `true` | Closes the list after a choice (set `false` for multiple) |
+| `@initiallyOpened` | boolean | `false` | Opens the list, focused, when the select renders |
 | `@renderInPlace` | boolean | `false` | Renders the list next to the trigger instead of at the document root (or the dialog, see below). Not needed inside `AppUi::Modal` any more |
 | `@dropdownClass` | string | none | Class added to the dropdown content element, which holds the options and `@afterOptionsComponent`. The list renders at the document root (or in the open dialog), so use it to scope styles for the options |
 | `@afterOptionsComponent` | component | none | Rendered below the option list, e.g. a footer link. It receives `@select` (`@select.actions.close()` closes the list) |

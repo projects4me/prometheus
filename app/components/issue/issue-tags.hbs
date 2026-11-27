@@ -1,4 +1,4 @@
-<div class="issue-tags" data-test-issue-tags data-field="issue.tags" {{on-insert this.load}} {{on-update @issue.id this.load}}>
+<div class="col-xs-6 col-md-4 issue-tags" data-test-issue-tags data-field="issue.tags" {{on-insert this.load}} {{on-update @issue.id this.load}}>
   <h4>{{t "views.app.issue.detail.tags.title"}}</h4>
   {{#if this.loadFailed}}
     <p class="text-danger" data-test-issue-tags-failed>{{t "views.app.issue.detail.tags.loadFailed"}}</p>
@@ -7,14 +7,30 @@
       {{#each this.taggedList as |tagged|}}
         <AppUi::Tag
           @colorKey={{tagged.tag.tag}}
-          @onRemove={{if this.canRemove (fn this.remove tagged)}}
+          @onRemove={{if (and this.adding this.canRemove) (fn this.remove tagged)}}
           data-test-issue-tag={{tagged.tag.tag}}
-        >{{tagged.tag.tag}}</AppUi::Tag>
+        >
+          {{#if this.adding}}
+            {{tagged.tag.tag}}
+          {{else}}
+            <LinkTo
+              @route="app.project.issue.index"
+              @model={{this.shortcode}}
+              @query={{hash query=(concat "((tag.tag : " tagged.tag.tag "))")}}
+              data-test-issue-tag-link
+            >{{tagged.tag.tag}}</LinkTo>
+          {{/if}}
+        </AppUi::Tag>
       {{else}}
         <span class="text-muted">-</span>
       {{/each}}
+      {{#if (and this.canEdit (not this.adding))}}
+        <AppUi::Button class="btn btn-box-tool" @onClick={{this.startAdding}} data-test-issue-tags-add>
+          <i class="fa fa-plus" title={{t "views.app.issue.detail.tags.add"}}></i>
+        </AppUi::Button>
+      {{/if}}
     </p>
-    {{#if this.canEdit}}
+    {{#if (and this.canEdit this.adding)}}
       <FormFields::FieldRelateMulti
         @selected={{(array)}}
         @search={{this.search}}
@@ -23,7 +39,9 @@
         @placeholder={{t "views.app.issue.detail.tags.add"}}
         @onchange={{this.select}}
         @onCreate={{this.add}}
+        @onClose={{this.stopAdding}}
         @closeOnSelect={{true}}
+        @initiallyOpened={{true}}
         @relateType="relate-simple"
         @data-field="issue.tags.add"
       />

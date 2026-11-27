@@ -15,9 +15,10 @@
         @onKeydown={{this.handleSelectKeydown}}
         @matcher={{this.matcher}}
         @closeOnSelect={{@closeOnSelect}}
+        @initiallyOpened={{@initiallyOpened}}
         @onFocus={{this.enableValidation}}
         @onBlur={{this.validate}}
-        @onClose={{this.validate}} as |data|>
+        @onClose={{this.handleClose}} as |data|>
         {{#if data.__create}}
           <span class="field-relate-multi-add" data-field-relate-multi-add>{{t "global.form.addText" text=data.text}}</span>
         {{else}}

@@ -182,15 +182,9 @@
                 {{/if}}
               </div>
 
-            </div>
+              <Issue::IssueTags @issue={{this.issue}} />
 
-            {{#unless @quickView}}
-              <div class="row">
-                <div class="col-xs-12">
-                  <Issue::IssueTags @issue={{this.issue}} />
-                </div>
-              </div>
-            {{/unless}}
+            </div>
 
           </div>
           {{!-- /.box-body --}}
