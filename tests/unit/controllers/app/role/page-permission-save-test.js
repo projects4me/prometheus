@@ -70,4 +70,15 @@ module('Unit | Controller | app/role/page permission save', function (hooks) {
         // runs, so a failed save is not reported and the batch ends with the success message.
         assert.strictEqual(toasts.length, 1, 'the batch ends with a single message');
     });
+
+    test('it opens the tab that lists a permission through tracked state', async function (assert) {
+        const controller = setup(this.owner, []);
+
+        assert.strictEqual(controller.permissionsTab, 'actions', 'Actions is open first');
+        assert.strictEqual(controller.tabForPermission({ resourceName: 'issue.subject' }), 'fields', 'a field permission is on Fields');
+        assert.strictEqual(controller.tabForPermission({ resourceName: 'issue.get' }), 'actions', 'an action permission is on Actions');
+
+        await controller.activateTabForPermission({ resourceName: 'issue.subject' });
+        assert.strictEqual(controller.permissionsTab, 'fields', 'the Fields tab was opened');
+    });
 });

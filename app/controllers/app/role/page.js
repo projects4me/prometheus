@@ -9,7 +9,7 @@ import { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import {
-    accessSplit, accessTier, actionTotals, coverageByRole, roleInitials, toCoverageEntries
+    ACTION_VERBS, accessSplit, accessTier, actionTotals, coverageByRole, roleInitials, toCoverageEntries
 } from 'prometheus/utils/role/access';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
@@ -38,6 +38,14 @@ export default class AppRolePageController extends PrometheusCreateController {
      * @protected
      */
     @tracked permissionsState = {};
+
+    /**
+     * The open permissions tab, `actions` or `fields`.
+     *
+     * @property permissionsTab
+     * @type {String}
+     */
+    @tracked permissionsTab = 'actions';
 
     /**
      * This flag is used to show or hide the modal dialog box for assigning
@@ -360,11 +368,11 @@ export default class AppRolePageController extends PrometheusCreateController {
 
             this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
 
+            await this.activateTabForPermission(permission);
             let permissionEl = listEl
                 ? listEl.querySelector(`[data-module-resource="${permission.resourceName}"]`)
                 : null;
             if (permissionEl) {
-                await this.activateTabForPermission(permissionEl);
                 permissionEl.classList.add("light-gray");
                 this.scrollToPermission(permissionEl);
             }
@@ -517,12 +525,14 @@ export default class AppRolePageController extends PrometheusCreateController {
                     let permissionEl = listEl.querySelector(`[data-module-resource="${key}"]`)
                         || listEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
                         || listEl.querySelector(`[data-module-resource="${moduleName}"]`);
-                    if (permissionEl) {
-                        return this.activateTabForPermission(permissionEl).then(() => {
-                            this.scrollToPermission(permissionEl);
-                        });
-                    }
-                    return Promise.resolve();
+                    let permission = this.model.permissions.find((item) => item.resourceName === key)
+                        || this.model.permissions.find((item) => item.resourceName === `${moduleName}.${key}`);
+                    return this.activateTabForPermission(permission).then(() => {
+                        let el = listEl.querySelector(`[data-module-resource="${permission?.resourceName}"]`) || permissionEl;
+                        if (el) {
+                            this.scrollToPermission(el);
+                        }
+                    });
                 }
             }
         }
@@ -530,45 +540,44 @@ export default class AppRolePageController extends PrometheusCreateController {
     }
 
     /**
-     * Ensure the Actions/Fields tab that owns the permission row is active
-     * before scroll/highlight. Waits for Bootstrap's fade transition
-     * (`shown.bs.tab`) so scroll uses the final layout.
+     * Open the Actions/Fields tab that owns a permission and wait until it is rendered,
+     * so the permission row can be found and scrolled to.
      *
-     * @param {HTMLElement} permissionEl
+     * @param {Object} permission
      * @method activateTabForPermission
      * @returns {Promise}
      */
-    activateTabForPermission(permissionEl) {
-        return new Promise((resolve) => {
-            if (!permissionEl) {
-                resolve();
-                return;
-            }
+    activateTabForPermission(permission) {
+        let tab = this.tabForPermission(permission);
+        if (this.permissionsTab === tab) {
+            return Promise.resolve();
+        }
 
-            let $pane = $(permissionEl).closest('.tab-pane');
-            if (!$pane.length || $pane.hasClass('active')) {
-                resolve();
-                return;
-            }
+        this.permissionsTab = tab;
+        return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    }
 
-            let paneId = $pane.attr('id');
-            if (!paneId) {
-                resolve();
-                return;
-            }
+    /**
+     * The tab that lists a permission: action permissions (`module.get`...) are on Actions, field
+     * permissions (`module.field`) on Fields.
+     *
+     * @param {Object} permission
+     * @method tabForPermission
+     * @returns {String}
+     */
+    tabForPermission(permission) {
+        let parts = (permission?.resourceName || '').split('.');
+        return parts.length === 2 && !ACTION_VERBS.has(parts[1]) ? 'fields' : 'actions';
+    }
 
-            let $tab = $(permissionEl)
-                .closest('[data-role="permissions"]')
-                .find(`.nav-tabs a[href="#${paneId}"]`);
-
-            if (!$tab.length) {
-                resolve();
-                return;
-            }
-
-            $tab.one('shown.bs.tab', () => resolve());
-            $tab.tab('show');
-        });
+    /**
+     * Open a permission tab.
+     *
+     * @method setPermissionsTab
+     * @param {String} name
+     */
+    @action setPermissionsTab(name) {
+        this.permissionsTab = name;
     }
 
     /**

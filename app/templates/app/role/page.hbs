@@ -264,6 +264,8 @@
       <Role::Permissions
         @permissionsByModule={{this.permissions}}
         @permissionsState={{this.permissionsState}}
+        @activeTab={{this.permissionsTab}}
+        @onTabChange={{this.setPermissionsTab}}
       />
     </div>
     <div class="box-footer">
