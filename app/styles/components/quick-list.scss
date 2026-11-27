@@ -24,31 +24,31 @@
   }
 
   &--empty {
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
   }
 
   &--error {
-    color: $dangerColor;
+    color: var(--p4m-color-danger);
   }
 }
 
 .quick-list__state-action {
-  border-radius: 0;
+  border-radius: var(--p4m-radius-none);
   padding: 0 0 0 0.4rem;
   vertical-align: baseline;
 }
 
 .quick-list {
-  border-radius: 0;
+  border-radius: var(--p4m-radius-none);
   box-shadow: none;
 
   .box-header,
   .box-body {
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
   }
 
   .quick-list__count {
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
   }
 
   .quick-list__header .quick-list__count {
@@ -62,7 +62,7 @@
   }
 
   .quick-list__row {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--p4m-color-border);
 
     &:last-child {
       border-bottom: 0;
@@ -71,19 +71,19 @@
 
   .quick-list-item {
     border-left: 3px solid transparent;
-    color: $darkColor;
+    color: var(--p4m-color-text);
     display: block;
     padding: 0.8rem 1rem 0.8rem 0.9rem;
 
     &:hover,
     &:focus {
-      background-color: $borderColor;
-      color: $darkColor;
+      background-color: var(--p4m-color-border);
+      color: var(--p4m-color-text);
       text-decoration: none;
     }
 
     &--active {
-      border-left-color: $primaryColor;
+      border-left-color: var(--p4m-color-brand);
     }
 
     &--with-leading {
@@ -94,7 +94,7 @@
   }
 
   .quick-list-item__leading {
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     flex: 0 0 auto;
   }
 
@@ -121,12 +121,12 @@
     }
 
     .label {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
     }
   }
 
   .quick-list-item__secondary {
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
     font-size: 1.4rem;
     margin-top: 0.3rem;
     overflow: hidden;
@@ -134,17 +134,17 @@
     white-space: nowrap;
 
     .label {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
       margin-left: 0.3rem;
     }
   }
 
   .quick-list__skeleton {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--p4m-color-border);
     padding: 0.8rem 1rem;
 
     .skeleton-line {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
     }
 
     .skeleton-line:last-child {
@@ -158,7 +158,7 @@
   }
 
   .quick-list__row--selected {
-    background-color: #f9fafc;
+    background-color: var(--p4m-slate-20);
   }
 
   .quick-list__row-body {
@@ -169,13 +169,13 @@
   .quick-list__check {
     background: transparent;
     border: 0;
-    border-radius: 0;
-    color: $mediumColor;
+    border-radius: var(--p4m-radius-none);
+    color: var(--p4m-color-text-muted);
     flex: 0 0 auto;
     padding: 0 0 0 0.9rem;
 
     .fa-check-square {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
 }

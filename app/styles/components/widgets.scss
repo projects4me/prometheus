@@ -28,20 +28,20 @@
     .time-label {
       span {
         a {
-          color: white;
+          color: var(--p4m-grey-0);
         }
       }
     }
 
     .timeline-item {
       box-shadow: rgba(14, 30, 37, 0.12) 0px 0.2rem 0.4rem 0px, rgba(14, 30, 37, 0.32) 0px 0.2rem 1.6rem 0px;
-      background: #f7f7f7;
+      background: var(--p4m-grey-30);
     }
   }
 
   [data-recent-conversations] {
     .accordion-body {
-      background: #f7f7f7;
+      background: var(--p4m-grey-30);
       padding: 0 1rem !important;
     }
     .conversations {
@@ -54,7 +54,7 @@
   [data-refresh-button] {
     padding: 0.2rem 0.6rem;
     background-color: transparent;
-    color: #333;
+    color: var(--p4m-color-text);
     font-size: 1.2rem;
     line-height: 0;
     border: none;
@@ -62,7 +62,7 @@
     transition: all 0.3s ease;
     &:hover {
       background-color: transparent;
-      color: #333;
+      color: var(--p4m-color-text);
     }
   }  
 

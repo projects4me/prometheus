@@ -32,7 +32,7 @@
   .app-dropdown .app-dropdown-btn {
     height: auto;
     max-width: 100%;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
 
     > span {
       min-width: 0;
@@ -48,7 +48,7 @@
     width: 100%;
     padding: 0.3rem 1rem;
     border: 0;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     background: none;
     text-align: left;
   }
@@ -60,7 +60,7 @@
     &,
     &:hover,
     &:focus {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
 }

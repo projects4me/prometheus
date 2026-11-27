@@ -4,11 +4,11 @@
 .tippy-box[data-theme~="gantt-issue-tooltip"] {
     width: 330px;
     max-width: 330px;
-    background-color: $backgroundColor;
-    color: $darkColor;
-    border: 1px solid #ddd;
-    border-top: 3px solid $primaryColor;
-    border-radius: 0;
+    background-color: var(--p4m-color-surface);
+    color: var(--p4m-color-text);
+    border: 1px solid var(--p4m-grey-135);
+    border-top: 3px solid var(--p4m-color-brand);
+    border-radius: var(--p4m-radius-none);
     text-align: left;
 
     > .tippy-content {
@@ -32,7 +32,7 @@
 
     .gantt-tooltip-number {
         font-size: 1.5rem;
-        color: $secondaryColor;
+        color: var(--p4m-color-link);
     }
 
     .gantt-tooltip-subject {
@@ -45,11 +45,11 @@
         grid-template-columns: 90px 1fr;
         row-gap: 4px;
         margin: 0;
-        border-top: 1px solid $borderColor;
+        border-top: 1px solid var(--p4m-color-border);
 
         dt {
             font-weight: normal;
-            color: $mediumColor;
+            color: var(--p4m-color-text-muted);
         }
 
         dd {
@@ -58,7 +58,7 @@
     }
 
     .gantt-tooltip-links {
-        border-top: 1px solid $borderColor;
+        border-top: 1px solid var(--p4m-color-border);
         line-height: 1.9;
     }
 
@@ -75,7 +75,7 @@
     }
 
     .gantt-tooltip-footer {
-        border-top: 1px solid $borderColor;
+        border-top: 1px solid var(--p4m-color-border);
         font-size: 1.1rem;
     }
 }
