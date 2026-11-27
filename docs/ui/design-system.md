@@ -1,8 +1,13 @@
 # Prometheus UI and design system
 
-Prometheus already has a finished look: **AdminLTE 2 on Bootstrap 3, the `skin-black-light` skin, the
+Prometheus already has a finished look: **the `skin-black-light` look of AdminLTE 2 on Bootstrap 3, the
 crimson Projects4Me palette, content grouped in boxes, and square edges.** Every UI change extends that look.
 Nothing gets rebuilt from scratch, restyled to match current trends, or given a new visual language.
+
+**Same look, new foundation.** Prometheus is moving off Bootstrap 3 and AdminLTE 2 onto its own CSS foundation
+(aprom-4999). During that migration, Bootstrap/AdminLTE markup and CSS may be replaced by our own markup and CSS,
+**as long as the page still looks the same**. Any visible change needs its own issue. How "looks the same" is
+checked is in [section 1a](#1a-same-look-new-foundation-how-it-is-checked).
 
 This document was written by walking through the running app (`https://app.local-projects4.me`, project
 *A Prometheus*) and reading `app/styles/`. Screens for reference are in [`screens/`](screens/): the app shell in
@@ -16,17 +21,29 @@ documentation tabs, in [`screens/library/`](screens/library/). They were last ta
    already round (`50%`). The rounded corners in section 10 are legacy; don't copy them.
 2. **Content lives in AdminLTE boxes.** Each block of related content is one `.box` with a `.box-header
    with-border` and a `.box-title`. Don't use cards, panels, bare `div`s with shadows, or custom containers.
-3. **Reuse before creating.** Use the existing Bootstrap 3 / AdminLTE classes and the components in
-   `app/components/form-fields/`, `app/components/app-ui/` and `app/components/widgets/` first. Only add a
-   class when nothing existing does the job, and then scope it under the module's class in
-   `app/styles/modules/<module>.scss`.
+3. **Reuse before creating.** Use the existing classes (Bootstrap 3 / AdminLTE until they are migrated, then
+   our own foundation classes) and the components in `app/components/form-fields/`, `app/components/app-ui/` and
+   `app/components/widgets/` first. Only add a class when nothing existing does the job, and then scope it under
+   the module's class in `app/styles/modules/<module>.scss`.
 4. **Colours come from `app/styles/variables.scss`.** Don't use new hex values, new shades, gradients or
    shadows.
 5. **Match the page pattern** in section 3 for the screen type: list, detail, create/edit or overview.
-6. **Don't add a UI library.** No Tailwind, Bootstrap 4/5, Material, CSS-in-JS or icon sets other than
-   Font Awesome 4.
+6. **Don't add a third-party UI library.** No Tailwind, Bootstrap 4/5, Material, CSS-in-JS or icon sets other
+   than Font Awesome 4. Our own foundation CSS (the tokens in section 4a, base styles and component styles written
+   in this repo) is allowed and is what replaces Bootstrap and AdminLTE.
 7. **Check it in the browser.** Before calling a UI change done, open the screen next to a similar existing
    screen and compare spacing, colours, borders and typography.
+
+### 1a. Same look, new foundation: how it is checked
+
+Unchanged by the migration: square edges, the palette, Source Sans Pro, Font Awesome 4, the page patterns,
+boxes as the visual grouping, and no third-party UI library.
+
+A change to the foundation is "the same look" when the visual baseline shows no difference. The procedure is in
+[`baseline/README.md`](baseline/README.md); its rule is: take a fresh "before" set on your own data with the
+baseline tool, then the "after" set, and compare those two. The stored images in `baseline/` are the reference
+for coverage (35 pages, desktop 1440 px and phone 390 px), not for a pixel comparison on another database.
+The acceptance tests check behaviour and the DOM, not pixels, so they don't replace this comparison.
 
 ## 2. App shell (never rebuilt per page)
 
@@ -153,6 +170,78 @@ states use `AppUi::EmptyState` (`@icon`, `@message`, `<:action>`).
 | `box-success` | green → plum | Issues overview, estimates |
 | `box-danger` | red → plum | Time logs, distribution or ratio charts |
 | `box-default` | grey → plum | Neutral charts (estimated vs spent) |
+
+## 4a. Design tokens
+
+CSS custom properties prefixed `--p4m-` (for example `--p4m-color-brand`), sizes in `rem` (the root is 10px, so
+`1.4rem` is 14px). Each token below lists today's value and the SCSS variable or AdminLTE value it replaces.
+
+**The tokens are names only for now.** No stylesheet defines them yet; the next phase of aprom-4999 introduces
+them. The existing SCSS variables in `app/styles/variables.scss` stay until each use is migrated, because Sass
+colour functions (`darken`, `rgba` in `modules/gantt.scss`) can't take CSS custom properties.
+
+**Colour**
+
+| Token | Value | Replaces |
+|---|---|---|
+| `--p4m-color-brand` | `#B3244F` | `$primaryColor` |
+| `--p4m-color-brand-strong` | `#640c44` | `$highlightColor` |
+| `--p4m-color-brand-subtle` | `#b3244f45` | `$primaryColorLight` |
+| `--p4m-color-link` | `#1B7BBA` | `$secondaryColor` |
+| `--p4m-color-text` | `#333333` | `$darkColor` |
+| `--p4m-color-text-muted` | `#999999` | `$mediumColor` |
+| `--p4m-color-text-disabled` | `#CCCCCC` | `$lightColor` |
+| `--p4m-color-border` | `#E5E5E5` | `$borderColor` |
+| `--p4m-color-surface` | `#fff` | boxes and header (`$backgroundColor`) |
+| `--p4m-color-surface-page` | `#ecf0f5` | AdminLTE page background |
+| `--p4m-color-surface-sidebar` | `#f9fafc` | sidebar background |
+| `--p4m-color-surface-muted` | `#f4f4f4` | box header border, `btn-default` background |
+| `--p4m-color-success` | `#5fca4a` | `$successColor` |
+| `--p4m-color-info` | `#61c4b8` | `$infoColor` |
+| `--p4m-color-warning` | `#db8b0b` | `$warningColor` |
+| `--p4m-color-danger` | `#d33724` | `$dangerColor` |
+| `--p4m-color-error` | `#dd6a45` | `$errorColor` |
+| `--p4m-color-status-new`, `-in-review` | `#80b5d3` | `.new`, `.in_review` in `styles/issue/issue-status.scss` |
+| `--p4m-color-status-in-progress` | `#B3244F` | `.in_progress` (`$primaryColor`) |
+| `--p4m-color-status-feedback`, `-pending`, `-deferred` | `#f7bf65` | `.feedback`, `.pending`, `.deferred` |
+| `--p4m-color-status-done` | `#5ac594` | `.done`, `.complete` |
+| `--p4m-color-status-closed` | `#e98a7e` | `.closed` |
+
+**Spacing**
+
+| Token | Value | Replaces |
+|---|---|---|
+| `--p4m-space-xs` | `0.5rem` | AdminLTE 5px |
+| `--p4m-space-sm` | `1rem` | AdminLTE 10px |
+| `--p4m-space-md` | `1.5rem` | AdminLTE 15px |
+| `--p4m-space-lg` | `2rem` | AdminLTE 20px |
+| `--p4m-space-xl` | `3rem` | AdminLTE 30px |
+
+**Radius.** Only two exist, in line with the square-edges rule: `--p4m-radius-none` (`0`) and `--p4m-radius-round`
+(`50%`, avatars and dots). The legacy rounded corners in section 10 get no token.
+
+**Type**
+
+| Token | Value | Replaces |
+|---|---|---|
+| `--p4m-font-family` | `"Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif` | AdminLTE `font-family` |
+| `--p4m-font-size-xs` | `1.1rem` | small text, labels (about 10.5px today) |
+| `--p4m-font-size-sm` | `1.2rem` | breadcrumb, meta text (12px) |
+| `--p4m-font-size-md` | `1.4rem` | body text (14px) |
+| `--p4m-font-size-lg` | `1.8rem` | box title, `<h4>` facts (18px) |
+| `--p4m-font-size-xl` | `2.4rem` | page title (24px) |
+| `--p4m-font-weight-regular` | `400` | body |
+| `--p4m-font-weight-medium` | `500` | titles |
+| `--p4m-font-weight-bold` | `700` | bold names, headers |
+| `--p4m-line-height-base` | `1.42857143` | Bootstrap 3 `line-height` |
+
+**Shadow**
+
+| Token | Value | Replaces |
+|---|---|---|
+| `--p4m-shadow-none` | `none` | |
+| `--p4m-shadow-box` | `0 1px 1px rgba(0, 0, 0, 0.1)` | AdminLTE `.box` shadow |
+| `--p4m-shadow-overlay` | `0 8px 16px 0 rgba(0, 0, 0, 0.2)` | dropdown menus (`components/dropdown.scss`); modals use their own, stronger shadow today and move onto this token only if the baseline shows no difference |
 
 ## 5. Colour tokens (`app/styles/variables.scss`)
 
@@ -290,6 +379,7 @@ separate task with its own issue.
 ## 12. Checklist for every UI change
 
 - [ ] Uses the page pattern from section 3 and AdminLTE boxes with the right variant
+- [ ] Before/after comparison with the baseline tool shows no difference, or the visible change has its own issue (section 1a)
 - [ ] No `border-radius` added; no new colours, fonts, shadows or gradients
 - [ ] Uses existing components and classes; any new class is scoped and justified in the PR
 - [ ] Form fields use `FormFields::*` with crimson labels and underline inputs
