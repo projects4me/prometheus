@@ -16,7 +16,7 @@
 
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="project.update"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" aria-label={{t "global.form.edit"}} {{tooltip (t "global.form.edit")}} @onClick={{fn this.editProject this.model.shortCode}} @aclContext="project.update"><i class="fa fa-pencil"></i></AppUi::Button>
             </div>
             {{!-- /.box-tools --}}
           </div>
@@ -279,7 +279,7 @@
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}
-                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="membership.delete">
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" aria-label={{t "views.app.project.detail.membership.removeMember"}} {{tooltip (t "views.app.project.detail.membership.removeMember")}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="membership.delete">
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
 

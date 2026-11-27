@@ -26,14 +26,14 @@
               {{/if}}
             </:search>
             <:selection>
-              <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
+              <span class="btn btn-default btn-sm checkbox-toggle" {{tooltip (t "global.list.selectAll")}}>
                 <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="agent.read"/>
               </span>
               <div class="btn-group">
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="delete" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="activate" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="agent.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="deactivate" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="agent.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="export" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="agent.read"><i class="fa fa-download"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-test-list-action="delete" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-test-list-action="activate" aria-label={{t "views.app.module.list.activation.activate"}} {{tooltip (t "views.app.module.list.activation.activate")}} @onClick={{fn this.setSelectedActive true}} @aclContext="agent.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-test-list-action="deactivate" aria-label={{t "views.app.module.list.activation.deactivate"}} {{tooltip (t "views.app.module.list.activation.deactivate")}} @onClick={{fn this.setSelectedActive false}} @aclContext="agent.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-test-list-action="export" aria-label={{t "views.app.module.list.export.label"}} {{tooltip (t "views.app.module.list.export.label")}} @onClick={{this.exportSelected}} @aclContext="agent.read"><i class="fa fa-download"></i></AppUi::Button>
               </div>
             </:selection>
             <:pager>

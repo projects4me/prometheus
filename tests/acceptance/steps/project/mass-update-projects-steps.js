@@ -23,8 +23,8 @@ function getBulkActionTitles(toolbar) {
     if (!group) {
         return [];
     }
-    return Array.from(group.querySelectorAll('button[data-toggle="tooltip"]'))
-        .map((button) => button.getAttribute('title') || '');
+    return Array.from(group.querySelectorAll('button[aria-label]'))
+        .map((button) => button.getAttribute('aria-label') || '');
 }
 
 export default function (assert) {
@@ -69,8 +69,8 @@ export default function (assert) {
             .then('project list toolbars do not include discuss or refresh', async function () {
                 const toolbars = document.querySelectorAll('.projects.project .list-controls');
                 toolbars.forEach((toolbar, index) => {
-                    const titles = Array.from(toolbar.querySelectorAll('button[data-toggle="tooltip"]'))
-                        .map((button) => button.getAttribute('title') || '');
+                    const titles = Array.from(toolbar.querySelectorAll('button[aria-label]'))
+                        .map((button) => button.getAttribute('aria-label') || '');
                     assert.notOk(
                         titles.includes('Discuss'),
                         `Toolbar ${index + 1} does not include Discuss`

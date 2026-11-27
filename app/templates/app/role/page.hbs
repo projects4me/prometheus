@@ -9,8 +9,7 @@
           type="button"
           class="btn btn-box-tool"
           data-btn="delete-role"
-          data-toggle="tooltip"
-          title={{t "views.app.role.tabs.permission.deleteRole"}}
+          aria-label={{t "views.app.role.tabs.permission.deleteRole"}} {{tooltip (t "views.app.role.tabs.permission.deleteRole")}}
           @onClick={{fn this.deleteRole this.model}}
           @aclContext="role.delete"
         >
@@ -133,8 +132,7 @@
                   data-delete-member
                   type="button"
                   class="btn btn-box-tool"
-                  data-toggle="tooltip"
-                  title={{t "views.app.role.tabs.user.removeMember"}}
+                  aria-label={{t "views.app.role.tabs.user.removeMember"}} {{tooltip (t "views.app.role.tabs.user.removeMember")}}
                   @onClick={{fn this.deleteUserrole userrole}}
                   @aclContext="userrole.delete"
                 >
