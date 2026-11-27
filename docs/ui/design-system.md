@@ -25,8 +25,9 @@ documentation tabs, in [`screens/library/`](screens/library/). They were last ta
    our own foundation classes) and the components in `app/components/form-fields/`, `app/components/app-ui/` and
    `app/components/widgets/` first. Only add a class when nothing existing does the job, and then scope it under
    the module's class in `app/styles/modules/<module>.scss`.
-4. **Colours come from `app/styles/variables.scss`.** Don't use new hex values, new shades, gradients or
-   shadows.
+4. **Colours come from `var(--p4m-...)` in `app/styles/tokens.scss`.** Use the semantic token when its role
+   matches and the palette token otherwise; a new colour gets a palette token by the naming formula. No hex
+   values or Sass colour functions in our files, alpha via `color-mix`. No new shades, gradients or shadows.
 5. **Match the page pattern** in section 3 for the screen type: list, detail, create/edit or overview.
 6. **Don't add a third-party UI library.** No Tailwind, Bootstrap 4/5, Material, CSS-in-JS or icon sets other
    than Font Awesome 4. Our own foundation CSS (the tokens in section 4a, base styles and component styles written
@@ -178,7 +179,7 @@ CSS custom properties prefixed `--p4m-` (for example `--p4m-color-brand`), sizes
 
 **Where they live.** `app/styles/tokens.scss` defines every token in one `:root` block, imported in
 `app/styles/app.scss` right after `variables.scss`. Migration issues only reference the tokens and never edit that
-file. The SCSS variables in `app/styles/variables.scss` stay until each use is migrated.
+file. The Sass colour variables are gone; `app/styles/variables.scss` keeps only the non-colour ones.
 
 **Two layers.** The *palette* has one token per distinct colour our own SCSS uses, at its exact value (see
 "Palette scales" below). The *semantic* tokens in the tables here are `var()` references to palette tokens. A style
@@ -423,16 +424,16 @@ colours of `rgba()` literals are included; the alpha comes from `color-mix`.
 | `--p4m-crimson-660` | `#8f1f3f` | board |
 | `--p4m-crimson-680` | `#891b3c` | issue (darken $primaryColor 10%) |
 
-## 5. Colour tokens (`app/styles/variables.scss`)
+## 5. Colour tokens (`app/styles/tokens.scss`)
 
 | Token | Value | Use |
 |---|---|---|
-| `$primaryColor` | `#B3244F` | Brand crimson: primary buttons, project selector, form labels, active nav bar, `in_progress` label |
-| `$highlightColor` | `#640c44` | Plum: hover/active of primary buttons, end colour of every box gradient |
-| `$secondaryColor` | `#1B7BBA` | Links (issue numbers, names, breadcrumb links) |
-| `$borderColor` | `#E5E5E5` | Light borders, `.no-entry` text |
-| `$darkColor` / `$mediumColor` / `$lightColor` | `#333` / `#999` / `#CCC` | Body text / input underline and muted text / disabled |
-| `$errorColor`, `$successColor`, `$infoColor`, `$warningColor`, `$dangerColor` | `#dd6a45`, `#5fca4a`, `#61c4b8`, `#db8b0b`, `#d33724` | Feedback states |
+| `--p4m-color-brand` | `#B3244F` | Brand crimson: primary buttons, project selector, form labels, active nav bar, `in_progress` label |
+| `--p4m-color-brand-strong` | `#640c44` | Plum: hover/active of primary buttons, end colour of every box gradient |
+| `--p4m-color-link` | `#1B7BBA` | Links (issue numbers, names, breadcrumb links) |
+| `--p4m-color-border` | `#E5E5E5` | Light borders, `.no-entry` text |
+| `--p4m-color-text` / `-text-muted` / `-text-disabled` | `#333` / `#999` / `#CCC` | Body text / input underline and muted text / disabled |
+| `--p4m-color-error`, `-success`, `-info`, `-warning`, `-danger` | `#dd6a45`, `#5fca4a`, `#61c4b8`, `#db8b0b`, `#d33724` | Feedback states |
 
 Fixed surfaces: page background `#ecf0f5`, sidebar `#f9fafc`, boxes and header `#fff`.
 
@@ -442,9 +443,9 @@ amber `#f7bf65`; `done` is green `#5ac594`; `closed` is salmon `#e98a7e`. Use th
 introduce new status colours.
 
 **Gantt bar colours** (`$gantt-bar-colours` in `styles/modules/gantt.scss`): Gantt bars use their own, stronger
-colours, derived from the palette (`new` `$secondaryColor`, `in_progress` `$primaryColor`, `in_review`
-`$highlightColor`, `feedback`/`done` darkened `$warningColor`/`$successColor`, `closed` `$dangerColor`,
-`deferred` and unknown statuses a darkened `$mediumColor`). They are Gantt-only: status labels elsewhere keep
+colours, derived from the palette (`new` link, `in_progress` brand, `in_review`
+brand-strong, `feedback`/`done` darkened warning/success, `closed` danger,
+`deferred` and unknown statuses a darkened muted text; see the `--p4m-gantt-bar-*` tokens). They are Gantt-only: status labels elsewhere keep
 the classes above. Bar labels are white, 11px semibold, so every colour keeps at least 4.5:1 contrast with white
 (checked by `tests/unit/gantt/bar-colours-test.js`).
 
@@ -455,7 +456,7 @@ High, a crimson target for Medium).
 
 - Font: **Source Sans Pro**, 14px, `#333`. No other font.
 - Page title (`.content-header h1`): 24px/500. Box title: 18px/500. Facts inside a box: `<h4>` 18px/500.
-- Form labels: 14px, **crimson** (`$primaryColor`), shown above the field.
+- Form labels: 14px, **crimson** (`--p4m-color-brand`), shown above the field.
 - Meta text (dates, roles, "created on …"): small grey, often italic.
 - Labels/badges: AdminLTE `.label` (bold, about 10.5px, white text).
 - Dates use the `utils/date` formats already in use (`date-format` / `format-date` helpers): `13 Oct '26` in tables, `13th Oct '26` in details,
@@ -552,7 +553,7 @@ separate task with its own issue.
 - Module styles: `app/styles/modules/<module>.scss`. Shared components: `app/styles/components/<name>.scss`.
   Import new files in `app/styles/app.scss` in the matching section.
 - Nest rules under the module's root class (for example `.create-issue …`) so nothing leaks globally.
-- Use `$variables` and the mixins in `mixins.scss`. No hex literals and no `!important`, unless you are
+- Use `var(--p4m-...)` tokens and the mixins in `mixins.scss`. No hex literals, Sass colour functions or `!important`, unless you are
   overriding AdminLTE the way `document.scss` does.
 - `custom/` is for customer-specific overrides, not product UI.
 
@@ -560,7 +561,7 @@ separate task with its own issue.
 
 - [ ] Uses the page pattern from section 3 and AdminLTE boxes with the right variant
 - [ ] Before/after comparison with the baseline tool shows no difference, or the visible change has its own issue (section 1a)
-- [ ] No `border-radius` added; no new colours, fonts, shadows or gradients
+- [ ] No `border-radius` added; colours only from `var(--p4m-...)` tokens, no hex; no new fonts, shadows or gradients
 - [ ] Uses existing components and classes; any new class is scoped and justified in the PR
 - [ ] Form fields use `FormFields::*` with crimson labels and underline inputs
 - [ ] All strings in `translations/en-us.json`; ACL contexts set

@@ -14,7 +14,7 @@
       bottom: 0;
       left: 0;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.5);
+      background: color-mix(in srgb, var(--p4m-grey-1000) 50%, transparent);
     }
   }
 }
