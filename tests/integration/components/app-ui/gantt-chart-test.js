@@ -71,7 +71,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         @expandedMilestones={{this.state.ids}} @isMilestoneExpanded={{this.isExpanded}}
         @onToggleMilestone={{this.onToggle}} @onIssueClick={{this.onIssueClick}}
         @onOpenIssuePanel={{this.onOpenPanel}} @selectedIssue={{this.selected}}
-        @onCloseIssuePanel={{this.noop}}>
+        @onCloseIssuePanel={{this.noop}} @schedule={{this.schedule}} @onIssueDragEnd={{this.onIssueDragEnd}}>
         <:search><span data-test-search>search</span></:search>
     </AppUi::GanttChart>`);
 
@@ -268,7 +268,8 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
 
         const cell = document.querySelector('.day-cell.current-day').getBoundingClientRect();
         assert.strictEqual(lineWidth(), '2px', 'days: 2px wide');
-        assert.ok(Math.abs(line() - (cell.left + cell.width / 2)) < 1, "days: centred on today's day cell");
+        const inToday = line() >= cell.left - 1 && line() <= cell.right + 1;
+        assert.true(inToday, "days: inside today's day cell, at the time of day");
 
         // Weeks has no day cells: the line sits inside the week cell that holds today
         await click('[data-test-gantt-scale-button="weeks"]');
@@ -278,6 +279,62 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         });
         assert.strictEqual(lineWidth(), '2px', 'weeks: 2px wide');
         assert.true(inWeek, 'weeks: inside a week cell');
+    });
+
+    test('Hours shows the working days on top and their hour columns below, nights and weekends skipped', async function (assert) {
+        // Thu 26 Nov to Tue 1 Dec 2026: the weekend of 28/29 Nov is not on the axis
+        this.timelineStart = '2026-11-26';
+        this.timelineEnd = '2026-12-01';
+        await renderChart();
+        await click('[data-test-gantt-scale-button="hours"]');
+        const texts = (selector) => [...document.querySelectorAll(selector)].map((cell) => cell.textContent.trim());
+
+        assert.dom('[data-test-gantt-scale-button="hours"]').hasClass('btn-primary');
+        assert.dom('.gantt-header-row').exists({ count: 2 }, 'two rows');
+        assert.deepEqual(texts('[data-test-gantt-header-top] .gantt-header-cell'), ['Thu 26 Nov', 'Fri 27 Nov', 'Mon 30 Nov', 'Tue 1 Dec']);
+        assert.dom('[data-test-gantt-header-bottom] .hour-cell').exists({ count: 4 * 9 }, 'nine hour columns a day');
+        assert.deepEqual(texts('[data-test-gantt-header-hour="2026-11-30"]'), ['09', '10', '11', '12', '13', '14', '15', '16', '17']);
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-day-width: 360px/);
+        assert.strictEqual(getComputedStyle(document.querySelector('.hour-cell')).width, '40px');
+        assert.strictEqual(getComputedStyle(document.querySelector('.hours-day-cell')).width, '360px');
+        assert.dom('.gantt-chart').hasAttribute('style', /--gantt-timeline-width: 1440px/, 'four working days wide');
+        assert.dom('[data-test-gantt-grid-day-separator]').exists('a dashed line between days');
+        assert.dom('[data-test-gantt-grid-weekend]').doesNotExist('no weekend shading on a working-time axis');
+        assert.strictEqual(JSON.parse(window.localStorage.getItem('gantt-toolbar')).scale, 'hours', 'the scale persists');
+    });
+
+    test('a chain on one day renders stepped bars from the planned times, in Hours and Days', async function (assert) {
+        // 1 blocks 2, both dated Tue 10 Nov: 1 runs 09:00-12:00, 2 from 12:00 to 15:00
+        this.schedule = new Map([
+            ['1', { plannedStart: new Date(2026, 10, 10, 9), plannedEnd: new Date(2026, 10, 10, 12) }],
+            ['2', { plannedStart: new Date(2026, 10, 10, 12), plannedEnd: new Date(2026, 10, 10, 15) }]
+        ]);
+        await renderChart();
+        const round = (box) => ({ left: Math.round(parseFloat(box.left)), width: Math.round(parseFloat(box.width)) });
+
+        // Days at 80px: Tue 10 Nov is column 9, so 09:00 is 720px and an hour is 80/9px
+        assert.deepEqual(round(barBox('1')), { left: 720, width: 27 }, 'Days: 1 fills the first third of its day');
+        assert.deepEqual(round(barBox('2')), { left: 747, width: 27 }, 'Days: 2 starts where 1 ends');
+
+        await click('[data-test-gantt-scale-button="hours"]');
+        // Hours at 40px an hour: Sun 1 Nov is skipped, Tue 10 Nov is working day 6 (2160px)
+        assert.deepEqual(round(barBox('1')), { left: 2160, width: 120 }, 'Hours: 09:00 to 12:00');
+        assert.deepEqual(round(barBox('2')), { left: 2280, width: 120 }, 'Hours: 12:00 to 15:00');
+    });
+
+    test('in Hours a drag moves the dates by whole working days', async function (assert) {
+        this.moved = [];
+        this.onIssueDragEnd = (issue, start, end) => this.moved.push([issue.id, start, end]);
+        await renderChart();
+        await click('[data-test-gantt-scale-button="hours"]');
+        const bar = document.querySelector('.gantt-bar-task[data-issue-id="1"]');
+        const rect = bar.getBoundingClientRect();
+        const startX = rect.left + rect.width / 2;
+        // 2.6 days of 360px snap to 3 working days: Tue 10 Nov to Fri 13 Nov, Thu 12 Nov to Tue 17 Nov
+        await triggerEvent(bar, 'mousedown', { button: 0, clientX: startX, clientY: rect.top + 2 });
+        await triggerEvent(document, 'mousemove', { clientX: startX + 936, clientY: rect.top + 2 });
+        await triggerEvent(document, 'mouseup', { button: 0, clientX: startX + 936, clientY: rect.top + 2 });
+        assert.deepEqual(this.moved, [['1', '2026-11-13', '2026-11-17']]);
     });
 
     test('there is no today line when today is outside the timeline', async function (assert) {

@@ -108,6 +108,19 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
+     * The milestone bar's `{ start, days }` on `@timeAxis`, in day columns; null without an axis (the bar then
+     * positions from its dates)
+     *
+     * @property milestoneSpan
+     * @type Object|null
+     * @for GanttRow
+     * @public
+     */
+    get milestoneSpan() {
+        return this.args.timeAxis?.dateSpan(this.milestoneBarStartDate, this.milestoneBarEndDate) ?? null;
+    }
+
+    /**
      * The milestone's % done (finished issues ÷ all issues) for its bar's fill, or null without issues.
      *
      * @property progress

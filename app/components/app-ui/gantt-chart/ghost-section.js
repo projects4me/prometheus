@@ -17,6 +17,22 @@ import { hasValidDates, getDaysBetween, getPositionInDays, toFiniteNumber } from
  */
 export default class GhostSectionComponent extends Component {
 	/**
+	 * A ghost bar's position as CSS custom properties, in day columns of `@timeAxis` (calendar days without one)
+	 *
+	 * @method barStyle
+	 * @param {Object} issue A dated issue
+	 * @return {SafeString}
+	 * @private
+	 */
+	barStyle(issue) {
+		const span = this.args.timeAxis?.dateSpan(issue.startDate, issue.endDate) ?? {
+			start: getPositionInDays(this.args.timelineStart, issue.startDate),
+			days: Math.max(1, getDaysBetween(issue.startDate, issue.endDate) + 1)
+		};
+		return htmlSafe(`--bar-start: ${toFiniteNumber(span.start)}; --bar-days: ${toFiniteNumber(span.days)}`);
+	}
+
+	/**
 	 * The rows to render: the issue, its code (PROJECTCODE-number) and its bar position, when it has dates.
 	 *
 	 * @property rows
@@ -32,12 +48,7 @@ export default class GhostSectionComponent extends Component {
 				code: `${String(issue.projectShortcode || '').toUpperCase()}-${issue.issueNumber}`,
 				shortcode: String(issue.projectShortcode || '').toLowerCase(),
 				hasDates: dated,
-				barStyle: dated
-					? htmlSafe(
-							`--bar-start: ${toFiniteNumber(getPositionInDays(this.args.timelineStart, issue.startDate))}; ` +
-								`--bar-days: ${Math.max(1, getDaysBetween(issue.startDate, issue.endDate) + 1)}`
-						)
-					: null
+				barStyle: dated ? this.barStyle(issue) : null
 			};
 		});
 	}

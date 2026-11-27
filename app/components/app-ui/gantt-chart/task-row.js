@@ -6,7 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
 import { htmlSafe } from '@ember/template';
-import { hasValidDates, calculateBarPosition, calculateBarWidth } from 'prometheus/utils/gantt-helpers';
+import { hasValidDates, getDaysBetween, getPositionInDays } from 'prometheus/utils/gantt-helpers';
 import { getIssueProgress } from 'prometheus/utils/gantt-progress';
 import { conflictingBlockers, blockerName } from 'prometheus/utils/gantt/conflicts';
 import { service } from '@ember/service';
@@ -52,9 +52,46 @@ export default class TaskRowComponent extends Component {
      * @public
      */
     get conflictStyle() {
-        const left = calculateBarPosition(this.args.timelineStart, this.args.issue.startDate, this.args.dayWidth);
-        const width = calculateBarWidth(this.args.issue.startDate, this.args.issue.endDate, this.args.dayWidth);
-        return htmlSafe(`left: ${left + width + (this.args.showBarLabels ? 64 : 6)}px`);
+        const { start, days } = this.barSpan;
+        const right = (start + days) * this.args.dayWidth;
+        return htmlSafe(`left: ${right + (this.args.showBarLabels ? 64 : 6)}px`);
+    }
+
+    /**
+     * The bar's `{ start, days }` in day columns: its planned start and end on `@timeAxis` when the schedule has
+     * them, else its dates (calendar days without an axis)
+     *
+     * @property barSpan
+     * @type Object
+     * @for TaskRow
+     * @public
+     */
+    get barSpan() {
+        const { startDate, endDate, id } = this.args.issue;
+        const axis = this.args.timeAxis;
+        const planned = this.args.schedule?.get(String(id));
+        const span = axis
+            ? (planned ? axis.momentSpan(planned.plannedStart, planned.plannedEnd) : null) ?? axis.dateSpan(startDate, endDate)
+            : null;
+        return span ?? {
+            start: getPositionInDays(this.args.timelineStart, startDate),
+            days: Math.max(1, getDaysBetween(startDate, endDate) + 1)
+        };
+    }
+
+    /**
+     * A date moved by whole day columns of `@timeAxis`, or by calendar days without one
+     *
+     * @method shiftDate
+     * @param {String} date `YYYY-MM-DD`
+     * @param {Number} columns
+     * @return {String}
+     * @private
+     */
+    shiftDate(date, columns) {
+        return this.args.timeAxis
+            ? this.args.timeAxis.shiftDate(date, columns)
+            : dates.format(dates.add(date, columns, 'days'), 'YYYY-MM-DD');
     }
 
     /**
@@ -173,9 +210,9 @@ export default class TaskRowComponent extends Component {
         if (!window || !this.hasDates || !this.args.timelineStart) {
             return null;
         }
-        const { startDate, endDate } = this.args.issue;
-        const left = calculateBarPosition(this.args.timelineStart, startDate, this.args.dayWidth);
-        const right = left + calculateBarWidth(startDate, endDate, this.args.dayWidth);
+        const { start, days } = this.barSpan;
+        const left = start * this.args.dayWidth;
+        const right = left + days * this.args.dayWidth;
         if (right <= window.start) {
             return 'left';
         }
@@ -348,9 +385,9 @@ export default class TaskRowComponent extends Component {
     @action
     handleDragEnd(daysMoved) {
         if (this.args.onIssueDragEnd) {
-            // Calculate new dates based on the number of days moved
-			let newStartDate = dates.format(dates.add(this.args.issue.startDate, daysMoved, 'days'), 'YYYY-MM-DD');
-			let newEndDate = dates.format(dates.add(this.args.issue.endDate, daysMoved, 'days'), 'YYYY-MM-DD');
+            // Whole day columns moved: calendar days, or working days in Hours
+			let newStartDate = this.shiftDate(this.args.issue.startDate, daysMoved);
+			let newEndDate = this.shiftDate(this.args.issue.endDate, daysMoved);
             
 			return this.args.onIssueDragEnd(
 				this.args.issue,

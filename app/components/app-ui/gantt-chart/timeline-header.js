@@ -7,9 +7,11 @@ import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import * as dates from 'prometheus/utils/date';
 import { toFiniteNumber } from 'prometheus/utils/gantt-helpers';
+import { WORK_DAY_START_HOUR, WORK_HOURS_PER_DAY } from 'prometheus/utils/gantt/working-time';
+import { HOURS_SCALE } from 'prometheus/utils/gantt/time-axis';
 
 /**
- * Timeline header renderer for months/weeks/days
+ * Timeline header renderer for months/weeks/days/hours
  *
  * @class TimelineHeaderComponent
  * @namespace Prometheus.Components.AppUi.GanttChart
@@ -114,7 +116,49 @@ export default class TimelineHeaderComponent extends Component {
 	 * @public
 	 */
 	get isDays() {
-		return this.args.timeScale !== 'weeks' && this.args.timeScale !== 'months';
+		return !['weeks', 'months', HOURS_SCALE].includes(this.args.timeScale);
+	}
+
+	/**
+	 * Whether the Hours scale is shown
+	 *
+	 * @property isHours
+	 * @type Boolean
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get isHours() {
+		return this.args.timeScale === HOURS_SCALE;
+	}
+
+	/**
+	 * The hour labels of one working day ("09" to "17"), one per hour column
+	 *
+	 * @property hourLabels
+	 * @type String[]
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get hourLabels() {
+		return Array.from({ length: WORK_HOURS_PER_DAY }, (_, index) => String(WORK_DAY_START_HOUR + index).padStart(2, '0'));
+	}
+
+	/**
+	 * The bottom row in Hours: each working day's hour columns, `{ date, label, isDayStart }`
+	 *
+	 * @property hourCells
+	 * @type Array
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get hourCells() {
+		if (!this.isHours) {
+			return [];
+		}
+		const labels = this.hourLabels;
+		return (this.args.dateRange || []).flatMap((day) =>
+			labels.map((label, index) => ({ date: day.date, label, isDayStart: index === 0 }))
+		);
 	}
 
 	/**
@@ -138,6 +182,14 @@ export default class TimelineHeaderComponent extends Component {
 	 * @public
 	 */
 	get topGroups() {
+		if (this.isHours) {
+			// one working day per cell, such as "Mon 30 Nov"
+			return (this.args.dateRange || []).map((day) => ({
+				days: 1,
+				date: day.date,
+				label: dates.format(day.date, 'ddd D MMM')
+			}));
+		}
 		if (this.args.timeScale === 'months') {
 			return (this.args.yearGroups || []).map((group) => ({ ...group, label: group.year }));
 		}
@@ -162,6 +214,9 @@ export default class TimelineHeaderComponent extends Component {
 	 * @public
 	 */
 	get topCellClass() {
+		if (this.isHours) {
+			return 'hours-day-cell';
+		}
 		return this.args.timeScale === 'months' ? 'year-cell' : 'month-cell';
 	}
 

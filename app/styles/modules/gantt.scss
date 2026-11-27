@@ -244,10 +244,31 @@ $gantt-bar-colours: (
     justify-content: center;
   }
 
+  /* Hours: a working day on top, its hour columns below; a dashed line between two days */
+  &.hours-day-cell {
+    font-weight: 600;
+    color: #333;
+    background: #f0f0f0;
+    border-right: 1px dashed #ccc;
+  }
+
+  &.hour-cell {
+    width: calc(var(--gantt-day-width) / var(--gantt-hours-per-day, 9));
+    min-width: calc(var(--gantt-day-width) / var(--gantt-hours-per-day, 9));
+    padding: 0;
+    color: #666;
+    font-size: 11px;
+
+    &.day-start {
+      border-left: 1px dashed #ccc;
+    }
+  }
+
   /* Year, month and week spans: --span-days is set per cell, the day width once on the chart root */
   &.year-cell,
   &.month-cell,
-  &.week-cell {
+  &.week-cell,
+  &.hours-day-cell {
     width: calc(var(--span-days) * var(--gantt-day-width));
     min-width: calc(var(--span-days) * var(--gantt-day-width));
   }
@@ -474,12 +495,13 @@ $gantt-bar-colours: (
   z-index: 0;
 }
 
-/* Today: a 2px line down the full body height, centred in today's day column. Above the grid, below the bars */
+/* Now: a 2px line down the full body height at --today-start day columns (09:00 is a day's left edge, 18:00 its
+   right edge). Above the grid, below the bars */
 .gantt-today-line {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: calc((var(--today-start, 0) + 0.5) * var(--gantt-day-width) - 1px);
+  left: calc(var(--today-start, 0) * var(--gantt-day-width) - 1px);
   width: 2px;
   background: $primaryColor;
   pointer-events: none;
@@ -500,6 +522,14 @@ $gantt-bar-colours: (
 
 .gantt-grid-overlay .grid-line-horizontal {
   stroke: rgba(15, 23, 42, 0.05);
+}
+
+/* Hours: the dashed line between two working days */
+.gantt-grid-overlay .grid-line-day {
+  stroke: rgba(15, 23, 42, 0.25);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  shape-rendering: crispEdges;
 }
 
 .gantt-timeline-row {
@@ -528,10 +558,11 @@ $gantt-bar-colours: (
 /* Gantt Bars */
 .gantt-bar {
   position: absolute;
-  /* --bar-start and --bar-days are in days; --bar-shift and --bar-stretch carry the live drag/resize offset */
+  /* --bar-start and --bar-days are in day columns (fractions for planned times); --bar-shift and --bar-stretch
+     carry the live drag/resize offset */
   left: calc(var(--bar-start, 0) * var(--gantt-day-width) + var(--bar-shift, 0px));
   width: max(
-    var(--gantt-day-width),
+    4px,
     calc(var(--bar-days, 1) * var(--gantt-day-width) + var(--bar-stretch, 0px))
   );
   height: 28px;
