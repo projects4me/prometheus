@@ -32,8 +32,8 @@
           }
 
           &:hover {
-            border-color: $primaryColor;
-            color: $primaryColor;
+            border-color: var(--p4m-color-brand);
+            color: var(--p4m-color-brand);
           }
         }
       }
@@ -116,7 +116,7 @@
     z-index: 999;
     // Clip the row sideways only, so a collapsed lane's title can hang below the strip
     overflow-x: clip;
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
 
     @media (max-width: 767px) {
       display: none;
@@ -136,7 +136,7 @@
     .lane-status-bar {
       display: flex;
       overflow-x: auto;
-      border: 1px solid $lightColor;
+      border: 1px solid var(--p4m-grey-200);
       border-left: 0;
       border-right: 0;
     }
@@ -147,16 +147,16 @@
       align-items: center;
       min-height: 4.4rem;
       padding: 1rem 1.4rem;
-      border: 1px solid $lightColor;
+      border: 1px solid var(--p4m-grey-200);
       border-top: 0;
       border-bottom: 0;
       background: transparent;
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
       white-space: nowrap;
 
       &.is-active {
-        border-color: $primaryColor;
-        color: $primaryColor;
+        border-color: var(--p4m-color-brand);
+        color: var(--p4m-color-brand);
         font-weight: bold;
       }
     }
@@ -176,7 +176,7 @@
       position: relative;
 
       z-index: 999;
-      background-color: $backgroundColor;
+      background-color: var(--p4m-color-surface);
     }
 
     .dotted-circle-add {
@@ -192,19 +192,19 @@
       min-height: 45rem;
       height: 100%;
       padding: 0rem;
-      border: 0.25rem solid $backgroundColor;
+      border: 0.25rem solid var(--p4m-color-surface);
     }
 
     .box-body-border {
-      border: 0.25rem dashed $blackColor;
+      border: 0.25rem dashed var(--p4m-grey-1000);
     }
 
     .box-body-color {
-      border-color: $primaryColor;
+      border-color: var(--p4m-color-brand);
     }
 
     .curr-lane {
-      border-color: $backgroundColor !important;
+      border-color: var(--p4m-color-surface) !important;
     }
 
     .lane-empty {
@@ -270,7 +270,7 @@
       }
 
       &.lane-droppable {
-        outline: 2px dashed black;
+        outline: 2px dashed var(--p4m-grey-1000);
         outline-offset: -2px;
 
         .lane-drop-icon {
@@ -338,16 +338,16 @@
       }
 
       > .lane.box-body {
-        --lane-color: #{$lightColor};
-        background-color: #f4f4f4;
+        --lane-color: var(--p4m-grey-200);
+        background-color: var(--p4m-grey-45);
         border: 0;
         border-top: 3px solid var(--lane-color);
 
-        &.lane-status-box-info { --lane-color: #{$infoColor}; }
-        &.lane-status-box-primary { --lane-color: #{$primaryColor}; }
-        &.lane-status-box-success { --lane-color: #{$successColor}; }
-        &.lane-status-box-warning { --lane-color: #{$warningColor}; }
-        &.lane-status-box-danger { --lane-color: #{$dangerColor}; }
+        &.lane-status-box-info { --lane-color: var(--p4m-color-info); }
+        &.lane-status-box-primary { --lane-color: var(--p4m-color-brand); }
+        &.lane-status-box-success { --lane-color: var(--p4m-color-success); }
+        &.lane-status-box-warning { --lane-color: var(--p4m-color-warning); }
+        &.lane-status-box-danger { --lane-color: var(--p4m-color-danger); }
       }
 
       .lane-add-row {
@@ -358,13 +358,13 @@
         width: 100%;
         margin-bottom: 0.8rem;
         padding: 1rem;
-        background: #fff;
-        border: 1px dashed #aaa;
-        border-radius: 0;
-        color: $mediumColor;
+        background: var(--p4m-grey-0);
+        border: 1px dashed var(--p4m-grey-335);
+        border-radius: var(--p4m-radius-none);
+        color: var(--p4m-color-text-muted);
 
         .lane-add-status {
-          color: $primaryColor;
+          color: var(--p4m-color-brand);
         }
       }
 
@@ -375,7 +375,7 @@
         justify-content: center;
         gap: 0.8rem;
         padding: 4rem 1rem;
-        color: $mediumColor;
+        color: var(--p4m-color-text-muted);
         text-align: center;
 
         .fa {
@@ -419,10 +419,10 @@
 
         .progress {
           height: 0.6rem;
-          background-color: $primaryColorLight;
+          background-color: var(--p4m-color-brand-subtle);
 
           .progress-bar {
-            background-color: $primaryColor;
+            background-color: var(--p4m-color-brand);
           }
         }
 
@@ -441,18 +441,18 @@
 
       .milestone-tab-count {
         margin-left: 0.5rem;
-        border-radius: 0;
+        border-radius: var(--p4m-radius-none);
       }
       
       &.milestone-tab-droppable {
-        background-color: rgba(179, 36, 79, 0.1);
-        border: 2px dashed black;
+        background-color: color-mix(in srgb, var(--p4m-color-brand) 10%, transparent);
+        border: 2px dashed var(--p4m-grey-1000);
         border-radius: 4px;
       }
       
       &.milestone-tab-hover {
-        background-color: rgba(179, 36, 79, 0.3);
-        border: 2px solid black;
+        background-color: color-mix(in srgb, var(--p4m-color-brand) 30%, transparent);
+        border: 2px solid var(--p4m-grey-1000);
         border-radius: 4px;
         transform: scale(1.05);
       }
@@ -474,8 +474,8 @@
     cursor: move;
     margin: 0.2rem 0.2rem 0.6rem 0.2rem;
     padding: 0.6rem 0.8rem;
-    border-left: 0.5rem solid #eee;
-    background-color: $backgroundColor;
+    border-left: 0.5rem solid var(--p4m-grey-65);
+    background-color: var(--p4m-color-surface);
     user-select: none;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.3px;
     width: auto;
@@ -491,7 +491,7 @@
         transition: color 0.3s ease;
         
         &:hover {
-          color: #999;
+          color: var(--p4m-grey-400);
         }
       }
     }
@@ -519,7 +519,7 @@
       margin-bottom: 0.3rem;
 
       .issue-number {
-        color: #646262;
+        color: var(--p4m-grey-610);
         font-size: 1.4rem;
         font-weight: 600;
       }
@@ -528,41 +528,41 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        background-color: #f6f7f8;
-        color: #4b5563;
-        border: 0.1rem solid #d8dde3;
+        background-color: var(--p4m-slate-31);
+        color: var(--p4m-slate-660);
+        border: 0.1rem solid var(--p4m-slate-130);
         font-weight: 600;
         font-size: 1.1rem;
         padding: 0.1rem 0.4rem;
 
         &.priority-low {
-          background-color: #e8f8f1;
-          color: #2f9367;
-          border-color: #b9e8d2;
+          background-color: var(--p4m-green-60);
+          color: var(--p4m-green-620);
+          border-color: var(--p4m-green-180);
         }
 
         &.priority-medium {
-          background-color: #e9f2ff;
-          color: #2f6fbe;
-          border-color: #bfd8fb;
+          background-color: var(--p4m-blue-45);
+          color: var(--p4m-blue-535);
+          border-color: var(--p4m-blue-135);
         }
 
         &.priority-high {
-          background-color: #fdeeea;
-          color: #cf614e;
-          border-color: #f4c7bf;
+          background-color: var(--p4m-red-44);
+          color: var(--p4m-red-440);
+          border-color: var(--p4m-red-145);
         }
 
         &.priority-critical {
-          background-color: #fdeaea;
-          color: #c0392b;
-          border-color: #edc4c4;
+          background-color: var(--p4m-red-45);
+          color: var(--p4m-red-540);
+          border-color: var(--p4m-red-150);
         }
 
         &.priority-blocker {
-          background-color: #fbe7e5;
-          color: #a42a1f;
-          border-color: #e8bab5;
+          background-color: var(--p4m-red-60);
+          color: var(--p4m-red-620);
+          border-color: var(--p4m-red-190);
         }
       }
     }
@@ -613,9 +613,9 @@
     }
 
     .issue-card-time-left {
-      border: 0.1rem solid #e2e4e8;
-      background-color: #f5f6f8;
-      color: #4b5563;
+      border: 0.1rem solid var(--p4m-slate-100);
+      background-color: var(--p4m-slate-32);
+      color: var(--p4m-slate-660);
       border-radius: 0.8rem;
       text-align: center;
       font-size: 1.1rem;
@@ -627,41 +627,41 @@
       gap: 0.5rem;
 
       &.is-warning {
-        border-color: #f0d8ad;
-        background-color: #fff4df;
-        color: #a76700;
+        border-color: var(--p4m-orange-190);
+        background-color: var(--p4m-orange-65);
+        color: var(--p4m-orange-675);
       }
 
       &.is-overdue {
-        border-color: #edc4c4;
-        background-color: #fdeaea;
-        color: #c0392b;
+        border-color: var(--p4m-red-150);
+        background-color: var(--p4m-red-45);
+        color: var(--p4m-red-540);
       }
     }
 
     .fa-ban {
-      color: #d33724;
+      color: var(--p4m-red-515);
     }
 
     .fa-angle-double-up {
-      color: #d33724;
+      color: var(--p4m-red-515);
       font-weight: bold;
     }
 
     .fa-arrow-up {
-      color: #e98a7e;
+      color: var(--p4m-red-295);
     }
 
     .fa-dot-circle-o {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     .fa-arrow-down {
-      color: #5ac594;
+      color: var(--p4m-green-435);
     }
 
     .fa-angle-double-down {
-      color: #00a65a;
+      color: var(--p4m-green-675);
       font-weight: bold;
     }
 
@@ -682,7 +682,7 @@
     .issue-card-footer {
       margin-top: 0.2rem;
       margin-bottom: 0;
-      border-top: 0.1rem solid #ddd;
+      border-top: 0.1rem solid var(--p4m-grey-135);
       padding-top: 0.4rem;
       min-height: 4.6rem;
       flex-wrap: wrap;
@@ -710,15 +710,15 @@
       min-width: 3.4rem;
       height: 2.2rem;
       padding: 0 0.8rem;
-      border: 0.1rem solid #e3e6ea;
+      border: 0.1rem solid var(--p4m-slate-96);
       border-radius: 0.6rem;
-      background-color: #f6f7f9;
-      color: #626b76;
+      background-color: var(--p4m-slate-30);
+      color: var(--p4m-slate-575);
       font-size: 1.2rem;
       line-height: 1;
 
       i {
-        color: #7c8794;
+        color: var(--p4m-slate-465);
         font-size: 1.2rem;
       }
     }
@@ -738,45 +738,45 @@
     }
 
     .info-tag {
-      border: 0.1rem solid #8f1f3f;
+      border: 0.1rem solid var(--p4m-crimson-660);
     }
   }
 
   .item-closed {
-    border-left-color: $darkColor;
+    border-left-color: var(--p4m-color-text);
   }
 
   .item-complete {
-    border-left-color: $successColor;
+    border-left-color: var(--p4m-color-success);
   }
 
   .item-deferred {
-    border-left-color: $infoColor;
+    border-left-color: var(--p4m-color-info);
   }
 
   .item-done {
-    border-left-color: $successColor;
+    border-left-color: var(--p4m-color-success);
   }
 
   .item-feedback {
-    border-left-color: $warningColor;
+    border-left-color: var(--p4m-color-warning);
   }
 
   .item-in-progress {
-    border-left-color: $primaryColor;
+    border-left-color: var(--p4m-color-brand);
   }
 
   .item-new {
-    border-left-color: $lightColor;
+    border-left-color: var(--p4m-grey-200);
   }
 
   .item-pending {
-    border-left-color: $dangerColor;
+    border-left-color: var(--p4m-color-danger);
   }
 
   .info-tag {
-    background-color: #b3244fc7;
-    color: white;
+    background-color: color-mix(in srgb, var(--p4m-crimson-580) 78.0392%, transparent);
+    color: var(--p4m-grey-0);
   }
 
   .items-body {
@@ -784,9 +784,9 @@
   }
 
   .curr-item {
-    border-top: 0.06rem dashed $primaryColor;
-    border-bottom: 0.06rem dashed $primaryColor;
-    border-right: 0.06rem dashed $primaryColor;
+    border-top: 0.06rem dashed var(--p4m-color-brand);
+    border-bottom: 0.06rem dashed var(--p4m-color-brand);
+    border-right: 0.06rem dashed var(--p4m-color-brand);
   }  
 
   // Mark as complete button styles
@@ -795,21 +795,21 @@
     
     .milestone-mark-complete-button {
       padding: 0.8rem 1.2rem;
-      background-color: #f8f9fa;
-      border: 0.1rem solid #dee2e6;
+      background-color: var(--p4m-slate-25);
+      border: 0.1rem solid var(--p4m-slate-115);
       border-radius: 0.4rem;
-      color: #6c757d;
+      color: var(--p4m-slate-545);
       transition: all 0.2s ease;
       
       &:hover {
-        background-color: #e9ecef;
-        border-color: $primaryColor;
-        color: $primaryColor;
+        background-color: var(--p4m-slate-75);
+        border-color: var(--p4m-color-brand);
+        color: var(--p4m-color-brand);
       }
       
       i {
         font-size: 1.2rem;
-        color: $successColor;
+        color: var(--p4m-color-success);
       }
     }
   }
@@ -850,7 +850,7 @@
 
   .board-move-label {
     margin: 1.5rem 0 0.5rem;
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
     font-weight: bold;
     text-transform: uppercase;
   }
@@ -872,24 +872,24 @@
     width: 100%;
     min-height: 4.4rem;
     padding: 0.8rem 1rem;
-    border: 1px solid $borderColor;
+    border: 1px solid var(--p4m-color-border);
     border-left: 3px solid transparent;
-    border-radius: 0;
-    background-color: $backgroundColor;
-    color: $darkColor;
+    border-radius: var(--p4m-radius-none);
+    background-color: var(--p4m-color-surface);
+    color: var(--p4m-color-text);
     text-align: left;
 
     &:hover,
     &:focus {
-      background-color: $borderColor;
+      background-color: var(--p4m-color-border);
     }
 
     &.is-current {
-      border-left-color: $primaryColor;
+      border-left-color: var(--p4m-color-brand);
     }
 
     &.is-selected {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     .board-move-name {
@@ -898,7 +898,7 @@
     }
 
     .board-move-current {
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
       font-size: 0.85em;
     }
   }
@@ -911,7 +911,7 @@
     display: inline-block;
     width: 1rem;
     height: 1rem;
-    border-radius: 50%;
+    border-radius: var(--p4m-radius-round);
   }
 }
 
