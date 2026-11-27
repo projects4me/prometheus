@@ -5,7 +5,7 @@
   background: transparent;
 
   .quick-list-toolbar {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--p4m-color-border);
   }
 
   .quick-list__toolbar-count {

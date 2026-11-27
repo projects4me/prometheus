@@ -4,9 +4,9 @@
         width: 100%;
         text-align: left;
         border: 0;
-        border-radius: 0;
-        background: #f4f4f4;
-        border-bottom: 1px solid #ddd;
+        border-radius: var(--p4m-radius-none);
+        background: var(--p4m-color-surface-muted);
+        border-bottom: 1px solid var(--p4m-grey-135);
         padding: 6px 10px;
         cursor: pointer;
         user-select: none;
