@@ -150,7 +150,11 @@ export const then = function () {
 		{
 			'The URL is still the task board': (assert, ctx) =>
 				async function () {
-					assert.equal(currentURL(), '/app/project/project_1/board');
+					// The quick view adds `?issue=N` to the board URL (aprom-4992).
+					assert.equal(
+						currentURL().split('?')[0],
+						'/app/project/project_1/board'
+					);
 				}
 		},
 		{

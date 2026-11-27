@@ -35,6 +35,10 @@ export default class BoardRoute extends App {
         milestone: {
             refreshModel: false,
             replace: true
+        },
+        // No `replace`: each open adds a history entry so Back closes the quick view.
+        issue: {
+            refreshModel: false
         }
     };
 
@@ -270,6 +274,7 @@ export default class BoardRoute extends App {
             controller.set('newSavedsearch', this.store.createRecord('savedsearch'));
         }
         controller.set('selectedIssue', null);
+        controller.syncIssueFromUrl(controller.issue);
         controller.registerHermesIntents(this.trackedProject.getProjectId());
         controller.registerIssuePreview();
     }
@@ -290,6 +295,7 @@ export default class BoardRoute extends App {
             controller.query = null;
             controller.searchId = null;
             controller.milestone = null;
+            controller.issue = null;
             controller.projectData = null;
             controller.isLoadingIssueDetails = false;
             controller.selectedIssue = null;
