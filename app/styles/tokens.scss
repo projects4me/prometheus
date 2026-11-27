@@ -1,0 +1,245 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+  Design tokens (aprom-4999 phase 1, see docs/ui/design-system.md §4a).
+
+  Two layers:
+  - Palette: one token per distinct colour our own SCSS uses today, at its exact value, named
+    --p4m-<family>-<n> with n = round((1 - HSL lightness) x 1000 / 5) x 5. Where two colours would share a
+    name, one keeps the step and the other takes its unrounded per-mille n.
+  - Semantic and role tokens: var() references to the palette. Styles use the semantic token when the role
+    matches and the palette token otherwise.
+
+  Alpha needs no token: use color-mix(in srgb, var(--p4m-...) a%, transparent).
+  Migration issues only reference these tokens; they never edit this file.
+*/
+
+:root {
+  /* ── Palette ──────────────────────────────────────────────────────────── */
+  // grey
+  --p4m-grey-0: #ffffff;
+  --p4m-grey-25: #f9f9f9;
+  --p4m-grey-30: #f7f7f7;
+  --p4m-grey-40: #f5f5f5;
+  --p4m-grey-45: #f4f4f4;
+  --p4m-grey-50: #f2f2f2;
+  --p4m-grey-55: #f1f1f1;
+  --p4m-grey-60: #f0f0f0;
+  --p4m-grey-65: #eeeeee;
+  --p4m-grey-98: #e6e6e6;
+  --p4m-grey-100: #e5e5e5;
+  --p4m-grey-115: #e2e2e2;
+  --p4m-grey-120: #e0e0e0;
+  --p4m-grey-135: #dddddd;
+  --p4m-grey-155: #d8d8d8;
+  --p4m-grey-175: #d3d3d3;
+  --p4m-grey-200: #cccccc;
+  --p4m-grey-335: #aaaaaa;
+  --p4m-grey-400: #999999;
+  --p4m-grey-465: #888888;
+  --p4m-grey-500: #808080;
+  --p4m-grey-520: #7a7a7a;
+  --p4m-grey-535: #777777;
+  --p4m-grey-555: #717171;
+  --p4m-grey-560: #707070;
+  --p4m-grey-600: #666666;
+  --p4m-grey-610: #646262;
+  --p4m-grey-665: #555555;
+  --p4m-grey-735: #444444;
+  --p4m-grey-800: #333333;
+  --p4m-grey-865: #222222;
+  --p4m-grey-1000: #000000;
+
+  // slate
+  --p4m-slate-15: #fafbfc;
+  --p4m-slate-20: #f9fafc;
+  --p4m-slate-25: #f8f9fa;
+  --p4m-slate-30: #f6f7f9;
+  --p4m-slate-31: #f6f7f8;
+  --p4m-slate-32: #f5f6f8;
+  --p4m-slate-33: #f4f6f9;
+  --p4m-slate-35: #f5f6f7;
+  --p4m-slate-55: #ecf0f5;
+  --p4m-slate-75: #e9ecef;
+  --p4m-slate-95: #e4e7ea;
+  --p4m-slate-96: #e3e6ea;
+  --p4m-slate-100: #e2e4e8;
+  --p4m-slate-115: #dee2e6;
+  --p4m-slate-130: #d8dde3;
+  --p4m-slate-155: #d2d6de;
+  --p4m-slate-160: #d0d5dd;
+  --p4m-slate-355: #97a0b3;
+  --p4m-slate-385: #8aa4af;
+  --p4m-slate-465: #7c8794;
+  --p4m-slate-485: #7f7f87;
+  --p4m-slate-545: #6c757d;
+  --p4m-slate-575: #626b76;
+  --p4m-slate-660: #4b5563;
+
+  // red
+  --p4m-red-20: #fff5f5;
+  --p4m-red-44: #fdeeea;
+  --p4m-red-45: #fdeaea;
+  --p4m-red-60: #fbe7e5;
+  --p4m-red-145: #f4c7bf;
+  --p4m-red-150: #edc4c4;
+  --p4m-red-190: #e8bab5;
+  --p4m-red-295: #e98a7e;
+  --p4m-red-420: #d9534f;
+  --p4m-red-430: #dd6a45;
+  --p4m-red-440: #cf614e;
+  --p4m-red-455: #dd4b39;
+  --p4m-red-500: #ff0000;
+  --p4m-red-515: #d33724;
+  --p4m-red-540: #c0392b;
+  --p4m-red-620: #a42a1f;
+  --p4m-red-650: #912d21;
+
+  // orange
+  --p4m-orange-40: #fef9ec;
+  --p4m-orange-45: #fff8e8;
+  --p4m-orange-65: #fff4df;
+  --p4m-orange-190: #f0d8ad;
+  --p4m-orange-320: #f7bf65;
+  --p4m-orange-375: #f0ad4e;
+  --p4m-orange-490: #f39c12;
+  --p4m-orange-550: #db8b0b;
+  --p4m-orange-610: #be790a;
+  --p4m-orange-615: #8a6d3b;
+  --p4m-orange-635: #af700c;
+  --p4m-orange-675: #a76700;
+  --p4m-orange-690: #976008;
+
+  // green
+  --p4m-green-45: #eef9f0;
+  --p4m-green-60: #e8f8f1;
+  --p4m-green-180: #b9e8d2;
+  --p4m-green-435: #5ac594;
+  --p4m-green-450: #66b396;
+  --p4m-green-459: #5cb85c;
+  --p4m-green-460: #5fca4a;
+  --p4m-green-595: #28a745;
+  --p4m-green-620: #2f9367;
+  --p4m-green-650: #3c763d;
+  --p4m-green-675: #00a65a;
+  --p4m-green-680: #347f25;
+  --p4m-green-750: #008000;
+  --p4m-green-805: #006432;
+
+  // teal
+  --p4m-teal-385: #5bc0de;
+  --p4m-teal-425: #61c4b8;
+  --p4m-teal-500: #5497ab;
+  --p4m-teal-530: #00c0ef;
+  --p4m-teal-705: #007896;
+
+  // blue
+  --p4m-blue-40: #eef6fb;
+  --p4m-blue-45: #e9f2ff;
+  --p4m-blue-50: #eaf4fb;
+  --p4m-blue-135: #bfd8fb;
+  --p4m-blue-335: #80b5d3;
+  --p4m-blue-515: #3c8dbc;
+  --p4m-blue-530: #00aff0;
+  --p4m-blue-535: #2f6fbe;
+  --p4m-blue-580: #1b7bba;
+  --p4m-blue-590: #146ebe;
+  --p4m-blue-625: #31708f;
+  --p4m-blue-890: #0f172a;
+
+  // plum
+  --p4m-plum-780: #640c44;
+
+  // crimson
+  --p4m-crimson-130: #f4c8d6;
+  --p4m-crimson-505: #d7263d;
+  --p4m-crimson-530: #dc143c;
+  --p4m-crimson-580: #b3244f;
+  --p4m-crimson-660: #8f1f3f;
+  --p4m-crimson-680: #891b3c;
+
+  /* ── Semantic colours ─────────────────────────────────────────────────── */
+  --p4m-color-brand: var(--p4m-crimson-580);
+  --p4m-color-brand-strong: var(--p4m-plum-780);
+  // #b3244f45: alpha 0x45 / 0xff = 27.0588%
+  --p4m-color-brand-subtle: color-mix(in srgb, var(--p4m-crimson-580) 27.0588%, transparent);
+  --p4m-color-brand-pressed: var(--p4m-crimson-680);
+  --p4m-color-link: var(--p4m-blue-580);
+  --p4m-color-text: var(--p4m-grey-800);
+  --p4m-color-text-muted: var(--p4m-grey-400);
+  --p4m-color-text-disabled: var(--p4m-grey-200);
+  --p4m-color-border: var(--p4m-grey-100);
+  --p4m-color-surface: var(--p4m-grey-0);
+  --p4m-color-surface-page: var(--p4m-slate-55);
+  --p4m-color-surface-sidebar: var(--p4m-slate-20);
+  --p4m-color-surface-muted: var(--p4m-grey-45);
+  --p4m-color-success: var(--p4m-green-460);
+  --p4m-color-info: var(--p4m-teal-425);
+  --p4m-color-warning: var(--p4m-orange-550);
+  --p4m-color-danger: var(--p4m-red-515);
+  --p4m-color-error: var(--p4m-red-430);
+
+  // Issue status labels (styles/issue/issue-status.scss)
+  --p4m-color-status-new: var(--p4m-blue-335);
+  --p4m-color-status-in-review: var(--p4m-blue-335);
+  --p4m-color-status-in-progress: var(--p4m-color-brand);
+  --p4m-color-status-feedback: var(--p4m-orange-320);
+  --p4m-color-status-pending: var(--p4m-orange-320);
+  --p4m-color-status-deferred: var(--p4m-orange-320);
+  --p4m-color-status-done: var(--p4m-green-435);
+  --p4m-color-status-closed: var(--p4m-red-295);
+
+  /* ── Role tokens for derived colours (lighten/darken of a variable) ───── */
+  // components/accordion.scss
+  --p4m-accordion-header-hover: var(--p4m-crimson-130);
+  --p4m-accordion-body-border: var(--p4m-grey-50);
+  // modules/conversation.scss, alternating comments
+  --p4m-conversation-comment-even: var(--p4m-grey-0);
+  --p4m-conversation-comment-odd: var(--p4m-grey-25);
+  // modules/header.scss, global search snippet
+  --p4m-search-snippet-text: var(--p4m-grey-600);
+  // modules/gantt.scss, $gantt-bar-colours
+  --p4m-gantt-bar-new: var(--p4m-color-link);
+  --p4m-gantt-bar-in-progress: var(--p4m-color-brand);
+  --p4m-gantt-bar-in-review: var(--p4m-color-brand-strong);
+  --p4m-gantt-bar-feedback: var(--p4m-orange-690);
+  --p4m-gantt-bar-done: var(--p4m-green-680);
+  --p4m-gantt-bar-closed: var(--p4m-color-danger);
+  --p4m-gantt-bar-deferred: var(--p4m-grey-560);
+  // modules/role.scss, $role-tiers
+  --p4m-role-tier-high: var(--p4m-color-brand);
+  --p4m-role-tier-elevated: var(--p4m-orange-610);
+  --p4m-role-tier-medium: var(--p4m-color-link);
+  --p4m-role-tier-low: var(--p4m-grey-520);
+  --p4m-role-tier-none: var(--p4m-color-text-muted);
+
+  /* ── Radius ───────────────────────────────────────────────────────────── */
+  --p4m-radius-none: 0;
+  --p4m-radius-round: 50%;
+
+  /* ── Spacing (root font size is 10px) ─────────────────────────────────── */
+  --p4m-space-xs: 0.5rem;
+  --p4m-space-sm: 1rem;
+  --p4m-space-md: 1.5rem;
+  --p4m-space-lg: 2rem;
+  --p4m-space-xl: 3rem;
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --p4m-font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --p4m-font-size-xs: 1.1rem;
+  --p4m-font-size-sm: 1.2rem;
+  --p4m-font-size-md: 1.4rem;
+  --p4m-font-size-lg: 1.8rem;
+  --p4m-font-size-xl: 2.4rem;
+  --p4m-font-weight-regular: 400;
+  --p4m-font-weight-medium: 500;
+  --p4m-font-weight-bold: 700;
+  --p4m-line-height-base: 1.42857143;
+
+  /* ── Shadow ───────────────────────────────────────────────────────────── */
+  --p4m-shadow-none: none;
+  --p4m-shadow-box: 0 1px 1px rgba(0, 0, 0, 0.1);
+  --p4m-shadow-overlay: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
