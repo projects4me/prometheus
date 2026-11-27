@@ -9,8 +9,8 @@
 .agent-badge {
   display: inline-block;
   padding: 1px 6px;
-  background: $highlightColor;
-  color: #fff;
+  background: var(--p4m-color-brand-strong);
+  color: var(--p4m-color-surface);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -23,10 +23,10 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  background: #f4f4f4;
-  color: $highlightColor;
+  border: 1px solid var(--p4m-grey-135);
+  border-radius: var(--p4m-radius-round);
+  background: var(--p4m-color-surface-muted);
+  color: var(--p4m-color-brand-strong);
   font-size: 18px;
   vertical-align: middle;
   overflow: hidden;

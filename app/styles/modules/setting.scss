@@ -13,32 +13,32 @@
 
   .settings-nav__group {
     padding: 12px 15px 4px;
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
     font-size: 12px;
     text-transform: uppercase;
   }
 
   .nav-stacked > li > a {
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     border-left: 3px solid transparent;
-    color: $darkColor;
+    color: var(--p4m-color-text);
     padding: 8px 15px;
 
     > .fa {
       width: 20px;
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
     }
   }
 
   .nav-stacked > li.active > a,
   .nav-stacked > li.active > a:hover {
-    background: #f4f4f4;
-    border-left-color: $primaryColor;
-    color: $primaryColor;
+    background: var(--p4m-color-surface-muted);
+    border-left-color: var(--p4m-color-brand);
+    color: var(--p4m-color-brand);
     font-weight: 600;
 
     > .fa {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
 }
@@ -72,12 +72,12 @@
 
       &::-webkit-color-swatch {
         border: 0;
-        border-radius: 0;
+        border-radius: var(--p4m-radius-none);
       }
 
       &::-moz-color-swatch {
         border: 0;
-        border-radius: 0;
+        border-radius: var(--p4m-radius-none);
       }
     }
   }

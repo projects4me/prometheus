@@ -17,13 +17,13 @@
 
       .form-control,
       .input-group-addon {
-        border-radius: 0;
+        border-radius: var(--p4m-radius-none);
       }
     }
 
     .developer-nav__group {
       padding: 12px 15px 4px;
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
       font-size: 12px;
       text-transform: uppercase;
     }
@@ -34,17 +34,17 @@
     }
 
     .nav-stacked > li > a {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
       border-left: 3px solid transparent;
-      color: $darkColor;
+      color: var(--p4m-color-text);
       padding: 8px 15px;
     }
 
     .nav-stacked > li.active > a,
     .nav-stacked > li.active > a:hover {
-      background: $borderColor;
-      border-left-color: $primaryColor;
-      color: $primaryColor;
+      background: var(--p4m-color-border);
+      border-left-color: var(--p4m-color-brand);
+      color: var(--p4m-color-brand);
       font-weight: 600;
     }
   }
