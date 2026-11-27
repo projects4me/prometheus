@@ -903,22 +903,7 @@ export default {
                     "important" : "Important"
                 }
             },
-            /**
-             * Most of these are going to be obsolete
-             * @todo after control bar fixing we need to remove the redundant entries
-             */
             "application" : {
-                "controlBar" : {
-                    "onlineUser" : "Online Users",
-                    "tasksProgress" : "Tasks Progress",
-                    "customTemplate" : "Custom Template Design",
-                    "seventy" : "70%",
-                    "statsTab" : "Stats Tab Content",
-                    "generalSettings" : "General Settings",
-                    "reportPanel" : "Report panel usage",
-                    "settingsInfo" : "Some information about this general settings option",
-
-                },
                 "header" : {
                     "title" : "<b>Projects</b>4<b>Me</b>",
                     "supportTeam" : "Support Team",
