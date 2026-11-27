@@ -4,7 +4,7 @@
 
 import steps from '../steps';
 import { click, settled, waitFor } from '@ember/test-helpers';
-import { openSelect, typeInSelectSearch } from 'prometheus/tests/helpers/select';
+import { typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 const TAGS = '[data-test-issue-tags]';
 
@@ -21,7 +21,9 @@ export default function (assert) {
 				server.create('tagged', { relatedTo: 'issue', relatedId: String(issue.id), tagId: String(tag.id), projectId, tag });
 			})
 			.when('User adds the tag "$name" to the issue', async function (name) {
-				await openSelect(`${TAGS} [data-field="issue.tags.add"]`);
+				await click(`${TAGS} [data-test-issue-tags-add]`);
+				await waitFor(`${TAGS} [data-field="issue.tags.add"]`);
+				await waitFor(`${TAGS} [data-field="issue.tags.add"]`);
 				await typeInSelectSearch(name);
 				await settled();
 				await waitFor('.ember-power-select-option:not(.ember-power-select-option--search-message):not(.ember-power-select-option--loading-message)', { timeout: 3000 });
@@ -29,7 +31,14 @@ export default function (assert) {
 				await click(option);
 			})
 			.when('User removes the tag "$name" from the issue', async function (name) {
+				await click(`${TAGS} [data-test-issue-tags-add]`);
 				await click(`${TAGS} [data-test-issue-tag="${name}"] [data-app-ui-tag-remove]`);
+			})
+			.when('User clicks the tag "$name" of the issue', async function (name) {
+				await click(`${TAGS} [data-test-issue-tag="${name}"] [data-test-issue-tag-link]`);
+			})
+			.then('The issue tags should be a fact next to Parent', async function () {
+				assert.dom('.row > [data-field="issue.parentissue"] + [data-field="issue.tags"]').exists();
 			})
 			.then('The issue should show the tag "$name"', async function (name) {
 				assert.dom(`${TAGS} [data-test-issue-tag="${name}"]`).exists();

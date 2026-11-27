@@ -47,3 +47,20 @@ Feature: Issue tags | Add, reuse and remove tags on the issue detail page
     And User removes the tag "urgent" from the issue
     Then The issue should not show the tag "urgent"
     And The project should have 1 tag named "urgent"
+
+  Scenario: Clicking a tag opens the issue list filtered by it
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    --------------
+    | issue    |
+    | 1        |
+    --------------
+    And Issue 1 is tagged "urgent"
+    When User navigates to app/project/PROJECT_1/issue/1
+    Then The issue tags should be a fact next to Parent
+    When User clicks the tag "urgent" of the issue
+    Then the issue list was queried with "((tag.tag : urgent))" and the project
+    And the url has a query

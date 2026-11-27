@@ -141,4 +141,16 @@ export default class FormFieldsFieldRelateMultiComponent extends FormFieldsCompo
         select?.actions?.close?.();
         this.args.onCreate(created.text);
     }
+
+    /**
+     * Validates the field and tells the caller through the optional `@onClose` that the list closed.
+     *
+     * @method handleClose
+     * @public
+     */
+    @action
+    handleClose(...args) {
+        this.validate(...args);
+        this.args.onClose?.(...args);
+    }
 }

@@ -29,6 +29,8 @@ export default class IssueIssueTagsComponent extends Component {
 	/** The tagged records of the issue, each with its tag loaded. */
 	@tracked taggedList = [];
 	@tracked loadFailed = false;
+	/** Whether the add select is open under the chips. */
+	@tracked adding = false;
 
 	/**
 	 * The project of the issue: its own projectId, else the project selected in the app.
@@ -50,6 +52,40 @@ export default class IssueIssueTagsComponent extends Component {
 		return this.acl.checkAccess('tagged.create');
 	}
 
+	/**
+	 * The shortcode (lower case) of the project of the issue, for the link to the list filtered by a tag.
+	 *
+	 * @property shortcode
+	 * @type String
+	 */
+	get shortcode() {
+		return String(this.args.issue.projectShortcode ?? this.trackedProject.shortCode ?? '').toLowerCase();
+	}
+
+	/** Opens the add select. */
+	@action
+	startAdding() {
+		this.adding = true;
+	}
+
+	/**
+	 * Closes the add select (Esc, a click away or after a tag was chosen). A click on a chip's remove button keeps it
+	 * open, so the button is still there when the click completes.
+	 *
+	 * @method stopAdding
+	 * @param {Object} [select] power-select's public API
+	 * @param {Event} [event] what closed the select
+	 */
+	@action
+	stopAdding(select, event) {
+		if (event?.target?.closest?.('[data-app-ui-tag-remove]')) {
+			return;
+		}
+		if (!this._gone) {
+			this.adding = false;
+		}
+	}
+
 	/** Whether the user may remove tags. */
 	get canRemove() {
 		return this.acl.checkAccess('tagged.delete');
@@ -68,7 +104,8 @@ export default class IssueIssueTagsComponent extends Component {
 			if (!this._gone) {
 				this.taggedList = list;
 			}
-		} catch {
+		} catch (error) {
+			console.error("The tags of the issue could not be loaded", error);
 			if (!this._gone) {
 				this.loadFailed = true;
 			}
@@ -110,6 +147,7 @@ export default class IssueIssueTagsComponent extends Component {
 	 */
 	@action
 	async add(text) {
+		this.stopAdding();
 		let exists = this.taggedList.some((tagged) => String(tagged.tag?.tag).trim().toLowerCase() === String(text).trim().toLowerCase());
 		if (exists) {
 			return;
