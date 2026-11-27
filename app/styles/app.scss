@@ -15,6 +15,9 @@
 
 @import "variables.scss";
 
+// Design tokens (--p4m- CSS custom properties), see docs/ui/design-system.md §4a
+@import "tokens.scss";
+
 /**
   Import global mixin file.
 */

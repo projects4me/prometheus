@@ -176,36 +176,72 @@ states use `AppUi::EmptyState` (`@icon`, `@message`, `<:action>`).
 CSS custom properties prefixed `--p4m-` (for example `--p4m-color-brand`), sizes in `rem` (the root is 10px, so
 `1.4rem` is 14px). Each token below lists today's value and the SCSS variable or AdminLTE value it replaces.
 
-**The tokens are names only for now.** No stylesheet defines them yet; the next phase of aprom-4999 introduces
-them. The existing SCSS variables in `app/styles/variables.scss` stay until each use is migrated, because Sass
-colour functions (`darken`, `rgba` in `modules/gantt.scss`) can't take CSS custom properties.
+**Where they live.** `app/styles/tokens.scss` defines every token in one `:root` block, imported in
+`app/styles/app.scss` right after `variables.scss`. Migration issues only reference the tokens and never edit that
+file. The SCSS variables in `app/styles/variables.scss` stay until each use is migrated.
+
+**Two layers.** The *palette* has one token per distinct colour our own SCSS uses, at its exact value (see
+"Palette scales" below). The *semantic* tokens in the tables here are `var()` references to palette tokens. A style
+uses the semantic token when its role matches (a border uses `--p4m-color-border`) and the palette token otherwise
+(`--p4m-grey-135` for a one-off `#ddd`). Later, merging near-identical shades means re-pointing tokens, each visible
+change in its own issue.
+
+**Derived colours.** Sass `lighten()`/`darken()` can't take a custom property, so every derived colour is computed
+once at today's value, becomes a palette token by the same naming rule, and gets a role token where the role is
+clear (table below).
+
+**Alpha.** `rgba($var, a)` needs no token: write `color-mix(in srgb, var(--p4m-...) a%, transparent)`, for example
+`color-mix(in srgb, var(--p4m-color-brand) 10%, transparent)` for `rgba($primaryColor, 0.1)`.
 
 **Colour**
 
-| Token | Value | Replaces |
-|---|---|---|
-| `--p4m-color-brand` | `#B3244F` | `$primaryColor` |
-| `--p4m-color-brand-strong` | `#640c44` | `$highlightColor` |
-| `--p4m-color-brand-subtle` | `#b3244f45` | `$primaryColorLight` |
-| `--p4m-color-link` | `#1B7BBA` | `$secondaryColor` |
-| `--p4m-color-text` | `#333333` | `$darkColor` |
-| `--p4m-color-text-muted` | `#999999` | `$mediumColor` |
-| `--p4m-color-text-disabled` | `#CCCCCC` | `$lightColor` |
-| `--p4m-color-border` | `#E5E5E5` | `$borderColor` |
-| `--p4m-color-surface` | `#fff` | boxes and header (`$backgroundColor`) |
-| `--p4m-color-surface-page` | `#ecf0f5` | AdminLTE page background |
-| `--p4m-color-surface-sidebar` | `#f9fafc` | sidebar background |
-| `--p4m-color-surface-muted` | `#f4f4f4` | box header border, `btn-default` background |
-| `--p4m-color-success` | `#5fca4a` | `$successColor` |
-| `--p4m-color-info` | `#61c4b8` | `$infoColor` |
-| `--p4m-color-warning` | `#db8b0b` | `$warningColor` |
-| `--p4m-color-danger` | `#d33724` | `$dangerColor` |
-| `--p4m-color-error` | `#dd6a45` | `$errorColor` |
-| `--p4m-color-status-new`, `-in-review` | `#80b5d3` | `.new`, `.in_review` in `styles/issue/issue-status.scss` |
-| `--p4m-color-status-in-progress` | `#B3244F` | `.in_progress` (`$primaryColor`) |
-| `--p4m-color-status-feedback`, `-pending`, `-deferred` | `#f7bf65` | `.feedback`, `.pending`, `.deferred` |
-| `--p4m-color-status-done` | `#5ac594` | `.done`, `.complete` |
-| `--p4m-color-status-closed` | `#e98a7e` | `.closed` |
+| Token | Value | Palette token | Replaces |
+|---|---|---|---|
+| `--p4m-color-brand` | `#B3244F` | `--p4m-crimson-580` | `$primaryColor` |
+| `--p4m-color-brand-strong` | `#640c44` | `--p4m-plum-780` | `$highlightColor` |
+| `--p4m-color-brand-subtle` | `#b3244f45` | `--p4m-crimson-580` at 27.0588% (`color-mix`) | `$primaryColorLight` |
+| `--p4m-color-brand-pressed` | `#891b3c` | `--p4m-crimson-680` | `darken($primaryColor, 10%)` (`modules/issue.scss` divider handle) |
+| `--p4m-color-link` | `#1B7BBA` | `--p4m-blue-580` | `$secondaryColor` |
+| `--p4m-color-text` | `#333333` | `--p4m-grey-800` | `$darkColor` |
+| `--p4m-color-text-muted` | `#999999` | `--p4m-grey-400` | `$mediumColor` |
+| `--p4m-color-text-disabled` | `#CCCCCC` | `--p4m-grey-200` | `$lightColor` |
+| `--p4m-color-border` | `#E5E5E5` | `--p4m-grey-100` | `$borderColor` |
+| `--p4m-color-surface` | `#fff` | `--p4m-grey-0` | boxes and header (`$backgroundColor`) |
+| `--p4m-color-surface-page` | `#ecf0f5` | `--p4m-slate-55` | AdminLTE page background |
+| `--p4m-color-surface-sidebar` | `#f9fafc` | `--p4m-slate-20` | sidebar background |
+| `--p4m-color-surface-muted` | `#f4f4f4` | `--p4m-grey-45` | box header border, `btn-default` background |
+| `--p4m-color-success` | `#5fca4a` | `--p4m-green-460` | `$successColor` |
+| `--p4m-color-info` | `#61c4b8` | `--p4m-teal-425` | `$infoColor` |
+| `--p4m-color-warning` | `#db8b0b` | `--p4m-orange-550` | `$warningColor` |
+| `--p4m-color-danger` | `#d33724` | `--p4m-red-515` | `$dangerColor` |
+| `--p4m-color-error` | `#dd6a45` | `--p4m-red-430` | `$errorColor` |
+| `--p4m-color-status-new`, `-in-review` | `#80b5d3` | `--p4m-blue-335` | `.new`, `.in_review` in `styles/issue/issue-status.scss` |
+| `--p4m-color-status-in-progress` | `#B3244F` | `--p4m-color-brand` | `.in_progress` (`$primaryColor`) |
+| `--p4m-color-status-feedback`, `-pending`, `-deferred` | `#f7bf65` | `--p4m-orange-320` | `.feedback`, `.pending`, `.deferred` |
+| `--p4m-color-status-done` | `#5ac594` | `--p4m-green-435` | `.done`, `.complete` |
+| `--p4m-color-status-closed` | `#e98a7e` | `--p4m-red-295` | `.closed` |
+
+**Role tokens for derived colours**
+
+| Token | Value | Palette token | Replaces |
+|---|---|---|---|
+| `--p4m-accordion-header-hover` | `#f4c8d6` | `--p4m-crimson-130` | `lighten($primaryColor, 45%)` (`components/accordion.scss`) |
+| `--p4m-accordion-body-border` | `#f2f2f2` | `--p4m-grey-50` | `lighten($borderColor, 5%)` (`components/accordion.scss`) |
+| `--p4m-conversation-comment-even` | `#ffffff` | `--p4m-grey-0` | `lighten($borderColor, 15%)` (`modules/conversation.scss`) |
+| `--p4m-conversation-comment-odd` | `#f9f9f9` | `--p4m-grey-25` | `lighten($borderColor, 8%)` (`modules/conversation.scss`) |
+| `--p4m-search-snippet-text` | `#666666` | `--p4m-grey-600` | `lighten($darkColor, 20%)` (`modules/header.scss`) |
+| `--p4m-gantt-bar-new` | `#1b7bba` | `--p4m-color-link` | `$gantt-bar-colours` `new` (`modules/gantt.scss`) |
+| `--p4m-gantt-bar-in-progress` | `#b3244f` | `--p4m-color-brand` | `in_progress` |
+| `--p4m-gantt-bar-in-review` | `#640c44` | `--p4m-color-brand-strong` | `in_review` |
+| `--p4m-gantt-bar-feedback` | `#976008` | `--p4m-orange-690` | `darken($warningColor, 14%)` |
+| `--p4m-gantt-bar-done` | `#347f25` | `--p4m-green-680` | `darken($successColor, 22%)` |
+| `--p4m-gantt-bar-closed` | `#d33724` | `--p4m-color-danger` | `closed` |
+| `--p4m-gantt-bar-deferred` | `#707070` | `--p4m-grey-560` | `darken($mediumColor, 16%)` (also unknown statuses) |
+| `--p4m-role-tier-high` | `#b3244f` | `--p4m-color-brand` | `$role-tiers` `high` (`modules/role.scss`) |
+| `--p4m-role-tier-elevated` | `#be790a` | `--p4m-orange-610` | `darken($warningColor, 6%)` |
+| `--p4m-role-tier-medium` | `#1b7bba` | `--p4m-color-link` | `medium` |
+| `--p4m-role-tier-low` | `#7a7a7a` | `--p4m-grey-520` | `darken($mediumColor, 12%)` |
+| `--p4m-role-tier-none` | `#999999` | `--p4m-color-text-muted` | `none` |
 
 **Spacing**
 
@@ -242,6 +278,150 @@ colour functions (`darken`, `rgba` in `modules/gantt.scss`) can't take CSS custo
 | `--p4m-shadow-none` | `none` | |
 | `--p4m-shadow-box` | `0 1px 1px rgba(0, 0, 0, 0.1)` | AdminLTE `.box` shadow |
 | `--p4m-shadow-overlay` | `0 8px 16px 0 rgba(0, 0, 0, 0.2)` | dropdown menus (`components/dropdown.scss`); modals use their own, stronger shadow today and move onto this token only if the baseline shows no difference |
+
+**Palette scales**
+
+Every colour value our own SCSS uses (`app/styles/**` without the vendored `messenger/`, `vendor/` and
+`twemoji-awesome.scss`, and without box-shadow values) has exactly one palette token, at its exact value. Base
+colours of `rgba()` literals are included; the alpha comes from `color-mix`.
+
+- **Name:** `--p4m-<family>-<n>`, with **n = round((1 - HSL lightness) x 1000 / 5) x 5**: 0 is white, 1000 is
+  black, so a higher number is darker (`#f4f4f4` = grey-45, `#e5e5e5` = grey-100, `#333` = grey-800).
+- **Families:** `grey` (r = g = b, or HSL saturation under 3%), `slate` (bluish greys: hue 195-255 with HSL
+  saturation under 35%, such as `#ecf0f5` = slate-55), and by hue for the rest: `red` 355-15, `orange` 15-45,
+  `amber` 45-70, `green` 70-170, `teal` 170-195, `blue` 195-255, `plum` 290-330, `crimson` 330-355.
+- **Ties:** when two colours get the same name, the one with a semantic role keeps the step, otherwise the one
+  whose unrounded n is closest to it. The other takes its unrounded n as a whole number, one lighter if that is
+  taken (`#e6e6e6` = grey-98 next to `#e5e5e5` = grey-100). These off-step names also mark the shades a later
+  consolidation should merge.
+- New colours aren't added here: use an existing token (section 1 rules).
+
+| Token | Value | Used in (`app/styles`) |
+|---|---|---|
+| `--p4m-grey-0` | `#ffffff` | accordion, agent, app-ui-avatar, app-ui-tag, board, conversation +24 more |
+| `--p4m-grey-25` | `#f9f9f9` | conversation (lighten $borderColor 8%), gantt, idea, skeleton |
+| `--p4m-grey-30` | `#f7f7f7` | document, widgets |
+| `--p4m-grey-40` | `#f5f5f5` | issue, issue-status, toolbar |
+| `--p4m-grey-45` | `#f4f4f4` | agent, app-ui-data-table, app-ui-list-toolbar, board, dropdown, gantt +9 more |
+| `--p4m-grey-50` | `#f2f2f2` | accordion (lighten $borderColor 5%) |
+| `--p4m-grey-55` | `#f1f1f1` | gantt |
+| `--p4m-grey-60` | `#f0f0f0` | gantt, infinite-scroll, toolbar |
+| `--p4m-grey-65` | `#eeeeee` | board, conversation, document, infinite-scroll, pagination |
+| `--p4m-grey-98` | `#e6e6e6` | role |
+| `--p4m-grey-100` | `#e5e5e5` | dropdown, variables |
+| `--p4m-grey-115` | `#e2e2e2` | role |
+| `--p4m-grey-120` | `#e0e0e0` | gantt |
+| `--p4m-grey-135` | `#dddddd` | agent, board, conversation, dropdown, gantt, group +3 more |
+| `--p4m-grey-155` | `#d8d8d8` | role |
+| `--p4m-grey-175` | `#d3d3d3` | role (lightgray) |
+| `--p4m-grey-200` | `#cccccc` | developer-entry, gantt, pagination, power-select, search, signin +1 more |
+| `--p4m-grey-335` | `#aaaaaa` | board, user |
+| `--p4m-grey-400` | `#999999` | app-ui-data-table, board, document, form-fields, gantt, inline-editable +3 more |
+| `--p4m-grey-465` | `#888888` | gantt, pagination |
+| `--p4m-grey-500` | `#808080` | user |
+| `--p4m-grey-520` | `#7a7a7a` | role (darken $mediumColor 12%) |
+| `--p4m-grey-535` | `#777777` | gantt, idea, infinite-scroll, notifications-sidebar, profile, role |
+| `--p4m-grey-555` | `#717171` | profile |
+| `--p4m-grey-560` | `#707070` | gantt (darken $mediumColor 16%) |
+| `--p4m-grey-600` | `#666666` | gantt, header (lighten $darkColor 20%), idea, inline-editable, toolbar, uploads |
+| `--p4m-grey-610` | `#646262` | board |
+| `--p4m-grey-665` | `#555555` | form-fields, gantt, milestone-overview, notifications-sidebar, pagination, role +1 more |
+| `--p4m-grey-735` | `#444444` | document, dropdown, loader, notifications-sidebar, user-management |
+| `--p4m-grey-800` | `#333333` | gantt, issue, notifications-sidebar, pagination, profile, role +2 more |
+| `--p4m-grey-865` | `#222222` | issue |
+| `--p4m-grey-1000` | `#000000` | board, gantt, header, inline-editable, notifications-sidebar, profile +4 more |
+| `--p4m-slate-15` | `#fafbfc` | issue |
+| `--p4m-slate-20` | `#f9fafc` | app-ui-data-table, quick-list, selection |
+| `--p4m-slate-25` | `#f8f9fa` | board, infinite-scroll |
+| `--p4m-slate-30` | `#f6f7f9` | board |
+| `--p4m-slate-31` | `#f6f7f8` | board |
+| `--p4m-slate-32` | `#f5f6f8` | board |
+| `--p4m-slate-33` | `#f4f6f9` | profile |
+| `--p4m-slate-35` | `#f5f6f7` | skeleton |
+| `--p4m-slate-55` | `#ecf0f5` | gantt |
+| `--p4m-slate-75` | `#e9ecef` | board, skeleton |
+| `--p4m-slate-95` | `#e4e7ea` | project |
+| `--p4m-slate-96` | `#e3e6ea` | board |
+| `--p4m-slate-100` | `#e2e4e8` | board |
+| `--p4m-slate-115` | `#dee2e6` | board |
+| `--p4m-slate-130` | `#d8dde3` | board |
+| `--p4m-slate-155` | `#d2d6de` | document, gantt, notifications-sidebar, profile |
+| `--p4m-slate-160` | `#d0d5dd` | gantt |
+| `--p4m-slate-355` | `#97a0b3` | app-ui-data-table, document, module |
+| `--p4m-slate-385` | `#8aa4af` | nav |
+| `--p4m-slate-465` | `#7c8794` | board |
+| `--p4m-slate-485` | `#7f7f87` | document |
+| `--p4m-slate-545` | `#6c757d` | board, infinite-scroll |
+| `--p4m-slate-575` | `#626b76` | board |
+| `--p4m-slate-660` | `#4b5563` | board |
+| `--p4m-red-20` | `#fff5f5` | gantt |
+| `--p4m-red-44` | `#fdeeea` | board |
+| `--p4m-red-45` | `#fdeaea` | board |
+| `--p4m-red-60` | `#fbe7e5` | board |
+| `--p4m-red-145` | `#f4c7bf` | board |
+| `--p4m-red-150` | `#edc4c4` | board |
+| `--p4m-red-190` | `#e8bab5` | board |
+| `--p4m-red-295` | `#e98a7e` | board, calendar, document, form-fields, issue, issue-status +2 more |
+| `--p4m-red-420` | `#d9534f` | gantt |
+| `--p4m-red-430` | `#dd6a45` | variables |
+| `--p4m-red-440` | `#cf614e` | board |
+| `--p4m-red-455` | `#dd4b39` | document, profile |
+| `--p4m-red-500` | `#ff0000` | document, profile, role |
+| `--p4m-red-515` | `#d33724` | board, calendar, document, form-fields, issue, power-select +2 more |
+| `--p4m-red-540` | `#c0392b` | board |
+| `--p4m-red-620` | `#a42a1f` | board |
+| `--p4m-red-650` | `#912d21` | document |
+| `--p4m-orange-40` | `#fef9ec` | role |
+| `--p4m-orange-45` | `#fff8e8` | profile |
+| `--p4m-orange-65` | `#fff4df` | board |
+| `--p4m-orange-190` | `#f0d8ad` | board |
+| `--p4m-orange-320` | `#f7bf65` | calendar, document, issue, issue-status, project |
+| `--p4m-orange-375` | `#f0ad4e` | role |
+| `--p4m-orange-490` | `#f39c12` | calendar, document, profile |
+| `--p4m-orange-550` | `#db8b0b` | variables |
+| `--p4m-orange-610` | `#be790a` | role (darken $warningColor 6%) |
+| `--p4m-orange-615` | `#8a6d3b` | role |
+| `--p4m-orange-635` | `#af700c` | document |
+| `--p4m-orange-675` | `#a76700` | board |
+| `--p4m-orange-690` | `#976008` | gantt (darken $warningColor 14%) |
+| `--p4m-green-45` | `#eef9f0` | role |
+| `--p4m-green-60` | `#e8f8f1` | board |
+| `--p4m-green-180` | `#b9e8d2` | board |
+| `--p4m-green-435` | `#5ac594` | board, calendar, document, form-fields, issue, issue-status +2 more |
+| `--p4m-green-450` | `#66b396` | profile |
+| `--p4m-green-459` | `#5cb85c` | role |
+| `--p4m-green-460` | `#5fca4a` | variables |
+| `--p4m-green-595` | `#28a745` | infinite-scroll |
+| `--p4m-green-620` | `#2f9367` | board |
+| `--p4m-green-650` | `#3c763d` | role |
+| `--p4m-green-675` | `#00a65a` | board, calendar, document, form-fields, issue, power-select +2 more |
+| `--p4m-green-680` | `#347f25` | gantt (darken $successColor 22%) |
+| `--p4m-green-750` | `#008000` | document, form-fields, role |
+| `--p4m-green-805` | `#006432` | document |
+| `--p4m-teal-385` | `#5bc0de` | form-fields, role |
+| `--p4m-teal-425` | `#61c4b8` | variables |
+| `--p4m-teal-500` | `#5497ab` | form-fields |
+| `--p4m-teal-530` | `#00c0ef` | document |
+| `--p4m-teal-705` | `#007896` | document |
+| `--p4m-blue-40` | `#eef6fb` | profile |
+| `--p4m-blue-45` | `#e9f2ff` | board |
+| `--p4m-blue-50` | `#eaf4fb` | role |
+| `--p4m-blue-135` | `#bfd8fb` | board |
+| `--p4m-blue-335` | `#80b5d3` | calendar, document, issue, issue-status, project |
+| `--p4m-blue-515` | `#3c8dbc` | calendar, document, notifications-sidebar, profile |
+| `--p4m-blue-530` | `#00aff0` | profile |
+| `--p4m-blue-535` | `#2f6fbe` | board |
+| `--p4m-blue-580` | `#1b7bba` | variables |
+| `--p4m-blue-590` | `#146ebe` | profile |
+| `--p4m-blue-625` | `#31708f` | role |
+| `--p4m-blue-890` | `#0f172a` | gantt |
+| `--p4m-plum-780` | `#640c44` | document, variables |
+| `--p4m-crimson-130` | `#f4c8d6` | accordion (lighten $primaryColor 45%) |
+| `--p4m-crimson-505` | `#d7263d` | gantt |
+| `--p4m-crimson-530` | `#dc143c` | nav |
+| `--p4m-crimson-580` | `#b3244f` | board, document, issue, variables, wiki |
+| `--p4m-crimson-660` | `#8f1f3f` | board |
+| `--p4m-crimson-680` | `#891b3c` | issue (darken $primaryColor 10%) |
 
 ## 5. Colour tokens (`app/styles/variables.scss`)
 
