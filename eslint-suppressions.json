@@ -279,11 +279,6 @@
       "count": 2
     }
   },
-  "app/controllers/app/project/gantt.js": {
-    "no-unused-vars": {
-      "count": 1
-    }
-  },
   "app/controllers/app/project/idea.js": {
     "no-unused-vars": {
       "count": 3
