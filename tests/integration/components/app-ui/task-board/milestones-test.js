@@ -102,9 +102,14 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         this.set('statuses', []);
         this.set('statusClass', {});
         this.set('noop', () => 0);
+        this.set('activeMilestoneId', null);
+        this.set('changeMilestone', (key) => {
+            assert.step(`change ${key}`);
+            this.set('activeMilestoneId', key);
+        });
 
         await render(hbs`
-            <AppUi::TaskBoard @milestones={{this.milestones}} @statuses={{this.statuses}} @statusClass={{this.statusClass}} @selectIssue={{this.noop}} @getMilestoneProgress={{this.noop}} @getCompletedIssuesCount={{this.noop}} />
+            <AppUi::TaskBoard @milestones={{this.milestones}} @activeMilestoneId={{this.activeMilestoneId}} @onMilestoneChange={{this.changeMilestone}} @statuses={{this.statuses}} @statusClass={{this.statusClass}} @selectIssue={{this.noop}} @getMilestoneProgress={{this.noop}} @getCompletedIssuesCount={{this.noop}} />
         `);
 
         assert.dom('[data-milestone-select-row] .milestone-mark-complete-mobile').doesNotExist('no Complete button for Backlog');
@@ -114,6 +119,38 @@ module('Integration | Component | app-ui/task-board/milestones', function (hooks
         await click(options[1]);
         assert.dom('#tab_5').hasClass('active', 'the chosen milestone pane is shown');
         assert.dom('[data-milestone-select-row] .milestone-mark-complete-mobile').exists('Complete button shows for a sprint');
+        assert.verifySteps(['change 5'], 'the dropdown reports the change instead of clicking the tab');
+    });
+
+    test('the open tab follows @activeMilestoneId and a tab click reports the change', async function (assert) {
+        this.set('milestones', [
+            { id: null, name: 'Backlog', milestoneType: 'backlog', issues: [] },
+            { id: 5, name: 'Sprint 5', milestoneType: 'sprint', issues: [] },
+            { id: 6, name: 'Sprint 6', milestoneType: 'sprint', issues: [] }
+        ]);
+        this.set('statuses', []);
+        this.set('statusClass', {});
+        this.set('noop', () => 0);
+        this.set('activeMilestoneId', '6');
+        this.set('changeMilestone', (key) => assert.step(`change ${key}`));
+
+        await render(hbs`
+            <AppUi::TaskBoard @milestones={{this.milestones}} @activeMilestoneId={{this.activeMilestoneId}} @onMilestoneChange={{this.changeMilestone}} @statuses={{this.statuses}} @statusClass={{this.statusClass}} @selectIssue={{this.noop}} @getMilestoneProgress={{this.noop}} @getCompletedIssuesCount={{this.noop}} />
+        `);
+
+        assert.dom('[data-milestone-id="6"]').hasClass('active', 'the tab from the argument is open');
+        assert.dom('[data-milestone-id="6"] > a').hasAttribute('aria-expanded', 'true');
+        assert.dom('[data-milestone-id="backlog"]').doesNotHaveClass('active');
+        assert.dom('#tab_6').hasClass('active', 'its pane is shown');
+        assert.dom('[data-milestone-id="6"] > a').doesNotHaveAttribute('data-toggle', 'Bootstrap no longer switches the tabs');
+
+        await click('[data-milestone-id="backlog"] > a');
+        assert.verifySteps(['change backlog'], 'a tab click reports the backlog key');
+        assert.dom('[data-milestone-id="6"]').hasClass('active', 'the tab stays until the owner changes the argument');
+
+        this.set('activeMilestoneId', 'unknown');
+        assert.dom('[data-milestone-id="backlog"]').hasClass('active', 'an unknown milestone opens the first tab');
+        assert.dom('#tab_backlog').hasClass('active');
     });
 
     test('an empty lane shows the empty state, a filled lane does not', async function (assert) {

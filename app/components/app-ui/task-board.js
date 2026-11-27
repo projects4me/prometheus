@@ -9,6 +9,18 @@ import { insertAtIfMissing } from 'prometheus/utils/live/collection';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import * as dates from 'prometheus/utils/date';
+
+/**
+ * The key of a milestone on the board and in the URL: its id, or `backlog` for the Backlog.
+ *
+ * @method milestoneKey
+ * @param {Object} milestone
+ * @return {String}
+ * @private
+ */
+function milestoneKey(milestone) {
+	return milestone.id ? String(milestone.id) : 'backlog';
+}
 /**
  * This component is used to render milestones of selected project.
  *
@@ -72,14 +84,35 @@ export default class TaskBoardComponent extends AppComponent {
 	@tracked showMarkMilestoneAsCompleteModal = false;
 
 	/**
-	 * This property holds the active milestone.
+	 * The open milestone: the one whose key matches the activeMilestoneId argument, else the first
+	 * milestone on the board.
 	 *
 	 * @property activeMilestone
 	 * @type Object
 	 * @for TaskBoard
-	 * @protected
+	 * @public
 	 */
-	@tracked activeMilestone = null;
+	get activeMilestone() {
+		let milestones = this.args.milestones || [];
+		let activeId = this.args.activeMilestoneId;
+		let active = (activeId !== undefined && activeId !== null)
+			? milestones.find((item) => milestoneKey(item) === String(activeId))
+			: null;
+		return active || objectAt(milestones, 0) || null;
+	}
+
+	/**
+	 * The key of the open milestone (its id, or `backlog`), handed to the sortable modifier so the
+	 * open tab isn't a drop target.
+	 *
+	 * @property activeMilestoneKey
+	 * @type String
+	 * @for TaskBoard
+	 * @public
+	 */
+	get activeMilestoneKey() {
+		return this.activeMilestone ? milestoneKey(this.activeMilestone) : null;
+	}
 
 
 	/**
@@ -171,7 +204,7 @@ export default class TaskBoardComponent extends AppComponent {
 			// Add the newly created milestone to the beginning of the milestones list
 			// This will make it appear as the first tab
 			insertAtIfMissing(this.args.milestones, this.newMilestone, 0);
-			this.switchToMilestoneTab(this.newMilestone.id);
+			this.changeMilestone(this.newMilestone);
 			
 			messenger.update({
 				message: this.intl.t('views.app.board.milestone.created', {
@@ -239,44 +272,46 @@ export default class TaskBoardComponent extends AppComponent {
 	}
 
 	/**
-	 * This method switches to the specified milestone tab
+	 * Reports the milestone to open through the onMilestoneChange event; the owner of the board
+	 * passes it back as activeMilestoneId.
 	 *
-	 * @method switchToMilestoneTab
-	 * @param {String} milestoneId The ID of the milestone to switch to
+	 * @method changeMilestone
+	 * @param {Object} milestone The milestone to open
 	 * @public
 	 */
-	switchToMilestoneTab(milestoneId) {
-		$(`[data-milestone-id="${milestoneId}"] a`).tab('show');
+	changeMilestone(milestone) {
+		if (milestone && this.args.onMilestoneChange) {
+			this.args.onMilestoneChange(milestoneKey(milestone));
+		}
 	}
 
 	/**
-	 * This action sets the provided milestone as active when a tab is clicked
+	 * Tab click: opens the clicked milestone
 	 *
-	 * @method updateActiveMilestone
-	 * @param {Object} milestone The milestone to update
+	 * @method selectMilestone
+	 * @param {Object} milestone The clicked milestone
+	 * @param {Event} event The click event
 	 * @public
 	 */
 	@action
-	updateActiveMilestone(milestone) {
-		Logger.debug("TaskBoardComponent::updateActiveMilestone");
-		this.activeMilestone = milestone;
-		Logger.debug("-TaskBoardComponent::updateActiveMilestone");
+	selectMilestone(milestone, event) {
+		event?.preventDefault();
+		this.changeMilestone(milestone);
 	}
 
 	/**
-	 * The milestone shown in the phone dropdown: the active one, else the first
+	 * The milestone shown in the phone dropdown: the open one
 	 *
 	 * @property selectedMilestone
 	 * @type Object
 	 * @public
 	 */
 	get selectedMilestone() {
-		return this.activeMilestone || objectAt(this.args.milestones, 0);
+		return this.activeMilestone;
 	}
 
 	/**
-	 * Phone dropdown change: shows the milestone by clicking its (hidden) tab, so the pane and
-	 * the active milestone follow the same path as a tab click
+	 * Phone dropdown change: opens the chosen milestone, like a tab click
 	 *
 	 * @method selectMilestoneFromDropdown
 	 * @param {Object} milestone The chosen milestone
@@ -284,13 +319,7 @@ export default class TaskBoardComponent extends AppComponent {
 	 */
 	@action
 	selectMilestoneFromDropdown(milestone) {
-		let id = milestone.id ? milestone.id : 'backlog';
-		let link = document.querySelector(`[data-milestone-tab][data-milestone-id="${id}"] > a`);
-		if (link) {
-			link.click();
-		} else {
-			this.updateActiveMilestone(milestone);
-		}
+		this.changeMilestone(milestone);
 	}
 
 	/**
@@ -303,7 +332,6 @@ export default class TaskBoardComponent extends AppComponent {
 	@action
 	toggleMarkMilestoneAsComplete() {
 		Logger.debug("TaskBoardComponent::toggleMarkMilestoneAsComplete");
-		this.activeMilestone = this.getActiveMilestone();
 		this.showMarkMilestoneAsCompleteModal = true;
 		Logger.debug("-TaskBoardComponent::toggleMarkMilestoneAsComplete");
 	}
@@ -333,8 +361,10 @@ export default class TaskBoardComponent extends AppComponent {
 	async markMilestoneAsComplete() {
 		Logger.debug("TaskBoardComponent::markMilestoneAsComplete");
 		try {
-			if (this.args.markMilestoneAsComplete && this.activeMilestone) {
-				await this.args.markMilestoneAsComplete(this.activeMilestone);
+			let milestone = this.activeMilestone;
+			if (this.args.markMilestoneAsComplete && milestone) {
+				await this.args.markMilestoneAsComplete(milestone);
+				if (this.isDestroying || this.isDestroyed) return;
 				this.cancelMarkMilestoneAsComplete();
 				this.setNewActiveMilestone();
 			}
@@ -373,34 +403,14 @@ export default class TaskBoardComponent extends AppComponent {
 	}
 
 	/**
-	 * This method gets the currently active milestone (the one being viewed).
-	 *
-	 * @method getActiveMilestone
-	 * @returns {Object} The active milestone
-	 * @public
-	 */
-	getActiveMilestone() {
-		Logger.debug("TaskBoardComponent::getActiveMilestone");
-		let milestoneId = document.querySelector('[data-milestone-tab].active').getAttribute('data-milestone-id');
-		let milestone = this.args.milestones.find((item) => item.id === milestoneId);
-		milestone = milestone ? milestone : this.args.milestones.find((item) => item.milestoneType === milestoneId);
-		Logger.debug("-TaskBoardComponent::getActiveMilestone");
-		return milestone;
-	}
-
-	/**
-	 * This method sets the new active milestone.
+	 * Opens the first milestone on the board, after the open one was marked as complete.
 	 *
 	 * @method setNewActiveMilestone
 	 * @public
 	 */
 	setNewActiveMilestone() {
 		Logger.debug("TaskBoardComponent::setNewActiveMilestone");
-		let newActiveMilestone = objectAt(this.args.milestones, 0);
-		if(newActiveMilestone) {
-			this.activeMilestone = newActiveMilestone;
-			document.querySelector(`[data-milestone-id="${newActiveMilestone.id}"] a`).click();
-		}
+		this.changeMilestone(objectAt(this.args.milestones, 0));
 		Logger.debug("-TaskBoardComponent::setNewActiveMilestone");
 	}
 }

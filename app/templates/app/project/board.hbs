@@ -4,6 +4,8 @@
     <div class={{this.boardColumnClass}}>
       <AppUi::TaskBoard
         @milestones={{this.milestoneList}}
+        @activeMilestoneId={{this.milestone}}
+        @onMilestoneChange={{this.changeMilestone}}
         @statuses={{this.statuses}}
         @statusClass={{this.statusClass}}
         @blockers={{this.blockers}}

@@ -114,4 +114,37 @@ module("Unit | Controller | app/project/board", function (hooks) {
     assert.false(controller.quickViewAsModal);
     assert.strictEqual(controller.boardColumnClass, "board-column col-md-8");
   });
+
+  test("changeMilestone puts the open tab in the milestone query param", function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    assert.true(controller.queryParams.includes("milestone"));
+    controller.changeMilestone("backlog");
+    assert.strictEqual(controller.milestone, "backlog");
+    controller.changeMilestone("m2");
+    assert.strictEqual(controller.milestone, "m2");
+  });
+
+  test("syncActiveMilestone keeps a milestone on the board and drops one that isn't", function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    controller.setProperties({
+      milestones: A([EmberObject.create({ id: null, issues: A() }), EmberObject.create({ id: "m1", issues: A() })]),
+    });
+
+    controller.milestone = "m1";
+    controller.syncActiveMilestone();
+    assert.strictEqual(controller.milestone, "m1", "a milestone on the board stays");
+
+    controller.milestone = "backlog";
+    controller.syncActiveMilestone();
+    assert.strictEqual(controller.milestone, "backlog", "the backlog stays");
+
+    controller.milestone = "gone";
+    controller.syncActiveMilestone();
+    assert.strictEqual(controller.milestone, null, "a milestone not on the board is dropped");
+  });
+
+  test("the milestone query param replaces the history entry and doesn't reload the board", function (assert) {
+    let route = this.owner.lookup("route:app/project/board");
+    assert.deepEqual(route.queryParams.milestone, { refreshModel: false, replace: true });
+  });
 });

@@ -311,7 +311,7 @@ export default class AppProjectBoardController extends ProjectRelated {
      * @type Array
      * @for Board
      */
-    queryParams = ['query', 'searchId'];
+    queryParams = ['query', 'searchId', 'milestone'];
 
     /**
      * These are the issues statues
@@ -359,6 +359,16 @@ export default class AppProjectBoardController extends ProjectRelated {
      * @for Board
      */
     @tracked searchId = null;
+
+    /**
+     * The open milestone tab: the milestone id, or `backlog` for the Backlog tab. Null opens the
+     * first tab.
+     *
+     * @property milestone
+     * @type String
+     * @for Board
+     */
+    @tracked milestone = null;
 
     /**
      * The ezSearch schema of the issues, loaded by the route
@@ -805,6 +815,7 @@ export default class AppProjectBoardController extends ProjectRelated {
         let milestone = this.milestones?.find((item) => item.id === envelope.resource.id);
         if (milestone) {
             this.set('milestones', this.milestones.filter((item) => item !== milestone));
+            this.syncActiveMilestone();
         }
     }
 
@@ -979,6 +990,35 @@ export default class AppProjectBoardController extends ProjectRelated {
             milestone.issues.splice(0, milestone.issues.length, ...sorted);
         });
         return this.milestones;
+    }
+
+    /**
+     * Opens a milestone tab: puts it in the milestone query param
+     *
+     * @method changeMilestone
+     * @param {String} milestoneId The milestone id, or `backlog`
+     * @public
+     */
+    @action changeMilestone(milestoneId) {
+        this.milestone = milestoneId || null;
+    }
+
+    /**
+     * Drops the milestone query param when that milestone isn't on the board (completed, deleted or
+     * filtered out), so the board opens the first tab and the URL says so.
+     *
+     * @method syncActiveMilestone
+     * @public
+     */
+    syncActiveMilestone() {
+        if (!this.milestone) {
+            return;
+        }
+        let key = String(this.milestone);
+        let onBoard = (this.milestones || []).some((item) => (item.id ? String(item.id) : 'backlog') === key);
+        if (!onBoard) {
+            this.milestone = null;
+        }
     }
 
     /**

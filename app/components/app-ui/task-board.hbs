@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded milestones=@milestones}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded milestones=@milestones activeMilestoneId=this.activeMilestoneKey}}>
   <div class="nav-tabs-custom">
     {{!-- Phones: the tabs are replaced by one milestone dropdown with the Complete button beside it --}}
     <div class="milestone-select-row" data-milestone-select-row>
@@ -29,10 +29,10 @@
         </AppUi::Button>
       {{/if}}
     </div>
-    <ul class="nav nav-tabs milestone-tabs">
-      {{#each @milestones as |milestone index|}}
-        <li class="milestone-tab {{if (eq index 0) "active" ""}} not-draggable" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
-          <a href="#tab_{{if milestone.id milestone.id "backlog"}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}} {{on "click" (fn this.updateActiveMilestone milestone)}}>
+    <ul class="nav nav-tabs milestone-tabs" role="tablist">
+      {{#each @milestones as |milestone|}}
+        <li role="presentation" class="milestone-tab {{if (eq milestone this.activeMilestone) "active" ""}} not-draggable" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
+          <a href="#tab_{{if milestone.id milestone.id "backlog"}}" role="tab" aria-selected={{if (eq milestone this.activeMilestone) "true" "false"}} aria-expanded={{if (eq milestone this.activeMilestone) "true" "false"}} {{on "click" (fn this.selectMilestone milestone)}}>
             <span data-milestone-tab-name>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</span>
             <span class="label label-default milestone-tab-count" data-milestone-issue-count title={{t "views.app.board.milestone.issueCount" count=milestone.issues.length}}>{{milestone.issues.length}}</span>
           </a>
@@ -81,8 +81,8 @@
       </span>
     {{/if}}
     <div class="tab-content">
-      {{#each @milestones as |milestone index|}}
-        <div class="tab-pane {{if (eq index 0) "active" ""}}" id="tab_{{if milestone.id milestone.id "backlog"}}">
+      {{#each @milestones as |milestone|}}
+        <div class="tab-pane {{if (eq milestone this.activeMilestone) "active" ""}}" id="tab_{{if milestone.id milestone.id "backlog"}}">
           <AppUi::TaskBoard::Milestones
             @milestone={{milestone}}
             @group={{@group}}
