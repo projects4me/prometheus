@@ -6,23 +6,23 @@
   .infinite-scroll-end {
     padding: 10px;
     text-align: center;
-    color: #777;
+    color: var(--p4m-grey-535);
     margin-top: 10px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--p4m-grey-65);
 
     .end-message {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 10px 0;
-      color: #6c757d;
-      background-color: #f8f9fa;
-      border-top: 1px solid #f0f0f0;
-      border-bottom: 1px solid #f0f0f0;
+      color: var(--p4m-slate-545);
+      background-color: var(--p4m-slate-25);
+      border-top: 1px solid var(--p4m-grey-60);
+      border-bottom: 1px solid var(--p4m-grey-60);
 
       i {
         margin-right: 8px;
-        color: #28a745;
+        color: var(--p4m-green-595);
       }
     }
   }
@@ -31,7 +31,7 @@
 .infinite-scroll-load-more {
   padding: 0.5rem;
   text-align: center;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--p4m-grey-65);
 
   .load-more-button {
     padding: 0.3rem 0.8rem;

@@ -30,25 +30,25 @@
     align-items: center;
     justify-content: center;
     padding: 0.8rem 1.6rem;
-    background-color: #fff;
+    background-color: var(--p4m-color-surface);
     border-radius: 2rem;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 
     i {
       margin-right: 0.8rem;
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
       animation: spin 1s infinite linear;
     }
 
     span {
       font-weight: 500;
-      color: #444;
+      color: var(--p4m-grey-735);
     }
   }
 
   // Overlay variant - for full overlay with backdrop
   &--overlay {
-    background: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, var(--p4m-color-surface) 95%, transparent);
     backdrop-filter: blur(3px);
     z-index: 100;
     cursor: pointer;

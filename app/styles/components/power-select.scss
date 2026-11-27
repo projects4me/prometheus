@@ -11,14 +11,14 @@
 }
 
 .ember-power-select-trigger {
-  border-radius: 0rem;
+  border-radius: var(--p4m-radius-none);
 }
 
 .ember-power-select-dropdown {
-  border-color: #ccc;
+  border-color: var(--p4m-grey-200);
 
   .ember-power-select-search-input {
-    border-color: #ccc;
+    border-color: var(--p4m-grey-200);
   }
 }
 
@@ -28,23 +28,23 @@
     margin-right: 0.5rem;
   }
   .fa-ban {
-    color: #d33724;
+    color: var(--p4m-color-danger);
   }
   .fa-angle-double-up {
-    color: #d33724;
+    color: var(--p4m-color-danger);
     font-weight: bold;
   }
   .fa-arrow-up {
-    color: #e98a7e;
+    color: var(--p4m-red-295);
   }
   .fa-dot-circle-o {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
   .fa-arrow-down {
-    color: #5ac594;
+    color: var(--p4m-green-435);
   }
   .fa-angle-double-down {
-    color: #00a65a;
+    color: var(--p4m-green-675);
     font-weight: bold;
   }
 }
@@ -67,18 +67,18 @@
 
 /* Form fields: multi select */
 .form-field .multiselect-input .ember-power-select-multiple-option {
-  background-color: $primaryColor;
-  color: #fff;
-  border-color: $primaryColor;
+  background-color: var(--p4m-color-brand);
+  color: var(--p4m-color-surface);
+  border-color: var(--p4m-color-brand);
   border-radius: 0.2rem;
 }
 
 /* Sidebar switcher */
 .main-sidebar .ember-power-select-trigger {
-  background-color: $primaryColor;
+  background-color: var(--p4m-color-brand);
   border: none;
   font-size: 1.8rem;
-  color: $backgroundColor;
+  color: var(--p4m-color-surface);
   width: 20.8rem;
 
   .ember-power-select-selected-item {
@@ -88,10 +88,10 @@
   }
 
   .ember-power-select-placeholder {
-    color: $backgroundColor;
+    color: var(--p4m-color-surface);
   }
   .ember-power-select-status-icon {
-    border-color: $backgroundColor transparent transparent transparent;
+    border-color: var(--p4m-color-surface) transparent transparent transparent;
   }
 }
 
@@ -99,7 +99,7 @@
 .wiki-detail .ember-power-select-trigger {
   line-height: 1.42857;
   padding: 0.6rem 1.2rem;
-  border-color: #ccc;
+  border-color: var(--p4m-grey-200);
 
   .ember-power-select-placeholder {
     margin-left: 0px;
@@ -115,9 +115,9 @@
   }
 
   .ember-power-select-multiple-option {
-    background-color: $primaryColor;
-    color: $backgroundColor;
-    border-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
+    color: var(--p4m-color-surface);
+    border-color: var(--p4m-color-brand);
     line-height: 1.42;
     border: none !important;
     margin: 0rem 0.2rem;
