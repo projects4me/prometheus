@@ -12,8 +12,8 @@
           type="button"
           class="btn btn-box-tool"
           @onClick={{this.showEditCommentDialog}}
-          data-toggle="tooltip"
-          title="{{t 'global.form.edit'}}"
+          {{tooltip (t 'global.form.edit')}}
+          aria-label={{t 'global.form.edit'}}
         >
           <i class="fa fa-pencil"></i>
         </AppUi::Button>
@@ -22,8 +22,8 @@
           type="button"
           class="btn btn-box-tool"
           @onClick={{this.showDeleteCommentDialog}}
-          data-toggle="tooltip"
-          title="{{t 'global.form.delete'}}"
+          {{tooltip (t 'global.form.delete')}}
+          aria-label={{t 'global.form.delete'}}
         >
           <i class="fa fa-trash-o"></i>
         </AppUi::Button>

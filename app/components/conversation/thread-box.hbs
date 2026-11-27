@@ -22,8 +22,8 @@
             class="btn btn-box-tool"
             data-btn="edit-conversation"
             @onClick={{this.showEditConversationDialog}}
-            data-toggle="tooltip"
-            title="{{t 'global.form.edit'}}"
+            {{tooltip (t 'global.form.edit')}}
+            aria-label={{t 'global.form.edit'}}
           >
             <i class="fa fa-pencil"></i>
           </AppUi::Button>
