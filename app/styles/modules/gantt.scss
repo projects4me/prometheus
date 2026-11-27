@@ -7,7 +7,7 @@
  * Based on GanttPro interface design
  */
 
-$gantt-grid-width: 440px;
+$gantt-grid-width: 580px;
 $gantt-header-row-height: 26px;
 $gantt-phone-grid-width: 124px;
 $gantt-selected-row-bg: rgba($primaryColor, 0.08);
@@ -90,6 +90,19 @@ $gantt-bar-colours: (
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  container: gantt / inline-size;
+}
+
+/* Narrow containers: Who/Start/End stay, Planned start goes first */
+@container gantt (max-width: 860px) {
+  .gantt-grid-header,
+  .gantt-grid-column {
+    width: $gantt-grid-width - 96px;
+  }
+
+  .gantt-grid-planned {
+    display: none;
+  }
 }
 
 /* Phones - the List tab's issue list, with its own vertical scroll */
@@ -369,6 +382,15 @@ $gantt-bar-colours: (
 
   &.gantt-grid-date {
     width: 64px;
+  }
+
+  &.gantt-grid-est {
+    width: 44px;
+  }
+
+  &.gantt-grid-planned {
+    width: 96px;
+    white-space: nowrap;
   }
 }
 
@@ -1024,6 +1046,8 @@ $gantt-bar-colours: (
 
     .gantt-grid-who,
     .gantt-grid-date,
+    .gantt-grid-est,
+    .gantt-grid-planned,
     .gantt-grid-count,
     .gantt-grid-open {
       display: none;

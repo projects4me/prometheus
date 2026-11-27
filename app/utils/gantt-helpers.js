@@ -205,15 +205,76 @@ export function getValidIssues(milestone) {
 }
 
 /**
- * All issues of a milestone in display order: the ones with dates first, then the ones without
+ * Moves each blocker before the issues it blocks, keeping the given order otherwise. A cycle is ignored.
+ *
+ * @function blockersFirst
+ * @param {Array} issues Issues in the order to keep
+ * @param {Array} blocksLinks `{ sourceId, targetId }`: the source issue blocks the target issue
+ * @returns {Array} The issues, every blocker (that is in the list) before what it blocks
+ * @private
+ */
+function blockersFirst(issues, blocksLinks) {
+    const byId = new Map(issues.map((issue) => [String(issue.id), issue]));
+    const blockersOf = new Map();
+    blocksLinks.forEach(({ sourceId, targetId }) => {
+        const source = String(sourceId);
+        const target = String(targetId);
+        if (source !== target && byId.has(source) && byId.has(target)) {
+            if (!blockersOf.has(target)) {
+                blockersOf.set(target, []);
+            }
+            blockersOf.get(target).push(source);
+        }
+    });
+    if (!blockersOf.size) {
+        return issues;
+    }
+    const placed = new Set();
+    const visiting = new Set();
+    const result = [];
+    const place = (issue) => {
+        const id = String(issue.id);
+        if (placed.has(id) || visiting.has(id)) {
+            return;
+        }
+        visiting.add(id);
+        (blockersOf.get(id) ?? []).forEach((source) => place(byId.get(source)));
+        visiting.delete(id);
+        placed.add(id);
+        result.push(issue);
+    };
+    issues.forEach(place);
+    return result;
+}
+
+/**
+ * All issues of a milestone in display order: the dated ones by planned start (the schedule's, else the start
+ * date), then blockers before the issues they block, then issue number; the undated ones last, in the same way.
  *
  * @function getOrderedIssues
  * @param {Object} milestone Milestone record with an issues array
+ * @param {Object} [plan] `{ schedule, blocksLinks }`: the chart's schedule (issue id → `{ plannedStart }`) and
+ *   the `{ sourceId, targetId }` blocks links
  * @returns {Array} Dated issues followed by undated issues
  */
-export function getOrderedIssues(milestone) {
+export function getOrderedIssues(milestone, plan = {}) {
+    const schedule = plan.schedule;
+    const startOf = (issue) => {
+        const planned = schedule?.get(String(issue.id))?.plannedStart;
+        return planned ? planned.getTime() : new Date(`${issue.startDate}T00:00:00`).getTime();
+    };
+    const numberOf = (issue) => Number(issue.issueNumber) || 0;
+    const sortGroup = (group, dated) => {
+        const sorted = [...group].sort(
+            (a, b) => (dated ? startOf(a) - startOf(b) : 0) || numberOf(a) - numberOf(b)
+        );
+        return blockersFirst(sorted, plan.blocksLinks ?? []);
+    };
     const issues = milestone.issues ?? [];
-    return [...issues.filter((issue) => hasValidDates(issue)), ...issues.filter((issue) => !hasValidDates(issue))];
+    return [
+        ...sortGroup(issues.filter((issue) => hasValidDates(issue)), true),
+        ...sortGroup(issues.filter((issue) => !hasValidDates(issue)), false)
+    ];
 }
 
 /**
@@ -226,17 +287,18 @@ export const MAX_INDENT_LEVEL = 3;
 
 /**
  * The milestone's issues as a parent/child tree in display order: each child follows its parent, children
- * sorted like top-level issues (dated first). A child whose parent is not in the milestone stays top-level; an
+ * ordered like top-level issues (planned start, blockers first). A child whose parent is not in the milestone stays top-level; an
  * issue already on the path (a parentId cycle) is shown flat. The children of a collapsed parent are left out.
  *
  * @function getIssueTree
  * @param {Object} milestone Milestone record with an issues array
  * @param {Set|Array} collapsedIds Ids of the parents whose children are hidden
+ * @param {Object} [plan] The schedule and blocks links the rows are ordered by (see getOrderedIssues)
  * @returns {Array} Rows `{ issue, depth, hasChildren, isCollapsed }`; depth is capped at MAX_INDENT_LEVEL
  */
-export function getIssueTree(milestone, collapsedIds) {
+export function getIssueTree(milestone, collapsedIds, plan) {
     const collapsed = collapsedIds instanceof Set ? collapsedIds : new Set(collapsedIds ?? []);
-    const ordered = getOrderedIssues(milestone);
+    const ordered = getOrderedIssues(milestone, plan);
     const ids = new Set(ordered.map((issue) => issue.id));
     const childrenOf = new Map();
     const roots = [];

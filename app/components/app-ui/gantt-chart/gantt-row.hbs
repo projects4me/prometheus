@@ -19,12 +19,15 @@
     <div class="gantt-grid-cell gantt-grid-who"></div>
     <div class="gantt-grid-cell gantt-grid-date">{{if this.hasValidDates (format-date date=this.milestoneBarStartDate format="D MMM")}}</div>
     <div class="gantt-grid-cell gantt-grid-date">{{if this.hasValidDates (format-date date=this.milestoneBarEndDate format="D MMM")}}</div>
+    <div class="gantt-grid-cell gantt-grid-est"></div>
+    <div class="gantt-grid-cell gantt-grid-planned"></div>
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.treeRows as |row|}}
+    {{#each this.treeRows key="issue.id" as |row|}}
       <AppUi::GanttChart::TaskRow
         @part="grid"
+        @timeTotals={{@timeTotals}}
         @issue={{row.issue}}
         @depth={{row.depth}}
         @hasChildren={{row.hasChildren}}
@@ -64,7 +67,7 @@
   </div>
 
   {{#if @isExpanded}}
-    {{#each this.treeRows as |row|}}
+    {{#each this.treeRows key="issue.id" as |row|}}
       <AppUi::GanttChart::TaskRow
         @issue={{row.issue}}
         @timeTotals={{@timeTotals}}

@@ -131,6 +131,35 @@ export default class TaskRowComponent extends Component {
     }
 
     /**
+     * The issue's summed estimate ("3h", "1h 30m"), or null without one.
+     *
+     * @property estimateText
+     * @type String|null
+     * @for TaskRow
+     * @public
+     */
+    get estimateText() {
+        const minutes = this.args.timeTotals?.get(this.args.issue.id)?.estimated ?? 0;
+        if (!(minutes > 0)) {
+            return null;
+        }
+        return this.intl.t('components.gantt.tooltip.duration', { hours: Math.floor(minutes / 60), minutes: minutes % 60 });
+    }
+
+    /**
+     * The calculated planned start ("30 Nov 12:00"), or null when the issue is not scheduled.
+     *
+     * @property plannedStartText
+     * @type String|null
+     * @for TaskRow
+     * @public
+     */
+    get plannedStartText() {
+        const planned = this.args.schedule?.get(String(this.args.issue.id))?.plannedStart;
+        return planned ? dates.format(planned, 'D MMM HH:mm') : null;
+    }
+
+    /**
      * Which edge of the row holds the chip: `left` or `right` when the whole bar lies outside the
      * visible window (phones only; `@chipWindow` is null otherwise), else null
      *

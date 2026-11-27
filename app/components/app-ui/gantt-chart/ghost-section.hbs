@@ -17,6 +17,8 @@
       </div>
       <div class="gantt-grid-cell gantt-grid-date">{{if row.hasDates (format-date date=row.issue.startDate format="D MMM") "—"}}</div>
       <div class="gantt-grid-cell gantt-grid-date">{{if row.hasDates (format-date date=row.issue.endDate format="D MMM") "—"}}</div>
+      <div class="gantt-grid-cell gantt-grid-est"></div>
+      <div class="gantt-grid-cell gantt-grid-planned"></div>
     </div>
   {{/each}}
 {{else}}

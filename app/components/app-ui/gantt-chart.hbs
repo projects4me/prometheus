@@ -108,6 +108,8 @@
             <div class="gantt-grid-cell gantt-grid-who">{{t "components.gantt.grid.who"}}</div>
             <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.start"}}</div>
             <div class="gantt-grid-cell gantt-grid-date">{{t "components.gantt.grid.end"}}</div>
+            <div class="gantt-grid-cell gantt-grid-est">{{t "components.gantt.grid.est"}}</div>
+            <div class="gantt-grid-cell gantt-grid-planned">{{t "components.gantt.grid.plannedStart"}}</div>
         </div>
         <div class="gantt-timeline-column">
           <AppUi::GanttChart::TimelineHeader
@@ -130,6 +132,7 @@
               @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
               @onToggle={{this.toggleMilestone}}
               @collapsedIssues={{@collapsedIssues}}
+              @timeTotals={{@timeTotals}}
               @onToggleIssue={{@onToggleIssue}}
               @onIssueClick={{this.handleGridSelect}}
               @onOpenIssuePanel={{this.handleOpenIssuePanel}}
