@@ -17,8 +17,8 @@ function getBulkActionTitles(toolbar) {
     if (!group) {
         return [];
     }
-    return Array.from(group.querySelectorAll('button[data-toggle="tooltip"]'))
-        .map((button) => button.getAttribute('title') || '');
+    return Array.from(group.querySelectorAll('button[aria-label]'))
+        .map((button) => button.getAttribute('aria-label') || '');
 }
 
 /**
@@ -70,8 +70,8 @@ export default function (assert) {
             .then('issue list toolbars do not include share, discuss or refresh', async function () {
                 const toolbars = document.querySelectorAll('.issues .list-controls');
                 toolbars.forEach((toolbar, index) => {
-                    const titles = Array.from(toolbar.querySelectorAll('button[data-toggle="tooltip"]'))
-                        .map((button) => button.getAttribute('title') || '');
+                    const titles = Array.from(toolbar.querySelectorAll('button[aria-label]'))
+                        .map((button) => button.getAttribute('aria-label') || '');
                     ['Share', 'Discuss', 'Refresh'].forEach((title) => {
                         assert.notOk(
                             titles.includes(title),
