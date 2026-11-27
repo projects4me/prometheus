@@ -8,12 +8,12 @@
 .ez-search-bar {
   position: relative;
   width: 100%;
-  border-radius: 0;
+  border-radius: var(--p4m-radius-none);
 
   .form-field,
   input {
     width: 100%;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
   }
 
   // The bar is a toolbar field, not a form layout field: drop the form-layout spacing.
@@ -32,7 +32,7 @@
     right: 0;
     height: 30px;
     padding: 5px 10px;
-    background: $backgroundColor;
+    background: var(--p4m-color-surface);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -41,15 +41,15 @@
   }
 
   .token-field {
-    color: $secondaryColor;
+    color: var(--p4m-color-link);
   }
 
   .token-operator {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
 
   .token-keyword {
-    color: $highlightColor;
+    color: var(--p4m-color-brand-strong);
     font-weight: bold;
   }
 
@@ -61,7 +61,7 @@
     max-width: min(48rem, calc(100vw - 16px));
     max-height: 320px;
     overflow-y: auto;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     z-index: $ezSearchMenuZIndex;
 
     &.ez-search-menu--end {
@@ -80,11 +80,11 @@
     }
 
     .dropdown-header {
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
     }
 
     li > a {
-      color: $darkColor;
+      color: var(--p4m-color-text);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -95,12 +95,12 @@
     li.active > a,
     li > a:hover,
     li > a:focus {
-      background: $primaryColor;
-      color: #fff;
+      background: var(--p4m-color-brand);
+      color: var(--p4m-grey-0);
       outline: none;
 
       .ez-search-item-detail {
-        color: #fff;
+        color: var(--p4m-grey-0);
       }
     }
 
@@ -108,14 +108,14 @@
       margin-left: auto;
       min-width: 0;
       overflow-wrap: anywhere;
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
     }
 
     .ez-search-hint {
       padding: 3px 20px;
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
       font-size: 11px;
-      border-top: 1px solid $borderColor;
+      border-top: 1px solid var(--p4m-color-border);
     }
   }
 

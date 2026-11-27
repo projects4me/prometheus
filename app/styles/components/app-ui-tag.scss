@@ -2,27 +2,7 @@
   AppUi::Tag: the Task Board tag look. 1px border and text in the variant colour on a 16% tint of it,
   11px semibold, square edges. Tags next to each other have a 4px gap and wrap.
 */
-@use 'sass:math';
 @import '../variables.scss';
-
-// WCAG relative luminance of a colour.
-@function app-ui-tag-luminance($colour) {
-  $result: 0;
-  @each $channel, $weight in (red: 0.2126, green: 0.7152, blue: 0.0722) {
-    $value: math.div(if($channel == red, red($colour), if($channel == green, green($colour), blue($colour))), 255);
-    $linear: if($value <= 0.03928, math.div($value, 12.92), math.pow(math.div($value + 0.055, 1.055), 2.4));
-    $result: $result + $weight * $linear;
-  }
-  @return $result;
-}
-
-// #fff or $darkColor, whichever has the higher WCAG contrast ratio on the background.
-@function app-ui-tag-text-on($background) {
-  $bg: app-ui-tag-luminance($background);
-  $white: math.div(1.05, $bg + 0.05);
-  $dark: math.div(max($bg, app-ui-tag-luminance($darkColor)) + 0.05, min($bg, app-ui-tag-luminance($darkColor)) + 0.05);
-  @return if($white > $dark, #fff, $darkColor);
-}
 
 .app-ui-tag {
   display: inline-flex;
@@ -30,10 +10,10 @@
   max-width: 200px;
   margin: 0 4px 4px 0;
   padding: 2px 7px;
-  border: 1px solid $borderColor;
-  border-radius: 0;
-  background: $backgroundColor;
-  color: $darkColor;
+  border: 1px solid var(--p4m-color-border);
+  border-radius: var(--p4m-radius-none);
+  background: var(--p4m-color-surface);
+  color: var(--p4m-color-text);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.4;
@@ -65,29 +45,35 @@
 }
 
 .app-ui-tag-default {
-  border-color: $lightColor;
-  background: $backgroundColor;
-  color: $darkColor;
+  border-color: var(--p4m-grey-200);
+  background: var(--p4m-color-surface);
+  color: var(--p4m-color-text);
 }
 
-@each $name, $colour in (primary: $primaryColor, info: $infoColor, success: $successColor, warning: $warningColor, danger: $dangerColor) {
+// Variant colour and the text colour with the higher WCAG contrast on it (white or dark), fixed here because
+// var() values can't be measured at compile time.
+@each $name, $colour, $on in (
+  (primary, var(--p4m-color-brand), var(--p4m-grey-0)),
+  (info, var(--p4m-color-info), var(--p4m-color-text)),
+  (success, var(--p4m-color-success), var(--p4m-color-text)),
+  (warning, var(--p4m-color-warning), var(--p4m-color-text)),
+  (danger, var(--p4m-color-danger), var(--p4m-grey-0))
+) {
   .app-ui-tag-#{$name} {
     border-color: $colour;
-    background: rgba($colour, 0.16);
+    background: color-mix(in srgb, $colour 16%, transparent);
     color: $colour;
+  }
+
+  .app-ui-tag-solid.app-ui-tag-#{$name} {
+    border-color: $colour;
+    background: $colour;
+    color: $on;
   }
 }
 
 .app-ui-tag-solid.app-ui-tag-default {
-  border-color: $lightColor;
-  background: $lightColor;
-  color: app-ui-tag-text-on($lightColor);
-}
-
-@each $name, $colour in (primary: $primaryColor, info: $infoColor, success: $successColor, warning: $warningColor, danger: $dangerColor) {
-  .app-ui-tag-solid.app-ui-tag-#{$name} {
-    border-color: $colour;
-    background: $colour;
-    color: app-ui-tag-text-on($colour);
-  }
+  border-color: var(--p4m-grey-200);
+  background: var(--p4m-grey-200);
+  color: var(--p4m-color-text);
 }

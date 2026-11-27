@@ -7,37 +7,37 @@
 // The ezSearch visual builder: nested groups with a coloured left edge and rows of field, operator and value.
 .ez-search-panel {
   .ez-search-group {
-    border: 1px solid $borderColor;
+    border: 1px solid var(--p4m-color-border);
     border-left-width: 4px;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     padding: 8px 10px;
     margin-bottom: 8px;
-    background: $backgroundColor;
+    background: var(--p4m-color-surface);
   }
 
   .ez-search-group-and {
-    border-left-color: $primaryColor;
+    border-left-color: var(--p4m-color-brand);
   }
 
   .ez-search-group-or {
-    border-left-color: $highlightColor;
+    border-left-color: var(--p4m-color-brand-strong);
   }
 
   .ez-search-group-header {
     margin-bottom: 8px;
 
     .btn {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
     }
   }
 
   .ez-search-group-footer {
-    border-top: 1px solid $borderColor;
+    border-top: 1px solid var(--p4m-color-border);
     margin-top: 8px;
     padding-top: 8px;
 
     .btn {
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
     }
   }
 

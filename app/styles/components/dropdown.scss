@@ -31,9 +31,9 @@
     .app-dropdown-content {
       display: none;
       position: absolute;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 0;
+      background-color: var(--p4m-grey-0);
+      border: 1px solid var(--p4m-grey-135);
+      border-radius: var(--p4m-radius-none);
       min-width: 160px;
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
       z-index: 1000;
@@ -54,11 +54,11 @@
         height: 1px;
         width: 100%;
         border: 0;
-        background-color: #e5e5e5;
+        background-color: var(--p4m-color-border);
       }
   
       > :not(hr) {
-        color: #444;
+        color: var(--p4m-grey-735);
         padding: 0.4rem 0.6rem;
         text-decoration: none;
         @include flexbox($display: flex, $alignItems: center, $justifyContent: space-between);
@@ -70,19 +70,19 @@
   
         &:hover,
         &:focus {
-          background-color: #f4f4f4;
-          color: #444;
+          background-color: var(--p4m-grey-45);
+          color: var(--p4m-grey-735);
           outline: none;
         }
 
         // A selected item: crimson text and a check, no fill.
         &.active,
         &[aria-selected="true"] {
-          color: $primaryColor;
+          color: var(--p4m-color-brand);
 
           &:hover,
           &:focus {
-            color: $primaryColor;
+            color: var(--p4m-color-brand);
           }
         }
 
