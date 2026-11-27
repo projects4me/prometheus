@@ -147,4 +147,50 @@ module("Unit | Controller | app/project/board", function (hooks) {
     let route = this.owner.lookup("route:app/project/board");
     assert.deepEqual(route.queryParams.milestone, { refreshModel: false, replace: true });
   });
+
+  test("the issue query param is registered and doesn't reload the board", function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    let route = this.owner.lookup("route:app/project/board");
+    assert.true(controller.queryParams.includes("issue"));
+    assert.deepEqual(route.queryParams.issue, { refreshModel: false });
+  });
+
+  test("closeIssueDetails clears the issue param", function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    controller._issue = "12";
+    controller.selectedIssue = EmberObject.create({ issueNumber: 12 });
+    controller.closeIssueDetails();
+    assert.strictEqual(controller.issue, null);
+    assert.strictEqual(controller.selectedIssue, null);
+  });
+
+  test("syncIssueFromUrl opens the board card, closes on an empty param and drops an unknown number", async function (assert) {
+    let controller = this.owner.lookup("controller:app/project/board");
+    let card = EmberObject.create({ issueNumber: 7 });
+    controller.milestones = A([EmberObject.create({ id: "m1", issues: A([card]) })]);
+    let selected = [];
+    Object.defineProperty(controller, "selectIssue", {
+      value: async (issue) => { selected.push(issue); controller.selectedIssue = issue; },
+    });
+    controller.findIssueByNumber = (number) => Promise.resolve(number === "7" ? card : null);
+
+    let tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    controller.issue = "7";
+    await tick();
+    assert.deepEqual(selected, [card], "setting the param (Back/Forward) opens the card");
+
+    await controller.syncIssueFromUrl("7");
+    assert.strictEqual(selected.length, 1, "an already open issue isn't reopened");
+
+    await controller.syncIssueFromUrl(null);
+    assert.strictEqual(controller.selectedIssue, null, "an empty param closes the quick view");
+
+    controller.issue = "999";
+    await tick();
+    assert.strictEqual(controller.issue, null, "an unknown number drops the param");
+
+    controller.issue = "abc";
+    await tick();
+    assert.strictEqual(controller.issue, null, "a non-numeric value drops the param");
+  });
 });

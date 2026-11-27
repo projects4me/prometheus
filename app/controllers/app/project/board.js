@@ -311,7 +311,7 @@ export default class AppProjectBoardController extends ProjectRelated {
      * @type Array
      * @for Board
      */
-    queryParams = ['query', 'searchId', 'milestone'];
+    queryParams = ['query', 'searchId', 'milestone', 'issue'];
 
     /**
      * These are the issues statues
@@ -369,6 +369,33 @@ export default class AppProjectBoardController extends ProjectRelated {
      * @for Board
      */
     @tracked milestone = null;
+
+    /**
+     * The issue number open in the quick view, or null. Each open adds a history entry, so Back
+     * closes the quick view.
+     *
+     * @property issue
+     * @type String
+     * @for Board
+     */
+    @tracked _issue = null;
+
+    get issue() {
+        return this._issue;
+    }
+
+    /**
+     * Setting the param (a URL change such as Back or Forward, or our own write) makes the quick
+     * view follow it. This replaces a route `queryParamsDidChange` override, which would replace
+     * Ember's own handler and stop `refreshModel` from firing for the other params.
+     */
+    set issue(value) {
+        let changed = this._issue !== value;
+        this._issue = value;
+        if (changed) {
+            this.syncIssueFromUrl(value);
+        }
+    }
 
     /**
      * The ezSearch schema of the issues, loaded by the route
@@ -1149,11 +1176,75 @@ export default class AppProjectBoardController extends ProjectRelated {
         Logger.debug("AppProjectBoardController::selectIssue");
         this.quickViewAsModal = this.isPhoneViewport();
         this.selectedIssue = issue;
+        this.issue = String(issue.issueNumber);
         this.isLoadingIssueDetails = true;
         window.scrollTo({top: 0, behavior: 'smooth'});
         await this.loadIssueDetails(issue);
         this.isLoadingIssueDetails = false;
         Logger.debug("-AppProjectBoardController::selectIssue");
+    }
+
+    /**
+     * Makes the quick view match the issue query param: opens the issue, or closes the quick view
+     * when the param is empty. An issue that isn't in the project drops the param.
+     *
+     * @method syncIssueFromUrl
+     * @param {String|null} number The issue number from the URL
+     * @public
+     */
+    async syncIssueFromUrl(number) {
+        if (!number) {
+            if (this.selectedIssue) {
+                this.closeIssueDetails();
+            }
+            return;
+        }
+        let key = String(number);
+        if (this.selectedIssue && String(this.selectedIssue.issueNumber) === key) {
+            return;
+        }
+        let issue = await this.findIssueByNumber(key);
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        if (String(this.issue) !== key) {
+            return;
+        }
+        if (!issue) {
+            this.issue = null;
+            return;
+        }
+        await this.selectIssue(issue);
+    }
+
+    /**
+     * Finds an issue by number: the board card when it is loaded, otherwise the project's issue.
+     *
+     * @method findIssueByNumber
+     * @param {String} number The issue number
+     * @return {Object|null}
+     * @public
+     */
+    async findIssueByNumber(number) {
+        for (let milestone of this.milestones || []) {
+            let card = (milestone.issues || []).find((item) => String(item.issueNumber) === number);
+            if (card) {
+                return card;
+            }
+        }
+        if (!/^\d+$/.test(number)) {
+            return null;
+        }
+        try {
+            let result = await this.store.query('issue', {
+                query: `((Issue.issueNumber : ${number}) AND (Issue.projectId : ${this.trackedProject.getProjectId()}))`,
+                limit: 1,
+            });
+            return objectAt(result, 0) || null;
+        } catch (error) {
+            Logger.error("AppProjectBoardController::findIssueByNumber - Error:", error);
+            return null;
+        }
     }
 
     /**
@@ -1165,6 +1256,7 @@ export default class AppProjectBoardController extends ProjectRelated {
     @action closeIssueDetails() {
         Logger.debug("AppProjectBoardController::closeIssueDetails");
         this.selectedIssue = null;
+        this.issue = null;
         this.selectedIssueDetails = null;
         this.isLoadingIssueDetails = false;
         this.isBoardCollapsed = false;
