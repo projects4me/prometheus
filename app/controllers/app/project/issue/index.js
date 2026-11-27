@@ -9,6 +9,8 @@ import format from "prometheus/utils/data/format";
 import { inject as controller } from '@ember/controller';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import { group, condition } from 'prometheus/utils/query/ast';
+import { serialize } from 'prometheus/utils/query/serializer';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
@@ -68,6 +70,76 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @for AppProjectIssueIndexController
      */
     @tracked selectedIssue = null;
+
+    @service tags;
+
+    /**
+     * The tags of the issues on the page: a Map of issue id to its tags, sorted by name.
+     *
+     * @property tagsByIssue
+     * @type Map
+     */
+    @tracked tagsByIssue = new Map();
+
+    /**
+     * The tags of an issue of the page, for the chips of the Overview cell.
+     *
+     * @method tagsOf
+     * @param {Prometheus.Models.Issue} issue
+     * @return {Array<Prometheus.Models.Tag>}
+     */
+    tagsOf = (issue) => this.tagsByIssue.get(String(issue.id)) ?? [];
+
+    /**
+     * Loads the tags of the issues of the page with one request. A failed load leaves the chips out.
+     *
+     * @method loadTags
+     * @param {Array} issues The issues of the page
+     */
+    async loadTags(issues) {
+        let token = (this._tagsLoad = (this._tagsLoad ?? 0) + 1);
+        let loaded = new Map();
+        try {
+            loaded = await this.tags.forRecords('issue', (issues?.slice() ?? []).map((issue) => issue.id));
+        } catch {
+            Logger.debug('AppProjectIssueIndexController::loadTags failed');
+        }
+        if (token !== this._tagsLoad || this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        this.tagsByIssue = loaded;
+    }
+
+    /**
+     * The tags a chip shows: the first three, and the rest as a +n chip.
+     *
+     * @method visibleTags
+     */
+    visibleTags = (issue) => this.tagsOf(issue).slice(0, 3);
+
+    /**
+     * @method hiddenTags
+     * @return {Array<Prometheus.Models.Tag>} the tags beyond the first three
+     */
+    hiddenTags = (issue) => this.tagsOf(issue).slice(3);
+
+    /**
+     * @method hiddenTitle
+     * @return {String} the names of the hidden tags, for the title of the +n chip
+     */
+    hiddenTitle = (issue) => this.hiddenTags(issue).map((tag) => tag.tag).join(', ');
+
+    /**
+     * Filters the list by the tag, replacing the search text the same way a typed `tag = x` does.
+     *
+     * @method filterByTag
+     * @param {String} name
+     */
+    @action filterByTag(name) {
+        let tree = group('AND', [group('AND', [condition('tag.tag', ':', name)])]);
+        this.applyQuery(serialize(tree).query);
+    }
+
 
     /**
      * The full issue details loaded for the selected issue

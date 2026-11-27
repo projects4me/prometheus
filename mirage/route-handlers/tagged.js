@@ -18,6 +18,11 @@ export function register(server, ctx) {
         if (relatedId) {
             tagged = tagged.filter((row) => String(row.relatedId) === relatedId[1]);
         }
+        let relatedIds = /Tagged\.relatedId CONTAINS ([^)]+)\)/.exec(query);
+        if (relatedIds) {
+            let wanted = [...relatedIds[1].matchAll(/'([^']*)'/g)].map((found) => found[1]);
+            tagged = tagged.filter((row) => wanted.includes(String(row.relatedId)));
+        }
         return new Collection('tagged', tagged);
     });
 

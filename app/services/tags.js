@@ -107,6 +107,43 @@ export default class TagsService extends Service {
 	}
 
 	/**
+	 * The tags of many records of one type with one request: a Map of record id (string) to its tags sorted by name.
+	 * Records without tags are not in the Map.
+	 *
+	 * @method forRecords
+	 * @param {String} relatedTo
+	 * @param {Array<String|Number>} ids
+	 * @return {Promise<Map<String, Array<Tag>>>}
+	 */
+	async forRecords(relatedTo, ids) {
+		let byRecord = new Map();
+		let wanted = (ids ?? []).map((id) => String(id));
+		if (!wanted.length) {
+			return byRecord;
+		}
+		let result = await this.store.query('tagged', {
+			query: `((Tagged.relatedTo : ${relatedTo}) AND (Tagged.relatedId CONTAINS ${wanted.map((id) => `'${id}'`).join(',')}))`,
+			rels: 'tag',
+			limit: -1
+		});
+		for (let tagged of result.slice()) {
+			let tag = await tagged.tag;
+			if (!tag) {
+				continue;
+			}
+			let key = String(tagged.relatedId);
+			if (!byRecord.has(key)) {
+				byRecord.set(key, []);
+			}
+			byRecord.get(key).push(tag);
+		}
+		for (let tags of byRecord.values()) {
+			tags.sort((a, b) => String(a.tag).localeCompare(String(b.tag)));
+		}
+		return byRecord;
+	}
+
+	/**
 	 * @method _findOrCreate
 	 * @param {String|Number} projectId
 	 * @param {String} name

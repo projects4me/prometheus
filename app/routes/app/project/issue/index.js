@@ -294,6 +294,7 @@ export default class IssueIndexRoute extends App {
         controller.set('milestones',this.milestones);
         controller.set('selectedIssue', null);
         controller.registerIssuePreview();
+        controller.loadTags(model);
 
         if(controller.searchId && this.savedsearches) {
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
