@@ -10,58 +10,58 @@
 
 .calendar{
   .fc-event,.fc-event-dot{
-    background-color: $primaryColor;
-    border: 0.1rem solid $primaryColor;
+    background-color: var(--p4m-color-brand);
+    border: 0.1rem solid var(--p4m-color-brand);
   }
   .fc-event:hover,.fc-event-dot:hover{
-    background-color: $highlightColor;
+    background-color: var(--p4m-color-brand-strong);
   }
 
   .fc-event-container,.fc-list-table{
 
     a.done,a.complete,.done .fc-event-dot, .complete .fc-event-dot{
-      background-color: #5AC594 !important;
-      border-color: #5AC594 !important;
-      color: $backgroundColor;
+      background-color: var(--p4m-green-435) !important;
+      border-color: var(--p4m-green-435) !important;
+      color: var(--p4m-color-surface);
     }
     a.done:hover,a.complete:hover,.done .fc-event-dot:hover, .complete .fc-event-dot:hover{
-      background-color: #00a65a !important;
+      background-color: var(--p4m-green-675) !important;
     }
 
     a.closed,.closed .fc-event-dot{
-      background-color: #e98a7e;
-      border-color: #e98a7e !important;
-      color: $backgroundColor;
+      background-color: var(--p4m-red-295);
+      border-color: var(--p4m-red-295) !important;
+      color: var(--p4m-color-surface);
     }
     a.closed:hover,.closed .fc-event-dot:hover{
-      background-color: #d33724 !important;
+      background-color: var(--p4m-red-515) !important;
     }
 
     a.deferred,a.pending,a.feedback,.deferred .fc-event-dot, .pending .fc-event-dot,.feedback .fc-event-dot{
-      background-color: #f7bf65;
-      border-color: #f7bf65 !important;
-      color: $backgroundColor;
+      background-color: var(--p4m-orange-320);
+      border-color: var(--p4m-orange-320) !important;
+      color: var(--p4m-color-surface);
     }
     a.deferred:hover,a.pending:hover,a.feedback:hover,.deferred .fc-event-dot:hover, .pending .fc-event-dot:hover,.feedback .fc-event-dot:hover{
-      background-color: #f39c12 !important;
+      background-color: var(--p4m-orange-490) !important;
     }
 
     a.new,.new .fc-event-dot{
-      background-color: #80b5d3;
-      border-color: #80b5d3 !important;
-      color: $backgroundColor;
+      background-color: var(--p4m-blue-335);
+      border-color: var(--p4m-blue-335) !important;
+      color: var(--p4m-color-surface);
     }
     a.new:hover,.new .fc-event-dot:hover{
-      background-color: #3c8dbc !important;
+      background-color: var(--p4m-blue-515) !important;
     }
 
     a.in_progress,.in_progress .fc-event-dot{
-      background-color: $primaryColor;
-      border-color: $primaryColor !important;
-      color: $backgroundColor;
+      background-color: var(--p4m-color-brand);
+      border-color: var(--p4m-color-brand) !important;
+      color: var(--p4m-color-surface);
     }
     a.in_progress:hover,.in_progress .fc-event-dot:hover{
-      background-color: $highlightColor !important;
+      background-color: var(--p4m-color-brand-strong) !important;
     }
 
     .fc-title{
@@ -72,23 +72,23 @@
       margin-right:0.5rem;
     }
     .fa-ban{
-      color: #d33724;
+      color: var(--p4m-red-515);
     }
     .fa-angle-double-up{
-      color: #d33724;
+      color: var(--p4m-red-515);
       font-weight: bold;
     }
     .fa-arrow-up{
-      color: #e98a7e;
+      color: var(--p4m-red-295);
     }
     .fa-dot-circle-o{
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
     .fa-arrow-down{
-      color: #5ac594;
+      color: var(--p4m-green-435);
     }
     .fa-angle-double-down{
-      color: #00a65a;
+      color: var(--p4m-green-675);
       font-weight: bold;
     }
 

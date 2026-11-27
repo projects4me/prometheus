@@ -128,7 +128,7 @@
         &:hover,
         &:focus {
           i {
-            color: $dangerColor;
+            color: var(--p4m-color-danger);
           }
         }
       }
@@ -159,11 +159,11 @@
 
     > .box-comment {
       &:nth-child(even) {
-        background-color: lighten($borderColor, 15%);
+        background-color: var(--p4m-conversation-comment-even);
       }
       
       &:nth-child(odd) {
-        background-color: lighten($borderColor, 8%);
+        background-color: var(--p4m-conversation-comment-odd);
       }
 
       &:nth-last-child(2) {
@@ -182,7 +182,7 @@
     }
 
     .box-comment {
-      border-bottom: 1px solid #eee !important;
+      border-bottom: 1px solid var(--p4m-grey-65) !important;
     }
     
     > .comment-pending {
@@ -192,7 +192,7 @@
 
       &.comment-pending-failed > .box-comment {
         opacity: 1;
-        border-left: 3px solid $dangerColor;
+        border-left: 3px solid var(--p4m-color-danger);
       }
 
       .comment-posting-dots > span {
@@ -210,11 +210,11 @@
 
     > .comment-item-wrapper {
       &:nth-child(even) > .box-comment {
-        background-color: lighten($borderColor, 15%);
+        background-color: var(--p4m-conversation-comment-even);
       }
       
       &:nth-child(odd) > .box-comment {
-        background-color: lighten($borderColor, 8%);
+        background-color: var(--p4m-conversation-comment-odd);
       }
 
       &:nth-last-child(2) > .box-comment {
@@ -264,7 +264,7 @@
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
     padding: 10px;
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
     .new-conversation {
       font-size: 2rem;
       cursor: pointer;
@@ -284,8 +284,8 @@
   
   // The thread box (.thread-box) is a standard box-primary and keeps AdminLTE's own look
   &:not(.thread-box) .box {
-    background-color: $backgroundColor;
-    border: 0.1rem solid $borderColor;
+    background-color: var(--p4m-color-surface);
+    border: 0.1rem solid var(--p4m-color-border);
     border-radius: 0.25rem;
     -webkit-box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2);
     box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2);
@@ -298,7 +298,7 @@
   margin-left: 1rem;
 
   .fa {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
     font-size: 1.5rem;
   }
 }
@@ -313,7 +313,7 @@
 
 .delete-comment-confirmation {
   p {
-    color: white;
+    color: var(--p4m-grey-0);
     margin-left: 0.5rem;
   }
 }
@@ -321,14 +321,14 @@
 /*=====  Conversation Search Bar  ======*/
 .conversation-search-bar {
   .conversation-search-bar__button-col {
-    background: white;
+    background: var(--p4m-grey-0);
     padding: 1rem;
     margin-right: 1rem;
   }
 
   .conversation-search-bar__body {
     width: 100%;
-    background: white;
+    background: var(--p4m-grey-0);
   }
 
   .conversation-search-container {
@@ -336,7 +336,7 @@
       height: 3rem;
     }
     .app-dropdown-btn {
-      border: 1px solid #ddd;
+      border: 1px solid var(--p4m-grey-135);
       height: 3rem;
     }
     .box-tools {
@@ -381,7 +381,7 @@
 /*=====  Conversation New Conversation Form  ======*/
 [data-field="conversation.linkedIssue"] {
   .floating-label {
-    color: $primaryColor !important;
+    color: var(--p4m-color-brand) !important;
   }
 }
 /*=====  End of Conversation New Conversation Form  ======*/
@@ -401,7 +401,7 @@
     font-size: 1.2rem;
     margin-top: 0;
     text-transform: uppercase;
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
   }
 }
 /*=====  End of Conversation Thread Box  ======*/

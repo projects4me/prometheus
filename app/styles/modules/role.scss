@@ -9,18 +9,18 @@
 .roles {
   // ── Role browser rows (QuickList) ─────────────────────────────────────
   $role-tiers: (
-    high: $primaryColor,
-    elevated: darken($warningColor, 6%),
-    medium: $secondaryColor,
-    low: darken($mediumColor, 12%),
-    none: $mediumColor
+    high: var(--p4m-role-tier-high),
+    elevated: var(--p4m-role-tier-elevated),
+    medium: var(--p4m-role-tier-medium),
+    low: var(--p4m-role-tier-low),
+    none: var(--p4m-role-tier-none)
   );
 
   .role-row {
     .role-row__initials {
       align-items: center;
-      background-color: rgba($mediumColor, 0.16);
-      color: $mediumColor;
+      background-color: color-mix(in srgb, var(--p4m-color-text-muted) 16%, transparent);
+      color: var(--p4m-color-text-muted);
       display: flex;
       font-weight: 700;
       height: 3.6rem;
@@ -46,7 +46,7 @@
     }
 
     .role-row__denied {
-      color: $dangerColor;
+      color: var(--p4m-color-danger);
       margin-left: 0.5rem;
     }
 
@@ -56,7 +56,7 @@
       white-space: nowrap;
 
       &--empty {
-        color: $mediumColor;
+        color: var(--p4m-color-text-muted);
         font-style: italic;
       }
     }
@@ -75,7 +75,7 @@
     @each $tier, $colour in $role-tiers {
       &.role-row--#{$tier} {
         .role-row__initials {
-          background-color: rgba($colour, 0.14);
+          background-color: color-mix(in srgb, $colour 14%, transparent);
           color: $colour;
         }
 
@@ -97,8 +97,8 @@
 
     .role-record__initials {
       align-items: center;
-      background-color: rgba($mediumColor, 0.16);
-      color: $mediumColor;
+      background-color: color-mix(in srgb, var(--p4m-color-text-muted) 16%, transparent);
+      color: var(--p4m-color-text-muted);
       display: flex;
       flex: 0 0 auto;
       font-size: 2rem;
@@ -110,7 +110,7 @@
 
       @each $tier, $colour in $role-tiers {
         &.role-record__initials--#{$tier} {
-          background-color: rgba($colour, 0.14);
+          background-color: color-mix(in srgb, $colour 14%, transparent);
           color: $colour;
         }
       }
@@ -203,7 +203,7 @@
         align-items: center;
         gap: 1.2rem;
         padding: 0.8rem 0.4rem;
-        border-bottom: 1px solid #f4f4f4;
+        border-bottom: 1px solid var(--p4m-grey-45);
 
         &:last-child {
           border-bottom: none;
@@ -222,12 +222,12 @@
 
       &__name {
         font-weight: 600;
-        color: #333;
+        color: var(--p4m-grey-800);
       }
 
       &__email {
         font-size: 1.2rem;
-        color: #777;
+        color: var(--p4m-grey-535);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -255,11 +255,11 @@
       .nav-tabs {
         li:hover {
           cursor: pointer;
-          border-top: 3px solid $primaryColor;
+          border-top: 3px solid var(--p4m-color-brand);
         }
 
         li.active {
-          border-top: 3px solid $primaryColor;
+          border-top: 3px solid var(--p4m-color-brand);
         }
       }
     }
@@ -276,7 +276,7 @@
         align-items: center;
         gap: 1rem;
         padding: 1.25rem 0.5rem;
-        border-bottom: 1px solid #e6e6e6;
+        border-bottom: 1px solid var(--p4m-grey-98);
 
         &:last-child {
           border-bottom: none;
@@ -290,7 +290,7 @@
         margin-right: 0.25rem;
         font-weight: 600;
         word-break: break-word;
-        border-right: 1px solid #d8d8d8;
+        border-right: 1px solid var(--p4m-grey-155);
         align-self: stretch;
         display: flex;
         align-items: center;
@@ -316,15 +316,15 @@
         width: 2rem;
 
         i.fa-spinner {
-          color: black;
+          color: var(--p4m-grey-1000);
         }
 
         i.fa-check-circle {
-          color: green;
+          color: var(--p4m-green-750);
         }
 
         i.fa-times-circle {
-          color: red;
+          color: var(--p4m-red-500);
         }
       }
 
@@ -339,7 +339,7 @@
         scroll-margin-top: 12rem;
 
         &.light-gray {
-          background-color: lightgray;
+          background-color: var(--p4m-grey-175);
         }
       }
 
@@ -347,7 +347,7 @@
         margin: 0;
         font-size: 1.2rem;
         font-weight: 500;
-        color: #555;
+        color: var(--p4m-grey-665);
         white-space: nowrap;
       }
 
@@ -372,7 +372,7 @@
 
         // Divider between adjacent scope sections
         & + .permission-scope-section {
-          border-top: 2px solid #e2e2e2;
+          border-top: 2px solid var(--p4m-grey-115);
           padding-top: 1rem;
         }
       }
@@ -397,12 +397,12 @@
       // System section — amber / warning palette (AdminLTE box-warning)
       .permission-scope-section--system {
         .permission-scope-section__header {
-          background-color: #fef9ec;
-          border: 1px solid #f0ad4e;
-          color: #8a6d3b;
+          background-color: var(--p4m-orange-40);
+          border: 1px solid var(--p4m-orange-375);
+          color: var(--p4m-orange-615);
 
           i.fa {
-            color: #f0ad4e;
+            color: var(--p4m-orange-375);
           }
         }
       }
@@ -410,12 +410,12 @@
       // User section — green / success palette
       .permission-scope-section--user {
         .permission-scope-section__header {
-          background-color: #eef9f0;
-          border: 1px solid #5cb85c;
-          color: #3c763d;
+          background-color: var(--p4m-green-45);
+          border: 1px solid var(--p4m-green-459);
+          color: var(--p4m-green-650);
 
           i.fa {
-            color: #5cb85c;
+            color: var(--p4m-green-459);
           }
         }
       }
@@ -423,12 +423,12 @@
       // Project section — blue / info palette (AdminLTE box-info)
       .permission-scope-section--project {
         .permission-scope-section__header {
-          background-color: #eaf4fb;
-          border: 1px solid #5bc0de;
-          color: #31708f;
+          background-color: var(--p4m-blue-50);
+          border: 1px solid var(--p4m-teal-385);
+          color: var(--p4m-blue-625);
 
           i.fa {
-            color: #5bc0de;
+            color: var(--p4m-teal-385);
           }
         }
       }

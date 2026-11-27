@@ -18,7 +18,7 @@
       width: 6rem;
       height: 1.6rem;
       margin: 0 0 0 0.5rem;
-      border-radius: 0;
+      border-radius: var(--p4m-radius-none);
     }
   }
 }
@@ -30,7 +30,7 @@
   }
 
   .idea-plan-issue {
-    border-top: 1px solid #f4f4f4;
+    border-top: 1px solid var(--p4m-grey-45);
   }
 
   .idea-plan-issue-head {
@@ -43,7 +43,7 @@
 
       .fa {
         width: 1rem;
-        color: #777;
+        color: var(--p4m-grey-535);
       }
     }
 
@@ -52,11 +52,11 @@
       flex-wrap: wrap;
       gap: 0.4rem 1rem;
       margin: 0.4rem 0 0 1.4rem;
-      color: #666;
+      color: var(--p4m-grey-600);
     }
 
     .project {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
       font-weight: 600;
     }
   }
@@ -64,15 +64,15 @@
   .priority-blocker,
   .priority-critical,
   .priority-high {
-    color: $dangerColor;
+    color: var(--p4m-color-danger);
   }
 
   .priority-medium {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
 
   .priority-low {
-    color: $successColor;
+    color: var(--p4m-color-success);
   }
 
   // compact screens fit the side column; the message screens span the message width
@@ -85,7 +85,7 @@
 
   .idea-message-screen-image {
     max-width: 100%;
-    border: 1px solid $borderColor;
+    border: 1px solid var(--p4m-color-border);
   }
 
   .idea-plan-description {
@@ -166,7 +166,7 @@
 
     .idea-message-screen-image {
       max-width: 100%;
-      border: 1px solid $borderColor;
+      border: 1px solid var(--p4m-color-border);
     }
 
     .idea-message-screen-title {
@@ -175,7 +175,7 @@
 
     .idea-message-body img {
       max-width: 100%;
-      border: 1px solid $borderColor;
+      border: 1px solid var(--p4m-color-border);
       cursor: pointer;
     }
 
@@ -242,14 +242,14 @@
   .idea-screen-preview-image {
     display: block;
     max-width: 100%;
-    border: 1px solid $borderColor;
+    border: 1px solid var(--p4m-color-border);
   }
 }
 
 .idea-created-issues {
-  .idea-created-group { padding: 8px 10px; background: #f9f9f9; border-bottom: 1px solid #f4f4f4; }
+  .idea-created-group { padding: 8px 10px; background: var(--p4m-grey-25); border-bottom: 1px solid var(--p4m-grey-45); }
   .idea-created-list { margin: 0; }
-  .idea-created-issue { padding: 6px 10px; border-bottom: 1px solid #f4f4f4; }
+  .idea-created-issue { padding: 6px 10px; border-bottom: 1px solid var(--p4m-grey-45); }
   .idea-created-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .idea-created-meta > * { margin-right: 8px; }
 }

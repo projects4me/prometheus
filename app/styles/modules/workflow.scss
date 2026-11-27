@@ -10,7 +10,7 @@
     position: relative;
     margin-bottom: 10px;
     padding: 4px 8px;
-    border-left: 3px solid $borderColor;
+    border-left: 3px solid var(--p4m-color-border);
   }
 
   .workflow-case-list .workflow-case {
@@ -27,7 +27,7 @@
   }
 
   .workflow-palette-group {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--p4m-color-border);
 
     &:last-child {
       border-bottom: 0;
@@ -39,7 +39,7 @@
     padding: 10px 10px 4px;
     font-size: 14px;
     font-weight: 600;
-    color: $darkColor;
+    color: var(--p4m-color-text);
   }
 
   .workflow-palette-item {
@@ -48,7 +48,7 @@
 
     &.disabled {
       cursor: not-allowed;
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
     }
   }
 
@@ -56,7 +56,7 @@
     position: relative;
     height: 560px;
     overflow: hidden;
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
     cursor: grab;
     touch-action: none;
     user-select: none;
@@ -103,12 +103,12 @@
 
   .workflow-edge-line {
     fill: none;
-    stroke: $mediumColor;
+    stroke: var(--p4m-color-text-muted);
     stroke-width: 2px;
   }
 
   .workflow-edge.selected .workflow-edge-line {
-    stroke: $primaryColor;
+    stroke: var(--p4m-color-brand);
   }
 
   .workflow-edge.invalid .workflow-edge-line,
@@ -117,43 +117,43 @@
   }
 
   .workflow-edge.invalid .workflow-edge-line {
-    stroke: $dangerColor;
+    stroke: var(--p4m-color-danger);
   }
 
   .workflow-edge-pending {
-    stroke: $primaryColor;
+    stroke: var(--p4m-color-brand);
     pointer-events: none;
   }
 
   .workflow-node {
     position: absolute;
-    background-color: $backgroundColor;
-    border: 1px solid $lightColor;
-    border-top: 3px solid $mediumColor; // NODE_BORDER_TOP in utils/workflow/node-geometry.js
+    background-color: var(--p4m-color-surface);
+    border: 1px solid var(--p4m-color-text-disabled);
+    border-top: 3px solid var(--p4m-color-text-muted); // NODE_BORDER_TOP in utils/workflow/node-geometry.js
     cursor: default;
 
     &.workflow-node-trigger {
-      border-top-color: $warningColor;
+      border-top-color: var(--p4m-color-warning);
     }
 
     &.workflow-node-condition {
-      border-top-color: $secondaryColor;
+      border-top-color: var(--p4m-color-link);
     }
 
     &.workflow-node-actor {
-      border-top-color: $primaryColor;
+      border-top-color: var(--p4m-color-brand);
     }
 
     &.workflow-node-action {
-      border-top-color: $successColor;
+      border-top-color: var(--p4m-color-success);
     }
 
     &.selected {
-      border-color: $primaryColor;
+      border-color: var(--p4m-color-brand);
     }
 
     &.has-errors {
-      border-color: $dangerColor;
+      border-color: var(--p4m-color-danger);
     }
   }
 
@@ -161,7 +161,7 @@
     position: relative;
     padding: 0 10px 0 14px;
     line-height: 39px;
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--p4m-color-border);
     cursor: move;
     white-space: nowrap;
     overflow: hidden;
@@ -170,7 +170,7 @@
 
   .workflow-node-name {
     font-weight: 600;
-    color: $darkColor;
+    color: var(--p4m-color-text);
   }
 
   .workflow-node-ports {
@@ -182,21 +182,21 @@
     padding: 0 14px 0 10px;
     text-align: right;
     font-size: 12px;
-    color: $mediumColor;
+    color: var(--p4m-color-text-muted);
   }
 
   .workflow-port {
     position: absolute;
     width: 12px;
     height: 12px;
-    border: 2px solid $mediumColor;
-    background-color: $backgroundColor;
+    border: 2px solid var(--p4m-color-text-muted);
+    background-color: var(--p4m-color-surface);
     cursor: crosshair;
 
     &:hover,
     &.active {
-      border-color: $primaryColor;
-      background-color: $primaryColor;
+      border-color: var(--p4m-color-brand);
+      background-color: var(--p4m-color-brand);
     }
   }
 
@@ -215,16 +215,16 @@
 
 .workflow-editor {
   .workflow-edge.taken .workflow-edge-line {
-    stroke: $primaryColor;
+    stroke: var(--p4m-color-brand);
     stroke-width: 3px;
   }
 
   .workflow-node.ran {
-    border-color: $primaryColor;
+    border-color: var(--p4m-color-brand);
   }
 
   .workflow-node.ran.failed {
-    border-color: $dangerColor;
+    border-color: var(--p4m-color-danger);
   }
 
   .workflow-run-step pre {
@@ -245,7 +245,7 @@
     display: inline-block;
     margin: 0 4px 4px 0;
     padding: 1px 6px;
-    border: 1px solid $borderColor;
-    background: #fff;
+    border: 1px solid var(--p4m-color-border);
+    background: var(--p4m-grey-0);
   }
 }
