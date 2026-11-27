@@ -98,7 +98,7 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="project-conversations show-5" {{initialize-slimscroll width='5'}}>
+                <ul class="project-conversations show-5 slim-scroll slim-scroll-wide">
                   {{#if this.conversations}}
                     {{#each this.conversations as |conversation|}}
                       <li data-conversation-id="{{conversation.id}}">
@@ -141,7 +141,7 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="issue-overview show-5 clearfix" {{initialize-slimscroll width='5'}}>
+                <ul class="issue-overview show-5 clearfix slim-scroll slim-scroll-wide">
                   {{#if this.issuetime}}
                     {{#each this.issuetime as |issue|}}
                       <li>
