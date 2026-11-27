@@ -4,16 +4,16 @@
 
 import { module, test } from 'qunit';
 
-// The resolved values of $gantt-bar-colours in styles/modules/gantt.scss (darken() lowers the HSL lightness).
-// Keep this map in step with the SCSS map.
+// The resolved values of the --p4m-gantt-bar-* tokens in styles/tokens.scss (used by styles/modules/gantt.scss).
+// Keep this map in step with the tokens.
 const BAR_COLOURS = {
-    new: '#1b7bba', // $secondaryColor
-    in_progress: '#b3244f', // $primaryColor
-    in_review: '#640c44', // $highlightColor
-    feedback: '#976008', // darken($warningColor, 14%)
-    done: '#347f25', // darken($successColor, 22%)
-    closed: '#d33724', // $dangerColor
-    deferred: '#707070', // darken($mediumColor, 16%)
+    new: '#1b7bba', // --p4m-gantt-bar-new
+    in_progress: '#b3244f', // --p4m-gantt-bar-in-progress
+    in_review: '#640c44', // --p4m-gantt-bar-in-review
+    feedback: '#976008', // --p4m-gantt-bar-feedback (orange-690)
+    done: '#347f25', // --p4m-gantt-bar-done (green-680)
+    closed: '#d33724', // --p4m-gantt-bar-closed
+    deferred: '#707070', // --p4m-gantt-bar-deferred (grey-560)
 };
 
 function luminance(hex) {
