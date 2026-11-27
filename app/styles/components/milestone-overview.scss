@@ -9,7 +9,7 @@
   .milestone-overview-dates-row {
     font-style: italic;
     font-size: 1.4rem;
-    color: #555;
+    color: var(--p4m-grey-665);
   }
 
   .milestone-icon {
@@ -36,10 +36,10 @@
     .progress {
       height: 0.6rem;
       margin-bottom: 0;
-      background-color: $primaryColorLight;
+      background-color: var(--p4m-color-brand-subtle);
 
       .progress-bar {
-        background-color: $primaryColor;
+        background-color: var(--p4m-color-brand);
       }
     }
 

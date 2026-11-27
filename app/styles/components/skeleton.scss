@@ -6,8 +6,8 @@
  * Facebook-style skeleton placeholders with shimmer animation
  */
 
-$skeleton-base: #e9ecef;
-$skeleton-highlight: #f5f6f7;
+$skeleton-base: var(--p4m-slate-75);
+$skeleton-highlight: var(--p4m-slate-35);
 
 @keyframes skeleton-shimmer {
   0% {
@@ -75,7 +75,7 @@ $skeleton-highlight: #f5f6f7;
 
 .skeleton-circle {
   @extend .skeleton-block;
-  border-radius: 50%;
+  border-radius: var(--p4m-radius-round);
   flex-shrink: 0;
 
   &--sm {
@@ -101,7 +101,7 @@ $skeleton-highlight: #f5f6f7;
   padding: 1rem 1.5rem;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--p4m-grey-45);
   }
 
   &__content {
@@ -131,7 +131,7 @@ $skeleton-highlight: #f5f6f7;
   }
 
   .skeleton-toolbar {
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--p4m-grey-45);
     display: flex;
     gap: 1rem;
     padding: 0 1.5rem 1.2rem;
@@ -149,8 +149,8 @@ $skeleton-highlight: #f5f6f7;
 // ── Gantt skeleton ────────────────────────────────────────────────────────────
 .gantt-skeleton {
   .box {
-    background: #fff;
-    border: 1px solid #f4f4f4;
+    background: var(--p4m-color-surface);
+    border: 1px solid var(--p4m-grey-45);
     border-radius: 0.4rem;
     margin-bottom: 0;
   }
@@ -158,14 +158,14 @@ $skeleton-highlight: #f5f6f7;
   .gantt-container {
     display: flex;
     overflow: hidden;
-    background: #fff;
+    background: var(--p4m-color-surface);
     min-height: 42rem;
   }
 
   .skeleton-gantt-task-list {
     flex: 0 0 22rem;
-    border-right: 1px solid #f4f4f4;
-    background: #fff;
+    border-right: 1px solid var(--p4m-grey-45);
+    background: var(--p4m-color-surface);
     padding: 0.5rem 0;
   }
 
@@ -174,7 +174,7 @@ $skeleton-highlight: #f5f6f7;
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--p4m-grey-45);
     margin-bottom: 0.5rem;
   }
 
@@ -183,7 +183,7 @@ $skeleton-highlight: #f5f6f7;
     align-items: center;
     gap: 0.6rem;
     padding: 0.6rem 1rem;
-    background: #f9f9f9;
+    background: var(--p4m-grey-25);
   }
 
   .skeleton-gantt-task-row {
@@ -193,7 +193,7 @@ $skeleton-highlight: #f5f6f7;
   .skeleton-gantt-timeline {
     flex: 1;
     overflow: hidden;
-    background: #fff;
+    background: var(--p4m-color-surface);
     padding: 0.5rem 0;
   }
 
@@ -211,7 +211,7 @@ $skeleton-highlight: #f5f6f7;
 
 // ── Kanban skeleton ───────────────────────────────────────────────────────────
 .skeleton-kanban-column {
-  border: 1px solid #f4f4f4;
+  border: 1px solid var(--p4m-grey-45);
   border-radius: 0.4rem;
   margin-bottom: 1rem;
 }

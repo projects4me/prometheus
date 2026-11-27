@@ -4,8 +4,8 @@
   right: 0;
   width: 30rem;
   height: 100vh;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: var(--p4m-color-surface);
+  color: var(--p4m-grey-1000);
   z-index: 810;
   transition: transform 0.3s ease-in-out;
   transform: translate(30rem, 0);
@@ -25,12 +25,12 @@
       > span.title {
         padding: 1.2rem 1rem;
         margin-bottom: 0.8rem;
-        color: #333333;
+        color: var(--p4m-color-text);
         font-weight: 600;
         font-size: 1.3rem;
         text-align: center;
-        border-bottom: 1px solid rgba(210, 214, 222, 0.8);
-        border-top: 1px solid rgba(210, 214, 222, 0.8);
+        border-bottom: 1px solid color-mix(in srgb, var(--p4m-slate-155) 80%, transparent);
+        border-top: 1px solid color-mix(in srgb, var(--p4m-slate-155) 80%, transparent);
         letter-spacing: 0.5px;
         position: relative;
         margin-top: 1rem;
@@ -45,8 +45,8 @@
             
             .mark-all-read-btn {
                 background-color: transparent;
-                color: $primaryColor;
-                border: 1px solid $primaryColor;
+                color: var(--p4m-color-brand);
+                border: 1px solid var(--p4m-color-brand);
                 border-radius: 4px;
                 padding: 0.3rem 0.6rem;
                 font-size: 0.9rem;
@@ -56,8 +56,8 @@
                 white-space: nowrap;
                 
                 &:hover {
-                    background-color: $primaryColor;
-                    color: white;
+                    background-color: var(--p4m-color-brand);
+                    color: var(--p4m-color-surface);
                 }
                 
                 i {
@@ -72,7 +72,7 @@
                 left: 25%;
                 width: 50%;
                 height: 2px;
-                background-color: $primaryColor;
+                background-color: var(--p4m-color-brand);
             }
         }
     }
@@ -88,7 +88,7 @@
           overflow: unset;
           display: flex;
           padding: 1rem 0.5rem;
-          color: #444444;
+          color: var(--p4m-grey-735);
           position: relative;
           
           .notification-content-wrapper {
@@ -107,7 +107,7 @@
               margin-left: 0.5rem;
 
               a {
-                  color: #3c8dbc;
+                  color: var(--p4m-blue-515);
               }
           }
 
@@ -119,16 +119,16 @@
       }
 
       .notification {
-          border: 0.2rem solid rgba(210, 214, 222, 1.2);
+          border: 0.2rem solid var(--p4m-slate-155);
           border-right: none;
           border-top: none;
-          background-color: rgba(210, 214, 222, 0.4);
+          background-color: color-mix(in srgb, var(--p4m-slate-155) 40%, transparent);
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
 
       .unread-notification {
-          background-color: white !important;
-          border-left: 0.3rem solid $primaryColor;
+          background-color: var(--p4m-color-surface) !important;
+          border-left: 0.3rem solid var(--p4m-color-brand);
           position: relative;
 
           &::before {
@@ -139,8 +139,8 @@
               transform: translateY(-50%);
               width: 0.8rem;
               height: 0.8rem;
-              background-color: $primaryColor;
-              border-radius: 50%;
+              background-color: var(--p4m-color-brand);
+              border-radius: var(--p4m-radius-round);
               animation: pulse 2s infinite;
               z-index: 5;
           }
@@ -151,7 +151,7 @@
       }
 
       .unread-notification:hover {
-          background-color: rgb(210, 214, 222, 0.7);
+          background-color: color-mix(in srgb, var(--p4m-slate-155) 70%, transparent);
           box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
           transition: all 0.2s ease-in-out;
       }
@@ -163,8 +163,8 @@
       .notification-group-heading {
           margin: 0;
           padding: 0.8rem 0.5rem 0.5rem;
-          border-top: 1px solid rgba(210, 214, 222, 1);
-          border-radius: 0;
+          border-top: 1px solid var(--p4m-slate-155);
+          border-radius: var(--p4m-radius-none);
           font-size: 1.3rem;
           font-weight: bold;
           display: flex;
@@ -172,7 +172,7 @@
           justify-content: space-between;
 
           a {
-              color: $secondaryColor;
+              color: var(--p4m-color-link);
           }
 
           .notification-group-mark-read {
@@ -180,7 +180,7 @@
               border: 0;
               padding: 0;
               margin-left: auto;
-              color: $primaryColor;
+              color: var(--p4m-color-brand);
               cursor: pointer;
 
               i {
@@ -207,20 +207,20 @@
           
           .empty-icon {
               font-size: 3rem;
-              color: rgba(210, 214, 222, 0.9);
+              color: color-mix(in srgb, var(--p4m-slate-155) 90%, transparent);
               margin-bottom: 1rem;
           }
           
           .empty-message {
               font-size: 1.1rem;
-              color: #777;
+              color: var(--p4m-grey-535);
               line-height: 1.5;
               
               strong {
                   display: block;
                   margin-bottom: 0.5rem;
                   font-size: 1.2rem;
-                  color: #555;
+                  color: var(--p4m-grey-665);
               }
           }
       }
@@ -269,7 +269,7 @@ body.notifications-sidebar-open .main-footer {
 }
 
 .notification-bell-unread {
-  color: $primaryColor;
+  color: var(--p4m-color-brand);
 }
 
 .notification-bell-ring {

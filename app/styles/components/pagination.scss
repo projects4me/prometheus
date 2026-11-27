@@ -13,7 +13,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 1rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--p4m-grey-65);
 
     .pagination-controls {
       display: flex;
@@ -25,7 +25,7 @@
       .pagination-btn {
         background: none;
         border: none;
-        color: #333;
+        color: var(--p4m-color-text);
         font-size: 1.5rem;
         padding: 0.5rem 1rem;
         cursor: pointer;
@@ -33,13 +33,13 @@
 
         &.disabled,
         &:disabled {
-          color: #ccc;
+          color: var(--p4m-color-text-disabled);
           cursor: not-allowed;
         }
 
         &:not(.disabled):hover,
         &:not(:disabled):hover {
-          color: $primaryColor;
+          color: var(--p4m-color-brand);
         }
       }
 
@@ -51,7 +51,7 @@
 
         .pagination-text {
           font-size: 1rem;
-          color: #555;
+          color: var(--p4m-grey-665);
         }
       }
     }
@@ -61,12 +61,12 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #888;
+      color: var(--p4m-grey-465);
       font-size: 1rem;
 
       i {
         margin-right: 6px;
-        color: $primaryColor;
+        color: var(--p4m-color-brand);
         font-size: 1.1rem;
       }
     }
