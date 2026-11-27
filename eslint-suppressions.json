@@ -478,11 +478,6 @@
       "count": 1
     }
   },
-  "app/modifiers/apply-mask.js": {
-    "ember/no-jquery": {
-      "count": 2
-    }
-  },
   "app/modifiers/autofocus.js": {
     "no-unused-vars": {
       "count": 2
