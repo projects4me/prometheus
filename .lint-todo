@@ -388,3 +388,4 @@ remove|ember-template-lint|no-at-ember-render-modifiers|47|8|47|8|a6aecd3fa17f97
 remove|ember-template-lint|no-at-ember-render-modifiers|3|2|3|2|dff3f9ec1ef5604778bf1fbe6ddeb535214f7509|1794614400000|||app/components/app-ui/gantt-chart/issue-details-panel.hbs
 remove|ember-template-lint|no-at-ember-render-modifiers|4|2|4|2|4c3d229865fd52356fe8ad3a1a86fa94c5bd68ed|1794614400000|||app/components/app-ui/gantt-chart/issue-details-panel.hbs
 remove|ember-template-lint|no-unsupported-role-attributes|6|10|6|10|14037998d96d15fda934d704d471bd260b8fba70|1794614400000|||app/components/app-ui/task-board.hbs
+remove|ember-template-lint|no-at-ember-render-modifiers|1|20|1|20|148e686ac76ab13783012df62a5bfae91e309a09|1794614400000|||app/components/app-layouts/application-wrapper.hbs
