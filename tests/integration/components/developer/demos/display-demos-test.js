@@ -31,6 +31,24 @@ module('Integration | Component | developer/demos/display', function (hooks) {
 		assert.dom('[data-demo-avatar-selected] [data-test-avatar-initials]').exists();
 	});
 
+	test('icon shows a set of icons with each argument and the controls change them', async function (assert) {
+		await render(hbs`<Developer::Demos::Icon @entry={{this.entry}} />`);
+		assert.dom('[data-test-demo-icon]').exists({ count: 12 });
+		assert.dom('[data-demo-icon-row="users"] [data-test-demo-icon]').hasClass('fa-users');
+		assert.dom('[data-test-demo-icon-size="5x"]').hasClass('fa-5x');
+		assert.dom('[data-test-demo-icon-spin]').hasClass('fa-spin');
+		assert.dom('[data-test-demo-icon-labelled] .sr-only').hasText('Delete');
+		assert.dom('[data-test-demo-icon-passthrough]').hasClass('fa-times');
+		assert.dom('[data-test-demo-icon-passthrough]').hasClass('text-danger');
+
+		await click('[data-control-icon-size] [data-size="2x"]');
+		await click('[data-control-icon-fixed-width]');
+		await click('[data-control-icon-spin]');
+		assert.dom('[data-demo-icon-row="cog"] [data-test-demo-icon]').hasClass('fa-2x');
+		assert.dom('[data-demo-icon-row="cog"] [data-test-demo-icon]').hasClass('fa-fw');
+		assert.dom('[data-demo-icon-row="cog"] [data-test-demo-icon]').hasClass('fa-spin');
+	});
+
 	test('status label shows every status', async function (assert) {
 		await render(hbs`<Developer::Demos::StatusLabel @entry={{this.entry}} />`);
 		assert.dom('[data-test-demo-status]').exists({ count: 8 });

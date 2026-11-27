@@ -1,0 +1,20 @@
+{
+  "name": "AppUi::Icon",
+  "component": "app-ui/icon",
+  "doc": "app-ui-icon.md",
+  "description": "One icon, rendered as today's Font Awesome 4 markup (an i element with fa classes), hidden from assistive technology unless it has a label. Every icon goes through it so the icon set can be replaced in one place.",
+  "arguments": {
+    "name": { "type": "string", "required": true, "description": "The bare Font Awesome 4 name (users); a leading fa- is stripped" },
+    "fixedWidth": { "type": "boolean", "required": false, "default": false, "description": "Adds fa-fw, a fixed width for icons in lists and menus" },
+    "spin": { "type": "boolean", "required": false, "default": false, "description": "Adds fa-spin" },
+    "size": { "type": "string", "required": false, "description": "lg, 2x, 3x, 4x or 5x; any other value is ignored" },
+    "label": { "type": "string", "required": false, "description": "The text read by assistive technology; with it the icon is not aria-hidden and holds a sr-only span" }
+  },
+  "events": {},
+  "blocks": {},
+  "variants": [
+    { "name": "decorative", "description": "An icon next to text that says the same", "arguments": ["name"] },
+    { "name": "labelled", "description": "An icon alone, as the only content of a control", "arguments": ["name", "label"] },
+    { "name": "loading", "description": "A spinning icon while something loads", "arguments": ["name", "spin", "fixedWidth"] }
+  ]
+}

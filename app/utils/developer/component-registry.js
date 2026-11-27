@@ -178,6 +178,17 @@ export const ENTRIES = [
         variants: ['default', 'sm', 'xs']
     },
     {
+        name: 'icon',
+        label: 'Icon',
+        group: 'Display',
+        status: 'experimental',
+        summary: 'AppUi::Icon, one icon: today the Font Awesome 4 markup, hidden from screen readers unless labelled.',
+        usedIn: [],
+        demo: 'developer/demos/icon',
+        doc: 'app-ui-icon.md',
+        variants: ['decorative', 'labelled', 'loading']
+    },
+    {
         name: 'status-label',
         label: 'Status',
         group: 'Display',

@@ -1,0 +1,44 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <h4>Icons</h4>
+    <ul class="list-unstyled" data-demo-icon-set>
+      {{#each this.names as |name|}}
+        <li data-demo-icon-row={{name}}>
+          <AppUi::Icon @name={{name}} @fixedWidth={{this.fixedWidth}} @spin={{this.spin}} @size={{this.size}} data-test-demo-icon />
+          <code>{{name}}</code>
+        </li>
+      {{/each}}
+    </ul>
+    <h4>Sizes</h4>
+    <p data-demo-icon-sizes>
+      {{#each this.sizes as |size|}}
+        <AppUi::Icon @name="users" @size={{size}} data-test-demo-icon-size={{size}} />
+      {{/each}}
+    </p>
+    <h4>Spinning</h4>
+    <p data-demo-icon-spin><AppUi::Icon @name="refresh" @spin={{true}} @fixedWidth={{true}} data-test-demo-icon-spin /> Loading</p>
+    <h4>Labelled</h4>
+    <p data-demo-icon-labelled>
+      <button type="button" class="btn btn-default btn-sm"><AppUi::Icon @name="trash" @label="Delete" data-test-demo-icon-labelled /></button>
+    </p>
+    <h4>Prefixed name and passed classes</h4>
+    <p data-demo-icon-passthrough><AppUi::Icon @name="fa-times" class="text-danger" title="Remove" data-test-demo-icon-passthrough /></p>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Size</label>
+      <div class="btn-group" data-control-icon-size>
+        <button type="button" class="btn btn-default {{unless this.size 'active'}}" data-size="none" {{on "click" (fn this.setSize null)}}>none</button>
+        {{#each this.sizes as |size|}}
+          <button type="button" class="btn btn-default {{if (eq size this.size) 'active'}}" data-size={{size}} {{on "click" (fn this.setSize size)}}>{{size}}</button>
+        {{/each}}
+      </div>
+    </div>
+    <FormFields::FieldCheckbox @label="Fixed width" @checked={{this.fixedWidth}} @select={{fn this.toggle "fixedWidth"}} data-control-icon-fixed-width />
+    <FormFields::FieldCheckbox @label="Spin" @checked={{this.spin}} @select={{fn this.toggle "spin"}} data-control-icon-spin />
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-icon.md" />
+  </:docs>
+</Developer::Entry>
