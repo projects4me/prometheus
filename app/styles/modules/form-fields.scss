@@ -21,7 +21,7 @@
     padding: 1rem 1rem 1rem 1rem;
     display: block;
     border: none;
-    border-bottom: 0.1rem solid #999;
+    border-bottom: 0.1rem solid var(--p4m-color-text-muted);
     font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
   }
@@ -29,7 +29,7 @@
   .count,
   .error {
     font-size: 1rem;
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
   .success {
     font-size: 1rem;
@@ -38,7 +38,7 @@
   /* LABEL ======================================= */
 
   .floating-label {
-    color: #999;
+    color: var(--p4m-color-text-muted);
     font-size: 1.4rem;
     font-weight: normal;
     pointer-events: none;
@@ -56,12 +56,12 @@
 
     [data-label-info="btn"] {
       margin-left: 0.3rem;
-      color: #5bc0de;
+      color: var(--p4m-teal-385);
     }
 
     [data-label-info="btn"]:hover {
       cursor: pointer;
-      color: #5497ab;
+      color: var(--p4m-teal-500);
     }
 
     div {
@@ -76,11 +76,11 @@
 
       p {
         position: relative;
-        background-color: #5bc0de7d;
+        background-color: color-mix(in srgb, var(--p4m-teal-385) 49.0196%, transparent);
         padding: 0.3rem 0.8rem;
         border-radius: 0.4rem;
         font-size: 1.2rem;
-        border: 1px solid #5497ab;
+        border: 1px solid var(--p4m-teal-500);
         z-index: 10;
         max-height: 5rem;
         overflow-y: auto;
@@ -99,7 +99,7 @@
   .multiselect-input ~ [data-form-field="label"] > .floating-label,
   .form-control[readonly] ~ [data-form-field="label"] > .floating-label {
     font-size: 1.4rem;
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
 
   .select-input,
@@ -115,11 +115,11 @@
       padding: 0rem;
       font-size: 1.4rem;
       line-height: 1.42857;
-      color: #555555;
-      background-color: #fff;
+      color: var(--p4m-grey-665);
+      background-color: var(--p4m-color-surface);
       background-image: none;
       border: none;
-      border-radius: 0rem;
+      border-radius: var(--p4m-radius-none);
       -webkit-box-shadow: none;
       box-shadow: none;
       -webkit-transition: none;
@@ -140,7 +140,7 @@
     width: 0;
     bottom: 0.1rem;
     position: absolute;
-    background: $highlightColor;
+    background: var(--p4m-color-brand-strong);
     transition: opacity 2s ease-in;
     -moz-transition: opacity 2s ease-in;
     -webkit-transition: opacity 2s ease-in;
@@ -167,28 +167,28 @@
 
   .checkbox-primary input[type="checkbox"]:checked + label::before,
   .checkbox-primary input[type="radio"]:checked + label::before {
-    background-color: $primaryColor;
-    border-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
+    border-color: var(--p4m-color-brand);
   }
 
   .radio-primary input[type="radio"]:checked + label::before {
-    border-color: $primaryColor;
+    border-color: var(--p4m-color-brand);
   }
 
   .radio-primary input[type="radio"]:checked + label::after {
-    background-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
   }
 }
 
 /* FormFields::FieldCheckbox (labelled): crimson and square, with or without a .form-field ancestor */
 .form-checkbox {
   input[type="checkbox"]:checked + label::before {
-    background-color: $primaryColor;
-    border-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
+    border-color: var(--p4m-color-brand);
   }
 
   input[type="checkbox"]:focus + label::before {
-    outline: 1px solid $primaryColor;
+    outline: 1px solid var(--p4m-color-brand);
     outline-offset: 1px;
   }
 
@@ -198,7 +198,7 @@
   }
 
   label::before {
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
   }
 
   /* @size="sm": a 14px box, matching the list checkboxes (fa-square-o) */
@@ -253,14 +253,14 @@
     .floating-label {
       top: -2rem;
       font-size: 1.4rem;
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
   }
   }
 }
 
 .calendar-table {
-  box-shadow: 1rem 1rem 1rem $borderColor;
+  box-shadow: 1rem 1rem 1rem var(--p4m-color-border);
 }
 
 .calendar-table:after {
@@ -280,35 +280,35 @@
     margin-right: 0.5rem;
   }
   .fa-ban {
-    color: #d33724;
+    color: var(--p4m-color-danger);
   }
   .fa-angle-double-up {
-    color: #d33724;
+    color: var(--p4m-color-danger);
     font-weight: bold;
   }
   .fa-arrow-up {
-    color: #e98a7e;
+    color: var(--p4m-color-status-closed);
   }
   .fa-dot-circle-o {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
   .fa-arrow-down {
-    color: #5ac594;
+    color: var(--p4m-color-status-done);
   }
   .fa-angle-double-down {
-    color: #00a65a;
+    color: var(--p4m-green-675);
     font-weight: bold;
   }
 }
 
 .btn {
-  border-radius: 0rem;
+  border-radius: var(--p4m-radius-none);
 }
 
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {
   from {
-    background: $primaryColor;
+    background: var(--p4m-color-brand);
   }
   to {
     width: 0;
@@ -317,7 +317,7 @@
 }
 @-moz-keyframes inputHighlighter {
   from {
-    background: $primaryColor;
+    background: var(--p4m-color-brand);
   }
   to {
     width: 0;
@@ -326,7 +326,7 @@
 }
 @keyframes inputHighlighter {
   from {
-    background: $primaryColor;
+    background: var(--p4m-color-brand);
   }
   to {
     width: 0;
@@ -335,10 +335,10 @@
 }
 
 .calendar-table .active {
-  border: 0.1rem solid $primaryColor;
+  border: 0.1rem solid var(--p4m-color-brand);
   border-radius: 0.3rem;
   outline: none;
-  box-shadow: 0 0 1rem $primaryColor;
+  box-shadow: 0 0 1rem var(--p4m-color-brand);
 }
 
 .calendar-table .table-condensed .available:hover {
@@ -347,18 +347,18 @@
 
 .dropzone-field {
   p {
-    border: 0.3rem dashed $borderColor;
+    border: 0.3rem dashed var(--p4m-color-border);
     text-align: center;
     margin: 0rem;
     padding: 2rem;
   }
 
   .dropzone-uploading {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
 
   .dropzone-active {
-    border-color: $primaryColor;
+    border-color: var(--p4m-color-brand);
   }
 
   .dropzone-ready {
@@ -408,7 +408,7 @@
 
       .form-control {
         height: 3rem;
-        border-radius: 0;
+        border-radius: var(--p4m-radius-none);
       }
 
       .input-group-addon {
@@ -458,7 +458,7 @@ $toggle-control-ease: ease-in;
   }
 
   input:checked ~ .control {
-    background-color: $secondaryColor;
+    background-color: var(--p4m-color-link);
 
     &:after {
       transform: translateX(var(--toggle-translate-x));
@@ -472,7 +472,7 @@ $toggle-control-ease: ease-in;
     height: var(--toggle-height);
     width: var(--toggle-width);
     border-radius: var(--toggle-radius);
-    background-color: $mediumColor;
+    background-color: var(--p4m-color-text-muted);
     transition: background-color $toggle-control-speed $toggle-control-ease;
 
     &:after {
@@ -483,7 +483,7 @@ $toggle-control-ease: ease-in;
       width: var(--toggle-control-size);
       height: var(--toggle-control-size);
       border-radius: var(--toggle-radius);
-      background: $backgroundColor;
+      background: var(--p4m-color-surface);
       transform: translateX(0);
       transition: transform $toggle-control-speed $toggle-control-ease;
     }
@@ -512,7 +512,7 @@ $toggle-control-ease: ease-in;
     border: none;
 
     &:hover {
-      border-bottom: 0.1rem solid #999;
+      border-bottom: 0.1rem solid var(--p4m-color-text-muted);
     }
 
     &:focus ~ span.edit {
@@ -538,7 +538,7 @@ $toggle-control-ease: ease-in;
 /* Native date input: keep the field box, tint the browser calendar icon */
 .field-date input[type="date"] {
   min-height: 3.6rem;
-  border-radius: 0;
+  border-radius: var(--p4m-radius-none);
 
   &::-webkit-calendar-picker-indicator {
     cursor: pointer;
@@ -556,7 +556,7 @@ $toggle-control-ease: ease-in;
 
   select {
     flex: 1;
-    border-radius: 0;
+    border-radius: var(--p4m-radius-none);
     margin-right: 1rem;
 
     &:last-child {
