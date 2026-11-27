@@ -13,7 +13,7 @@
 
 .cropper-view-box,
 .cropper-face {
-    border-radius: 50%;
+    border-radius: var(--p4m-radius-round);
 }
 
 .email-password-hint {
@@ -59,13 +59,13 @@
     .user-timezone {
         margin-top: 1rem;
         font-size: 1.2rem;
-        color: #555;
+        color: var(--p4m-grey-665);
 
         .fa-birthday-cake,
         .fa-language,
         .fa-clock-o {
             margin-right: 6px;
-            color: #aaa;
+            color: var(--p4m-grey-335);
         }
 
         .user-meta-label {
@@ -106,7 +106,7 @@
             opacity: 0;
             transform: translate(-50%, -50%);
             position: absolute;
-            color: grey;
+            color: var(--p4m-grey-500);
             font-size: 2rem;
         }
 

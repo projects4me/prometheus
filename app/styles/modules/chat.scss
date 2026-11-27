@@ -16,7 +16,7 @@
   z-index: 500;
 
   .direct-chat-primary{
-    border: 0.1rem solid $primaryColor;
+    border: 0.1rem solid var(--p4m-color-brand);
     border-top: 0.3rem solid;
     border-radius: 0.3rem 0.3rem 0rem 0rem;
     bottom: 0;
@@ -25,7 +25,7 @@
   }
 
   .badge{
-    background: $primaryColor;
+    background: var(--p4m-color-brand);
   }
 
 
@@ -35,12 +35,12 @@
 
 
   .direct-chat-primary .right > .direct-chat-text{
-    background-color: $primaryColor;
-    border-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
+    border-color: var(--p4m-color-brand);
   }
 
   .direct-chat-primary .right > .direct-chat-text:after, .direct-chat-primary .right > .direct-chat-text:before{
-      border-left-color: $primaryColor;
+      border-left-color: var(--p4m-color-brand);
   }
 
   .chat-box{

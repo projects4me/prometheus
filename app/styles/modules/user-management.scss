@@ -52,22 +52,22 @@
     }
 
     .account-status-active {
-      color: $successColor;
+      color: var(--p4m-color-success);
       background-color: inherit;
     }
 
     .account-status-inactive {
-      color: $dangerColor;
+      color: var(--p4m-color-danger);
       background-color: inherit;
     }
 
     .account-status-invited {
-      color: $warningColor;
+      color: var(--p4m-color-warning);
       background-color: inherit;
     }
 
     .account-status-disabled {
-      color: $lightColor;
+      color: var(--p4m-color-text-disabled);
       background-color: inherit;
     }
 
@@ -93,7 +93,7 @@
       }
 
       i {
-        color: #444;
+        color: var(--p4m-grey-735);
         font-size: 1.5rem;
       }
     }

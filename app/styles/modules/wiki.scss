@@ -14,7 +14,7 @@
 
 .wiki-list {
   .node-selected {
-    background-color: $primaryColor !important;
+    background-color: var(--p4m-color-brand) !important;
   }
 
   ul {
@@ -77,12 +77,12 @@
   cursor: pointer;
 
   .fa {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
     font-size: 1.5rem;
   }
   .fa:hover {
     font-size: 1.7rem;
-    text-shadow: 2px 2px 4px rgba(179, 36, 79, 0.5);
+    text-shadow: 2px 2px 4px color-mix(in srgb, var(--p4m-color-brand) 50%, transparent);
     font-weight: bold;
   }
 }
