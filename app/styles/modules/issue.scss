@@ -664,7 +664,7 @@
   &.assignee-select-compact {
     display: inline-block;
 
-    [data-toggle="dropdown"] {
+    .assignee-select-toggle {
       cursor: pointer;
 
       .fa-caret-down {

@@ -4,12 +4,12 @@
   ...attributes
 >
   {{#if @compact}}
-    <div data-toggle="dropdown" role="button" tabindex="0" data-issue-assignee-toggle>
+    <div class="assignee-select-toggle" role="button" tabindex="0" data-issue-assignee-toggle {{dropdown-toggle}}>
       <AppUi::Avatar @user={{@issue.assignedTo}} @size="s" />
       <i class="fa fa-caret-down"></i>
     </div>
   {{else}}
-    <div class="flex-row flex-ai-c flex-jc-c" data-toggle="dropdown" role="button" tabindex="0">
+    <div class="flex-row flex-ai-c flex-jc-c assignee-select-toggle" role="button" tabindex="0" {{dropdown-toggle}}>
       <span class="users-list-name" data-issue-assignee>
         {{@issue.assignedTo.name}}
       </span>
