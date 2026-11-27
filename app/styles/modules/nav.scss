@@ -106,3 +106,37 @@ $sidebarWidth: 200px;
     transform: translate(0, 0);
   }
 }
+
+/*
+ * Treeview submenus open and close through the menu-open class (AppUi::NavbarItems), not AdminLTE's
+ * slideUp/slideDown. AdminLTE shows an active item's submenu even when closed; menu-open decides here.
+ * The height slides over AdminLTE's 500ms where the browser can transition to height: auto
+ * (interpolate-size); elsewhere it opens and closes at once. The collapsed icon strip keeps
+ * AdminLTE's hover flyout, so these rules stay out of it.
+ */
+@mixin treeview-slide {
+  .sidebar-menu .treeview > .treeview-menu {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    interpolate-size: allow-keywords;
+    transition: height 0.5s ease, visibility 0s linear 0.5s;
+  }
+
+  .sidebar-menu .treeview.menu-open > .treeview-menu {
+    height: auto;
+    visibility: visible;
+    transition: height 0.5s ease, visibility 0s linear 0s;
+  }
+}
+
+body:not(.sidebar-collapse) {
+  @include treeview-slide;
+}
+
+@media (max-width: 767px) {
+  body.sidebar-collapse {
+    @include treeview-slide;
+  }
+}

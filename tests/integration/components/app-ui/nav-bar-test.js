@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import CurrentUserStub from '../../stub-services/current-user-stub';
@@ -110,5 +110,54 @@ module('Integration | Component | nav-bar', function (hooks) {
         assert.dom('li[data-navigation-module="Agents"]').doesNotExist();
         assert.dom('li[data-navigation-module="Settings"]').exists();
         assert.dom('li[data-navigation-module="Developer"]').exists();
+    });
+
+    module('treeview submenus', function (hooks) {
+        hooks.beforeEach(function () {
+            this.owner.register('service:tracked-project', class extends Service {
+                shortCode = 'aprom';
+                workspaceShortCode = 'agw';
+                getProjectId() { return '1'; }
+            });
+            this.mini = false;
+            let context = this;
+            this.owner.register('service:sidebar', class extends Service {
+                get isMini() { return context.mini; }
+                close() {}
+            });
+        });
+
+        const project = '[data-navigation-module="Project"]';
+        const issue = '[data-navigation-module="Issue"]';
+
+        test('a click opens a submenu and a second click closes it', async function (assert) {
+            await render(hbs`<AppUi::NavBar />`);
+            assert.dom(project).doesNotHaveClass('menu-open');
+
+            await click(`${project} > a`);
+            assert.dom(project).hasClass('menu-open');
+
+            await click(`${project} > a`);
+            assert.dom(project).doesNotHaveClass('menu-open');
+        });
+
+        test('one submenu is open at a time across the groups', async function (assert) {
+            await render(hbs`<AppUi::NavBar />`);
+
+            await click(`${project} > a`);
+            await click(`${issue} > a`);
+
+            assert.dom(issue).hasClass('menu-open');
+            assert.dom(project).doesNotHaveClass('menu-open');
+        });
+
+        test('nothing happens while the sidebar is collapsed to its icon strip', async function (assert) {
+            this.mini = true;
+            await render(hbs`<AppUi::NavBar />`);
+
+            await click(`${project} > a`);
+
+            assert.dom(project).doesNotHaveClass('menu-open');
+        });
     });
 });

@@ -7,8 +7,10 @@
     </a>
   </li>
 {{else if definition.actions}}
-  <li class="treeview {{if (is-active-route definition.route) 'active menu-open'}}" data-navigation-module={{module}}>
-    <a href={{this.hrefFor definition}}>
+  {{#let (is-active-route definition.route) as |active|}}
+  {{#let (this.isOpen module active) as |open|}}
+  <li class="treeview {{if active 'active'}} {{if open 'menu-open'}}" data-navigation-module={{module}}>
+    <a href={{this.hrefFor definition}} {{on "click" (prevent-default this.toggle module open)}}>
       <i class="fa fa-{{definition.icon}}"></i>
       <span>{{t definition.label}}</span>
       <span class="pull-right-container">
@@ -30,6 +32,8 @@
       {{/each-in}}
     </ul>
   </li>
+  {{/let}}
+  {{/let}}
 {{else}}
   <li class="treeview {{if (is-active-route definition.route) 'active'}}" data-navigation-module={{module}}>
     <a href={{this.hrefFor definition}} {{on "click" (prevent-default @navigate definition)}}>

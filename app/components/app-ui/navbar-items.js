@@ -38,6 +38,35 @@ export default class AppUiNavbarItemsComponent extends Component {
     };
 
     /**
+     * Whether an item's submenu is open: the one in `@openModule`, or the active route's item until a submenu
+     * has been toggled (`@openModule` undefined).
+     *
+     * @method isOpen
+     * @param {String} module The navigation module of the item
+     * @param {Boolean} active Whether the item's route is active
+     * @return {Boolean}
+     * @public
+     */
+    isOpen = (module, active) => {
+        if (this.args.openModule === undefined) {
+            return Boolean(active);
+        }
+        return this.args.openModule === module;
+    };
+
+    /**
+     * Opens or closes an item's submenu through `@toggleMenu`.
+     *
+     * @method toggle
+     * @param {String} module The navigation module of the item
+     * @param {Boolean} open Whether its submenu is open now
+     * @public
+     */
+    toggle = (module, open) => {
+        this.args.toggleMenu?.(module, open);
+    };
+
+    /**
      * Whether an item is shown disabled: a project item while no project is selected (`@disabled`), or a
      * workspace item while the selected project's workspace is not known.
      *

@@ -61,6 +61,43 @@ export default class NavBarComponent extends AppComponent {
     @service router;
 
     /**
+     * The sidebar service closes the phone sidebar after navigation and says whether the sidebar is collapsed.
+     *
+     * @property sidebar
+     * @type Ember.Service
+     * @for NavBar
+     * @private
+     */
+    @service sidebar;
+
+    /**
+     * The module whose submenu is open. Until a submenu is toggled it is undefined, and the active route's item
+     * shows its submenu open. One submenu is open at a time across the whole sidebar menu.
+     *
+     * @property openModule
+     * @type String|null|undefined
+     * @for NavBar
+     * @public
+     */
+    @tracked openModule;
+
+    /**
+     * Opens a submenu, closing the open one, or closes it when it is already open. Nothing happens while the
+     * sidebar is collapsed to its icon strip, where submenus show on hover.
+     *
+     * @method toggleMenu
+     * @param {String} module The navigation module of the item
+     * @param {Boolean} isOpen Whether its submenu is open now
+     * @public
+     */
+    @action toggleMenu(module, isOpen) {
+        if (this.sidebar.isMini) {
+            return;
+        }
+        this.openModule = isOpen ? null : module;
+    }
+
+    /**
      * This function fetches the navigation metaData and makes it available for display
      *
      * @method constructor

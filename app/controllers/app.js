@@ -51,6 +51,15 @@ export default class AppController extends PrometheusController {
     @service acl;
 
     /**
+     * The sidebar service: a tap on the page outside the open phone sidebar closes it.
+     *
+     * @property sidebar
+     * @type Ember.Service
+     * @for AppController
+     */
+    @service sidebar;
+
+    /**
      * Hermes socket client.
      *
      * @property hermes
