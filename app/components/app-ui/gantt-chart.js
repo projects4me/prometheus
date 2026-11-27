@@ -159,6 +159,17 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Whether the grid has dropped its Who column (it goes last), so the bars carry the assignee's photo instead
+	 *
+	 * @property whoHidden
+	 * @type Boolean
+	 * @public
+	 */
+	get whoHidden() {
+		return visibleColumns(this.listWidth) === 0;
+	}
+
+	/**
 	 * Sets the issue list's width (limited) and remembers it
 	 *
 	 * @method setGridWidth

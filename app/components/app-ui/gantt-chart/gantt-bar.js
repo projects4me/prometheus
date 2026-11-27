@@ -466,6 +466,24 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
+     * Whether the assignee's photo sits at the right end of the bar: a task with an assignee, when the grid's Who
+     * column is hidden (`@whoHidden`, or a phone) and the bar is wide enough for the photo and a few px
+     *
+     * @property showAssigneePhoto
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get showAssigneePhoto() {
+        return (
+            this.args.type === 'task' &&
+            Boolean(this.args.issue?.assignedTo) &&
+            Boolean(this.args.whoHidden || this.viewport.isPhone) &&
+            this.effectiveBarWidth >= this.minInnerLabelWidth
+        );
+    }
+
+    /**
      * Whether the label sits after the bar: milestones only
      *
      * @property showAfterLabel

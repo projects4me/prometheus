@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, triggerKeyEvent, triggerEvent, focus } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { htmlSafe } from '@ember/template';
+import Service from '@ember/service';
 import CurrentUserStub from '../../../stub-services/current-user-stub';
 
 module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks) {
@@ -207,5 +208,69 @@ module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks
         assert.dom('[data-test-gantt-bar]').doesNotHaveClass('selected');
         assert.dom('[data-test-gantt-resize-handle]').doesNotExist();
         assert.dom('.connector-dot-end').doesNotExist();
+    });
+
+    const renderAssigneeBar = (context, endDate = '2026-11-12') => {
+        context.set('endDate', endDate);
+        return render(hbs`<div class="gantt-chart" style={{this.rootStyle}}><AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42 - Fix login"
+            @startDate="2026-11-10"
+            @endDate={{this.endDate}}
+            @timelineStart="2026-11-01"
+            @dayWidth={{30}}
+            @whoHidden={{this.whoHidden}}
+            @updateDependencyPositions={{this.noop}}
+        /></div>`, context);
+    };
+
+    test('the assignee photo sits at the bar end while the Who column is hidden, and leaves when it returns', async function (assert) {
+        this.issue = { ...this.issue, assignedTo: { id: '3', name: 'Ada Lovelace' } };
+        this.whoHidden = true;
+        await renderAssigneeBar(this);
+        assert.dom('[data-test-gantt-bar-assignee] [data-test-avatar]').hasAttribute('data-size', 'xs');
+        assert.dom('[data-test-gantt-bar]').hasClass('has-assignee-photo');
+
+        this.set('whoHidden', false);
+        assert.dom('[data-test-gantt-bar-assignee]').doesNotExist();
+        assert.dom('[data-test-gantt-bar]').doesNotHaveClass('has-assignee-photo');
+    });
+
+    test('a phone shows the assignee photo on the bar', async function (assert) {
+        this.owner.register('service:viewport', class extends Service { isPhone = true; });
+        this.issue = { ...this.issue, assignedTo: { id: '3', name: 'Ada Lovelace' } };
+        this.whoHidden = false;
+        await renderAssigneeBar(this);
+        assert.dom('[data-test-gantt-bar-assignee]').exists();
+    });
+
+    test('a bar too short for the photo, or without an assignee, shows none', async function (assert) {
+        this.issue = { ...this.issue, assignedTo: { id: '3', name: 'Ada Lovelace' } };
+        this.whoHidden = true;
+        await renderAssigneeBar(this, '2026-11-10');
+        // one day is 30px wide here; a bar under 28px is simulated by a narrower day width below
+        assert.dom('[data-test-gantt-bar-assignee]').exists('a 30px bar is wide enough');
+
+        this.set('issue', { ...this.issue, assignedTo: null });
+        assert.dom('[data-test-gantt-bar-assignee]').doesNotExist('no assignee: no photo');
+    });
+
+    test('a bar narrower than 28px shows no photo', async function (assert) {
+        this.issue = { ...this.issue, assignedTo: { id: '3', name: 'Ada Lovelace' } };
+        this.whoHidden = true;
+        await render(hbs`<div class="gantt-chart" style={{this.rootStyle}}><AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42 - Fix login"
+            @startDate="2026-11-10"
+            @endDate="2026-11-10"
+            @timelineStart="2026-11-01"
+            @dayWidth={{20}}
+            @whoHidden={{this.whoHidden}}
+            @updateDependencyPositions={{this.noop}}
+        /></div>`);
+        assert.dom('[data-test-gantt-bar]').exists();
+        assert.dom('[data-test-gantt-bar-assignee]').doesNotExist();
     });
 });
