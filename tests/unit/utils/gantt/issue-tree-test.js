@@ -49,4 +49,26 @@ module('Unit | Utility | gantt-helpers | issue tree', function () {
         assert.deepEqual(ids(rows).sort(), ['a', 'b', 's']);
         assert.ok(getIssueTree(milestone, new Set(['a', 'b'])).length <= 3, 'terminates when collapsed');
     });
+
+    test('rows follow planned start, with undated issues last', function (assert) {
+        const numbered = (id, number, start, parentId = null) => ({
+            id, issueNumber: number, parentId, startDate: start, endDate: start ? '2026-12-30' : null
+        });
+        const milestone = { issues: [numbered('u', 1, null), numbered('b', 2, '2026-12-10'), numbered('a', 3, '2026-12-01')] };
+        assert.deepEqual(ids(getIssueTree(milestone)), ['a', 'b', 'u']);
+        const schedule = new Map([['a', { plannedStart: new Date(2026, 11, 20) }]]);
+        assert.deepEqual(ids(getIssueTree(milestone, null, { schedule })), ['b', 'a', 'u'], 'the planned start wins');
+    });
+
+    test('a blocked issue renders below its blocker even with an earlier number', function (assert) {
+        const numbered = (id, number, parentId = null) => ({
+            id, issueNumber: number, parentId, startDate: '2026-12-01', endDate: '2026-12-30'
+        });
+        const blocksLinks = [{ sourceId: 'later', targetId: 'first' }];
+        const milestone = { issues: [numbered('first', 1), numbered('later', 2), numbered('kid', 4, 'p'), numbered('p', 3)] };
+        assert.deepEqual(ids(getIssueTree(milestone, null, { blocksLinks })), ['later', 'first', 'p', 'kid']);
+        const siblings = { issues: [numbered('p', 1), numbered('c2', 3, 'p'), numbered('c1', 2, 'p')] };
+        const nested = [{ sourceId: 'c2', targetId: 'c1' }];
+        assert.deepEqual(ids(getIssueTree(siblings, null, { blocksLinks: nested })), ['p', 'c2', 'c1']);
+    });
 });

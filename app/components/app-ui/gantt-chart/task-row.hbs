@@ -24,6 +24,8 @@
     </div>
     <div class="gantt-grid-cell gantt-grid-date" data-test-gantt-grid-start>{{if this.hasDates (format-date date=@issue.startDate format="D MMM") "—"}}</div>
     <div class="gantt-grid-cell gantt-grid-date" data-test-gantt-grid-end>{{if this.hasDates (format-date date=@issue.endDate format="D MMM") "—"}}</div>
+    <div class="gantt-grid-cell gantt-grid-est" data-test-gantt-grid-est>{{or this.estimateText "—"}}</div>
+    <div class="gantt-grid-cell gantt-grid-planned" data-test-gantt-grid-planned><em>{{or this.plannedStartText "—"}}</em></div>
   </div>
 {{else}}
   <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">

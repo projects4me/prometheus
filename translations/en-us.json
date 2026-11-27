@@ -442,6 +442,8 @@
         "who": "Who",
         "start": "Start",
         "end": "End",
+        "est": "Est",
+        "plannedStart": "Planned start",
         "overdue": "Overdue",
         "done": "Done",
         "noDates": "No dates"

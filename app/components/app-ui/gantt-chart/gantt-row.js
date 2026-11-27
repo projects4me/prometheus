@@ -64,7 +64,7 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
-     * The issues as tree rows (`{ issue, depth, hasChildren, isCollapsed }`): children follow their parent
+     * The issues as tree rows (`{ issue, depth, hasChildren, isCollapsed }`): children follow their parent, each level ordered by planned start with blockers first
      *
      * @property treeRows
      * @type Array
@@ -72,7 +72,13 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get treeRows() {
-        return getIssueTree(this.args.milestone, this.args.collapsedIssues);
+        const blocksLinks = (this.args.links?.links ?? [])
+            .filter((link) => link.type === 'blocks')
+            .map((link) => ({
+                sourceId: link.belongsTo('sourceIssue').id(),
+                targetId: link.belongsTo('targetIssue').id()
+            }));
+        return getIssueTree(this.args.milestone, this.args.collapsedIssues, { schedule: this.args.schedule, blocksLinks });
     }
 
     /**
