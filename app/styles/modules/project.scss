@@ -94,7 +94,7 @@
   padding: 0;
 
   li {
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--p4m-grey-45);
     padding: 1rem;
 
     .user-block .app-ui-avatar {
@@ -144,7 +144,7 @@
   }
 
   li {
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid var(--p4m-grey-45);
     padding: 1rem;
   }
 
@@ -184,7 +184,7 @@
   padding-left: 1rem;
 
   i {
-    color: $dangerColor;
+    color: var(--p4m-color-danger);
     margin-top: 0.1rem;
   }
 
@@ -196,53 +196,53 @@
 
 .project {
   .fa-ban {
-    color: #d33724;
+    color: var(--p4m-color-danger);
   }
   .fa-angle-double-up {
-    color: #d33724;
+    color: var(--p4m-color-danger);
     font-weight: bold;
   }
   .fa-arrow-up {
-    color: #e98a7e;
+    color: var(--p4m-color-status-closed);
   }
   .fa-dot-circle-o {
-    color: $primaryColor;
+    color: var(--p4m-color-brand);
   }
   .fa-arrow-down {
-    color: #5ac594;
+    color: var(--p4m-color-status-done);
   }
   .fa-angle-double-down {
-    color: #00a65a;
+    color: var(--p4m-green-675);
     font-weight: bold;
   }
 
   .done,
   .complete {
-    background-color: #5ac594 !important;
+    background-color: var(--p4m-color-status-done) !important;
   }
 
   .closed {
-    background-color: #e98a7e;
+    background-color: var(--p4m-color-status-closed);
   }
 
   .deferred,
   .pending,
   .feedback {
-    background-color: #f7bf65;
+    background-color: var(--p4m-color-status-feedback);
   }
 
   .new {
-    background-color: #80b5d3;
+    background-color: var(--p4m-color-status-new);
   }
 
   .in_progress {
-    background-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
   }
 
   .no-entry {
     text-align: center;
     margin: 2rem 0rem;
-    color: $lightColor;
+    color: var(--p4m-color-text-disabled);
     font-style: italic;
   }
 
@@ -326,13 +326,13 @@
   }
 
   .member-account-status-inactive {
-    color: $dangerColor;
-    background-color: rgba($dangerColor, 0.12);
+    color: var(--p4m-color-danger);
+    background-color: color-mix(in srgb, var(--p4m-color-danger) 12%, transparent);
   }
 
   .member-account-status-invited {
-    color: $warningColor;
-    background-color: rgba($warningColor, 0.12);
+    color: var(--p4m-color-warning);
+    background-color: color-mix(in srgb, var(--p4m-color-warning) 12%, transparent);
   }
 }
 
@@ -366,9 +366,9 @@
     flex: none;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    background-color: #e4e7ea;
-    border: 2px solid #fff;
+    border-radius: var(--p4m-radius-round);
+    background-color: var(--p4m-slate-95);
+    border: 2px solid var(--p4m-grey-0);
     font-size: 1.2rem;
     font-weight: bold;
     cursor: default;
@@ -388,19 +388,19 @@
     }
 
     a:hover {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     .btn-group > .btn-box-tool:hover > .fa {
-      color: $primaryColor;
+      color: var(--p4m-color-brand);
     }
 
     .dropdown-menu > li > a:hover {
-      background-color: $backgroundColor;
+      background-color: var(--p4m-color-surface);
     }
 
     .dropdown-menu li + li {
-      border-top: 0.1rem solid $borderColor;
+      border-top: 0.1rem solid var(--p4m-color-border);
     }
 
     .search-name {
