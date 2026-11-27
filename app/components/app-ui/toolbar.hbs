@@ -13,8 +13,8 @@
           @onClick={{this.toggleDropdown}}
           aria-haspopup="true"
           aria-expanded={{if this.isDropdownOpen "true" "false"}}
-          data-toggle="tooltip"
-          title="More actions"
+          {{tooltip "More actions"}}
+          aria-label="More actions"
         >
           <i class="fa fa-caret-down"></i>
         </AppUi::Button>

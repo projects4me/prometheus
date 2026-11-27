@@ -5,8 +5,7 @@
       type="button"
       class="btn btn-default btn-xs"
       data-test-pager-previous
-      data-toggle="tooltip"
-      title={{t "components.pager.previous"}}
+      {{tooltip (t "components.pager.previous")}}
       aria-label={{t "components.pager.previous"}}
       disabled={{this.isPreviousDisabled}}
       {{on "click" this.previous}}
@@ -15,8 +14,7 @@
       type="button"
       class="btn btn-default btn-xs"
       data-test-pager-next
-      data-toggle="tooltip"
-      title={{t "components.pager.next"}}
+      {{tooltip (t "components.pager.next")}}
       aria-label={{t "components.pager.next"}}
       disabled={{this.isNextDisabled}}
       {{on "click" this.next}}

@@ -2,14 +2,14 @@
   {{#each this.visibleMembers as |member|}}
     {{#if @linkToUser}}
       <a href="/app/user/{{member.id}}" data-member-link={{member.id}}>
-        <AppUi::Avatar @user={{member}} @size={{this.size}} class="member-avatar" title={{member.name}} data-toggle="tooltip" />
+        <AppUi::Avatar @user={{member}} @size={{this.size}} class="member-avatar" title="" {{tooltip member.name}} />
       </a>
     {{else}}
-      <AppUi::Avatar @user={{member}} @size={{this.size}} class="member-avatar" title={{member.name}} data-toggle="tooltip" />
+      <AppUi::Avatar @user={{member}} @size={{this.size}} class="member-avatar" title="" {{tooltip member.name}} />
     {{/if}}
   {{/each}}
   {{#if this.overflowCount}}
-    <span class="member-avatars-overflow member-avatars-overflow-{{this.size}}" title="{{this.overflowCount}} more members" data-toggle="tooltip">
+    <span class="member-avatars-overflow member-avatars-overflow-{{this.size}}" {{tooltip (concat this.overflowCount " more members")}}>
       +{{this.overflowCount}}
     </span>
   {{/if}}

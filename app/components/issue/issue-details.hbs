@@ -49,8 +49,8 @@
                     data-btn="ai-plan" 
                     type="button" 
                     class="btn btn-box-tool btn-no-outline" 
-                    data-toggle="tooltip" 
-                    title="{{t 'views.app.issue.planWithAi.title'}}" 
+                    {{tooltip (t 'views.app.issue.planWithAi.title')}} 
+                    aria-label={{t 'views.app.issue.planWithAi.title'}} 
                     @onClick={{this.showIssuePlanDialog}}
                   >
                   <svg xmlns="http://www.w3.org/2000/svg" width="78" height="76" viewBox="0 0 78 76" fill="none">
@@ -64,8 +64,8 @@
                     data-btn="edit" 
                     type="button" 
                     class="btn btn-box-tool btn-no-outline" 
-                    data-toggle="tooltip" 
-                    title="{{t 'global.form.edit'}}" 
+                    {{tooltip (t 'global.form.edit')}} 
+                    aria-label={{t 'global.form.edit'}} 
                     @onClick={{fn this.editIssue this.issue.issueNumber}} 
                     @aclContext="issue.update"
                   >
@@ -78,8 +78,8 @@
                     data-btn="watcher" 
                     type="button" 
                     class="btn btn-box-tool btn-no-outline" 
-                    data-toggle="tooltip" 
-                    title="{{t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching')}}" 
+                    {{tooltip (t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching'))}} 
+                    aria-label={{t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching')}} 
                     @onClick={{this.toggleWatcher}}
                     disabled={{this.isCoreMember}}
                   >
@@ -95,8 +95,8 @@
                       data-btn="add-watcher" 
                       type="button" 
                       class="btn btn-box-tool btn-no-outline btn-sm" 
-                      data-toggle="tooltip" 
-                      title="{{t 'views.app.issue.watcher.addWatchers'}}" 
+                      {{tooltip (t 'views.app.issue.watcher.addWatchers')}} 
+                      aria-label={{t 'views.app.issue.watcher.addWatchers'}} 
                       @onClick={{this.showAddWatcherDialog}}
                     >
                       <i class="fa fa-plus"></i>
@@ -110,8 +110,8 @@
                     data-btn="close" 
                     type="button" 
                     class="btn btn-box-tool btn-no-outline" 
-                    data-toggle="tooltip" 
-                    title="{{t 'views.app.issue.close'}}" 
+                    {{tooltip (t 'views.app.issue.close')}} 
+                    aria-label={{t 'views.app.issue.close'}} 
                     @onClick={{@closeIssueDetails}}>
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
@@ -379,7 +379,7 @@
               {{#if (gt this.issue.estimated.length 0)}}
                 {{#each this.issue.estimated as |timelog|}}
                   <li class="item" data-issue-estimate-id={{timelog.id}}>
-                    <div class="time-log-user" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                    <div class="time-log-user" {{tooltip timelog.createdUserName}}>
                       <AppUi::Avatar @user={{hash id=timelog.createdUser name=timelog.createdUserName}} @size="m" />
                     </div>
                     <div class="log-info">
@@ -387,8 +387,8 @@
                       <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{date-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{on "click" (fn this.showEditEstimateDialog timelog)}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        <a href="javascript:void(0);" {{on "click" (fn this.showEditEstimateDialog timelog)}} {{tooltip (t "global.form.edit")}} aria-label={{t "global.form.edit"}}><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} {{tooltip (t "global.form.delete")}} aria-label={{t "global.form.delete"}}><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
@@ -488,7 +488,7 @@
               {{#if (gt this.issue.spent.length 0)}}
                 {{#each this.issue.spent as |timelog|}}
                   <li class="item" data-issue-spent-id={{timelog.id}}>
-                    <div class="time-log-user" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                    <div class="time-log-user" {{tooltip timelog.createdUserName}}>
                       <AppUi::Avatar @user={{hash id=timelog.createdUser name=timelog.createdUserName}} @size="m" />
                     </div>
                     <div class="log-info">
@@ -496,8 +496,8 @@
                       <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{date-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{on "click" (fn this.showEditLogDialog timelog)}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        <a href="javascript:void(0);" {{on "click" (fn this.showEditLogDialog timelog)}} {{tooltip (t "global.form.edit")}} aria-label={{t "global.form.edit"}}><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} {{tooltip (t "global.form.delete")}} aria-label={{t "global.form.delete"}}><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
@@ -652,10 +652,10 @@
         {{#each this.availableProjectMembers as |member|}}
             <div class="member-item flex-column flex-ai-c" data-member-id={{member.id}}>
               <AppUi::Avatar @user={{member}} @size="s" />
-              <button type="button" class="btn btn-xs btn-success" {{on "click" (fn this.addWatcher member)}} data-toggle="tooltip" title="{{t 'views.app.issue.watcher.addWatcher'}}">
+              <button type="button" class="btn btn-xs btn-success" {{on "click" (fn this.addWatcher member)}} {{tooltip (t 'views.app.issue.watcher.addWatcher')}}>
                 <i class="fa fa-plus"></i>
               </button>
-              <p data-toggle="tooltip" title="{{member.name}}">{{member.name}}</p>
+              <p {{tooltip member.name}}>{{member.name}}</p>
             </div>
         {{/each}}
       {{else}}

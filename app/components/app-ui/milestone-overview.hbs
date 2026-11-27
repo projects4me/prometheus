@@ -36,12 +36,10 @@
         <div
           class="progress-bar"
           style={{progress-width this.progressPercent}}
-          data-toggle="tooltip"
-          title={{t
+          {{tooltip (t
             "views.app.project.detail.milestone.progress"
             closed=this.overview.closedIssues
-            total=this.totalIssues
-          }}
+            total=this.totalIssues)}}
         ></div>
       </div>
     </div>
