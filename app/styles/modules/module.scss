@@ -10,8 +10,8 @@
 
 .btn-success,
 .btn-success[disabled] {
-  background: $primaryColor;
-  border-color: $primaryColor;
+  background: var(--p4m-color-brand);
+  border-color: var(--p4m-color-brand);
 }
 .btn-success:hover,
 .btn-success:active,
@@ -21,8 +21,8 @@
 .btn-success[disabled]:active,
 .btn-success[disabled]:visited,
 .btn-success[disabled]:focus {
-  background: $highlightColor;
-  border-color: $highlightColor;
+  background: var(--p4m-color-brand-strong);
+  border-color: var(--p4m-color-brand-strong);
 }
 
 
@@ -30,7 +30,7 @@
   .form-control[disabled],
   .form-control[readonly],
   fieldset[disabled] .form-control {
-    background-color: $backgroundColor;
+    background-color: var(--p4m-color-surface);
     cursor: text;
   }
 }
@@ -45,7 +45,7 @@
     }
 
     i {
-      @include custom-i(black, 2rem);
+      @include custom-i(var(--p4m-grey-1000), 2rem);
     }
 
     button:hover {
@@ -72,8 +72,8 @@
         }
 
         li:hover {
-          background-color: $primaryColor;
-          color: #FFFF;
+          background-color: var(--p4m-color-brand);
+          color: var(--p4m-grey-0);
 
           button {
             color: inherit;
@@ -97,9 +97,9 @@
 
       .btn-group {
         button > a {
-          color: #97a0b3;
+          color: var(--p4m-slate-355);
           &:hover {
-            color: $primaryColor;
+            color: var(--p4m-color-brand);
           }
         }
       }

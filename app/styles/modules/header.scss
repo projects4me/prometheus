@@ -44,13 +44,13 @@
     top: 100%;
     right: 0;
     position: absolute;
-    background-color: white;
+    background-color: var(--p4m-grey-0);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     min-width: 14rem;
 
     a {
-      color: black;
+      color: var(--p4m-grey-1000);
       padding: 0.4rem 0.6rem;
       text-decoration: none;
       display: block;
@@ -63,17 +63,17 @@
       }
 
       &:hover {
-        background-color: $primaryColor;
-        color: white;
+        background-color: var(--p4m-color-brand);
+        color: var(--p4m-grey-0);
       }
     }
 
     .pointer-none {
-      color: $mediumColor;
+      color: var(--p4m-color-text-muted);
 
       &:hover {
         background-color: transparent;
-        color: $mediumColor;
+        color: var(--p4m-color-text-muted);
         cursor: default;
       }
     }
@@ -91,18 +91,18 @@
   min-width: 18rem;
 
   .ember-power-select-trigger {
-    background-color: $primaryColor;
-    border: 1px solid $primaryColor;
-    border-radius: 0;
-    color: white;
+    background-color: var(--p4m-color-brand);
+    border: 1px solid var(--p4m-color-brand);
+    border-radius: var(--p4m-radius-none);
+    color: var(--p4m-grey-0);
     line-height: 2.4rem;
 
     .ember-power-select-placeholder {
-      color: white;
+      color: var(--p4m-grey-0);
     }
 
     .ember-power-select-status-icon {
-      border-top-color: white;
+      border-top-color: var(--p4m-grey-0);
     }
   }
 
@@ -164,7 +164,7 @@
 
 .ember-power-select-option .project-switcher-code {
   float: right;
-  color: $mediumColor;
+  color: var(--p4m-color-text-muted);
 }
 
 /* The highlighted option turns its text white; keep the code readable on the highlight background. */
@@ -182,8 +182,8 @@
 .project-switcher-all {
   display: block;
   padding: 0.8rem 1.2rem;
-  border-top: 1px solid $mediumColor;
-  color: $secondaryColor;
+  border-top: 1px solid var(--p4m-color-text-muted);
+  color: var(--p4m-color-link);
 
   i {
     margin-right: 0.5rem;
@@ -195,13 +195,13 @@
 .global-search-dropdown {
   .global-search-snippet {
     display: block;
-    color: lighten($darkColor, 20%);
+    color: var(--p4m-search-snippet-text);
     font-size: 1.2rem;
     white-space: normal;
 
     mark {
       padding: 0;
-      background-color: $primaryColorLight;
+      background-color: var(--p4m-color-brand-subtle);
       color: inherit;
       font-weight: 600;
     }
@@ -213,14 +213,14 @@
     color: inherit;
 
     mark {
-      background-color: rgba($backgroundColor, 0.3);
+      background-color: color-mix(in srgb, var(--p4m-grey-0) 30%, transparent);
     }
   }
 
   .global-search-note {
     padding: 0.8rem 1.2rem;
-    border-top: 1px solid $mediumColor;
-    color: $mediumColor;
+    border-top: 1px solid var(--p4m-color-text-muted);
+    color: var(--p4m-color-text-muted);
   }
 }
 
@@ -319,9 +319,9 @@ $headerIconGap: 0.5rem; // between an icon/avatar and its label
     bottom: 0;
     width: 1rem;
     height: 1rem;
-    border-radius: 50%;
-    background-color: $successColor;
-    border: 0.2rem solid $backgroundColor;
+    border-radius: var(--p4m-radius-round);
+    background-color: var(--p4m-color-success);
+    border: 0.2rem solid var(--p4m-color-surface);
   }
 }
 
@@ -356,14 +356,14 @@ $headerIconGap: 0.5rem; // between an icon/avatar and its label
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem 1.5rem;
-  border-bottom: 0.1rem solid $borderColor;
+  border-bottom: 0.1rem solid var(--p4m-color-border);
 
   .header-status-dot-inline {
     display: inline-block;
     width: 0.8rem;
     height: 0.8rem;
     margin-right: 0.6rem;
-    border-radius: 50%;
-    background-color: $successColor;
+    border-radius: var(--p4m-radius-round);
+    background-color: var(--p4m-color-success);
   }
 }

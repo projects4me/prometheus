@@ -10,7 +10,7 @@
 
 .app-updates {
     min-height: 100vh;
-    background-color: $primaryColor;
+    background-color: var(--p4m-color-brand);
 
     .content {
         @include flexbox($justifyContent: center, $alignItems: center, $direction: column);
@@ -19,7 +19,7 @@
     }
 
     h2 {
-        color: #fff;
+        color: var(--p4m-grey-0);
         margin-bottom: 4rem;
     }
 }
@@ -74,7 +74,7 @@
                 margin: 0 0 3rem 0;
 
                 input {
-                    border: 1px solid #ccc;
+                    border: 1px solid var(--p4m-grey-200);
                 }
 
                 span.bar {
