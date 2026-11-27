@@ -16,7 +16,7 @@
               {{!-- Issue status dropdown --}}
               <span class="issue-status">
                 <div class="dropdown">
-                  <span class="badge {{this.issue.status}}" style={{status-style this.issue.status}} data-toggle="dropdown">
+                  <span class="badge {{this.issue.status}}" style={{status-style this.issue.status}} {{dropdown-toggle}}>
                     {{status-label this.issue.status}}
                     <i class="fa fa-caret-down"></i>
                   </span>

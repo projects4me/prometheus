@@ -29,7 +29,7 @@ export default function (assert) {
             await click('[data-issue-assignee-dropdown] [data-issue-assignee-option]');
         })
 		.when('User clicks on assignee dropdown', async function () {
-            await click('[data-issue-assignee-dropdown] [data-toggle="dropdown"]');
+            await click('[data-issue-assignee-dropdown] .assignee-select-toggle');
 		})
         .then('User_2 is assigned to issue 4', function () {
             assert.dom('[data-issue-assignee]').hasText('User_2');
