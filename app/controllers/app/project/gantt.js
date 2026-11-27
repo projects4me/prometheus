@@ -12,6 +12,7 @@ import { refreshView } from 'prometheus/utils/live/reload';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 import { sumTimelogs } from 'prometheus/utils/gantt-progress';
+import { schedule } from 'prometheus/utils/gantt/schedule';
 import UrlState from 'prometheus/utils/state/url-state';
 
 /**
@@ -133,6 +134,39 @@ export default class AppProjectGanttController extends PrometheusController {
 	@cached
 	get timeTotals() {
 		return sumTimelogs(this.timelogs);
+	}
+
+	/**
+	 * Each shown issue's planned start and end in working time (issue id → `{ plannedStart, plannedEnd,
+	 * durationHours, pushed }`), worked out from its dates, its estimate and its blockers on the chart. Display only:
+	 * recomputed when the issues, their dates, the time logs or the links change, and never saved.
+	 *
+	 * @property plannedSchedule
+	 * @type Map
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@cached
+	get plannedSchedule() {
+		let totals = this.timeTotals;
+		let issues = (this.milestones || []).flatMap((milestone) =>
+			toArray(milestone.issues).map((issue) => {
+				let estimated = totals.get(issue.id)?.estimated;
+				return {
+					id: issue.id,
+					startDate: issue.startDate,
+					endDate: issue.endDate,
+					estimateHours: estimated > 0 ? estimated / 60 : null
+				};
+			})
+		);
+		let blocksLinks = toArray(this.links?.links)
+			.filter((link) => link.type === 'blocks')
+			.map((link) => ({
+				sourceId: link.belongsTo('sourceIssue').id(),
+				targetId: link.belongsTo('targetIssue').id()
+			}));
+		return schedule(issues, blocksLinks);
 	}
 
 	/**
