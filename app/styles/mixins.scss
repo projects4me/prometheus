@@ -36,8 +36,8 @@
 
     &:hover,
     &:focus {
-        background-color: $primaryColor;
-        color: #fff;
+        background-color: var(--p4m-color-brand);
+        color: var(--p4m-grey-0);
         outline: none;
     }
 }

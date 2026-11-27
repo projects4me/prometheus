@@ -14,9 +14,9 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: $primaryColor;
-    color: $primaryColor;
-    box-shadow: 9999px 0 0 -5px $primaryColor;
+    background-color: var(--p4m-color-brand);
+    color: var(--p4m-color-brand);
+    box-shadow: 9999px 0 0 -5px var(--p4m-color-brand);
     animation: dotPulse 1.5s infinite linear;
     animation-delay: .25s;
   }
@@ -29,54 +29,54 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: $primaryColor;
-    color: $primaryColor;
+    background-color: var(--p4m-color-brand);
+    color: var(--p4m-color-brand);
   }
   
   .dot-pulse::before {
-    box-shadow: 9984px 0 0 -5px $primaryColor;
+    box-shadow: 9984px 0 0 -5px var(--p4m-color-brand);
     animation: dotPulseBefore 1.5s infinite linear;
     animation-delay: 0s;
   }
   
   .dot-pulse::after {
-    box-shadow: 10014px 0 0 -5px $primaryColor;
+    box-shadow: 10014px 0 0 -5px var(--p4m-color-brand);
     animation: dotPulseAfter 1.5s infinite linear;
     animation-delay: .5s;
   }
   
   @keyframes dotPulseBefore {
     0% {
-      box-shadow: 9984px 0 0 -5px $primaryColor;
+      box-shadow: 9984px 0 0 -5px var(--p4m-color-brand);
     }
     30% {
-      box-shadow: 9984px 0 0 2px $primaryColor;
+      box-shadow: 9984px 0 0 2px var(--p4m-color-brand);
     }
     100% {
-      box-shadow: 9984px 0 0 -5px $primaryColor;
+      box-shadow: 9984px 0 0 -5px var(--p4m-color-brand);
     }
   }
   
   @keyframes dotPulse {
     0% {
-      box-shadow: 9999px 0 0 -5px $primaryColor;
+      box-shadow: 9999px 0 0 -5px var(--p4m-color-brand);
     }
     30% {
-      box-shadow: 9999px 0 0 2px $primaryColor;
+      box-shadow: 9999px 0 0 2px var(--p4m-color-brand);
     }
     100% {
-      box-shadow: 9999px 0 0 -5px $primaryColor;
+      box-shadow: 9999px 0 0 -5px var(--p4m-color-brand);
     }
   }
   
   @keyframes dotPulseAfter {
     0% {
-      box-shadow: 10014px 0 0 -5px $primaryColor;
+      box-shadow: 10014px 0 0 -5px var(--p4m-color-brand);
     }
     30% {
-      box-shadow: 10014px 0 0 2px $primaryColor;
+      box-shadow: 10014px 0 0 2px var(--p4m-color-brand);
     }
     100% {
-      box-shadow: 10014px 0 0 -5px $primaryColor;
+      box-shadow: 10014px 0 0 -5px var(--p4m-color-brand);
     }
   }       
