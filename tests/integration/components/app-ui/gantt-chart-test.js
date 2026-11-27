@@ -351,7 +351,7 @@ module('Integration | Component | app-ui/gantt-chart', function (hooks) {
         // 2026-11-01 is a Sunday: the tile starts on the Monday six days earlier, Saturday and Sunday are columns 5 and 6
         assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('width', '560').hasAttribute('x', '-480');
         assert.dom('[data-test-gantt-grid-weekend]').hasAttribute('x', '400').hasAttribute('width', '160');
-        assert.strictEqual(getComputedStyle(document.querySelector('[data-test-gantt-grid-weekend]')).fill, 'rgba(204, 204, 204, 0.3)');
+        assert.strictEqual(getComputedStyle(document.querySelector('[data-test-gantt-grid-weekend]')).fill, 'color(srgb 0.8 0.8 0.8 / 0.3)');
 
         await click('[data-test-gantt-scale-button="weeks"]');
         assert.dom('[data-test-gantt-grid-pattern]').hasAttribute('width', '245').hasAttribute('x', '-210');
