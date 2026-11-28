@@ -1,0 +1,42 @@
+<AppUi::Modal
+  @title={{this.title}}
+  @titleParams={{@titleParams}}
+  @closeLabel="global.form.cancel"
+  @confirmLabel="components.tags.editModal.save"
+  @confirm={{this.save}}
+  @disableSaveBtn={{this.loading}}
+  @onClose={{@onClose}}
+  @containerClass="tags-edit-modal"
+  data-test-tags-edit-modal
+>
+  <div {{on-insert this.setup}}>
+    {{#if this.error}}
+      <div class="alert alert-danger" role="alert" data-test-tags-edit-error>{{this.error}}</div>
+    {{/if}}
+    <div class="tags-edit-modal-chips" data-test-tags-edit-chips>
+      {{#each this.chips as |chip|}}
+        <span class="tags-edit-modal-chip" data-test-tags-edit-chip>
+          <AppUi::Tag @colorKey={{chip.name}} @onRemove={{if this.canRemove (fn this.remove chip)}} data-test-tag-chip>{{chip.name}}</AppUi::Tag>
+        </span>
+      {{else}}
+        {{#unless this.loading}}
+          <p class="text-muted" data-test-tags-edit-empty>{{t "components.tags.editModal.empty"}}</p>
+        {{/unless}}
+      {{/each}}
+    </div>
+    <FormFields::FieldRelateMulti
+      @data-field="tags-edit-input"
+      @label={{t "components.tags.editModal.title"}}
+      @relateType="relate-simple"
+      @searchField="label"
+      @searchEnabled={{true}}
+      @search={{this.search}}
+      @selected={{this.noSelection}}
+      @placeholder={{t "components.tags.editModal.placeholder"}}
+      @onchange={{this.addPicked}}
+      @onCreate={{this.add}}
+      @closeOnSelect={{false}}
+      @initiallyOpened={{true}}
+    />
+  </div>
+</AppUi::Modal>

@@ -1,0 +1,18 @@
+{
+  "name": "Tags::EditModal",
+  "component": "tags/edit-modal",
+  "doc": "tags-edit-modal.md",
+  "description": "A modal that edits the tags of one record: chips with remove buttons and an input that adds an existing or a new project tag. Changes are staged and applied on Save.",
+  "arguments": {
+    "projectId": { "type": "string|number", "required": true, "description": "The project whose tags are suggested and created" },
+    "relatedTo": { "type": "string", "required": true, "description": "The record type: issue or conversationroom" },
+    "relatedId": { "type": "string|number", "required": true, "description": "The id of the record" },
+    "title": { "type": "string", "required": false, "default": "components.tags.editModal.title", "description": "Translation key of the modal title" },
+    "titleParams": { "type": "object", "required": false, "description": "Values for the title translation, e.g. the issue number" }
+  },
+  "events": {
+    "onClose": { "payload": [], "description": "The modal closed, by Save, Cancel, the close button or Esc; the caller removes it" },
+    "onSaved": { "payload": [], "description": "All staged changes were applied, before the modal closes" }
+  },
+  "blocks": {}
+}
