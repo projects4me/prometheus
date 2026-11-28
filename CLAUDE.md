@@ -27,6 +27,7 @@
 - Colours only from `var(--p4m-...)` tokens in `app/styles/tokens.scss` (semantic first, e.g. crimson `--p4m-color-brand`, plum `--p4m-color-brand-strong`, link blue `--p4m-color-link`; palette token otherwise). No hex values or Sass colour functions in our files; alpha via `color-mix`. No new colours, fonts (Source Sans Pro only), shadows, gradients or third-party UI/icon libraries (Font Awesome 4 only; our own foundation CSS is fine).
 - Follow the page patterns: list = one full-width `box-primary` with search toolbar, table and pagination; detail = `col-md-8` record box + `col-md-4` side boxes; create/edit = `col-md-8` form box + `col-md-4` side boxes, Save/Cancel below the boxes.
 - **Composing components:** follow rules R1–R7 in `docs/ui/design-system.md` §13 (rule of three, blocks before args, data in/events out, change only with a benefit, `data-test-*` selectors only, ship docs + manifest + tests, `app-ui/` vs domain folders).
+- **Icons** are `<AppUi::Icon @name="plus" />`, never hand-written `<i class="fa fa-*">` or `fa-` strings in JS. **Tooltips** are the `{{tooltip}}` modifier (rich ones `{{initialize-tooltip}}`), no `data-toggle="tooltip"` in new markup. Dropdowns are `AppUi::Dropdown` or `{{dropdown-toggle}}`; no Bootstrap/AdminLTE JS or jQuery plugins (design-system.md §8, §9, §12).
 - Before calling a UI change done, open it in the running app (`https://app.local-projects4.me`) next to an existing screen of the same type and compare.
 
 ## Rules

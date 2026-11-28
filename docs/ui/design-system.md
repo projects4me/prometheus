@@ -494,9 +494,11 @@ translation, from the app or from Gaia, must extend the formatter first.
 - **Secondary:** `btn btn-default`, grey `#f4f4f4` with a `#ddd` border (Cancel, Clear, toolbar icon buttons).
 - Sizes `btn-sm` / `btn-xs`; `btn-flat` where AdminLTE uses it; `btn-box-tool` inside box headers.
 - Use `AppUi::Button` when the button needs ACL (`@aclContext`).
-- Dropdown buttons (`New ▾`, `Saved Searches ▾`, status label ▾) are Bootstrap dropdowns with a caret.
-- Icons: **Font Awesome 4** (`fa fa-*`) only, placed before the text. Ionicons are loaded but only used
-  where they already are.
+- Dropdown buttons (`New ▾`, `Saved Searches ▾`, status label ▾) are `AppUi::Dropdown`, or `{{dropdown-toggle}}` on
+  existing dropdown markup, with a caret.
+- Icons: **Font Awesome 4**, always `<AppUi::Icon @name="plus" />` (the name without `fa-`), placed before the text.
+  Never write `<i class="fa fa-*">` by hand or build `fa-` class strings in JS; where a name comes from data, pass
+  it as `@name`. Ionicons are loaded but only used where they already are.
 - Avatars are round images with the user's name in bold beneath or beside them, truncated with an ellipsis.
   Member grids use `users-list`.
 - **Every user picture is `AppUi::Avatar`** (people and agents), never a raw `<img>` of `/userimage/get`. The only
@@ -520,7 +522,10 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Charts | Existing chart components (`chart-issueratio`, `chart-estimatedspent`, `components/charts/`) |
 | Tabs | `AppUi::Tabs` (AdminLTE `nav-tabs-custom` with panes, counts and tools; the active tab is an argument, a change is an event). Older screens use plain `nav nav-tabs` (gantt "Days / Weeks", board milestone tabs) |
 | Select | `AppUi::Select`, the searchable single/multiple select behind every relate field, the global search and the project switcher. In forms, use the `FormFields::*` wrapper, not `AppUi::Select` directly |
-| Dropdown menus | `AppUi::Dropdown` (button + floating menu, auto alignment, standard menu colours): saved searches, board filters, row actions |
+| Dropdown menus | `AppUi::Dropdown` (button + floating menu, auto alignment, standard menu colours): saved searches, board filters, row actions. On existing Bootstrap-style markup (`.dropdown`, `.dropdown-menu`) put `{{dropdown-toggle}}` on the toggle; it opens and closes the menu, no `data-toggle` |
+| Icons | `AppUi::Icon` (`@name`, extra classes and attributes pass through). The only place that writes `fa fa-*` markup |
+| Sidebar | The `sidebar` service holds the collapsed/open state (the `sidebar-preference` service keeps the choice); the hamburger and the sidebar call it. No AdminLTE push menu |
+| Scroll areas | The shared native `slim-scroll` class (`slim-scroll-wide` for 5px) on an element with a height or max-height; never a jQuery scroll plugin |
 | List pages | `AppUi::ListToolbar`, `AppUi::DataTable`, `AppUi::Pager` (section 3) |
 | Narrow record lists | `QuickList` (section 3) |
 | Search bar / query builder | `EzSearch`, `EzSearchCompact` |
@@ -549,8 +554,9 @@ Put the `{{tooltip}}` modifier on the element, with the translated text:
 - The text is plain text, never HTML; it updates when the value changes, and an empty value shows no tooltip.
 - `placement` is optional (`top` by default; `bottom`, `left`, `right`).
 - It draws the standard dark tooltip (tippy theme `p4m` in `components/tooltip.scss`, the look of the Bootstrap 3
-  tooltip with square corners). Don't add `data-toggle="tooltip"` to new markup: those tooltips are being moved to
-  the modifier.
+  tooltip with square corners). There is no Bootstrap tooltip JS. The legacy `data-toggle="tooltip"` attribute is still served by the
+  delegated handler (`utils/ui/delegated-tooltips.js`, e.g. `components/project/milestones.hbs`); don't use it in
+  new markup, use the modifier.
 - For HTML content or a shared element (Gantt bar details), use `{{initialize-tooltip}}` with its own theme.
 
 ## 10. Rounded corners already in the code (don't copy)
@@ -589,6 +595,10 @@ separate task with its own issue.
 - [ ] Issue statuses use `status-label`; the comment input is the `CommentComposer`
 - [ ] Every user picture is `AppUi::Avatar` with a standard size (section 8)
 - [ ] Checked the Component Library (section 14) first; a new or changed shared component has its library entry
+- [ ] Icons are `<AppUi::Icon @name>`, never hand-written `fa fa-*` markup or `fa-` strings in JS
+- [ ] Tooltips are `{{tooltip}}` (rich ones `{{initialize-tooltip}}`), dropdowns `AppUi::Dropdown` or `{{dropdown-toggle}}`, tabs `AppUi::Tabs`
+- [ ] Sidebar behaviour goes through the sidebar service; scroll areas use `slim-scroll`
+- [ ] No Bootstrap/AdminLTE JS, jQuery plugins or `data-toggle` / `data-target` attributes in new or changed markup (existing uses such as `milestones.hbs` are legacy)
 - [ ] Compared side by side in the browser with an existing screen of the same type
 
 ## 13. Composing views from components
