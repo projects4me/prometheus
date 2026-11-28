@@ -22,7 +22,7 @@
               title={{get this.typeLabels entry.type}}
               aria-label={{get this.typeLabels entry.type}}
             >
-              <i class="fa {{or (get this.typeIcons entry.type) "fa-file-text-o"}}" aria-hidden="true"></i>
+              <AppUi::Icon @name={{get this.typeIcons entry.type}} />
             </span>
             <div class="user-qualification-item-content">
               <p class="qualification-title">{{entry.title}}</p>
@@ -49,7 +49,7 @@
                 disabled={{this.isSaving}}
                 {{on "click" (fn this.removeItem entry)}}
               >
-                <i class="fa fa-times"></i>
+                <AppUi::Icon @name="times" />
               </button>
             {{/if}}
           </li>

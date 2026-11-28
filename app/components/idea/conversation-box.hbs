@@ -23,11 +23,11 @@
     <span class="label {{if this.isArchived "deferred" "new"}}" data-idea-status>{{t (concat "views.app.idea.status." @idea.status)}}</span>
     <div class="box-tools pull-right">
       <AppUi::Button type="button" class="btn btn-box-tool" @onClick={{@onRefresh}} title={{t "views.app.idea.conversation.refresh"}} data-idea-refresh>
-        <i class="fa fa-refresh"></i>
+        <AppUi::Icon @name="refresh" />
       </AppUi::Button>
       <AppUi::Button type="button" class="btn btn-box-tool" @onClick={{this.askArchive}} @aclContext="idea.update"
         title={{t (if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive")}} data-idea-archive>
-        <i class="fa {{if this.isArchived "fa-undo" "fa-archive"}}"></i>
+        <AppUi::Icon @name={{if this.isArchived "undo" "archive"}} />
       </AppUi::Button>
     </div>
   </div>
@@ -53,7 +53,7 @@
       @confirm={{this.confirmArchive}}
     >
       <div class="alert alert-warning flex-row flex-ai-c" data-idea-archive-confirm>
-        <i class="fa fa-exclamation-triangle"></i>
+        <AppUi::Icon @name="exclamation-triangle" />
         <p>{{t (if this.isArchived "views.app.idea.conversation.unarchiveMessage" "views.app.idea.conversation.archiveMessage")}}</p>
       </div>
     </AppUi::Modal>

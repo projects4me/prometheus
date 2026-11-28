@@ -8,7 +8,7 @@
       {{else}}
         <img class="user-profile-img img-responsive" src="{{if @model.profilePicture @model.profilePicture (if @model.id (concat this.apiHost "/userimage/get/" @model.id) "/img/default.png")}}" alt="{{@model.name}}">
       {{/if}}
-      <i class="fa fa-edit"></i>
+      <AppUi::Icon @name="edit" />
     </a>
 
     <input id="upload-img" type="file" class="hidden" accept="image/*" {{queue.selectFile}}>

@@ -3,11 +3,11 @@
     <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
     <div class="box-tools pull-right">
       {{#if this.selected}}
-        <span class="label {{this.statusClass}}" role="status" aria-live="polite" data-idea-plan-status>{{#if this.isCreating}}<i class="fa fa-spinner fa-spin" aria-hidden="true" data-idea-plan-creating></i> {{/if}}{{t (concat "views.app.idea.plan.status." this.displayStatus)}}</span>
+        <span class="label {{this.statusClass}}" role="status" aria-live="polite" data-idea-plan-status>{{#if this.isCreating}}<AppUi::Icon @name="spinner" @spin={{true}} data-idea-plan-creating /> {{/if}}{{t (concat "views.app.idea.plan.status." this.displayStatus)}}</span>
       {{/if}}
       {{#if @onToggleReview}}
         <button type="button" class="btn btn-box-tool" title={{t (if @isReviewMode "views.app.idea.plan.reviewExit" "views.app.idea.plan.reviewEnter")}} {{on "click" @onToggleReview}} data-idea-plan-review>
-          <i class="fa {{if @isReviewMode "fa-compress" "fa-expand"}}"></i>
+          <AppUi::Icon @name={{if @isReviewMode "compress" "expand"}} />
         </button>
       {{/if}}
     </div>
@@ -31,7 +31,7 @@
             {{#if entry.screen}}
               <Idea::MessageScreen @screen={{entry.screen}} />
             {{else}}
-              <li class="text-muted" data-idea-plan-screen-missing={{entry.key}}><i class="fa fa-picture-o"></i> {{entry.key}}</li>
+              <li class="text-muted" data-idea-plan-screen-missing={{entry.key}}><AppUi::Icon @name="picture-o" /> {{entry.key}}</li>
             {{/if}}
           {{/each}}
         </ul>
@@ -65,21 +65,21 @@
                 <span class="project" data-idea-plan-issue-project>{{issue.projectLabel}}</span>
                 <span>{{issue.type}}</span>
                 <span class="priority-{{issue.priority}}" data-idea-plan-issue-priority><AppUi::PriorityIcon @priority={{issue.priority}} /> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</span>
-                <span data-idea-plan-issue-complexity><i class="fa {{if (eq issue.complexity "complex") "fa-cogs" "fa-cog"}}"></i> {{t (concat "views.app.idea.plan.complexities." issue.complexity)}}</span>
-                <span title={{if issue.newMilestone (t "views.app.idea.plan.newMilestoneTitle")}} data-idea-plan-issue-milestone><i class="fa fa-flag-o"></i> {{issue.milestone}}{{if issue.newMilestone (t "views.app.idea.plan.newMilestone")}}</span>
+                <span data-idea-plan-issue-complexity><AppUi::Icon @name={{if (eq issue.complexity "complex") "cogs" "cog"}} /> {{t (concat "views.app.idea.plan.complexities." issue.complexity)}}</span>
+                <span title={{if issue.newMilestone (t "views.app.idea.plan.newMilestoneTitle")}} data-idea-plan-issue-milestone><AppUi::Icon @name="flag-o" /> {{issue.milestone}}{{if issue.newMilestone (t "views.app.idea.plan.newMilestone")}}</span>
                 {{#if issue.dependsOn}}
-                  <span data-idea-plan-issue-depends><i class="fa fa-level-up"></i> {{t "views.app.idea.plan.after" keys=issue.dependsOn}}</span>
+                  <span data-idea-plan-issue-depends><AppUi::Icon @name="level-up" /> {{t "views.app.idea.plan.after" keys=issue.dependsOn}}</span>
                 {{/if}}
                 {{#if issue.screens}}
-                  <span><i class="fa fa-picture-o"></i> {{issue.screens}}</span>
+                  <span><AppUi::Icon @name="picture-o" /> {{issue.screens}}</span>
                 {{/if}}
                 {{#let (get this.createdIssues issue.key) as |created|}}
                   {{#if created.readable}}
                     <LinkTo @route="app.project.issue.page" @models={{array created.projectShortcode created.issueNumber}} data-idea-plan-issue-link>
-                      <i class="fa fa-external-link"></i> {{created.projectShortcode}}-{{created.issueNumber}}
+                      <AppUi::Icon @name="external-link" /> {{created.projectShortcode}}-{{created.issueNumber}}
                     </LinkTo>
                   {{else if created.unloaded}}
-                    <span class="text-muted" title={{t "views.app.idea.plan.createdUnloaded"}} data-idea-plan-issue-unloaded><span class="fa fa-check" aria-hidden="true"></span> {{issue.key}}</span>
+                    <span class="text-muted" title={{t "views.app.idea.plan.createdUnloaded"}} data-idea-plan-issue-unloaded><AppUi::Icon @name="check" /> {{issue.key}}</span>
                   {{else if created}}
                     <span class="text-muted" data-idea-plan-issue-unreadable>{{created.projectShortcode}}-{{created.issueNumber}}</span>
                   {{else}}
@@ -120,7 +120,7 @@
       @confirm={{this.confirmApprove}}
     >
       <div class="alert alert-warning flex-row flex-ai-c" data-idea-plan-approve-confirm>
-        <i class="fa fa-exclamation-triangle"></i>
+        <AppUi::Icon @name="exclamation-triangle" />
         <p>{{t "views.app.idea.plan.approveMessage" version=this.selected.version}}</p>
       </div>
     </AppUi::Modal>
