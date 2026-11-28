@@ -6,15 +6,15 @@
   <div class="issue-plan-issue-item-status">
     {{#let (get @creationStates @node.task.id) as |state|}}
       {{#if (eq state "creating")}}
-        <i class="fa fa-spinner fa-spin issue-plan-task-node-status"></i>
+        <AppUi::Icon @name="spinner" @spin={{true}} class="issue-plan-task-node-status" />
       {{else if (eq state "success")}}
-        <i class="fa fa-check icon-success issue-plan-task-node-status"></i>
+        <AppUi::Icon @name="check" class="icon-success issue-plan-task-node-status" />
       {{else if (eq state "error")}}
-        <i class="fa fa-times icon-error issue-plan-task-node-status"></i>
-        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-retry-btn issue-plan-task-node-status" @onClick={{this.handleRetry}} title="Retry"><i class="fa fa-refresh"></i></AppUi::Button>
-        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-copy-btn issue-plan-task-node-status" @onClick={{this.handleCopy}} title="Copy to clipboard"><i class="fa fa-files-o"></i></AppUi::Button>
+        <AppUi::Icon @name="times" class="icon-error issue-plan-task-node-status" />
+        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-retry-btn issue-plan-task-node-status" @onClick={{this.handleRetry}} title="Retry"><AppUi::Icon @name="refresh" /></AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-copy-btn issue-plan-task-node-status" @onClick={{this.handleCopy}} title="Copy to clipboard"><AppUi::Icon @name="files-o" /></AppUi::Button>
       {{else}}
-        <i class="fa fa-clock-o"></i>
+        <AppUi::Icon @name="clock-o" />
       {{/if}}
     {{/let}}
   </div>

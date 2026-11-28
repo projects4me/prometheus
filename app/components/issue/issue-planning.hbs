@@ -11,7 +11,7 @@
     @disableSaveBtn={{@loading}}
   >
     {{#if @loading}}
-      <div class="text-center"><i class="fa fa-spinner fa-spin"></i> {{t "global.form.loading"}}</div>
+      <div class="text-center"><AppUi::Icon @name="spinner" @spin={{true}} /> {{t "global.form.loading"}}</div>
     {{else if @error}}
       <div class="alert alert-danger">{{@error}}</div>
     {{else if (and @data (not this.planStarted))}}
