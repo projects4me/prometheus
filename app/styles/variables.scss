@@ -16,3 +16,9 @@ $p4m-screen-lg: 1200px;
 $p4m-screen-xs-max: 767px;
 $p4m-screen-sm-max: 991px;
 $p4m-screen-md-max: 1199px;
+
+// App shell widths (aprom-4999 phase 3). Sass variables because the foundation shell (imported before the modules)
+// and modules/nav.scss both use them. The sidebar is narrower than AdminLTE's 230px since project selection moved to
+// the header; the collapsed (mini) sidebar keeps AdminLTE's 50px icon strip.
+$sidebarWidth: 200px;
+$sidebarCollapsedWidth: 50px;
