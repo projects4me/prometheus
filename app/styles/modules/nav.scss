@@ -60,8 +60,7 @@
 }
 
 /* Sidebar width: project selection no longer lives in the navigation, so it is narrower than AdminLTE's 230px.
-   Logo, sidebar, navbar and content offsets all follow $sidebarWidth. */
-$sidebarWidth: 200px;
+   Logo, sidebar, navbar and content offsets all follow $sidebarWidth (variables.scss). */
 
 .main-sidebar,
 .left-side {

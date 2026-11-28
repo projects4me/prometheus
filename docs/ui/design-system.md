@@ -53,7 +53,7 @@ What the app uses from Bootstrap 3 and AdminLTE 2 today (classes by issue key, e
 | Part | What it is | Source |
 |---|---|---|
 | Header | White navbar, a flex row. Left to right: logo "Projects4Me" (as wide as the sidebar); hamburger; **crimson project switcher** (`AppLayouts::ProjectSwitcher`: `AppUi::Select`, square, white text, project name in bold + short code, "All projects" link under the options); **global search** (`AppUi::Select`) centred, up to 42rem; then, on the right, the crimson **New ▾** dropdown (Issue / Thread / Project; Issue and Thread are greyed out until a project is selected), the bell (opens the notifications sidebar) and the user avatar (`AppUi::Avatar` `s`) + name with a green status dot; the user dropdown shows the avatar (`l`), an "Online" row, Profile and Sign out | `components/app-layouts/application-header`, `project-switcher`, `styles/modules/header.scss` |
-| Sidebar | Light grey (`#f9fafc`), fixed, **200px** wide (`$sidebarWidth` in `modules/nav.scss`; logo, navbar, content and footer offsets follow it). No project selector: that lives in the header. Three groups (`AppUi::NavBar`, items from the `Navigation` metadata in `utils/metadata/metadata.js`): **Workspace** (Dashboard, Projects), **Project** (Issues, Task Board, Gantt Cal, Threads, Ideas; the group header shows the selected project's short code, and the items are dimmed and disabled until a project is selected) and **Admin** (Workflows, Agents, Settings, Developer; each shown only when the user's ACL allows it). Font Awesome icon + label per item; the active item has a crimson left bar; tree items use `fa-circle-o` bullets. When the sidebar is collapsed to icons, a divider separates the groups | `components/app-layouts/application-sidebar`, `components/app-ui/nav-bar`, `navbar-items` |
+| Sidebar | Light grey (`#f9fafc`), fixed, **200px** wide (`$sidebarWidth` in `variables.scss`, collapsed `$sidebarCollapsedWidth` 50px; logo, navbar, content and footer offsets follow it). No project selector: that lives in the header. Three groups (`AppUi::NavBar`, items from the `Navigation` metadata in `utils/metadata/metadata.js`): **Workspace** (Dashboard, Projects), **Project** (Issues, Task Board, Gantt Cal, Threads, Ideas; the group header shows the selected project's short code, and the items are dimmed and disabled until a project is selected) and **Admin** (Workflows, Agents, Settings, Developer; each shown only when the user's ACL allows it). Font Awesome icon + label per item; the active item has a crimson left bar; tree items use `fa-circle-o` bullets. When the sidebar is collapsed to icons, a divider separates the groups | `components/app-layouts/application-sidebar`, `components/app-ui/nav-bar`, `navbar-items` |
 | Mobile (< 768px) | The header wraps: the project switcher fills the space between the hamburger and the right-hand menu (name truncated with an ellipsis), **New** becomes a `+` icon, the user name is hidden and the global search drops to its own full-width row. The sidebar slides in over a dimmed page and closes after each navigation (`close-sidebar-on-navigate`) | `modules/header.scss`, `components/sidebar-overlay.scss` |
 | Content header | `<section class="content-header">`: page title as `<h1>` (24px/500), or the project name as a crimson `<small>` link inside a project; breadcrumb on the right (12px, Font Awesome icon + link per level, `>` separators) | `templates/app/project.hbs`, `<BreadCrumb/>` |
 | Content | `<section class="content">` on `#ecf0f5`, then Bootstrap `.row` / `.col-md-*` | |
@@ -275,8 +275,15 @@ exact value, so the foundation CSS that replaces Bootstrap and AdminLTE uses tok
 
 Raw: `--p4m-space-` `neg-20`, `neg-16-5`, `neg-15`, `neg-10`, `neg-8`, `neg-7`, `neg-5`, `neg-3`, `neg-2`, `neg-1`,
 `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `7-5`, `8`, `9`, `9-5`, `10`, `12`, `15`, `20`, `25`, `30`, `40`, `42-5`,
-`50`, `60`, `90`, `100`, `190`, `230`, `0-2em`, `0-3em`, `0-35em`, `0-6em`, `0-625em`, `0-67em`, `0-75em`, `1em`,
-`7pct`.
+`50`, `60`, `90`, `100`, `175`, `190`, `230`, `250`, `280`, `0-2em`, `0-3em`, `0-35em`, `0-6em`, `0-625em`, `0-67em`,
+`0-75em`, `1em`, `5pct`, `7pct`. (`175`, `250`, `280` and `5pct` came with the shell, aprom-5058: the user card
+height, the `.content` min-height, the header menu width and the phone menu offset.)
+
+**Motion:** `--p4m-duration-300` (`0.3s`) and `--p4m-ease-in-out` (`ease-in-out`), AdminLTE's shell slide: content,
+footer, navbar and logo follow the sidebar as it collapses or opens.
+
+**Shell widths** are Sass variables in `app/styles/variables.scss`, because the foundation shell and
+`modules/nav.scss` both need them: `$sidebarWidth` (`200px`) and `$sidebarCollapsedWidth` (`50px`).
 
 **Radius.** New code uses only two, in line with the square-edges rule: `--p4m-radius-none` (`0`) and
 `--p4m-radius-round` (`50%`, avatars and dots). The legacy radii the vendor CSS applies today have raw tokens so the
@@ -398,6 +405,7 @@ colours of `rgba()` literals are included; the alpha comes from `color-mix`.
 | Token | Value | Used in (`app/styles`) |
 |---|---|---|
 | `--p4m-grey-0` | `#ffffff` | accordion, agent, app-ui-avatar, app-ui-tag, board, conversation +24 more |
+| `--p4m-grey-10` | `#fcfcfc` | foundation shell (logo hover, desktop) |
 | `--p4m-grey-25` | `#f9f9f9` | conversation (lighten $borderColor 8%), gantt, idea, skeleton |
 | `--p4m-grey-30` | `#f7f7f7` | document, widgets |
 | `--p4m-grey-40` | `#f5f5f5` | issue, issue-status, toolbar |
@@ -428,6 +436,7 @@ colours of `rgba()` literals are included; the alpha comes from `color-mix`.
 | `--p4m-grey-735` | `#444444` | document, dropdown, loader, notifications-sidebar, user-management |
 | `--p4m-grey-800` | `#333333` | gantt, issue, notifications-sidebar, pagination, profile, role +2 more |
 | `--p4m-grey-865` | `#222222` | issue |
+| `--p4m-grey-880` | `#1f1f1f` | foundation shell (logo hover, phone) |
 | `--p4m-grey-1000` | `#000000` | board, gantt, header, inline-editable, notifications-sidebar, profile +4 more |
 | `--p4m-slate-15` | `#fafbfc` | issue |
 | `--p4m-slate-20` | `#f9fafc` | app-ui-data-table, quick-list, selection |

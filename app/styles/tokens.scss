@@ -20,6 +20,7 @@
   /* ── Palette ──────────────────────────────────────────────────────────── */
   // grey
   --p4m-grey-0: #ffffff;
+  --p4m-grey-10: #fcfcfc;
   --p4m-grey-25: #f9f9f9;
   --p4m-grey-30: #f7f7f7;
   --p4m-grey-40: #f5f5f5;
@@ -50,6 +51,7 @@
   --p4m-grey-735: #444444;
   --p4m-grey-800: #333333;
   --p4m-grey-865: #222222;
+  --p4m-grey-880: #1f1f1f;
   --p4m-grey-1000: #000000;
 
   // slate
@@ -257,8 +259,11 @@
   --p4m-space-60: 6rem;
   --p4m-space-90: 9rem;
   --p4m-space-100: 10rem;
+  --p4m-space-175: 17.5rem;
   --p4m-space-190: 19rem;
   --p4m-space-230: 23rem;
+  --p4m-space-250: 25rem;
+  --p4m-space-280: 28rem;
   --p4m-space-0-2em: 0.2em;
   --p4m-space-0-3em: 0.3em;
   --p4m-space-0-35em: 0.35em;
@@ -267,6 +272,7 @@
   --p4m-space-0-67em: 0.67em;
   --p4m-space-0-75em: 0.75em;
   --p4m-space-1em: 1em;
+  --p4m-space-5pct: 5%;
   --p4m-space-7pct: 7%;
   // named steps (aliases, values unchanged)
   --p4m-space-xs: var(--p4m-space-5);
@@ -382,6 +388,11 @@
   --p4m-shadow-progress: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   --p4m-shadow-progress-bar: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   --p4m-shadow-kbd: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+  // AdminLTE's shell slide (content, footer, navbar and logo follow the sidebar)
+  --p4m-duration-300: 0.3s;
+  --p4m-ease-in-out: ease-in-out;
 
   /* ── z-index, lowest first (today's values; design-system §4a) ─────────── */
   // inside one component (Bootstrap button and input groups, pagination, the header user card)

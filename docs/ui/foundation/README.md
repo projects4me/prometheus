@@ -12,7 +12,7 @@ Bootstrap and AdminLTE still load, the foundation's rules repeat their values, s
 |---|---|
 | `base/_reset.scss` | the reset issue of aprom-4999 phase 3 |
 | `base/_typography.scss` | the typography issue of aprom-4999 phase 3 |
-| `shell/_layout.scss` | the layout issue of aprom-4999 phase 3 |
+| `shell/_layout.scss` | aprom-5058 (wrapper, header and header menus, content, footer) |
 | `shell/_sidebar.scss` | the sidebar issue of aprom-4999 phase 3 |
 | `grid/_grid.scss` | aprom-5060 |
 | `components/_box.scss` | aprom-5061 |
