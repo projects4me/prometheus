@@ -26,7 +26,7 @@
         <:actions>
           <AccessControl @aclContext="idea.create">
             <button type="button" class="btn btn-primary btn-sm" disabled={{this.isCreating}} {{on "click" this.newIdea}} data-new-idea>
-              <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+              <AppUi::Icon @name="plus" /> {{t "views.app.idea.browser.new"}}
             </button>
           </AccessControl>
         </:actions>
@@ -117,7 +117,7 @@
         data-expand-browser={{if this.browserCollapsed "true"}}
       >
         <span class="divider-handle">
-          <i class="fa fa-angle-{{if this.browserCollapsed "right" "left"}}"></i>
+          <AppUi::Icon @name={{if this.browserCollapsed "angle-right" "angle-left"}} />
         </span>
       </button>
       {{outlet}}

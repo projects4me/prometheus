@@ -26,7 +26,7 @@
             <:selection>
               <AccessControl @aclContext="workspace.create">
                 <LinkTo @route="app.workspaces.create" class="btn btn-primary btn-sm" data-test-list-action="create">
-                  <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workspace.list.create"}}
+                  <AppUi::Icon @name="plus" /> {{t "views.app.workspace.list.create"}}
                 </LinkTo>
               </AccessControl>
             </:selection>
