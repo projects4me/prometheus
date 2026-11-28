@@ -15,7 +15,7 @@
         </li>
       </ul>
       <AppUi::Dropdown @align="end" @title={{t "components.gantt.options.label"}} class="gantt-options" data-test-gantt-options>
-        <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+        <:button><AppUi::Icon @name="ellipsis-v" /></:button>
         <:content>
           <div class="gantt-options-menu" data-test-gantt-options-menu>
             <div class="gantt-options-heading" data-test-gantt-options-heading="links">{{t "components.gantt.links.label"}}</div>
@@ -69,7 +69,7 @@
           <FormFields::FieldCheckbox @size="sm" @label={{t "components.gantt.toolbar.weekends"}} @checked={{this.showWeekends}} @select={{this.toggleWeekends}} @data-select="gantt-weekends" />
         </div>
         <div class="gantt-toolbar-group gantt-legend-info" data-test-gantt-legend-info>
-          <button type="button" class="btn btn-link btn-sm gantt-legend-icon" aria-label={{t "components.gantt.links.legend.title"}}><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+          <button type="button" class="btn btn-link btn-sm gantt-legend-icon" aria-label={{t "components.gantt.links.legend.title"}}><AppUi::Icon @name="info-circle" /></button>
           <div class="gantt-line-legend text-muted" data-test-gantt-line-legend>
             <span class="gantt-line-legend-item"><i class="gantt-line-sample is-blocks"></i>{{t "components.gantt.links.legend.blocks"}}</span>
             <span class="gantt-line-legend-item"><i class="gantt-line-sample is-splits"></i>{{t "components.gantt.links.legend.splits"}}</span>

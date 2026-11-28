@@ -33,7 +33,7 @@
       <div class="gantt-tooltip-links" data-test-gantt-tooltip-links>
         <div class="gantt-tooltip-section-title text-muted">{{t "components.gantt.tooltip.linksTitle"}}</div>
         {{#if this.conflict}}
-          <div class="text-red" data-test-gantt-tooltip-conflict><i class="fa fa-ban" aria-hidden="true"></i> {{this.conflict}}</div>
+          <div class="text-red" data-test-gantt-tooltip-conflict><AppUi::Icon @name="ban" /> {{this.conflict}}</div>
         {{/if}}
         {{#each this.linkGroups as |group|}}
           {{#each group.rows as |row|}}

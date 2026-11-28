@@ -10,7 +10,7 @@
             <span class="board-move-dot {{row.status.name}}"></span>
             <span class="board-move-name">{{status-label row.status.name}}</span>
             {{#if row.isCurrent}}<span class="board-move-current" data-test-move-current>{{t "views.app.board.move.current"}}</span>{{/if}}
-            {{#if row.isSelected}}<i class="fa fa-check" aria-hidden="true"></i>{{/if}}
+            {{#if row.isSelected}}<AppUi::Icon @name="check" />{{/if}}
           </button>
         </li>
       {{/each}}
@@ -22,7 +22,7 @@
     <button type="button" class="board-move-row" data-test-move-open="assignee" {{on "click" (fn this.openPicker "assignee")}}>
       {{#if this.assigneeMember}}<AppUi::Avatar @user={{this.assigneeMember}} @size="s" />{{/if}}
       <span class="board-move-name" data-test-move-value="assignee">{{this.assigneeMember.name}}</span>
-      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      <AppUi::Icon @name="chevron-right" />
     </button>
   </section>
 
@@ -30,7 +30,7 @@
     <h5 class="board-move-label">{{t "views.app.board.move.milestone"}}</h5>
     <button type="button" class="board-move-row" data-test-move-open="milestone" {{on "click" (fn this.openPicker "milestone")}}>
       <span class="board-move-name" data-test-move-value="milestone">{{if this.selectedMilestone.id this.selectedMilestone.name (t "views.app.board.backlog")}}</span>
-      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      <AppUi::Icon @name="chevron-right" />
     </button>
   </section>
 
@@ -43,7 +43,7 @@
             <button type="button" class="board-move-row {{if row.isSelected "is-selected"}}" data-test-move-pick={{row.item.id}} {{on "click" (fn this.pick row.item)}}>
               {{#if this.isAssigneePicker}}<AppUi::Avatar @user={{row.item}} @size="s" />{{/if}}
               <span class="board-move-name">{{if row.isBacklog (t "views.app.board.backlog") row.item.name}}</span>
-              {{#if row.isSelected}}<i class="fa fa-check" aria-hidden="true"></i>{{/if}}
+              {{#if row.isSelected}}<AppUi::Icon @name="check" />{{/if}}
             </button>
           </li>
         {{/each}}

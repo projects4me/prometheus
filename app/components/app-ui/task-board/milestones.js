@@ -127,7 +127,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	}
 
 	/**
-	 * This property returns the appropriate icon class based on milestone status
+	 * This property returns the appropriate icon name based on milestone status
 	 *
 	 * @property milestoneIcon
 	 * @type String
@@ -146,8 +146,8 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		}
 
 		return status === 'overdue'
-			? 'fa fa-exclamation-triangle'
-			: 'fa fa-bullseye';
+			? 'exclamation-triangle'
+			: 'bullseye';
 	}
 
 	/**

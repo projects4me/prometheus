@@ -9,13 +9,13 @@
       {{#if @hasChildren}}
         <button type="button" class="gantt-issue-toggle" data-test-gantt-issue-toggle
           aria-expanded={{if @isCollapsed "false" "true"}} {{on "click" this.handleToggleChildren}}>
-          <i class="fa {{if @isCollapsed "fa-chevron-right" "fa-chevron-down"}}" aria-hidden="true"></i>
+          <AppUi::Icon @name={{if @isCollapsed "chevron-right" "chevron-down"}} />
         </button>
       {{/if}}
-      <span class="gantt-grid-text">{{#if this.conflictText}}<i class="fa fa-ban text-danger gantt-conflict-icon" title={{this.conflictText}} data-test-gantt-conflict-icon aria-hidden="true"></i> {{/if}}<span class="gantt-grid-number">#{{this.issueNumber}}</span> {{this.issueSubject}}</span>
+      <span class="gantt-grid-text">{{#if this.conflictText}}<AppUi::Icon @name="ban" class="text-danger gantt-conflict-icon" title={{this.conflictText}} data-test-gantt-conflict-icon /> {{/if}}<span class="gantt-grid-number">#{{this.issueNumber}}</span> {{this.issueSubject}}</span>
       <button type="button" class="btn btn-box-tool gantt-grid-open" data-test-gantt-grid-open
         aria-label={{t "components.gantt.issueList.open"}} title={{t "components.gantt.issueList.open"}}
-        {{on "click" this.handleIssueNumberClick}}><i class="fa fa-eye" aria-hidden="true"></i></button>
+        {{on "click" this.handleIssueNumberClick}}><AppUi::Icon @name="eye" /></button>
     </div>
     <div class="gantt-grid-cell gantt-grid-who" data-test-gantt-grid-who>
       {{#if @issue.assignedTo}}
@@ -70,14 +70,14 @@
       @onTooltipIssue={{@onTooltipIssue}}
     />
     {{#if this.conflictText}}
-      <span class="label label-danger gantt-conflict-flag" style={{this.conflictStyle}} data-test-gantt-conflict-flag><i class="fa fa-ban" aria-hidden="true"></i> {{this.conflictText}}</span>
+      <span class="label label-danger gantt-conflict-flag" style={{this.conflictStyle}} data-test-gantt-conflict-flag><AppUi::Icon @name="ban" /> {{this.conflictText}}</span>
     {{/if}}
     {{#if this.edgeChip}}
       <button type="button" class="gantt-edge-chip gantt-edge-chip-{{this.edgeChip}}" style={{this.edgeChipStyle}} data-test-gantt-edge-chip={{this.edgeChip}}
         {{on "click" this.handleChipSelect}}>
-        {{#if (eq this.edgeChip "left")}}<i class="fa fa-angle-left" aria-hidden="true"></i>{{/if}}
+        {{#if (eq this.edgeChip "left")}}<AppUi::Icon @name="angle-left" />{{/if}}
         {{this.edgeChipDate}}
-        {{#if (eq this.edgeChip "right")}}<i class="fa fa-angle-right" aria-hidden="true"></i>{{/if}}
+        {{#if (eq this.edgeChip "right")}}<AppUi::Icon @name="angle-right" />{{/if}}
       </button>
     {{/if}}
     {{else}}

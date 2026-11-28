@@ -103,15 +103,15 @@ export default class AppUiMilestoneOverviewComponent extends Component {
 	}
 
 	/**
-	 * Font Awesome icon class for the milestone header icon from `@milestone` status and dates.
+	 * Icon name for the milestone header icon from `@milestone` status and dates.
 	 *
 	 * @method milestoneIcon
 	 * @return {string}
 	 */
 	get milestoneIcon() {
 		return this._effectiveMilestoneStatus() === 'overdue'
-			? 'fa fa-exclamation-triangle'
-			: 'fa fa-bullseye';
+			? 'exclamation-triangle'
+			: 'bullseye';
 	}
 
 	/**

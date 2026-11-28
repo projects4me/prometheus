@@ -24,7 +24,7 @@
           @onClick={{this.toggleMarkMilestoneAsComplete}}
           title={{t "views.app.board.milestone.markComplete.confirm"}}
         >
-          <i class="fa fa-check"></i>
+          <AppUi::Icon @name="check" />
           {{t "views.app.board.milestone.markComplete.short"}}
         </AppUi::Button>
       {{/if}}
@@ -58,7 +58,7 @@
             @onClick={{this.toggleMarkMilestoneAsComplete}}
             title={{t "views.app.board.milestone.markComplete.confirm"}}
           >
-            <i class="fa fa-check"></i>
+            <AppUi::Icon @name="check" />
             {{t "views.app.board.milestone.markComplete.confirm"}}
           </AppUi::Button>
         </li>
@@ -218,7 +218,7 @@
   >
     <div class="close-milestone-confirmation">
       <div class="alert alert-warning flex-row flex-ai-c">
-        <i class="fa fa-exclamation-triangle"></i>
+        <AppUi::Icon @name="exclamation-triangle" />
         <p>{{safe-html (t "views.app.board.milestone.markComplete.message" milestoneName=this.activeMilestone.name)}}</p>
       </div>
       

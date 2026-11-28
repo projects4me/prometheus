@@ -42,7 +42,7 @@
       {{#each this.blockers key="link.id" as |row|}}
         <div class="gantt-edit-sheet-link" data-test-gantt-edit-blocker={{row.issue.id}}>
           <span><strong>{{call this.label row.issue}}</strong> {{row.issue.subject}}</span>
-          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.gantt.editSheet.removeDependency"}} data-test-gantt-edit-remove={{row.issue.id}} {{on "click" (fn this.remove row.link)}}><i class="fa fa-times" aria-hidden="true"></i></button>
+          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.gantt.editSheet.removeDependency"}} data-test-gantt-edit-remove={{row.issue.id}} {{on "click" (fn this.remove row.link)}}><AppUi::Icon @name="times" /></button>
         </div>
       {{else}}
         <p class="text-muted" data-test-gantt-edit-no-blockers>{{t "views.app.gantt.editSheet.noBlockers"}}</p>
