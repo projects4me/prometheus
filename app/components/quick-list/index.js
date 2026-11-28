@@ -73,7 +73,7 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  *            @activeId={{this.ideaId}} @isLoading={{this.isLoading}} @error={{this.error}}
  *            @onRetry={{this.reload}} @onClearSearch={{this.clearSearch}}>
  *   <:actions>
- *     <button type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+ *     <button type="button" class="btn btn-box-tool"><AppUi::Icon @name="plus" /></button>
  *   </:actions>
  *   <:search>
  *     <EzSearchCompact @schema={{this.schema}} @onApply={{this.search}} />

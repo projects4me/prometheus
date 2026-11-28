@@ -4,7 +4,7 @@
   {{else if (eq @data.kind "user")}}
     <AppUi::Avatar @size="xs" @user={{hash id=@data.value name=@data.label}} />
   {{else}}
-    <i class="fa fa-code" aria-hidden="true"></i>
+    <AppUi::Icon @name="code" />
   {{/if}}
   <span class="username">{{@data.label}}</span>
 </span>

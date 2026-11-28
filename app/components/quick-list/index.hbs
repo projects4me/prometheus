@@ -34,7 +34,7 @@
       {{/each}}
     {{else if @error}}
       <p class="quick-list__state quick-list__state--error" data-test-quick-list-error>
-        <i class="fa fa-exclamation-triangle"></i>
+        <AppUi::Icon @name="exclamation-triangle" />
         {{t "components.quickList.error"}}
         {{#if @onRetry}}
           <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-retry {{on "click" @onRetry}}>

@@ -5,7 +5,7 @@
 >
   <AppUi::MilestoneBlock @milestone={{@milestone}}>
     <AppUi::Button class="btn btn-box-tool" @onClick={{fn @editMilestone @milestone}} @eventRequired={{true}} data-milestone-action="edit">
-      <i class="fa fa-pencil edit-milestone" {{tooltip (t "global.form.edit")}} aria-label={{t "global.form.edit"}}></i>
+      <AppUi::Icon @name="pencil" @label={{t "global.form.edit"}} class="edit-milestone" {{tooltip (t "global.form.edit")}} />
     </AppUi::Button>
 
     <span class="pull-right" data-milestone="progress">
