@@ -1,0 +1,7 @@
+// Build flags, imported first in app.scss.
+//
+// $p4m-foundation-only: when true, app.scss skips bootstrap-sass, AdminLTE, the skin and
+// awesome-bootstrap-checkbox, so a foundation area can be checked on its own. Set it to true
+// locally only. The committed value is always false.
+// See docs/ui/foundation/README.md.
+$p4m-foundation-only: false !default;

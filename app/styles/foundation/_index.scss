@@ -1,0 +1,10 @@
+// Foundation stylesheet entry, imported in app.scss right after the AdminLTE skin.
+// Order matters: base, shell, then grid and components.
+// See docs/ui/foundation/README.md.
+@import 'base/reset';
+@import 'base/typography';
+@import 'shell/layout';
+@import 'shell/sidebar';
+
+// --- Grid and component partials: added by the second scaffold issue as one commented import block. ---
+// (placeholder: do not add imports here from other issues)

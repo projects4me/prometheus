@@ -13,6 +13,13 @@
 
 // Variables should be imported at very first
 
+@use "sass:meta";
+
+// Build flags (e.g. $p4m-foundation-only), must come first
+// (Bootstrap, AdminLTE and the checkbox lib load through meta.load-css: Sass forbids @import inside @if.
+// They emit the same CSS in the same order; the app's own files use none of their variables or mixins.)
+@import "build-flags.scss";
+
 @import "variables.scss";
 
 // Design tokens (--p4m- CSS custom properties), see docs/ui/design-system.md §4a
@@ -29,17 +36,26 @@
   capability of being able to override the rule in our application related
   Sass files.
 */
-@import 'node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
+@if not $p4m-foundation-only {
+  @include meta.load-css('node_modules/bootstrap-sass/assets/stylesheets/_bootstrap');
+}
 @import 'node_modules/ionicons/dist/scss/ionicons.scss';
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
 @import 'components/power-select.scss';
-@import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
-@import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';
+@if not $p4m-foundation-only {
+  @include meta.load-css('vendor/AdminLTE/dist/css/AdminLTE.min.scss');
+  @include meta.load-css('vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss');
+}
+
+// Foundation stylesheet (docs/ui/foundation/README.md)
+@import 'foundation/index';
 @import 'messenger/messenger.scss';
 @import 'messenger/messenger-spinner.scss';
 @import 'messenger/messenger-theme-air.scss';
 @import 'twemoji-awesome.scss';
-@import 'node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
+@if not $p4m-foundation-only {
+  @include meta.load-css('vendor-checkbox');
+}
 @import 'vendor/@toast-ui/toastui-editor.scss';
 @import 'vendor/@toast-ui/codemirror.scss';
 @import 'vendor/tippy.js/tippy.scss';
