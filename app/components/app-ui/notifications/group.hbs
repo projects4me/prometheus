@@ -1,12 +1,12 @@
 <li data-notification-group={{@group.key}} class="notification-group">
 	<h5 class="notification-group-heading" data-notification-group-heading>
 		<a href={{this.issueUrl}} data-notification-group-link {{on "click" this.goToIssue}}>
-			<i class="fa fa-ticket"></i>
+			<AppUi::Icon @name="ticket" />
 			<span data-notification-group-key>{{@group.shortcode}}-{{@group.issueNumber}}</span>
 		</a>
 		{{#if this.hasUnread}}
 			<button type="button" class="notification-group-mark-read" data-notification-group-mark-read title={{t "views.app.notifications.markGroupAsRead"}} disabled={{this.isSaving}} {{on "click" this.markGroupAsRead}}>
-				<i class="fa fa-check-circle"></i>
+				<AppUi::Icon @name="check-circle" />
 			</button>
 		{{/if}}
 	</h5>

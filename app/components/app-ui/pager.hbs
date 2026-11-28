@@ -9,7 +9,7 @@
       aria-label={{t "components.pager.previous"}}
       disabled={{this.isPreviousDisabled}}
       {{on "click" this.previous}}
-    ><i class="fa fa-angle-left"></i></button>
+    ><AppUi::Icon @name="angle-left" /></button>
     <button
       type="button"
       class="btn btn-default btn-xs"
@@ -18,6 +18,6 @@
       aria-label={{t "components.pager.next"}}
       disabled={{this.isNextDisabled}}
       {{on "click" this.next}}
-    ><i class="fa fa-angle-right"></i></button>
+    ><AppUi::Icon @name="angle-right" /></button>
   </div>
 </div>

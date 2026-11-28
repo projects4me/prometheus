@@ -12,7 +12,7 @@
 							{{on 'click' this.markAllAsRead}}
 							title={{t 'views.app.notifications.markAllAsRead'}}
 						>
-							<i class='fa fa-check-circle'></i>
+							<AppUi::Icon @name="check-circle" />
 							{{t 'views.app.notifications.markAllAsRead'}}
 						</button>
 					</div>
@@ -46,7 +46,7 @@
 						{{else}}
 							<li class='empty-notifications' data-empty-notifications>
 								<div class='empty-icon'>
-									<i class='fa fa-bell-slash-o'></i>
+									<AppUi::Icon @name="bell-slash-o" />
 								</div>
 								<div class='empty-message' data-empty-message>
 									<strong>{{t

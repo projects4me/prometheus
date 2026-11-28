@@ -23,22 +23,22 @@ export default class PriorityIcon {
 
         switch (priority) {
             case 'blocker':
-                className = 'fa-ban';
+                className = 'ban';
                 break;
             case 'critical':
-                className = 'fa-angle-double-up';
+                className = 'angle-double-up';
                 break;
             case 'high':
-                className = 'fa-arrow-up';
+                className = 'arrow-up';
                 break;
             case 'medium':
-                className = 'fa-dot-circle-o';
+                className = 'dot-circle-o';
                 break;
             case 'low':
-                className = 'fa-arrow-down';
+                className = 'arrow-down';
                 break;
             case 'lowest':
-                className = 'fa-angle-double-down';
+                className = 'angle-double-down';
                 break;
             default:
                 break;
