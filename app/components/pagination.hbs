@@ -22,14 +22,14 @@
         title={{t (if @previousButtonTitle @previousButtonTitle "views.components.pagination.previousPage")}}
         data-btn="previous"
       >
-        <i class="fa fa-caret-left"></i>
+        <AppUi::Icon @name="caret-left" />
       </button>
 
       {{#if this.showPageInfo}}
         <div class="pagination-info" data-pagination-info>
           {{#if this.isLoading}}
             <div class="pagination-loading" data-pagination-loading>
-              <i class="fa fa-spinner fa-spin"></i>
+              <AppUi::Icon @name="spinner" @spin={{true}} />
               <span>{{@loadingText}}</span>
             </div>
           {{else if (has-block "center")}}
@@ -50,7 +50,7 @@
         title={{t (if @nextButtonTitle @nextButtonTitle "views.components.pagination.nextPage")}}
         data-btn="next"
       >
-        <i class="fa fa-caret-right"></i>
+        <AppUi::Icon @name="caret-right" />
       </button>
     </div>
   </div>
