@@ -40,6 +40,7 @@
   --p4m-grey-335: #aaaaaa;
   --p4m-grey-400: #999999;
   --p4m-grey-465: #888888;
+  --p4m-grey-480: #848484;
   --p4m-grey-500: #808080;
   --p4m-grey-520: #7a7a7a;
   --p4m-grey-535: #777777;
@@ -63,6 +64,7 @@
   --p4m-slate-32: #f5f6f8;
   --p4m-slate-33: #f4f6f9;
   --p4m-slate-35: #f5f6f7;
+  --p4m-slate-40: #f4f4f5;
   --p4m-slate-55: #ecf0f5;
   --p4m-slate-75: #e9ecef;
   --p4m-slate-95: #e4e7ea;
@@ -259,12 +261,15 @@
   --p4m-space-30: 3rem;
   --p4m-space-40: 4rem;
   --p4m-space-42-5: 4.25rem;
+  --p4m-space-44: 4.4rem;
   --p4m-space-50: 5rem;
   --p4m-space-60: 6rem;
   --p4m-space-90: 9rem;
   --p4m-space-100: 10rem;
   --p4m-space-175: 17.5rem;
+  --p4m-space-180: 18rem;
   --p4m-space-190: 19rem;
+  --p4m-space-200: 20rem;
   --p4m-space-230: 23rem;
   --p4m-space-250: 25rem;
   --p4m-space-280: 28rem;
@@ -397,6 +402,8 @@
   // AdminLTE's shell slide (content, footer, navbar and logo follow the sidebar)
   --p4m-duration-300: 0.3s;
   --p4m-ease-in-out: ease-in-out;
+  // the sidebar menu's active bar (border-left-color)
+  --p4m-ease: ease;
 
   /* ── z-index, lowest first (today's values; design-system §4a) ─────────── */
   // inside one component (Bootstrap button and input groups, pagination, the header user card)

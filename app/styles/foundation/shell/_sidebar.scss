@@ -1,2 +1,355 @@
-// Foundation: shell sidebar.
-// Intentionally empty: filled by issue TBD (sidebar issue of aprom-4999 phase 3).
+// Foundation: shell sidebar (aprom-5059, phase 3 of aprom-4999).
+//
+// The shell-sidebar rows of docs/ui/foundation/inventory.md, at today's values: main-sidebar, sidebar, sidebar-menu
+// with its headers, treeviews and active items, the header's sidebar-toggle, the collapsed icon strip (sidebar-mini)
+// with AdminLTE's hover flyout, and the phone drawer.
+//
+// State comes from the sidebar service through the body classes the sidebar-body-classes modifier sets:
+// sidebar-collapse (desktop icon strip), sidebar-expanded-on-hover (icon strip expanded under the pointer: the
+// plain expanded rules apply) and sidebar-open (phone drawer). The drawer slides in over the page, which
+// components/sidebar-overlay.scss dims; the treeview open/close slide stays in modules/nav.scss.
+//
+// Widths follow $sidebarWidth and $sidebarCollapsedWidth (variables.scss): modules/nav.scss sets the same widths
+// and offsets. Selectors are no more specific than the vendor ones, so modules/nav.scss and modules/header.scss
+// still win. The content, footer, logo and navbar offsets for each state are in shell/layout.
+//
+// Not ported, because nothing in app/ renders them: AdminLTE's .left-side, .sidebar-form, .user-panel and the
+// sidebar-toggle .icon-bar rules. The !important declarations in the icon strip mirror AdminLTE's and can go when
+// the vendor CSS is removed.
+
+$p4m-sidebar-slide: var(--p4m-duration-300) var(--p4m-ease-in-out);
+
+/* ── Sidebar column ──────────────────────────────────────────────────────── */
+.main-sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: var(--p4m-space-50);
+  min-height: 100%;
+  width: $sidebarWidth;
+  z-index: var(--p4m-z-drawer);
+  transition: transform $p4m-sidebar-slide, width $p4m-sidebar-slide;
+}
+
+.fixed .main-sidebar {
+  position: fixed;
+}
+
+body.hold-transition .main-sidebar {
+  transition: none;
+}
+
+.skin-black-light .main-sidebar {
+  background-color: var(--p4m-slate-20);
+}
+
+.sidebar {
+  padding-bottom: var(--p4m-space-10);
+}
+
+.skin-black-light .sidebar a {
+  color: var(--p4m-grey-735);
+}
+
+.skin-black-light .sidebar a:hover {
+  text-decoration: none;
+}
+
+/* ── Menu ────────────────────────────────────────────────────────────────── */
+.sidebar-menu {
+  list-style: none;
+  margin: var(--p4m-space-0);
+  padding: var(--p4m-space-0);
+}
+
+.sidebar-menu,
+.sidebar-menu > li.header {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-menu:hover {
+  overflow: visible;
+}
+
+.sidebar-menu > li {
+  position: relative;
+  margin: var(--p4m-space-0);
+  padding: var(--p4m-space-0);
+}
+
+.sidebar-menu > li > a {
+  padding: var(--p4m-space-12) var(--p4m-space-5) var(--p4m-space-12) var(--p4m-space-15);
+  display: block;
+}
+
+.sidebar-menu > li > a > .fa,
+.sidebar-menu > li > a > .glyphicon,
+.sidebar-menu > li > a > .ion {
+  width: var(--p4m-space-20);
+}
+
+.sidebar-menu > li .label,
+.sidebar-menu > li .badge {
+  margin-right: var(--p4m-space-5);
+}
+
+.sidebar-menu > li .badge {
+  margin-top: var(--p4m-space-3);
+}
+
+.sidebar-menu li.header {
+  padding: var(--p4m-space-10) var(--p4m-space-25) var(--p4m-space-10) var(--p4m-space-15);
+  font-size: var(--p4m-font-size-12);
+}
+
+.sidebar-menu > li.header {
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.sidebar-menu li > a {
+  position: relative;
+}
+
+.sidebar-menu li > a > .pull-right-container {
+  position: absolute;
+  right: var(--p4m-space-10);
+  top: 50%;
+  margin-top: var(--p4m-space-neg-7);
+}
+
+// The treeview chevron; modules/nav.scss turns it for menu-open.
+.sidebar-menu li > a > .fa-angle-left,
+.sidebar-menu li > a > .pull-right-container > .fa-angle-left {
+  width: auto;
+  height: auto;
+  padding: var(--p4m-space-0);
+  margin-right: var(--p4m-space-10);
+}
+
+.sidebar-menu li.active > a > .fa-angle-left,
+.sidebar-menu li.active > a > .pull-right-container > .fa-angle-left {
+  transform: rotate(-90deg);
+}
+
+.skin-black-light .sidebar-menu > li {
+  transition: border-left-color var(--p4m-duration-300) var(--p4m-ease);
+}
+
+.skin-black-light .sidebar-menu > li.header {
+  color: var(--p4m-grey-480);
+  background: var(--p4m-slate-20);
+}
+
+.skin-black-light .sidebar-menu > li > a {
+  border-left: var(--p4m-border-width-3) solid transparent;
+  font-weight: var(--p4m-font-weight-600);
+}
+
+.skin-black-light .sidebar-menu > li:hover > a,
+.skin-black-light .sidebar-menu > li.active > a {
+  color: var(--p4m-grey-1000);
+  background: var(--p4m-slate-40);
+}
+
+.skin-black-light .sidebar-menu > li.active {
+  border-left-color: var(--p4m-grey-0);
+}
+
+.skin-black-light .sidebar-menu > li.active > a {
+  font-weight: var(--p4m-font-weight-600);
+}
+
+/* ── Treeview submenus ───────────────────────────────────────────────────── */
+// Open and close through menu-open in modules/nav.scss; AdminLTE shows an active item's submenu.
+.sidebar-menu .treeview-menu {
+  display: none;
+  list-style: none;
+  padding: var(--p4m-space-0);
+  margin: var(--p4m-space-0);
+  padding-left: var(--p4m-space-5);
+}
+
+.sidebar-menu li.active > .treeview-menu {
+  display: block;
+}
+
+.sidebar-menu .treeview-menu .treeview-menu {
+  padding-left: var(--p4m-space-20);
+}
+
+.sidebar-menu .treeview-menu > li {
+  margin: var(--p4m-space-0);
+}
+
+.sidebar-menu .treeview-menu > li > a {
+  padding: var(--p4m-space-5) var(--p4m-space-5) var(--p4m-space-5) var(--p4m-space-15);
+  display: block;
+  font-size: var(--p4m-font-size-14);
+}
+
+.sidebar-menu .treeview-menu > li > a > .fa,
+.sidebar-menu .treeview-menu > li > a > .glyphicon,
+.sidebar-menu .treeview-menu > li > a > .ion {
+  width: var(--p4m-space-20);
+}
+
+.sidebar-menu .treeview-menu > li > a > .pull-right-container > .fa-angle-left,
+.sidebar-menu .treeview-menu > li > a > .pull-right-container > .fa-angle-down,
+.sidebar-menu .treeview-menu > li > a > .fa-angle-left,
+.sidebar-menu .treeview-menu > li > a > .fa-angle-down {
+  width: auto;
+}
+
+.skin-black-light .sidebar-menu > li > .treeview-menu {
+  background: var(--p4m-slate-40);
+}
+
+.skin-black-light .treeview-menu > li > a {
+  color: var(--p4m-grey-535);
+}
+
+.skin-black-light .treeview-menu > li.active > a,
+.skin-black-light .treeview-menu > li > a:hover {
+  color: var(--p4m-grey-1000);
+}
+
+.skin-black-light .treeview-menu > li.active > a {
+  font-weight: var(--p4m-font-weight-600);
+}
+
+/* ── Header toggle ───────────────────────────────────────────────────────── */
+.main-header .sidebar-toggle {
+  float: left;
+  background-color: transparent;
+  background-image: none;
+  padding: var(--p4m-space-15) var(--p4m-space-15);
+  font-family: var(--p4m-font-family-fontawesome);
+}
+
+.main-header .sidebar-toggle:before {
+  content: "\f0c9";
+}
+
+.main-header .sidebar-toggle:hover {
+  color: var(--p4m-grey-0);
+}
+
+.main-header .sidebar-toggle:focus,
+.main-header .sidebar-toggle:active {
+  background: transparent;
+}
+
+.skin-black-light .main-header .navbar .sidebar-toggle {
+  color: var(--p4m-grey-800);
+}
+
+.skin-black-light .main-header .navbar .sidebar-toggle:hover {
+  color: var(--p4m-grey-400);
+  background: var(--p4m-grey-0);
+}
+
+.skin-black-light .main-header .navbar > .sidebar-toggle {
+  color: var(--p4m-grey-800);
+  border-right: var(--p4m-border-width-1) solid var(--p4m-grey-65);
+}
+
+/* ── Desktop: collapsed and the icon strip ───────────────────────────────── */
+@media (min-width: $p4m-screen-sm) {
+  .sidebar-collapse .main-sidebar {
+    transform: translate(-$sidebarWidth, 0);
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar {
+    transform: translate(0, 0);
+    width: $sidebarCollapsedWidth !important;
+    z-index: var(--p4m-z-drawer-collapsed);
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li {
+    position: relative;
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > a {
+    margin-right: var(--p4m-space-0);
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > span {
+    border-top-right-radius: var(--p4m-radius-4);
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:not(.treeview) > a > span {
+    border-bottom-right-radius: var(--p4m-radius-4);
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu {
+    padding-top: var(--p4m-space-5);
+    padding-bottom: var(--p4m-space-5);
+    border-bottom-right-radius: var(--p4m-radius-4);
+  }
+
+  // Hover flyout: the label and the submenu show beside the icon strip.
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+    display: block !important;
+    position: absolute;
+    width: var(--p4m-space-180);
+    left: $sidebarCollapsedWidth;
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span {
+    top: 0;
+    margin-left: var(--p4m-space-neg-3);
+    padding: var(--p4m-space-12) var(--p4m-space-5) var(--p4m-space-12) var(--p4m-space-20);
+    background-color: inherit;
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
+    float: right;
+    width: auto !important;
+    left: var(--p4m-space-200) !important;
+    top: var(--p4m-space-10) !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container > .label:not(:first-of-type) {
+    display: none;
+  }
+
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+    top: var(--p4m-space-44);
+    margin-left: var(--p4m-space-0);
+  }
+
+  // Outside the hover flyout only the icons show.
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > span,
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu,
+  .sidebar-mini.sidebar-collapse .sidebar-menu > li > a > .pull-right,
+  .sidebar-mini.sidebar-collapse .sidebar-menu li.header {
+    display: none !important;
+    transform: translateZ(0);
+  }
+
+  .skin-black-light.sidebar-mini.sidebar-collapse .sidebar-menu > li > .treeview-menu {
+    border-left: var(--p4m-border-width-1) solid var(--p4m-slate-155);
+  }
+}
+
+/* ── Phone: the drawer ───────────────────────────────────────────────────── */
+// Below the two-row phone header, off screen until sidebar-open slides it (and the page) across.
+@media (max-width: $p4m-screen-xs-max) {
+  .main-sidebar {
+    padding-top: var(--p4m-space-100);
+    transform: translate(-$sidebarWidth, 0);
+  }
+
+  .sidebar-open .main-sidebar {
+    transform: translate(0, 0);
+  }
+}
+
+@media print {
+  .main-sidebar {
+    display: none !important;
+  }
+}
