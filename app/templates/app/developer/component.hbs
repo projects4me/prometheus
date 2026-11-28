@@ -11,7 +11,7 @@
       <p>No component named <code>{{this.model.name}}</code> is registered.</p>
       {{#if this.model.first}}
         <LinkTo @route="app.developer.component" @model={{this.model.first.name}} data-developer-back>
-          <i class="fa fa-arrow-left"></i> Back to {{this.model.first.label}}
+          <AppUi::Icon @name="arrow-left" /> Back to {{this.model.first.label}}
         </LinkTo>
       {{/if}}
     </div>

@@ -11,12 +11,12 @@
         </:search>
         <:actions as |narrow|>
           <button type="button" class="btn btn-default" title="New agent" aria-label="New agent" data-test-demo-list-create {{on "click" (fn this.create log)}}>
-            <i class="fa fa-plus" aria-hidden="true"></i>{{#unless narrow}} New agent{{/unless}}
+            <AppUi::Icon @name="plus" />{{#unless narrow}} New agent{{/unless}}
           </button>
         </:actions>
         <:bulkActions as |ids clear|>
           <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete {{on "click" (fn this.bulk log ids clear)}}><i class="fa fa-trash-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete {{on "click" (fn this.bulk log ids clear)}}><AppUi::Icon @name="trash-o" /></button>
           </div>
         </:bulkActions>
         <:pager>
@@ -35,7 +35,7 @@
             {{/if}}
           </:cell>
           <:rowActions>
-            <button type="button" class="btn btn-default btn-sm" title="Edit" aria-label="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-default btn-sm" title="Edit" aria-label="Edit"><AppUi::Icon @name="pencil" /></button>
           </:rowActions>
           <:empty>
             <Exceptions::NothingFound @description="No agents found." />
@@ -47,7 +47,7 @@
       <AppUi::ListToolbar @position="bottom" @selection={{this.selection}} @rows={{this.rows}} @onSelectionChange={{fn this.selectionChange log}}>
         <:bulkActions as |ids clear|>
           <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete-bottom {{on "click" (fn this.bulk log ids clear)}}><i class="fa fa-trash-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete-bottom {{on "click" (fn this.bulk log ids clear)}}><AppUi::Icon @name="trash-o" /></button>
           </div>
         </:bulkActions>
         <:pager>

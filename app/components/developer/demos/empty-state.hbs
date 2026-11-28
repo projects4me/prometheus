@@ -3,7 +3,7 @@
   <:demo>
     <div class="box box-primary" data-test-demo-empty-state>
       <div class="box-body">
-        <AppUi::EmptyState @icon={{if this.customIcon "fa-search"}} @message="No records found.">
+        <AppUi::EmptyState @icon={{if this.customIcon "search"}} @message="No records found.">
           <:action>
             {{#if this.withAction}}
               <button type="button" class="btn btn-link quick-list__state-action">Clear the search</button>

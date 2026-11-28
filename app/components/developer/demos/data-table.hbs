@@ -16,7 +16,7 @@
           @onToggle={{fn this.toggleRow log}}
         >
           <:rowActions as |record|>
-            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><AppUi::Icon @name="pencil" /></button>
           </:rowActions>
         </AppUi::DataTable>
       {{else if this.showActions}}
@@ -33,7 +33,7 @@
           @onSelectionChange={{fn this.selectionChanged log}}
         >
           <:rowActions as |record|>
-            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><AppUi::Icon @name="pencil" /></button>
           </:rowActions>
           <:moreActions as |record|>
               <button type="button" data-test-demo-more-item {{on "click" (fn this.act log "delete" record)}}><span>Delete</span></button>

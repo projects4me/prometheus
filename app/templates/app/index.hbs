@@ -23,9 +23,7 @@
           <:default>
             <p>{{t "views.app.createNewProjectDescription"}}</p>
             <LinkTo @route="app.projects.create">
-              <AppUi::Button type="button" class="btn btn-primary"><i
-                  class="fa fa-plus"
-                ></i>
+              <AppUi::Button type="button" class="btn btn-primary"><AppUi::Icon @name="plus" />
                 {{t "views.app.createProject"}}</AppUi::Button>
             </LinkTo>
           </:default>
