@@ -12,7 +12,7 @@
           disabled={{this.isSaving}}
           {{on "click" this.commitSave}}
         >
-          <i class="fa fa-check text-success"></i>
+          <AppUi::Icon @name="check" class="text-success" />
         </button>
         <button
           type="button"
@@ -21,7 +21,7 @@
           disabled={{this.isSaving}}
           {{on "click" this.cancelEdit}}
         >
-          <i class="fa fa-times text-muted"></i>
+          <AppUi::Icon @name="times" class="text-muted" />
         </button>
       </span>
     </div>
@@ -54,7 +54,7 @@
         </span>
         {{#if this.canEdit}}
           <span class="app-ui-inline-editable__edit-hint" aria-hidden="true">
-            <i class="fa fa-pencil"></i>
+            <AppUi::Icon @name="pencil" />
           </span>
         {{/if}}
       </div>

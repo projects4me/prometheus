@@ -1,3 +1,4 @@
+{{! template-lint-disable require-presentational-children }}
 <div class="accordion-container" ...attributes>
   {{#each-in this.sections as |key content|}}
     <div class="accordion-section {{if (includes key this.openSections) 'open'}}" data-accordion-section={{key}}>
@@ -17,7 +18,7 @@
           {{/if}}
         </div>
         <div class="accordion-icon">
-          <i class="fa {{if (includes key this.openSections) 'fa-minus' 'fa-plus'}}"></i>
+          <AppUi::Icon @name={{if (includes key this.openSections) "minus" "plus"}} />
         </div>
       </div>
       

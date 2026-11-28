@@ -26,7 +26,7 @@ const MAX_DEPTH = 8; // keep in step with the @for loop in app/styles/components
  * Like QuickList it can show a select-all box (`@selectedIds` and `@onSelectAll`; the owner keeps the ids, so the
  * selection survives paging), group rows (`@groupKey`, `@groupLabel`) and show a second line under a cell
  * (`column.subKey`). Sort icons are always visible and the applied one is marked with the primary colour.
- * Extra row actions go into the `<:moreActions>` block, shown in an AppUi::Dropdown behind a `fa-ellipsis-v` button.
+ * Extra row actions go into the `<:moreActions>` block, shown in an AppUi::Dropdown behind a `ellipsis-v` button.
  *
  * The row check buttons (the QuickList icon button, `aria-pressed`) carry `data-select` with the record id, so a page can find them by record.
  *
@@ -214,10 +214,10 @@ export default class AppUiDataTableComponent extends Component {
 	get columns() {
 		return (this.args.columns || []).map((column, index) => {
 			let sortKey = column.sortKey || column.key;
-			let icon = 'fa-sort';
+			let icon = 'sort';
 			let active = !!column.sortable && sortKey === this.args.sort;
 			if (active) {
-				icon = this.args.order === 'desc' ? 'fa-sort-desc' : 'fa-sort-asc';
+				icon = this.args.order === 'desc' ? 'sort-desc' : 'sort-asc';
 			}
 			return { ...column, sortKey, sortIcon: icon, active, isFirst: index === 0 };
 		});

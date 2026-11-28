@@ -1,5 +1,5 @@
 <p class="quick-list__state quick-list__state--empty" data-test-empty-state ...attributes>
-  <i class="fa {{if @icon @icon "fa-info-circle"}}" aria-hidden="true" data-test-empty-state-icon></i>
+  <AppUi::Icon @name={{if @icon @icon "info-circle"}} data-test-empty-state-icon />
   <span data-test-empty-state-message>{{@message}}</span>
   {{#if (has-block "action")}}
     <span data-test-empty-state-action>
