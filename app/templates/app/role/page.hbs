@@ -13,7 +13,7 @@
           @onClick={{fn this.deleteRole this.model}}
           @aclContext="role.delete"
         >
-          <i class="fa fa-trash"></i>
+          <AppUi::Icon @name="trash" />
         </AppUi::Button>
       </div>
     </div>
@@ -136,7 +136,7 @@
                   @onClick={{fn this.deleteUserrole userrole}}
                   @aclContext="userrole.delete"
                 >
-                  <i class="fa fa-times"></i>
+                  <AppUi::Icon @name="times" />
                 </AppUi::Button>
 
                 <div class="member-avatar-wrap">
@@ -202,7 +202,7 @@
               <div class="role-members-view-all__search">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <AppUi::Icon @name="search" />
                   </span>
                   <Input
                     data-field="search role members"

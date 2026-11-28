@@ -17,7 +17,7 @@
             <div class="box-tools pull-right">
               <AccessControl @aclContext="agent.update">
                 <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-server" @onClick={{this.toggleServerForm}}>
-                  <i class="fa fa-plus"></i> {{t "views.app.agent.tools.addServer"}}
+                  <AppUi::Icon @name="plus" /> {{t "views.app.agent.tools.addServer"}}
                 </AppUi::Button>
               </AccessControl>
             </div>
@@ -109,7 +109,7 @@
                       {{#if row.canRefresh}}
                         <AccessControl @aclContext="agent.update">
                           <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="refresh" disabled={{row.isRefreshing}} @onClick={{fn this.refreshServer row.server}}>
-                            <i class="fa fa-refresh"></i> {{t "views.app.agent.tools.refresh"}}
+                            <AppUi::Icon @name="refresh" /> {{t "views.app.agent.tools.refresh"}}
                           </AppUi::Button>
                         </AccessControl>
                       {{/if}}
@@ -182,7 +182,7 @@
                   <div class="col-md-1">
                     <AccessControl @aclContext="agent.update">
                       <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="remove-grant" @onClick={{fn this.removeGrant row.grant}}>
-                        <i class="fa fa-times"></i>
+                        <AppUi::Icon @name="times" />
                       </AppUi::Button>
                     </AccessControl>
                   </div>
