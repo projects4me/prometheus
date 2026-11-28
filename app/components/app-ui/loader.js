@@ -29,13 +29,34 @@ export default class AppUiLoaderComponent extends Component {
 	}
 
 	/**
-	 * Get the icon class for the spinner
-	 * @property iconClass
+	 * The words of the icon argument: today's values such as "fa-spinner fa-spin" stay accepted.
+	 * @property iconWords
+	 * @type {Array<string>}
+	 * @private
+	 */
+	get iconWords() {
+		return (this.args.icon || 'spinner spin').split(/\s+/).filter((word) => word && word !== 'fa');
+	}
+
+	/**
+	 * The bare icon name of the spinner (the AppUi::Icon component strips a leading fa-)
+	 * @property iconName
 	 * @type {string}
-	 * @default "fa-spinner fa-spin"
+	 * @default "spinner"
 	 * @public
 	 */
-	get iconClass() {
-		return this.args.icon || 'fa-spinner fa-spin';
+	get iconName() {
+		return this.iconWords.find((word) => !/^(fa-)?spin$/.test(word)) || 'spinner';
+	}
+
+	/**
+	 * Whether the icon spins
+	 * @property iconSpin
+	 * @type {boolean}
+	 * @default true
+	 * @public
+	 */
+	get iconSpin() {
+		return this.iconWords.some((word) => /^(fa-)?spin$/.test(word));
 	}
 }

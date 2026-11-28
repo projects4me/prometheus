@@ -2,7 +2,7 @@
   {{#if this.isAgent}}
     <Agent::Avatar @user={{@user}} data-user-agent-avatar />
     {{#if this.hasPicture}}
-      <span class="app-ui-avatar-marker" data-test-avatar-marker><i class="fa fa-android" aria-hidden="true"></i></span>
+      <span class="app-ui-avatar-marker" data-test-avatar-marker><AppUi::Icon @name="android" /></span>
     {{/if}}
   {{else if this.showInitials}}
     <span class="app-ui-avatar-initials {{this.identityClass}}" data-test-avatar-initials>
@@ -10,7 +10,7 @@
       {{#if this.initials}}
         <span class="app-ui-avatar-text" data-test-avatar-text>{{this.initials}}</span>
       {{else}}
-        <i class="fa fa-user" aria-hidden="true" data-test-avatar-icon></i>
+        <AppUi::Icon @name="user" data-test-avatar-icon />
       {{/if}}
     </span>
   {{else}}

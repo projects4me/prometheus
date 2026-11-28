@@ -14,7 +14,7 @@
           <th class="{{if column.sortable "sortable"}} {{if column.active "sorted"}}" data-test-data-table-header={{column.key}}>
             {{column.label}}
             {{#if column.sortable}}
-              <button type="button" class="btn btn-box-tool data-table-sort {{if column.active "active"}}" data-test-data-table-sort={{column.key}} {{on "click" (fn this.sort column)}}><i class="fa {{column.sortIcon}}"></i></button>
+              <button type="button" class="btn btn-box-tool data-table-sort {{if column.active "active"}}" data-test-data-table-sort={{column.key}} {{on "click" (fn this.sort column)}}><AppUi::Icon @name={{column.sortIcon}} /></button>
             {{/if}}
           </th>
         {{/each}}
@@ -33,7 +33,7 @@
             <tr class="data-table-group" data-test-data-table-group={{section.key}}>
               <td colspan="100%">
                 <button type="button" class="data-table-group-heading" aria-expanded={{if section.isCollapsed "false" "true"}} data-test-data-table-group-toggle {{on "click" (fn this.toggleGroup section.key)}}>
-                  <i class="fa {{if section.isCollapsed "fa-caret-right" "fa-caret-down"}}" aria-hidden="true"></i>
+                  <AppUi::Icon @name={{if section.isCollapsed "caret-right" "caret-down"}} />
                   {{#if (has-block "groupHeading")}}
                     {{yield section to="groupHeading"}}
                   {{else if section.label}}
@@ -53,7 +53,7 @@
                   {{#if @selectable}}
                     <td class="select-box">
                       <button type="button" class="data-table-check" aria-pressed={{if (this.isSelected record) "true" "false"}} aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "click" (fn this.select record)}}>
-                        <i class="fa {{if (this.isSelected record) "fa-check-square" "fa-square-o"}}" aria-hidden="true"></i>
+                        <AppUi::Icon @name={{if (this.isSelected record) "check-square" "square-o"}} />
                       </button>
                     </td>
                   {{/if}}
@@ -62,7 +62,7 @@
                       {{#if (and column.isFirst tree)}}
                         {{#if tree.expandable}}
                           <button type="button" class="data-table-toggle" aria-expanded={{if tree.expanded "true" "false"}} aria-busy={{if tree.loading "true"}} aria-label={{if tree.expanded (t "components.dataTable.collapse") (t "components.dataTable.expand")}} disabled={{tree.loading}} data-test-data-table-toggle {{on "click" (fn this.toggleRow record)}}>
-                            <i class="fa {{if tree.loading "fa-spinner fa-spin" (if tree.expanded "fa-caret-down" "fa-caret-right")}}" aria-hidden="true"></i>
+                            <AppUi::Icon @name={{if tree.loading "spinner" (if tree.expanded "caret-down" "caret-right")}} @spin={{tree.loading}} />
                           </button>
                         {{else}}
                           <span class="data-table-toggle-spacer" aria-hidden="true"></span>
@@ -86,7 +86,7 @@
                         {{yield record to="rowActions"}}
                         {{#if (and (has-block "moreActions") (this.hasMore record))}}
                           <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
-                            <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                            <:button><AppUi::Icon @name="ellipsis-v" /></:button>
                             <:content>{{yield record to="moreActions"}}</:content>
                           </AppUi::Dropdown>
                         {{/if}}

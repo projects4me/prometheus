@@ -1,6 +1,6 @@
 <div class="app-ui-loader app-ui-loader--{{this.variant}}" data-loading-indicator>
   <div class="app-ui-loader__indicator">
-    <i class="fa {{this.iconClass}}"></i>
+    <AppUi::Icon @name={{this.iconName}} @spin={{this.iconSpin}} />
     <span>{{@message}}</span>
   </div>
 </div>

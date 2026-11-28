@@ -28,7 +28,6 @@ add|ember-template-lint|no-negated-condition|34|102|34|102|b78accb102ebb4649bd1b
 add|ember-template-lint|no-negated-condition|35|102|35|102|b78accb102ebb4649bd1bdee72cd2c2d7e72cabf|1794614400000|||app/components/app-layouts/application-header.hbs
 add|ember-template-lint|no-unsupported-role-attributes|83|18|83|18|64b9e510459cdfd8568018b4189f2f5588464933|1794614400000|||app/components/app-layouts/application-header.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|1|20|1|20|148e686ac76ab13783012df62a5bfae91e309a09|1794614400000|||app/components/app-layouts/application-wrapper.hbs
-add|ember-template-lint|require-presentational-children|20|10|20|10|d1fdace4cd53c411cce5d852408d1160d59adf96|1794614400000|||app/components/app-ui/accordion.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|2|31|2|31|60910886803ef1eaf2c95b1c4f278130f4e14232|1794614400000|||app/components/app-ui/gantt-chart.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|2|67|2|67|06afd804863890ff7ff92c926bb9a4c986540804|1794614400000|||app/components/app-ui/gantt-chart.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|52|8|52|8|a30c6de6f50a32eb30bf46e7413ce0d0660e2bff|1794614400000|||app/components/app-ui/gantt-chart.hbs

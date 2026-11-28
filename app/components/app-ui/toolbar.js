@@ -18,11 +18,11 @@ import { action } from '@ember/object';
  * @example
  * <AppUi::Toolbar @showCaret={{true}}>
  *   <:primary>
- *     <AppUi::Button><i class="fa fa-pencil"></i></AppUi::Button>
+ *     <AppUi::Button><AppUi::Icon @name="pencil" /></AppUi::Button>
  *   </:primary>
  *   <:dropdown>
- *     <AppUi::Button><i class="fa fa-copy"></i></AppUi::Button>
- *     <AppUi::Button><i class="fa fa-download"></i></AppUi::Button>
+ *     <AppUi::Button><AppUi::Icon @name="copy" /></AppUi::Button>
+ *     <AppUi::Button><AppUi::Icon @name="download" /></AppUi::Button>
  *   </:dropdown>
  * </AppUi::Toolbar>
  */
