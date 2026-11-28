@@ -332,6 +332,16 @@
     "exclamation": "exclamation"
   },
   "components": {
+    "tags": {
+      "editModal": {
+        "title": "Tags",
+        "save": "Save",
+        "placeholder": "Add a tag",
+        "empty": "No tags yet.",
+        "loadFailed": "The tags could not be loaded.",
+        "failed": "{count, plural, one {One change} other {# changes}} could not be saved. The tags shown are the current ones."
+      }
+    },
     "developerDocs": {
       "title": "Documentation",
       "loading": "Loading documentation...",
