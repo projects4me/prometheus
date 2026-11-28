@@ -1,6 +1,6 @@
 {{#if @blockers.length}}
   <AppUi::Tag @variant="danger" class="blocked-by-label" data-test-blocked-by ...attributes>
-    <i class="fa fa-ban" aria-hidden="true"></i>
+    <AppUi::Icon @name="ban" />
     {{t "views.app.issue.detail.linkedIssues.blockedBy"}}
     {{#each this.shown as |item index|}}{{if index ", "}}<LinkTo @route="app.project.issue.page" @models={{array (lowercase item.issue.projectShortcode) item.issue.issueNumber}} data-test-blocked-by-link>{{item.text}}</LinkTo>{{/each}}{{#if this.more}} +{{this.more}}{{/if}}
   </AppUi::Tag>

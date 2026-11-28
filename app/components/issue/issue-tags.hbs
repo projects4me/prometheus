@@ -18,7 +18,7 @@
       {{/each}}
       {{#if this.canEdit}}
         <AppUi::Button class="btn btn-box-tool" @onClick={{this.openEdit}} aria-label={{t "views.app.issue.detail.tags.edit"}} data-test-issue-tags-add>
-          <i class="fa fa-plus" title={{t "views.app.issue.detail.tags.edit"}}></i>
+          <AppUi::Icon @name="plus" title={{t "views.app.issue.detail.tags.edit"}} />
         </AppUi::Button>
       {{/if}}
     </p>
