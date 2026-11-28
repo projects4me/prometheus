@@ -4,7 +4,8 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { click, render, settled } from '@ember/test-helpers';
+import Service from '@ember/service';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
@@ -33,6 +34,19 @@ module('Integration | Component | application-header', function (hooks) {
         `);
 
         assert.dom('div#btn-signout > a').hasText('Sign Out', 'signout button exists');
+    });
+
+    test('the sidebar toggle goes through the sidebar service', async function (assert) {
+        let toggles = 0;
+        this.owner.register('service:sidebar', class extends Service {
+            toggle = () => toggles++;
+        });
+
+        await render(hbs`<AppLayouts::ApplicationHeader @session={{this.session}} />`);
+        await click('[data-test-sidebar-toggle]');
+
+        assert.strictEqual(toggles, 1);
+        assert.dom('[data-test-sidebar-toggle]').doesNotHaveAttribute('data-toggle', 'AdminLTE no longer handles it');
     });
 
     test('it renders component with the sign in button', async function (assert) {

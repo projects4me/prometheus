@@ -68,6 +68,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @service('pub-sub') pubSub;
 
     /**
+     * The sidebar service behind the sidebar toggle
+     *
+     * @property sidebar
+     * @type Service
+     * @for ApplicationHeader
+     * @public
+     */
+    @service sidebar;
+
+    /**
      * Sign-In eligibility shared with the sign-in route.
      *
      * @property signInControl

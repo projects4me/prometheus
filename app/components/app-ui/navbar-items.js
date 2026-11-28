@@ -3,13 +3,15 @@
 */
 
 import Component from '@glimmer/component';
+import { service } from '@ember/service';
 
 /**
  * Renders the navbar items.
  *
  * An item (or a sub-item in its actions) is scoped by its metadata flags: `workspaceRelated` links to
  * `<anchorRoute>/<workspace short code>`, `projectRelated` to `project/<project short code>/<anchorRoute>`, and
- * anything else to `<anchorRoute>`. The short codes come from `@trackedProject`.
+ * anything else to `<anchorRoute>`. The short codes come from `@trackedProject`. Which submenu is open comes from
+ * the `sidebar-menu` service.
  *
  * @class AppUiNavbarItemsComponent
  * @namespace Prometheus.Components
@@ -17,6 +19,16 @@ import Component from '@glimmer/component';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUiNavbarItemsComponent extends Component {
+
+    /**
+     * Which submenu is open, one at a time across the sidebar menu.
+     *
+     * @property sidebarMenu
+     * @type Ember.Service
+     * @for AppUiNavbarItemsComponent
+     * @private
+     */
+    @service sidebarMenu;
 
     /**
      * Returns the href of a navigation item from its scope flags and the tracked short codes.

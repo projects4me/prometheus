@@ -480,11 +480,6 @@
       "count": 2
     }
   },
-  "app/modifiers/initialize-sidebar.js": {
-    "ember/no-jquery": {
-      "count": 10
-    }
-  },
   "app/modifiers/initialize-sortable.js": {
     "no-unused-vars": {
       "count": 1

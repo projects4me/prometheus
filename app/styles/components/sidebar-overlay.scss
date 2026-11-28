@@ -1,6 +1,6 @@
 /*
- * Dims the page under the open sidebar on phones. Tapping it hits .content-wrapper, which AdminLTE
- * already uses to close the menu.
+ * Dims the page under the open sidebar on phones. Tapping it hits .content-wrapper, whose click
+ * closes the menu through the sidebar service.
  */
 @media (max-width: 767px) {
   body.sidebar-open .content-wrapper {

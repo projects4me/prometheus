@@ -1,6 +1,6 @@
 
 {{!-- Sidebar Menu --}}
-<ul class="sidebar-menu" {{initialize-sidebar}} {{close-sidebar-on-navigate this.router}}>
+<ul class="sidebar-menu" {{close-sidebar-on-navigate this.router this.sidebar}}>
   <li class="header">{{t "views.nav.mainnav"}}</li>
   <AppUi::NavbarItems
     @meta={{this.workspaceNavigationMeta}}

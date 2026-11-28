@@ -61,6 +61,16 @@ export default class NavBarComponent extends AppComponent {
     @service router;
 
     /**
+     * The sidebar service closes the phone sidebar after navigation.
+     *
+     * @property sidebar
+     * @type Ember.Service
+     * @for NavBar
+     * @private
+     */
+    @service sidebar;
+
+    /**
      * This function fetches the navigation metaData and makes it available for display
      *
      * @method constructor

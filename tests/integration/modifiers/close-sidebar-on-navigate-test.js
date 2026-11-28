@@ -12,36 +12,20 @@ module('Integration | Modifier | close-sidebar-on-navigate', function (hooks) {
 
 	hooks.beforeEach(function () {
 		this.router = FakeRouter.create();
-		this.originalWidth = window.innerWidth;
-		document.body.classList.add('sidebar-open');
+		this.closed = 0;
+		this.sidebar = { close: () => this.closed++ };
 	});
 
-	hooks.afterEach(function () {
-		document.body.classList.remove('sidebar-open');
-		Object.defineProperty(window, 'innerWidth', { value: this.originalWidth, configurable: true, writable: true });
-	});
-
-	const setWidth = (w) => Object.defineProperty(window, 'innerWidth', { value: w, configurable: true, writable: true });
-
-	test('it closes the sidebar on route change on phones', async function (assert) {
-		setWidth(500);
-		await render(hbs`<div {{close-sidebar-on-navigate this.router}}></div>`);
+	test('it closes the sidebar on route change', async function (assert) {
+		await render(hbs`<div {{close-sidebar-on-navigate this.router this.sidebar}}></div>`);
 		this.router.trigger('routeDidChange');
-		assert.false(document.body.classList.contains('sidebar-open'));
-	});
-
-	test('it leaves the sidebar alone on desktop', async function (assert) {
-		setWidth(1200);
-		await render(hbs`<div {{close-sidebar-on-navigate this.router}}></div>`);
-		this.router.trigger('routeDidChange');
-		assert.true(document.body.classList.contains('sidebar-open'));
+		assert.strictEqual(this.closed, 1);
 	});
 
 	test('it removes the listener on teardown', async function (assert) {
-		setWidth(500);
-		await render(hbs`<div {{close-sidebar-on-navigate this.router}}></div>`);
+		await render(hbs`<div {{close-sidebar-on-navigate this.router this.sidebar}}></div>`);
 		await render(hbs``);
 		this.router.trigger('routeDidChange');
-		assert.true(document.body.classList.contains('sidebar-open'));
+		assert.strictEqual(this.closed, 0);
 	});
 });
