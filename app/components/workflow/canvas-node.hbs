@@ -22,10 +22,10 @@
         {{on "click" (fn @onInputClick @node)}}
       ></span>
     {{/if}}
-    <i class="fa fa-{{this.icon}}" aria-hidden="true"></i>
+    <AppUi::Icon @name={{this.icon}} />
     <span class="workflow-node-name">{{if @node.name @node.name (t (kind-label @node.kind))}}</span>
     {{#if @node.errors.length}}
-      <i class="fa fa-exclamation-circle text-red pull-right" title={{join " " @node.errors}} aria-hidden="true" data-node-error></i>
+      <AppUi::Icon @name="exclamation-circle" class="text-red pull-right" title={{join " " @node.errors}} data-node-error />
     {{/if}}
   </div>
   <ul class="list-unstyled workflow-node-ports">

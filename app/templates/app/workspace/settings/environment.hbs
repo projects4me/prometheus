@@ -5,7 +5,7 @@
   <:body>
     <p data-test-environment-runtime>
       {{#if this.runtimeName}}
-        <i class="fa fa-circle {{if this.model.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot aria-hidden="true"></i>
+        <AppUi::Icon @name="circle" class="{{if this.model.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot />
         <strong>{{this.runtimeName}}</strong>
         <span class="text-muted">({{this.runtimeKind}}, {{if this.model.runtimeOnline (t "views.app.workspace.settings.environment.online") (t "views.app.workspace.settings.environment.offline")}})</span>
       {{else}}

@@ -65,7 +65,7 @@
                   <h4>{{t "views.app.workspace.detail.environment"}}</h4>
                   <p class="workspace-environment-fact" data-test-environment-fact>
                     {{#if this.runtimeName}}
-                      <i class="fa fa-circle {{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot aria-hidden="true"></i>
+                      <AppUi::Icon @name="circle" class="{{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-environment-dot />
                       {{#if this.model.workspace.runtimeOnline}}
                         {{t "views.app.workspace.detail.runtimeOnline" name=this.runtimeName}}
                       {{else}}
@@ -224,7 +224,7 @@
                     <td>{{t "views.app.workspace.detail.runtime"}}</td>
                     <td class="text-right" data-test-env-runtime>
                       {{#if this.runtimeName}}
-                        <i class="fa fa-circle {{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-env-dot aria-hidden="true"></i>
+                        <AppUi::Icon @name="circle" class="{{if this.model.workspace.runtimeOnline "text-green" "text-muted"}}" data-test-env-dot />
                         {{this.runtimeName}}
                       {{else}}
                         {{t "views.app.workspace.detail.noRuntime"}}
@@ -274,7 +274,7 @@
             <:body>
               {{#each this.milestones as |milestone|}}
                 <div class="info-box {{if (eq milestone.status "in_progress") "bg-yellow" "bg-gray"}}" data-milestone-id={{milestone.id}} data-test-workspace-milestone>
-                  <span class="info-box-icon"><i class="fa {{if (eq milestone.status "in_progress") "fa-bullseye" "fa-clock-o"}}"></i></span>
+                  <span class="info-box-icon"><AppUi::Icon @name={{if (eq milestone.status "in_progress") "bullseye" "clock-o"}} /></span>
                   <div class="info-box-content" data-milestone-status={{milestone.status}}>
                     <span class="info-box-text" data-test-milestone-status>{{t (concat "views.app.milestone.lists.status." milestone.status)}}</span>
                     <span class="info-box-number" data-test-milestone-name>{{milestone.name}}</span>
