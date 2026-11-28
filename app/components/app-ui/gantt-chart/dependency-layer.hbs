@@ -65,7 +65,7 @@
     {{did-update this.applyContextMenuStyle this.contextMenu}}
   >
     <button type="button" class="context-menu-item" {{on "click" this.handleDeleteDependency}}>
-      <i class="fa fa-trash"></i> {{t "global.form.delete"}}
+      <AppUi::Icon @name="trash" /> {{t "global.form.delete"}}
     </button>
   </div>
 {{/if}}

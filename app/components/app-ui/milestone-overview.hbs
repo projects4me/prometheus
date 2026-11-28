@@ -7,7 +7,7 @@
   <div class="milestone-header-content flex-row">
     {{#if this.showCompactView}}
       <div class="milestone-icon {{this.milestoneBgClass}} flex-row jc-c">
-        <i class="{{this.milestoneIcon}}"></i>
+        <AppUi::Icon @name={{this.milestoneIcon}} />
       </div>
     {{/if}}
     <div class="milestone-progress-section {{unless this.showCompactView "milestone-progress-section--full"}}">

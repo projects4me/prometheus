@@ -3,7 +3,7 @@
   <div class="box-header with-border">
     <div class="milestone-header-content flex-row">
       <div class="milestone-icon {{this.milestoneBgClass}} flex-row jc-c">
-        <i class="{{this.milestoneIcon}}"></i>
+        <AppUi::Icon @name={{this.milestoneIcon}} />
       </div>
       
       <div class="milestone-progress-section">
@@ -42,10 +42,10 @@
             <div class="box-header with-border box {{get-prop @statusClass status.name}}" style={{if status.color (status-style status.name "border-top-color")}} data-field-status="{{status.name}}">
               <div class="flex-row flex-jc-sb flex-ai-c lane-header">
                 <button type="button" class="btn btn-box-tool lane-collapse-toggle" data-lane-toggle={{status.name}} title={{t (if collapsed "views.app.board.expandLane" "views.app.board.collapseLane")}} {{on "click" (fn this.toggleLane status.name)}}>
-                  <i class="fa {{if collapsed "fa-angle-right" "fa-angle-left"}}"></i>
+                  <AppUi::Icon @name={{if collapsed "angle-right" "angle-left"}} />
                 </button>
                 <div class="lane-title">
-                  <span class="lane-name">{{status-label status.name}}</span> <span class="lane-count">({{call (fn this.getIssuesCountForStatus status.name)}})</span>{{#if collapsed}} <i class="fa fa-arrow-down lane-drop-icon" aria-hidden="true"></i>{{/if}}
+                  <span class="lane-name">{{status-label status.name}}</span> <span class="lane-count">({{call (fn this.getIssuesCountForStatus status.name)}})</span>{{#if collapsed}} <AppUi::Icon @name="arrow-down" class="lane-drop-icon" />{{/if}}
                 </div>
                 {{#unless collapsed}}
                   <AppUi::DottedAddButton 
@@ -71,13 +71,13 @@
         <div class="lane box-body lane-status-{{get-prop @statusClass status.name}}" style={{if status.color (status-style status.name "--lane-color")}} data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>
           <AccessControl @aclContext="issue.create">
             <button type="button" class="lane-add-row" data-lane-add={{status.name}} {{on "click" (fn this.showAddIssueDialog status.name)}}>
-              <i class="fa fa-plus" aria-hidden="true"></i>
+              <AppUi::Icon @name="plus" />
               <span>{{t "views.app.board.laneAdd"}} <span class="lane-add-status">{{status-label status.name}}</span></span>
             </button>
           </AccessControl>
           {{#if (eq (call (fn this.getIssuesCountForStatus status.name)) 0)}}
             <div class="lane-empty" data-lane-empty={{status.name}}>
-              <i class="fa fa-inbox" aria-hidden="true"></i>
+              <AppUi::Icon @name="inbox" />
               <span>{{t "views.app.board.laneEmpty" status=(status-label status.name)}}</span>
             </div>
           {{/if}}
@@ -94,7 +94,7 @@
                       </span>
                     </div>
                     <button type="button" class="btn btn-box-tool issue-card-move" data-issue-move data-test-issue-move title={{t "views.app.board.move.action"}} aria-label={{t "views.app.board.move.action"}} {{on "click" (fn this.openMoveIssue issue)}}>
-                      <i class="fa fa-arrows" aria-hidden="true"></i>
+                      <AppUi::Icon @name="arrows" />
                     </button>
                   </div>
 
@@ -122,8 +122,8 @@
 
                   {{!-- Issue card effort --}}
                   <div class="flex-row flex-ai-c flex-jc-sb issue-card-effort">
-                    <span><i class="fa fa-clock-o"></i> {{t "views.app.board.estimated"}}: {{call (fn this.getIssueTimeLabel issue "estimated")}}</span>
-                    <span><i class="fa fa-hourglass-half"></i> {{t "views.app.board.spent"}}: {{call (fn this.getIssueTimeLabel issue "spent")}}</span>
+                    <span><AppUi::Icon @name="clock-o" /> {{t "views.app.board.estimated"}}: {{call (fn this.getIssueTimeLabel issue "estimated")}}</span>
+                    <span><AppUi::Icon @name="hourglass-half" /> {{t "views.app.board.spent"}}: {{call (fn this.getIssueTimeLabel issue "spent")}}</span>
                   </div>
 
                   {{!-- Issue card time left --}}
@@ -131,7 +131,7 @@
                     {{#if timeLeftMeta.isVisible}}
                       <div class="issue-card-time-left-wrap">
                         <div class="issue-card-time-left {{if (eq timeLeftMeta.state "warning") "is-warning"}} {{if (eq timeLeftMeta.state "overdue") "is-overdue"}}">
-                          <i class="fa {{if (eq timeLeftMeta.state "overdue") "fa-calendar-times-o" "fa-calendar-o"}}"></i>
+                          <AppUi::Icon @name={{if (eq timeLeftMeta.state "overdue") "calendar-times-o" "calendar-o"}} />
                           {{timeLeftMeta.label}}
                         </div>
                       </div>
@@ -163,13 +163,13 @@
                       <div class="flex-row flex-ai-c flex-jc-sb issue-card-right-meta">
                         {{#if issue.files.length}}
                           <div class="issue-card-files-count">
-                            <i class="fa fa-paperclip"></i> {{issue.files.length}}
+                            <AppUi::Icon @name="paperclip" /> {{issue.files.length}}
                           </div>
                         {{/if}}
 
                         {{#if issue.comments.length}}
                           <div class="issue-card-comments-count">
-                            <i class="fa fa-comments-o"></i> {{issue.comments.length}}
+                            <AppUi::Icon @name="comments-o" /> {{issue.comments.length}}
                           </div>
                         {{/if}}
                         <div class="issue-card-assignee">

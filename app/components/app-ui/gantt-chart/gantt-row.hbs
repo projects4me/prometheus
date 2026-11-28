@@ -4,7 +4,7 @@
     <div class="gantt-grid-cell gantt-grid-name">
       <button type="button" class="gantt-milestone-toggle" data-test-gantt-milestone-toggle
         aria-expanded={{if @isExpanded "true" "false"}} {{on "click" this.toggleMilestone}}>
-        <i class="fa {{if @isExpanded "fa-chevron-down" "fa-chevron-right"}}" aria-hidden="true"></i>
+        <AppUi::Icon @name={{if @isExpanded "chevron-down" "chevron-right"}} />
         <strong class="gantt-grid-text">{{this.milestoneName}}</strong>
       </button>
       {{#if (eq this.state "overdue")}}
@@ -47,7 +47,7 @@
       <div class="gantt-milestone-label" data-test-gantt-milestone-label>
         <button type="button" class="gantt-milestone-toggle" data-test-gantt-milestone-toggle
           aria-expanded={{if @isExpanded "true" "false"}} {{on "click" this.toggleMilestone}}>
-          <i class="fa {{if @isExpanded "fa-chevron-down" "fa-chevron-right"}}" aria-hidden="true"></i>
+          <AppUi::Icon @name={{if @isExpanded "chevron-down" "chevron-right"}} />
           <strong>{{this.milestoneName}}</strong>
         </button>
       </div>
