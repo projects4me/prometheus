@@ -10,11 +10,11 @@
     </h3>
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-default btn-sm" disabled={{@workflow.isNew}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst")}} data-workflow-runs {{on "click" @onShowRuns}}>
-        <i class="fa fa-history" aria-hidden="true"></i>
+        <AppUi::Icon @name="history" />
         {{t "views.app.workflow.editor.runs"}}
       </button>
       <button type="button" class="btn btn-default btn-sm" disabled={{or @workflow.isNew @graphUnsaved}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst") (if @graphUnsaved (t "views.app.workflow.editor.saveGraphFirst"))}} data-workflow-test-run {{on "click" @onShowTestRun}}>
-        <i class="fa fa-play" aria-hidden="true"></i>
+        <AppUi::Icon @name="play" />
         {{t "views.app.workflow.editor.testRun"}}
       </button>
       <AppUi::Button
@@ -24,7 +24,7 @@
         @aclContext={{if @workflow.isNew "workflow.create" "workflow.update"}}
         data-workflow-save
       >
-        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        <AppUi::Icon @name="floppy-o" />
         {{t "views.app.workflow.editor.save"}}
       </AppUi::Button>
     </div>

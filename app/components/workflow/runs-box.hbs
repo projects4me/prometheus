@@ -3,7 +3,7 @@
     <h3 class="box-title">{{t "views.app.workflow.runs.title"}}</h3>
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.runs.close"}} data-close-runs {{on "click" @onClose}}>
-        <i class="fa fa-times" aria-hidden="true"></i>
+        <AppUi::Icon @name="times" />
       </button>
     </div>
   </div>
@@ -29,7 +29,7 @@
       </table>
     {{else}}
       <p class="text-center text-muted" data-no-runs>
-        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        <AppUi::Icon @name="info-circle" />
         {{t "views.app.workflow.runs.empty"}}
       </p>
     {{/if}}

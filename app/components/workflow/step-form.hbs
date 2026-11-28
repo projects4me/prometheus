@@ -20,7 +20,7 @@
     />
   {{else}}
     <p class="text-muted" data-step-no-settings>
-      <i class="fa fa-info-circle" aria-hidden="true"></i>
+      <AppUi::Icon @name="info-circle" />
       {{t "views.app.workflow.properties.noSettings"}}
     </p>
   {{/each}}
@@ -35,7 +35,7 @@
   {{#if @node.errors.length}}
     <ul class="list-unstyled text-red" data-node-errors>
       {{#each @node.errors as |message|}}
-        <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{message}}</li>
+        <li><AppUi::Icon @name="exclamation-circle" /> {{message}}</li>
       {{/each}}
     </ul>
   {{/if}}

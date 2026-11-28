@@ -3,7 +3,7 @@
     <h3 class="box-title">{{t "views.app.workflow.testRun.title"}}</h3>
     <div class="box-tools pull-right">
       <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.runs.close"}} data-close-test-run {{on "click" @onClose}}>
-        <i class="fa fa-times" aria-hidden="true"></i>
+        <AppUi::Icon @name="times" />
       </button>
     </div>
   </div>
@@ -30,7 +30,7 @@
     {{/if}}
     <p class="text-muted">{{t "views.app.workflow.testRun.hint"}}</p>
     <button type="button" class="btn btn-primary btn-sm" disabled={{this.cannotRun}} data-run-test {{on "click" this.run}}>
-      <i class="fa fa-play" aria-hidden="true"></i>
+      <AppUi::Icon @name="play" />
       {{t "views.app.workflow.testRun.run"}}
     </button>
   </div>

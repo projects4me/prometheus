@@ -12,7 +12,7 @@
             data-remove-case
             {{on "click" (fn this.remove row.index)}}
           >
-            <i class="fa fa-times" aria-hidden="true"></i>
+            <AppUi::Icon @name="times" />
           </button>
         </div>
       </div>
@@ -37,6 +37,6 @@
     </div>
   {{/each}}
   <button type="button" class="btn btn-default btn-xs" disabled={{@locked}} data-add-case {{on "click" this.add}}>
-    <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workflow.config.addCase"}}
+    <AppUi::Icon @name="plus" /> {{t "views.app.workflow.config.addCase"}}
   </button>
 </div>

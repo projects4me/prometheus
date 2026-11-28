@@ -3,24 +3,24 @@
     <h3 class="box-title">{{t "views.app.workflow.canvas.title"}}</h3>
     {{#if @locked}}
       <small class="text-muted" data-graph-locked>
-        <i class="fa fa-lock" aria-hidden="true"></i> {{t "views.app.workflow.canvas.locked"}}
+        <AppUi::Icon @name="lock" /> {{t "views.app.workflow.canvas.locked"}}
       </small>
     {{/if}}
     <div class="box-tools pull-right">
       {{#if this.selectedEdge}}
         <button type="button" class="btn btn-box-tool" disabled={{@locked}} title={{t "views.app.workflow.canvas.removeEdge"}} data-remove-edge {{on "click" this.removeSelectedEdge}}>
-          <i class="fa fa-chain-broken" aria-hidden="true"></i>
+          <AppUi::Icon @name="chain-broken" />
         </button>
       {{/if}}
       <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.zoomOut"}} data-zoom-out {{on "click" this.zoomOut}}>
-        <i class="fa fa-search-minus" aria-hidden="true"></i>
+        <AppUi::Icon @name="search-minus" />
       </button>
       <span class="text-muted" title={{t "views.app.workflow.canvas.zoomHint"}} data-zoom-level>{{this.zoomPercent}}%</span>
       <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.zoomIn"}} data-zoom-in {{on "click" this.zoomIn}}>
-        <i class="fa fa-search-plus" aria-hidden="true"></i>
+        <AppUi::Icon @name="search-plus" />
       </button>
       <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.fit"}} data-zoom-fit {{on "click" this.fit}}>
-        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+        <AppUi::Icon @name="arrows-alt" />
       </button>
     </div>
   </div>
@@ -40,7 +40,7 @@
     >
       {{#unless @graph.nodes.length}}
         <p class="workflow-canvas-empty text-muted" data-canvas-empty>
-          <i class="fa fa-info-circle" aria-hidden="true"></i>
+          <AppUi::Icon @name="info-circle" />
           {{t "views.app.workflow.canvas.empty"}}
         </p>
       {{/unless}}

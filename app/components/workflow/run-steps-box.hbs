@@ -11,7 +11,7 @@
   </div>
   <div class="box-body">
     {{#if @error}}
-      <p class="text-red" data-run-error><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{@error}}</p>
+      <p class="text-red" data-run-error><AppUi::Icon @name="exclamation-circle" /> {{@error}}</p>
     {{/if}}
     {{#each @steps as |step|}}
       <div class="workflow-run-step" data-run-step={{step.sequence}} data-step-kind={{step.kind}}>
@@ -21,7 +21,7 @@
           {{#if step.port}}<small data-step-port>&rarr; {{step.port}}</small>{{/if}}
         </h4>
         {{#if step.error}}
-          <p class="text-red" data-step-error><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{step.error}}</p>
+          <p class="text-red" data-step-error><AppUi::Icon @name="exclamation-circle" /> {{step.error}}</p>
         {{/if}}
         <h5>{{t "views.app.workflow.runs.inputs"}}</h5>
         <pre data-step-inputs>{{step.inputsText}}</pre>
@@ -30,7 +30,7 @@
       </div>
     {{else}}
       <p class="text-center text-muted" data-no-steps>
-        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        <AppUi::Icon @name="info-circle" />
         {{t "views.app.workflow.runs.noSteps"}}
       </p>
     {{/each}}
