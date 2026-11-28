@@ -6,5 +6,16 @@
 @import 'shell/layout';
 @import 'shell/sidebar';
 
-// --- Grid and component partials: added by the second scaffold issue as one commented import block. ---
-// (placeholder: do not add imports here from other issues)
+// --- Grid and component partials, one per area. Grid first, utilities, widgets and third-party last. ---
+@import 'grid/grid';
+@import 'components/box';
+@import 'components/buttons';
+@import 'components/forms';
+@import 'components/tables';
+@import 'components/labels';
+@import 'components/nav';
+@import 'components/dropdown';
+@import 'components/modal';
+@import 'components/utilities';
+@import 'components/widgets';
+@import 'vendor/third-party';
