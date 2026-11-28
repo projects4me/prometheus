@@ -3,13 +3,15 @@
 */
 
 import Component from '@glimmer/component';
+import { service } from '@ember/service';
 
 /**
  * Renders the navbar items.
  *
  * An item (or a sub-item in its actions) is scoped by its metadata flags: `workspaceRelated` links to
  * `<anchorRoute>/<workspace short code>`, `projectRelated` to `project/<project short code>/<anchorRoute>`, and
- * anything else to `<anchorRoute>`. The short codes come from `@trackedProject`.
+ * anything else to `<anchorRoute>`. The short codes come from `@trackedProject`. Which submenu is open comes from
+ * the `sidebar-menu` service.
  *
  * @class AppUiNavbarItemsComponent
  * @namespace Prometheus.Components
@@ -17,6 +19,16 @@ import Component from '@glimmer/component';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUiNavbarItemsComponent extends Component {
+
+    /**
+     * Which submenu is open, one at a time across the sidebar menu.
+     *
+     * @property sidebarMenu
+     * @type Ember.Service
+     * @for AppUiNavbarItemsComponent
+     * @private
+     */
+    @service sidebarMenu;
 
     /**
      * Returns the href of a navigation item from its scope flags and the tracked short codes.
@@ -35,35 +47,6 @@ export default class AppUiNavbarItemsComponent extends Component {
             return `/${prefix}/project/${this.args.trackedProject?.shortCode ?? ''}/${item.anchorRoute}`;
         }
         return `/${prefix}/${item.anchorRoute}`;
-    };
-
-    /**
-     * Whether an item's submenu is open: the one in `@openModule`, or the active route's item until a submenu
-     * has been toggled (`@openModule` undefined).
-     *
-     * @method isOpen
-     * @param {String} module The navigation module of the item
-     * @param {Boolean} active Whether the item's route is active
-     * @return {Boolean}
-     * @public
-     */
-    isOpen = (module, active) => {
-        if (this.args.openModule === undefined) {
-            return Boolean(active);
-        }
-        return this.args.openModule === module;
-    };
-
-    /**
-     * Opens or closes an item's submenu through `@toggleMenu`.
-     *
-     * @method toggle
-     * @param {String} module The navigation module of the item
-     * @param {Boolean} open Whether its submenu is open now
-     * @public
-     */
-    toggle = (module, open) => {
-        this.args.toggleMenu?.(module, open);
     };
 
     /**

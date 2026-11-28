@@ -8,7 +8,7 @@
 {{!-- He ader Navbar --}}
 <nav class="navbar navbar-static-top" role="navigation">
   {{!-- Sidebar toggle button--}}
-  <a href="#" class="sidebar-toggle" role="button" title={{t "views.app.togglenav"}} data-test-sidebar-toggle {{on "click" (prevent-default this.sidebar.toggle)}}>
+  <a href="#" class="sidebar-toggle" role="button" title="{{t "views.app.togglenav"}}" data-test-sidebar-toggle {{on "click" (prevent-default this.sidebar.toggle)}}>
     <span class="sr-only">{{t "views.app.togglenav"}}</span>
   </a>
   <AppLayouts::ProjectSwitcher @projects={{@projects}} />

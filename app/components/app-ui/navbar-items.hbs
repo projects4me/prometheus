@@ -8,9 +8,9 @@
   </li>
 {{else if definition.actions}}
   {{#let (is-active-route definition.route) as |active|}}
-  {{#let (this.isOpen module active) as |open|}}
+  {{#let (this.sidebarMenu.isOpen module active) as |open|}}
   <li class="treeview {{if active 'active'}} {{if open 'menu-open'}}" data-navigation-module={{module}}>
-    <a href={{this.hrefFor definition}} {{on "click" (prevent-default this.toggle module open)}}>
+    <a href={{this.hrefFor definition}} {{on "click" (prevent-default this.sidebarMenu.toggle module active)}}>
       <i class="fa fa-{{definition.icon}}"></i>
       <span>{{t definition.label}}</span>
       <span class="pull-right-container">

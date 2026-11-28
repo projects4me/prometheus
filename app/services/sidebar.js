@@ -6,23 +6,14 @@ import Service, { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 /**
- * The localStorage key that keeps the desktop collapsed preference across sessions.
- *
- * @property SIDEBAR_STORAGE_KEY
- * @type String
- * @final
- */
-export const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
-
-/**
  * State of the main navigation sidebar, replacing AdminLTE's push menu.
  *
  * On desktop (768px and wider) the sidebar is `collapsed` to its icon strip or expanded, and the choice is kept in
  * localStorage. On phones it slides in over the page: `open`. While collapsed on desktop, hovering the sidebar
  * expands it for as long as the pointer stays over it (`hoverExpanded`), as AdminLTE's sidebar-mini did.
  *
- * The state is shown through the body classes AdminLTE's CSS already styles: `sidebar-collapse`, `sidebar-open`
- * and `sidebar-expanded-on-hover`.
+ * The service holds the state only: the preference is kept by the `sidebar-preference` service, and the
+ * `sidebar-body-classes` modifier shows the state through the body classes AdminLTE's CSS styles.
  *
  * @class SidebarService
  * @namespace Prometheus.Services
@@ -71,15 +62,24 @@ export default class SidebarService extends Service {
     @tracked hoverExpanded = false;
 
     /**
-     * Restores the persisted collapsed preference and applies it to the body.
+     * Keeps the desktop collapsed preference across sessions.
+     *
+     * @property sidebarPreference
+     * @type Ember.Service
+     * @for SidebarService
+     * @private
+     */
+    @service sidebarPreference;
+
+    /**
+     * Restores the persisted collapsed preference.
      *
      * @method constructor
      * @public
      */
     constructor() {
         super(...arguments);
-        this.collapsed = readCollapsed();
-        this.applyBodyClasses();
+        this.collapsed = this.sidebarPreference.read();
     }
 
     /**
@@ -91,24 +91,50 @@ export default class SidebarService extends Service {
      * @public
      */
     get isMini() {
-        return !this.viewport.isPhone && this.collapsed && !this.hoverExpanded;
+        return !this.viewport.isPhone && this.collapsed && !this.isExpandedOnHover;
     }
 
     /**
-     * The header toggle: collapses or expands the sidebar on desktop, opens or closes it on phones.
+     * Whether the phone sidebar shows open: `open` counts only while the screen is a phone, so a window widened
+     * past 768px with the phone sidebar open shows the desktop sidebar.
+     *
+     * @property isPhoneOpen
+     * @type Boolean
+     * @for SidebarService
+     * @public
+     */
+    get isPhoneOpen() {
+        return this.open && this.viewport.isPhone;
+    }
+
+    /**
+     * Whether the collapsed desktop sidebar shows expanded by hover: `hoverExpanded` counts only on desktop.
+     *
+     * @property isExpandedOnHover
+     * @type Boolean
+     * @for SidebarService
+     * @public
+     */
+    get isExpandedOnHover() {
+        return this.hoverExpanded && !this.viewport.isPhone;
+    }
+
+    /**
+     * The header toggle: flips the desktop collapsed preference, or opens or closes the sidebar on phones. A
+     * collapsed sidebar that is expanded by hover counts as collapsed, so the toggle keeps it expanded.
      *
      * @method toggle
      * @public
      */
     toggle = () => {
         if (this.viewport.isPhone) {
-            this.open = !this.open;
+            this.open = !this.isPhoneOpen;
         } else {
-            this.collapsed = !this.isMini;
+            this.open = false;
+            this.collapsed = !this.collapsed;
             this.hoverExpanded = false;
-            writeCollapsed(this.collapsed);
+            this.sidebarPreference.write(this.collapsed);
         }
-        this.applyBodyClasses();
     };
 
     /**
@@ -120,7 +146,6 @@ export default class SidebarService extends Service {
     close = () => {
         if (this.open) {
             this.open = false;
-            this.applyBodyClasses();
         }
     };
 
@@ -133,74 +158,18 @@ export default class SidebarService extends Service {
     hoverStart = () => {
         if (this.isMini) {
             this.hoverExpanded = true;
-            this.applyBodyClasses();
         }
     };
 
     /**
-     * The pointer left the sidebar: a sidebar expanded by hover collapses again.
+     * The pointer left the sidebar: a sidebar expanded by hover collapses again, whatever the screen is now.
      *
      * @method hoverEnd
      * @public
      */
     hoverEnd = () => {
-        if (this.hoverExpanded && !this.viewport.isPhone) {
+        if (this.hoverExpanded) {
             this.hoverExpanded = false;
-            this.applyBodyClasses();
         }
     };
-
-    /**
-     * Sets the body classes AdminLTE's CSS styles from the current state.
-     *
-     * @method applyBodyClasses
-     * @private
-     */
-    applyBodyClasses() {
-        let classes = document.body.classList;
-        classes.toggle('sidebar-collapse', this.collapsed && !this.hoverExpanded);
-        classes.toggle('sidebar-expanded-on-hover', this.hoverExpanded);
-        classes.toggle('sidebar-open', this.open);
-    }
-
-    /**
-     * Removes the body classes, so a destroyed app (tests) leaves the page as it found it.
-     *
-     * @method willDestroy
-     * @public
-     */
-    willDestroy() {
-        super.willDestroy(...arguments);
-        document.body.classList.remove('sidebar-collapse', 'sidebar-expanded-on-hover', 'sidebar-open');
-    }
-}
-
-/**
- * Reads the persisted collapsed preference; storage that can't be read means expanded.
- *
- * @method readCollapsed
- * @return {Boolean}
- * @private
- */
-function readCollapsed() {
-    try {
-        return window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true';
-    } catch {
-        return false;
-    }
-}
-
-/**
- * Persists the collapsed preference; storage that can't be written is ignored.
- *
- * @method writeCollapsed
- * @param {Boolean} collapsed
- * @private
- */
-function writeCollapsed(collapsed) {
-    try {
-        window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(collapsed));
-    } catch {
-        // Private mode or full storage: the preference just isn't kept.
-    }
 }

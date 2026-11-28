@@ -123,7 +123,7 @@ module('Integration | Component | nav-bar', function (hooks) {
             let context = this;
             this.owner.register('service:sidebar', class extends Service {
                 get isMini() { return context.mini; }
-                close() {}
+                close = () => {};
             });
         });
 

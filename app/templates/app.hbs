@@ -13,9 +13,9 @@
   <AppLayouts::ApplicationSidebar
   />
   {{!-- Content Wrapper. Contains page content --}}
-  <div class="content-wrapper" {{close-sidebar-on-overlay-tap this.sidebar}}>
+  <AppLayouts::ApplicationContent>
     {{outlet}}
-  </div>
+  </AppLayouts::ApplicationContent>
   {{!-- /.content-wrapper --}}
 
   {{!-- Main Footer --}}
