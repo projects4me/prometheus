@@ -215,31 +215,195 @@
   --p4m-role-tier-low: var(--p4m-grey-520);
   --p4m-role-tier-none: var(--p4m-color-text-muted);
 
-  /* ── Radius ───────────────────────────────────────────────────────────── */
-  --p4m-radius-none: 0;
-  --p4m-radius-round: 50%;
+  /* ── Raw scales (aprom-4999 phase 3, see docs/ui/design-system.md §4a) ─────
+     One token per distinct value in the vendor value lists of docs/ui/foundation/inventory.md, at its exact
+     value. Named by the value: <px> for pixels (the root is 10px, so space-6 is 0.6rem), -<n>-<d> for a decimal
+     point (space-16-5 is 16.5px), neg-<px> for negatives, <n>em and <n>pct for em and percent values.
+     Keywords (auto, inherit, normal, none) and compound values get no token of their own: a compound value is
+     written from these tokens, e.g. padding: var(--p4m-space-6) var(--p4m-space-12). */
 
   /* ── Spacing (root font size is 10px) ─────────────────────────────────── */
-  --p4m-space-xs: 0.5rem;
-  --p4m-space-sm: 1rem;
-  --p4m-space-md: 1.5rem;
-  --p4m-space-lg: 2rem;
-  --p4m-space-xl: 3rem;
+  --p4m-space-neg-20: -2rem;
+  --p4m-space-neg-16-5: -1.65rem;
+  --p4m-space-neg-15: -1.5rem;
+  --p4m-space-neg-10: -1rem;
+  --p4m-space-neg-8: -0.8rem;
+  --p4m-space-neg-7: -0.7rem;
+  --p4m-space-neg-5: -0.5rem;
+  --p4m-space-neg-3: -0.3rem;
+  --p4m-space-neg-2: -0.2rem;
+  --p4m-space-neg-1: -0.1rem;
+  --p4m-space-0: 0;
+  --p4m-space-1: 0.1rem;
+  --p4m-space-2: 0.2rem;
+  --p4m-space-3: 0.3rem;
+  --p4m-space-4: 0.4rem;
+  --p4m-space-5: 0.5rem;
+  --p4m-space-6: 0.6rem;
+  --p4m-space-7: 0.7rem;
+  --p4m-space-7-5: 0.75rem;
+  --p4m-space-8: 0.8rem;
+  --p4m-space-9: 0.9rem;
+  --p4m-space-9-5: 0.95rem;
+  --p4m-space-10: 1rem;
+  --p4m-space-12: 1.2rem;
+  --p4m-space-15: 1.5rem;
+  --p4m-space-20: 2rem;
+  --p4m-space-25: 2.5rem;
+  --p4m-space-30: 3rem;
+  --p4m-space-40: 4rem;
+  --p4m-space-42-5: 4.25rem;
+  --p4m-space-50: 5rem;
+  --p4m-space-60: 6rem;
+  --p4m-space-90: 9rem;
+  --p4m-space-100: 10rem;
+  --p4m-space-190: 19rem;
+  --p4m-space-230: 23rem;
+  --p4m-space-0-2em: 0.2em;
+  --p4m-space-0-3em: 0.3em;
+  --p4m-space-0-35em: 0.35em;
+  --p4m-space-0-6em: 0.6em;
+  --p4m-space-0-625em: 0.625em;
+  --p4m-space-0-67em: 0.67em;
+  --p4m-space-0-75em: 0.75em;
+  --p4m-space-1em: 1em;
+  --p4m-space-7pct: 7%;
+  // named steps (aliases, values unchanged)
+  --p4m-space-xs: var(--p4m-space-5);
+  --p4m-space-sm: var(--p4m-space-10);
+  --p4m-space-md: var(--p4m-space-15);
+  --p4m-space-lg: var(--p4m-space-20);
+  --p4m-space-xl: var(--p4m-space-30);
 
   /* ── Typography ───────────────────────────────────────────────────────── */
   --p4m-font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --p4m-font-size-xs: 1.1rem;
-  --p4m-font-size-sm: 1.2rem;
-  --p4m-font-size-md: 1.4rem;
-  --p4m-font-size-lg: 1.8rem;
-  --p4m-font-size-xl: 2.4rem;
-  --p4m-font-weight-regular: 400;
-  --p4m-font-weight-medium: 500;
-  --p4m-font-weight-bold: 700;
-  --p4m-line-height-base: 1.42857143;
+  --p4m-font-family-source-sans: "Source Sans Pro", sans-serif;
+  --p4m-font-family-helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --p4m-font-family-sans-serif: sans-serif;
+  --p4m-font-family-mono: Menlo, Monaco, Consolas, "Courier New", monospace;
+  --p4m-font-family-mono-reset: monospace, monospace;
+  --p4m-font-family-fontawesome: "FontAwesome";
+  --p4m-font-family-glyphicons: "Glyphicons Halflings";
+  // font sizes
+  --p4m-font-size-0: 0;
+  --p4m-font-size-9: 0.9rem;
+  --p4m-font-size-10: 1rem;
+  --p4m-font-size-11: 1.1rem;
+  --p4m-font-size-12: 1.2rem;
+  --p4m-font-size-13: 1.3rem;
+  --p4m-font-size-14: 1.4rem;
+  --p4m-font-size-15: 1.5rem;
+  --p4m-font-size-16: 1.6rem;
+  --p4m-font-size-17: 1.7rem;
+  --p4m-font-size-17-5: 1.75rem;
+  --p4m-font-size-18: 1.8rem;
+  --p4m-font-size-20: 2rem;
+  --p4m-font-size-21: 2.1rem;
+  --p4m-font-size-24: 2.4rem;
+  --p4m-font-size-25: 2.5rem;
+  --p4m-font-size-30: 3rem;
+  --p4m-font-size-35: 3.5rem;
+  --p4m-font-size-36: 3.6rem;
+  --p4m-font-size-45: 4.5rem;
+  --p4m-font-size-100: 10rem;
+  --p4m-font-size-1em: 1em;
+  --p4m-font-size-2em: 2em;
+  --p4m-font-size-65pct: 65%;
+  --p4m-font-size-75pct: 75%;
+  --p4m-font-size-80pct: 80%;
+  --p4m-font-size-85pct: 85%;
+  --p4m-font-size-90pct: 90%;
+  --p4m-font-size-100pct: 100%;
+  --p4m-font-size-xs: var(--p4m-font-size-11);
+  --p4m-font-size-sm: var(--p4m-font-size-12);
+  --p4m-font-size-md: var(--p4m-font-size-14);
+  --p4m-font-size-lg: var(--p4m-font-size-18);
+  --p4m-font-size-xl: var(--p4m-font-size-24);
+  // font weights (the keywords bold and normal are 700 and 400)
+  --p4m-font-weight-300: 300;
+  --p4m-font-weight-400: 400;
+  --p4m-font-weight-500: 500;
+  --p4m-font-weight-600: 600;
+  --p4m-font-weight-700: 700;
+  --p4m-font-weight-regular: var(--p4m-font-weight-400);
+  --p4m-font-weight-medium: var(--p4m-font-weight-500);
+  --p4m-font-weight-bold: var(--p4m-font-weight-700);
+  // line heights: unitless ratios, then fixed heights (<px>px)
+  --p4m-line-height-0: 0;
+  --p4m-line-height-0-9: 0.9;
+  --p4m-line-height-1: 1;
+  --p4m-line-height-1-1: 1.1;
+  --p4m-line-height-1-4: 1.4;
+  --p4m-line-height-1-428571429: 1.428571429;
+  --p4m-line-height-1-5: 1.5;
+  --p4m-line-height-10px: 1rem;
+  --p4m-line-height-20px: 2rem;
+  --p4m-line-height-30px: 3rem;
+  --p4m-line-height-34px: 3.4rem;
+  --p4m-line-height-35px: 3.5rem;
+  --p4m-line-height-50px: 5rem;
+  --p4m-line-height-90px: 9rem;
+  --p4m-line-height-base: var(--p4m-line-height-1-428571429);
+
+  /* ── Border width (px: hairlines must not scale with the root size) ──── */
+  --p4m-border-width-0: 0;
+  --p4m-border-width-1: 1px;
+  --p4m-border-width-2: 2px;
+  --p4m-border-width-3: 3px;
+  --p4m-border-width-4: 4px;
+  --p4m-border-width-5: 5px;
+
+  /* ── Radius ───────────────────────────────────────────────────────────── */
+  --p4m-radius-none: 0;
+  --p4m-radius-round: 50%;
+  // legacy radii the vendor CSS applies today (design-system §10); new code uses none or round only
+  --p4m-radius-1: 1px;
+  --p4m-radius-2: 2px;
+  --p4m-radius-3: 3px;
+  --p4m-radius-4: 4px;
+  --p4m-radius-6: 6px;
+  --p4m-radius-10: 10px;
+  --p4m-radius-0-25em: 0.25em;
 
   /* ── Shadow ───────────────────────────────────────────────────────────── */
   --p4m-shadow-none: none;
   --p4m-shadow-box: 0 1px 1px rgba(0, 0, 0, 0.1);
   --p4m-shadow-overlay: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  // vendor shadows
+  --p4m-shadow-header: 0 1px 1px rgba(0, 0, 0, 0.05);
+  --p4m-shadow-modal: 0 2px 3px rgba(0, 0, 0, 0.125);
+  --p4m-shadow-modal-bootstrap: 0 3px 9px rgba(0, 0, 0, 0.5);
+  --p4m-shadow-modal-bootstrap-sm: 0 5px 15px rgba(0, 0, 0, 0.5);
+  --p4m-shadow-dropdown: 0 6px 12px rgba(0, 0, 0, 0.175);
+  --p4m-shadow-input: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  --p4m-shadow-input-focus: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  --p4m-shadow-btn-active: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --p4m-shadow-btn-bg-hover: inset 0 0 100px rgba(0, 0, 0, 0.2);
+  --p4m-shadow-progress: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  --p4m-shadow-progress-bar: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  --p4m-shadow-kbd: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+  /* ── z-index, lowest first (today's values; design-system §4a) ─────────── */
+  // inside one component (Bootstrap button and input groups, pagination, the header user card)
+  --p4m-z-local-1: 1;
+  --p4m-z-local-2: 2;
+  --p4m-z-local-3: 3;
+  --p4m-z-local-5: 5;
+  --p4m-z-overlay: 50;
+  // shell
+  --p4m-z-shell-content: 800;
+  --p4m-z-drawer: 810;
+  --p4m-z-shell-footer: 820;
+  --p4m-z-shell-content-collapsed: 840;
+  --p4m-z-drawer-collapsed: 850;
+  // page layers
+  --p4m-z-sticky-content: 999;
+  --p4m-z-dropdown: 1000;
+  --p4m-z-sticky: 1030;
+  --p4m-z-modal-backdrop: 1040;
+  --p4m-z-modal: 1050;
+  --p4m-z-dropdown-raised: 1100;
+  --p4m-z-dropdown-top: 2000;
+  --p4m-z-tooltip: 9999;
+  --p4m-z-toast: 10000;
 }

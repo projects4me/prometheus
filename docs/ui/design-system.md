@@ -246,41 +246,137 @@ clear (table below).
 | `--p4m-role-tier-low` | `#7a7a7a` | `--p4m-grey-520` | `darken($mediumColor, 12%)` |
 | `--p4m-role-tier-none` | `#999999` | `--p4m-color-text-muted` | `none` |
 
+**Raw scales.** Spacing, type, border width, radius, shadow and z-index have one token per distinct value in the
+vendor CSS the app uses today ("Value lists for the tokens issue" in `docs/ui/foundation/inventory.md`), at its
+exact value, so the foundation CSS that replaces Bootstrap and AdminLTE uses tokens only. The named steps (`xs`-`xl`,
+`regular`/`medium`/`bold`, `base`) are `var()` aliases of raw tokens. New code uses a named step when one fits.
+
+- **Name:** by the value. `<px>` for pixel values, which become `rem` (`--p4m-space-6` is `0.6rem`, 6px);
+  `-<n>-<d>` for a decimal point (`--p4m-space-16-5` is 16.5px, `--p4m-line-height-1-1` is `1.1`); `neg-<px>`
+  for negatives (`--p4m-space-neg-15`); `<n>em` and `<n>pct` for em and percent values (`--p4m-space-0-35em`,
+  `--p4m-font-size-85pct`); `<px>px` for fixed line heights (`--p4m-line-height-34px` is `3.4rem`). Border widths
+  and radii stay in `px`, because hairlines must not scale with the root size.
+- **No token:** keywords (`auto`, `inherit`, `normal`, `none` other than `--p4m-shadow-none`) and compound values.
+  Write a compound value from the raw tokens: `padding: var(--p4m-space-6) var(--p4m-space-12)`. IE hacks (`\9`)
+  aren't carried over.
+- **Same value, one token:** `bold` is `--p4m-font-weight-700`, `normal` is `--p4m-font-weight-400`,
+  `"FontAwesome"` and `fontAwesome` share `--p4m-font-family-fontawesome`, and the two spellings of the Helvetica
+  stack share `--p4m-font-family-helvetica`.
+
 **Spacing**
 
 | Token | Value | Replaces |
 |---|---|---|
-| `--p4m-space-xs` | `0.5rem` | AdminLTE 5px |
-| `--p4m-space-sm` | `1rem` | AdminLTE 10px |
-| `--p4m-space-md` | `1.5rem` | AdminLTE 15px |
-| `--p4m-space-lg` | `2rem` | AdminLTE 20px |
-| `--p4m-space-xl` | `3rem` | AdminLTE 30px |
+| `--p4m-space-xs` | `var(--p4m-space-5)` (`0.5rem`) | AdminLTE 5px |
+| `--p4m-space-sm` | `var(--p4m-space-10)` (`1rem`) | AdminLTE 10px |
+| `--p4m-space-md` | `var(--p4m-space-15)` (`1.5rem`) | AdminLTE 15px |
+| `--p4m-space-lg` | `var(--p4m-space-20)` (`2rem`) | AdminLTE 20px |
+| `--p4m-space-xl` | `var(--p4m-space-30)` (`3rem`) | AdminLTE 30px |
 
-**Radius.** Only two exist, in line with the square-edges rule: `--p4m-radius-none` (`0`) and `--p4m-radius-round`
-(`50%`, avatars and dots). The legacy rounded corners in section 10 get no token.
+Raw: `--p4m-space-` `neg-20`, `neg-16-5`, `neg-15`, `neg-10`, `neg-8`, `neg-7`, `neg-5`, `neg-3`, `neg-2`, `neg-1`,
+`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `7-5`, `8`, `9`, `9-5`, `10`, `12`, `15`, `20`, `25`, `30`, `40`, `42-5`,
+`50`, `60`, `90`, `100`, `190`, `230`, `0-2em`, `0-3em`, `0-35em`, `0-6em`, `0-625em`, `0-67em`, `0-75em`, `1em`,
+`7pct`.
+
+**Radius.** New code uses only two, in line with the square-edges rule: `--p4m-radius-none` (`0`) and
+`--p4m-radius-round` (`50%`, avatars and dots). The legacy radii the vendor CSS applies today have raw tokens so the
+foundation can keep them until each is made square in its own issue (section 10): `--p4m-radius-1`, `-2`, `-3`,
+`-4`, `-6`, `-10` (px) and `--p4m-radius-0-25em`. Don't use them in new code.
+
+**Border width:** `--p4m-border-width-0`, `-1`, `-2`, `-3`, `-4`, `-5` (px).
 
 **Type**
 
 | Token | Value | Replaces |
 |---|---|---|
 | `--p4m-font-family` | `"Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif` | AdminLTE `font-family` |
-| `--p4m-font-size-xs` | `1.1rem` | small text, labels (about 10.5px today) |
-| `--p4m-font-size-sm` | `1.2rem` | breadcrumb, meta text (12px) |
-| `--p4m-font-size-md` | `1.4rem` | body text (14px) |
-| `--p4m-font-size-lg` | `1.8rem` | box title, `<h4>` facts (18px) |
-| `--p4m-font-size-xl` | `2.4rem` | page title (24px) |
-| `--p4m-font-weight-regular` | `400` | body |
-| `--p4m-font-weight-medium` | `500` | titles |
-| `--p4m-font-weight-bold` | `700` | bold names, headers |
-| `--p4m-line-height-base` | `1.42857143` | Bootstrap 3 `line-height` |
+| `--p4m-font-family-source-sans` | `"Source Sans Pro", sans-serif` | AdminLTE `h1`-`h6` |
+| `--p4m-font-family-helvetica` | `"Helvetica Neue", Helvetica, Arial, sans-serif` | Bootstrap 3 base font |
+| `--p4m-font-family-sans-serif` | `sans-serif` | normalize `html` |
+| `--p4m-font-family-mono` | `Menlo, Monaco, Consolas, "Courier New", monospace` | Bootstrap `code`, `kbd`, `pre`, `samp` |
+| `--p4m-font-family-mono-reset` | `monospace, monospace` | normalize `code`, `kbd`, `pre`, `samp` |
+| `--p4m-font-family-fontawesome` | `"FontAwesome"` | `.sidebar-toggle` icon (`fontAwesome`), awesome-bootstrap-checkbox tick |
+| `--p4m-font-family-glyphicons` | `"Glyphicons Halflings"` | `.glyphicon` (sign-in form) |
+| `--p4m-font-size-xs` | `var(--p4m-font-size-11)` (`1.1rem`) | small text, labels |
+| `--p4m-font-size-sm` | `var(--p4m-font-size-12)` (`1.2rem`) | breadcrumb, meta text (12px) |
+| `--p4m-font-size-md` | `var(--p4m-font-size-14)` (`1.4rem`) | body text (14px) |
+| `--p4m-font-size-lg` | `var(--p4m-font-size-18)` (`1.8rem`) | box title, `<h4>` facts (18px) |
+| `--p4m-font-size-xl` | `var(--p4m-font-size-24)` (`2.4rem`) | page title (24px) |
+| `--p4m-font-weight-regular` | `var(--p4m-font-weight-400)` | body |
+| `--p4m-font-weight-medium` | `var(--p4m-font-weight-500)` | titles |
+| `--p4m-font-weight-bold` | `var(--p4m-font-weight-700)` | bold names, headers |
+| `--p4m-line-height-base` | `var(--p4m-line-height-1-428571429)` | Bootstrap 3 `line-height` (was `1.42857143`; the 1e-9 difference renders the same) |
+
+Raw font sizes: `--p4m-font-size-` `0`, `9`, `10`, `11`, `12`, `13`, `14`, `15`, `16`, `17`, `17-5`, `18`, `20`,
+`21`, `24`, `25`, `30`, `35`, `36`, `45`, `100`, `1em`, `2em`, `65pct`, `75pct`, `80pct`, `85pct`, `90pct`,
+`100pct`. Raw weights: `--p4m-font-weight-` `300`, `400`, `500`, `600`, `700`. Raw line heights:
+`--p4m-line-height-` `0`, `0-9`, `1`, `1-1`, `1-4`, `1-428571429`, `1-5`, `10px`, `20px`, `30px`, `34px`, `35px`,
+`50px`, `90px`.
 
 **Shadow**
 
 | Token | Value | Replaces |
 |---|---|---|
 | `--p4m-shadow-none` | `none` | |
-| `--p4m-shadow-box` | `0 1px 1px rgba(0, 0, 0, 0.1)` | AdminLTE `.box` shadow |
+| `--p4m-shadow-box` | `0 1px 1px rgba(0, 0, 0, 0.1)` | AdminLTE `.box`, `.info-box`, `.nav-tabs-custom`, timeline items, product list |
 | `--p4m-shadow-overlay` | `0 8px 16px 0 rgba(0, 0, 0, 0.2)` | dropdown menus (`components/dropdown.scss`); modals use their own, stronger shadow today and move onto this token only if the baseline shows no difference |
+| `--p4m-shadow-header` | `0 1px 1px rgba(0, 0, 0, 0.05)` | `.skin-black-light .main-header` |
+| `--p4m-shadow-modal` | `0 2px 3px rgba(0, 0, 0, 0.125)` | AdminLTE `.modal-content` (wins over Bootstrap's two below) |
+| `--p4m-shadow-modal-bootstrap` | `0 3px 9px rgba(0, 0, 0, 0.5)` | Bootstrap `.modal-content` |
+| `--p4m-shadow-modal-bootstrap-sm` | `0 5px 15px rgba(0, 0, 0, 0.5)` | Bootstrap `.modal-content` from 768px |
+| `--p4m-shadow-dropdown` | `0 6px 12px rgba(0, 0, 0, 0.175)` | Bootstrap `.dropdown-menu` |
+| `--p4m-shadow-input` | `inset 0 1px 1px rgba(0, 0, 0, 0.075)` | Bootstrap `.form-control` |
+| `--p4m-shadow-input-focus` | `inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6)` | Bootstrap `.form-control:focus` |
+| `--p4m-shadow-btn-active` | `inset 0 3px 5px rgba(0, 0, 0, 0.125)` | `.btn:active`, `.btn.active`, open `.dropdown-toggle` |
+| `--p4m-shadow-btn-bg-hover` | `inset 0 0 100px rgba(0, 0, 0, 0.2)` | AdminLTE `.btn[class*='bg-']:hover` |
+| `--p4m-shadow-progress` | `inset 0 1px 2px rgba(0, 0, 0, 0.1)` | Bootstrap `.progress` |
+| `--p4m-shadow-progress-bar` | `inset 0 -1px 0 rgba(0, 0, 0, 0.15)` | Bootstrap `.progress-bar` |
+| `--p4m-shadow-kbd` | `inset 0 -1px 0 rgba(0, 0, 0, 0.25)` | Bootstrap `kbd` |
+
+**z-index layers**, lowest first, at today's values. A new layer goes between two existing ones; it never renumbers
+them.
+
+| Token | Value | Today |
+|---|---|---|
+| `--p4m-z-local-1`, `-2`, `-3`, `-5` | `1`, `2`, `3`, `5` | stacking inside one component: Bootstrap button and input groups, pagination, the checkbox input, the header user card |
+| `--p4m-z-overlay` | `50` | AdminLTE `.box .overlay` (loading cover inside a box) |
+| `--p4m-z-shell-content` | `800` | `.content-wrapper` |
+| `--p4m-z-drawer` | `810` | `.main-sidebar` (desktop sidebar and phone drawer), notifications sidebar |
+| `--p4m-z-shell-footer` | `820` | `.main-footer` |
+| `--p4m-z-shell-content-collapsed` | `840` | content and footer with the sidebar collapsed |
+| `--p4m-z-drawer-collapsed` | `850` | collapsed (mini) sidebar, above the content so its flyouts show |
+| `--p4m-z-sticky-content` | `999` | sticky strips inside the page (board lane headers) |
+| `--p4m-z-dropdown` | `1000` | Bootstrap `.dropdown-menu`, `AppUi::Dropdown`, `$ezSearchMenuZIndex`, toolbar dropdowns, `.navbar-static-top` |
+| `--p4m-z-sticky` | `1030` | AdminLTE `.main-header` |
+| `--p4m-z-modal-backdrop` | `1040` | Bootstrap `.modal-backdrop` (unused today: AdminLTE tints `.modal` itself) |
+| `--p4m-z-modal` | `1050` | Bootstrap `.modal` |
+| `--p4m-z-dropdown-raised` | `1100` | menus that open over a modal: document dropdowns, Tribute mentions, Gantt link picker and legend |
+| `--p4m-z-dropdown-top` | `2000` | ember-power-select menus, Pace loading bar |
+| `--p4m-z-tooltip` | `9999` | tippy.js (its default) |
+| `--p4m-z-toast` | `10000` | Messenger notifications |
+
+The six layers the foundation is built on are sticky, dropdown, drawer, modal (with its backdrop), toast and tooltip.
+Today's values don't fit those six without changing the stacking order, so the named steps keep it:
+
+- The drawer (810) sits *below* dropdowns, and the header (`--p4m-z-sticky`, 1030) above them: content dropdowns
+  scroll under the header.
+- `-sticky-content` (999) keeps the board lane headers under the ezSearch menus.
+- `-dropdown-raised` and `-dropdown-top` exist because those menus open from inside modals.
+- The shell steps (800-850) and `-local-*` keep AdminLTE's and Bootstrap's order inside the shell and inside a
+  component.
+- Tooltips (9999) sit *below* toasts (10000) today; keep that order.
+
+**Breakpoints.** Media queries can't read custom properties, so breakpoints are Sass variables in
+`app/styles/variables.scss` at Bootstrap 3's values:
+
+| Variable | Value | Use |
+|---|---|---|
+| `$p4m-screen-sm` | `768px` | `(min-width: $p4m-screen-sm)`; also AdminLTE's one `(max-width: 768px)` query |
+| `$p4m-screen-md` | `992px` | `(min-width: $p4m-screen-md)` |
+| `$p4m-screen-lg` | `1200px` | `(min-width: $p4m-screen-lg)` |
+| `$p4m-screen-xs-max` | `767px` | `(max-width: $p4m-screen-xs-max)` |
+| `$p4m-screen-sm-max` | `991px` | `(max-width: $p4m-screen-sm-max)` |
+| `$p4m-screen-md-max` | `1199px` | `(max-width: $p4m-screen-md-max)` |
 
 **Palette scales**
 
@@ -572,7 +668,8 @@ Square is the standard. These exceptions exist and **must not be used as precede
   `modules/form-fields.scss` (2rem toggle).
 
 New code sets no `border-radius` except `50%` on avatars and dots. Making the exceptions above square is a
-separate task with its own issue.
+separate task with its own issue. The vendor radii have raw tokens (`--p4m-radius-1` ... `-10`, section 4a) only so
+the foundation CSS can keep them until then.
 
 ## 11. Where styles go
 

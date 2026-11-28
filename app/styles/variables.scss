@@ -6,3 +6,13 @@ $baseSize : 1rem;
 
 // z-index of the ezSearch menus (suggestions, Saved, Filter badge); must stay above the board lane headers (999).
 $ezSearchMenuZIndex: 1000;
+
+// Breakpoints (aprom-4999 phase 3). Sass variables because media queries can't read custom properties.
+// Today's Bootstrap 3 / AdminLTE 2 values: min-width queries use $p4m-screen-*, max-width queries the -max
+// counterpart one pixel below the next step (AdminLTE also has one (max-width: 768px) query, which uses $p4m-screen-sm).
+$p4m-screen-sm: 768px;
+$p4m-screen-md: 992px;
+$p4m-screen-lg: 1200px;
+$p4m-screen-xs-max: 767px;
+$p4m-screen-sm-max: 991px;
+$p4m-screen-md-max: 1199px;
