@@ -536,6 +536,12 @@ body.hold-transition .main-header .logo {
   .fixed .content-wrapper {
     padding-top: var(--p4m-space-100);
   }
+
+  // The open phone drawer (shell/sidebar) pushes the page across by its width.
+  .sidebar-open .content-wrapper,
+  .sidebar-open .main-footer {
+    transform: translate($sidebarWidth, 0);
+  }
 }
 
 @media print {

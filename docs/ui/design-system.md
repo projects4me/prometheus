@@ -275,12 +275,14 @@ exact value, so the foundation CSS that replaces Bootstrap and AdminLTE uses tok
 
 Raw: `--p4m-space-` `neg-20`, `neg-16-5`, `neg-15`, `neg-10`, `neg-8`, `neg-7`, `neg-5`, `neg-3`, `neg-2`, `neg-1`,
 `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `7-5`, `8`, `9`, `9-5`, `10`, `12`, `15`, `20`, `25`, `30`, `40`, `42-5`,
-`50`, `60`, `90`, `100`, `175`, `190`, `230`, `250`, `280`, `0-2em`, `0-3em`, `0-35em`, `0-6em`, `0-625em`, `0-67em`,
-`0-75em`, `1em`, `5pct`, `7pct`. (`175`, `250`, `280` and `5pct` came with the shell, aprom-5058: the user card
-height, the `.content` min-height, the header menu width and the phone menu offset.)
+`44`, `50`, `60`, `90`, `100`, `175`, `180`, `190`, `200`, `230`, `250`, `280`, `0-2em`, `0-3em`, `0-35em`, `0-6em`,
+`0-625em`, `0-67em`, `0-75em`, `1em`, `5pct`, `7pct`. (`175`, `250`, `280` and `5pct` came with the shell, aprom-5058:
+the user card height, the `.content` min-height, the header menu width and the phone menu offset. `44`, `180` and
+`200` came with the sidebar, aprom-5059: the collapsed sidebar's hover flyout top, width and badge offset.)
 
 **Motion:** `--p4m-duration-300` (`0.3s`) and `--p4m-ease-in-out` (`ease-in-out`), AdminLTE's shell slide: content,
-footer, navbar and logo follow the sidebar as it collapses or opens.
+footer, navbar and logo follow the sidebar as it collapses or opens. `--p4m-ease` (`ease`): the sidebar menu's
+active bar (`border-left-color`, with `--p4m-duration-300`).
 
 **Shell widths** are Sass variables in `app/styles/variables.scss`, because the foundation shell and
 `modules/nav.scss` both need them: `$sidebarWidth` (`200px`) and `$sidebarCollapsedWidth` (`50px`).
@@ -425,6 +427,7 @@ colours of `rgba()` literals are included; the alpha comes from `color-mix`.
 | `--p4m-grey-335` | `#aaaaaa` | board, user |
 | `--p4m-grey-400` | `#999999` | app-ui-data-table, board, document, form-fields, gantt, inline-editable +3 more |
 | `--p4m-grey-465` | `#888888` | gantt, pagination |
+| `--p4m-grey-480` | `#848484` | foundation sidebar (menu group headers) |
 | `--p4m-grey-500` | `#808080` | user |
 | `--p4m-grey-520` | `#7a7a7a` | role (darken $mediumColor 12%) |
 | `--p4m-grey-535` | `#777777` | gantt, idea, infinite-scroll, notifications-sidebar, profile, role |
@@ -446,6 +449,7 @@ colours of `rgba()` literals are included; the alpha comes from `color-mix`.
 | `--p4m-slate-32` | `#f5f6f8` | board |
 | `--p4m-slate-33` | `#f4f6f9` | profile |
 | `--p4m-slate-35` | `#f5f6f7` | skeleton |
+| `--p4m-slate-40` | `#f4f4f5` | foundation sidebar (hovered and active items, submenus) |
 | `--p4m-slate-55` | `#ecf0f5` | gantt |
 | `--p4m-slate-75` | `#e9ecef` | board, skeleton |
 | `--p4m-slate-95` | `#e4e7ea` | project |
