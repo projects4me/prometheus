@@ -46,6 +46,8 @@ baseline tool, then the "after" set, and compare those two. The stored images in
 for coverage (35 pages, desktop 1440 px and phone 390 px), not for a pixel comparison on another database.
 The acceptance tests check behaviour and the DOM, not pixels, so they don't replace this comparison.
 
+What the app uses from Bootstrap 3 and AdminLTE 2 today (classes by issue key, element-level rules, third-party CSS, value lists, grid and float uses) is listed in [`foundation/inventory.md`](foundation/inventory.md); the foundation issues work from it.
+
 ## 2. App shell (never rebuilt per page)
 
 | Part | What it is | Source |
