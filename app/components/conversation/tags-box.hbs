@@ -1,33 +1,45 @@
-{{!-- The tags of a thread: chips, and the field that adds one when the user may tag --}}
+{{!-- The tags of a thread: chips that filter the thread list, and the + that opens the tags modal when the user may tag --}}
 <div class="box box-primary" data-tags-box>
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.conversation.thread.tags"}}</h3>
+    {{#if this.canEdit}}
+      <div class="box-tools">
+        <AppUi::Button
+          type="button"
+          class="btn btn-box-tool"
+          data-btn="edit-tags"
+          @onClick={{this.openModal}}
+          {{tooltip (t "views.app.conversation.thread.editTags")}}
+          title={{t "views.app.conversation.thread.editTags"}}
+          aria-label={{t "views.app.conversation.thread.editTags"}}
+        >
+          <i class="fa fa-plus"></i>
+        </AppUi::Button>
+      </div>
+    {{/if}}
   </div>
   <div class="box-body">
     {{#if this.items.length}}
       <div data-tags-list>
         {{#each this.items as |item|}}
-          <AppUi::Tag @colorKey={{item.name}} @onRemove={{if this.canEdit (fn this.remove item.record)}} data-tag-chip>{{item.name}}</AppUi::Tag>
+          <LinkTo @route="app.project.conversation" @query={{hash query=item.filter page=null c_id=null}} data-tag-link>
+            <AppUi::Tag @colorKey={{item.name}} data-tag-chip>{{item.name}}</AppUi::Tag>
+          </LinkTo>
         {{/each}}
       </div>
     {{else}}
       <p class="text-muted" data-tags-empty>{{t "views.app.conversation.thread.noTags"}}</p>
     {{/if}}
-    {{#if this.canEdit}}
-      <div data-tags-edit>
-        <FormFields::FieldRelateMulti
-          @data-field="thread-tags"
-          @label={{t "views.app.conversation.thread.addTag"}}
-          @relateType="relate-simple"
-          @searchField="label"
-          @searchEnabled={{true}}
-          @search={{@suggest}}
-          @selected={{this.noSelection}}
-          @onchange={{this.addPicked}}
-          @onCreate={{this.add}}
-          @renderInPlace={{true}}
-        />
-      </div>
-    {{/if}}
   </div>
 </div>
+{{#if this.showModal}}
+  <Tags::EditModal
+    @projectId={{@projectId}}
+    @relatedTo="conversationroom"
+    @relatedId={{@threadId}}
+    @title="views.app.conversation.thread.tagsModalTitle"
+    @titleParams={{hash title=@threadTitle}}
+    @onClose={{this.closeModal}}
+    @onSaved={{@onSaved}}
+  />
+{{/if}}

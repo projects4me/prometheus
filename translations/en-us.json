@@ -967,7 +967,8 @@
           "participants": "Participants",
           "tags": "Tags",
           "noTags": "No tags yet",
-          "addTag": "Add a tag",
+          "editTags": "Edit tags",
+          "tagsModalTitle": "Tags: {title}",
           "activity": {
             "title": "Activity",
             "empty": "No activity yet",

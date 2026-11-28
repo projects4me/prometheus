@@ -5,10 +5,13 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
+import { group, condition } from 'prometheus/utils/query/ast';
+import { serialize } from 'prometheus/utils/query/serializer';
 
 /**
- * The Tags box of a thread: the thread's tags as chips, and, with the tagged.create permission, the field that
- * adds an existing or a new tag and the remove button of each chip.
+ * The Tags box of a thread: the thread's tags as chips, each linking to the thread list filtered by that tag,
+ * and, with the tagged.create or tagged.delete permission, the + that opens the Tags::EditModal.
  *
  * @class TagsBox
  * @namespace Prometheus.Components.Conversation
@@ -17,36 +20,33 @@ import { service } from '@ember/service';
 export default class ConversationTagsBoxComponent extends Component {
     @service acl;
 
-    noSelection = [];
+    @tracked showModal = false;
 
     get canEdit() {
-        return this.acl.checkAccess('tagged.create');
+        return this.acl.checkAccess('tagged.create') || this.acl.checkAccess('tagged.delete');
     }
 
     /**
-     * The tag names of the thread, in the order they were added
+     * The tags of the thread, each with the search query that lists the threads having it
      *
-     * @property names
-     * @type Array<{record: Tagged, name: String}>
+     * @property items
+     * @type Array<{name: String, filter: String}>
      * @public
      */
     get items() {
-        return (this.args.tags ?? []).map((record) => ({ record, name: String(record.tag?.get?.('tag') ?? record.tag?.tag ?? '') }));
+        return (this.args.tags ?? []).map((record) => {
+            let name = String(record.tag?.get?.('tag') ?? record.tag?.tag ?? '');
+            return { name, filter: serialize(group('AND', [group('AND', [condition('tag.tag', ':', name)])])).query };
+        });
     }
 
     @action
-    add(text) {
-        return this.args.onAdd?.(text);
+    openModal() {
+        this.showModal = true;
     }
 
     @action
-    addPicked(selected) {
-        let picked = Array.from(selected ?? []).pop();
-        return picked ? this.args.onAdd?.(picked.label) : undefined;
-    }
-
-    @action
-    remove(record) {
-        return this.args.onRemove?.(record);
+    closeModal() {
+        this.showModal = false;
     }
 }
