@@ -793,16 +793,8 @@
 	}
 }
 
-/* The tags fact of the issue detail: the add select sits under the chips without its label and underline. */
+/* The tags fact of the issue detail: the chip links keep the chip colour. */
 .issue-tags {
-	.form-field {
-		[data-form-field="label"],
-		.highlight,
-		.bar {
-			display: none;
-		}
-	}
-
 	.app-ui-tag a {
 		color: inherit;
 	}
