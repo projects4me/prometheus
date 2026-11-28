@@ -11,12 +11,12 @@ const QUALIFICATION_TYPE_DEFINITIONS = [
 	{
 		value: 'education',
 		labelKey: 'views.app.user.page.qualification.typeEducation',
-		iconClass: 'fa-graduation-cap',
+		icon: 'graduation-cap',
 	},
 	{
 		value: 'certification',
 		labelKey: 'views.app.user.page.qualification.typeCertification',
-		iconClass: 'fa-certificate',
+		icon: 'certificate',
 	},
 ];
 
@@ -185,7 +185,7 @@ export default class UserProfileQualificationComponent extends UserProfileBaseIn
 	}
 
 	/**
-	 * Font Awesome icon classes keyed by qualification type for the list.
+	 * Font Awesome icon names keyed by qualification type for the list.
 	 *
 	 * @property typeIcons
 	 * @type Object
@@ -194,9 +194,9 @@ export default class UserProfileQualificationComponent extends UserProfileBaseIn
 	 */
 	get typeIcons() {
 		return Object.fromEntries(
-			QUALIFICATION_TYPE_DEFINITIONS.map(({ value, iconClass }) => [
+			QUALIFICATION_TYPE_DEFINITIONS.map(({ value, icon }) => [
 				value,
-				iconClass,
+				icon,
 			])
 		);
 	}

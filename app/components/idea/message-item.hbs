@@ -16,7 +16,7 @@
   </ConversationUi::CommentFrame>
 {{else if this.isNotice}}
   <div class="idea-message-notice text-center text-muted {{if this.isError "text-red"}}" data-idea-message={{@message.id}} data-kind={{@message.kind}}>
-    <i class="fa {{if this.isError "fa-exclamation-triangle" "fa-info-circle"}}"></i>
+    <AppUi::Icon @name={{if this.isError "exclamation-triangle" "info-circle"}} />
     <span data-idea-message-body {{render-markdown @message.body}}></span>
   </div>
 {{else}}
@@ -35,7 +35,7 @@
       {{/if}}
       {{#if this.steps.length}}
         <button type="button" class="btn btn-link btn-xs" {{on "click" this.toggleSteps}} data-idea-steps-toggle>
-          <i class="fa {{if this.showSteps "fa-caret-down" "fa-caret-right"}}"></i>
+          <AppUi::Icon @name={{if this.showSteps "caret-down" "caret-right"}} />
           {{t "views.app.idea.conversation.steps" count=this.steps.length}}
         </button>
         {{#if this.showSteps}}
@@ -48,7 +48,7 @@
       {{/if}}
       {{#if @message.ideaplanId}}
         <button type="button" class="btn btn-link btn-xs" {{on "click" (fn @onShowPlan @message.ideaplanId)}} data-idea-plan-link>
-          <i class="fa fa-file-text-o"></i> {{t "views.app.idea.conversation.plan"}}
+          <AppUi::Icon @name="file-text-o" /> {{t "views.app.idea.conversation.plan"}}
         </button>
       {{/if}}
     </:body>

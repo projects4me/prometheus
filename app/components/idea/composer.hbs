@@ -12,7 +12,7 @@
   {{/if}}
   {{#if this.isUploading}}
     <span class="text-muted" data-idea-image-uploading>
-      <i class="fa fa-spinner fa-spin"></i> {{t "views.app.idea.conversation.image.uploading"}}
+      <AppUi::Icon @name="spinner" @spin={{true}} /> {{t "views.app.idea.conversation.image.uploading"}}
     </span>
   {{/if}}
   <AppUi::Button
@@ -23,6 +23,6 @@
     disabled={{this.isSendDisabled}}
     data-idea-send
   >
-    <i class="fa fa-paper-plane"></i> {{t "views.app.idea.conversation.send"}}
+    <AppUi::Icon @name="paper-plane" /> {{t "views.app.idea.conversation.send"}}
   </AppUi::Button>
 </div>
