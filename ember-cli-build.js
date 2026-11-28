@@ -58,16 +58,11 @@ module.exports = function (defaults) {
 
     app.import("vendor/pace/pace-options.js");
     app.import("vendor/pace/pace.min.js");
-    app.import("vendor/jquery-ui/jquery-ui.min.js");
     app.import('node_modules/js-logger/src/logger.min.js');
-    app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
-    app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
-    app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
-    app.import("vendor/AdminLTE/dist/js/app.js");
 
 
     // CSS Imports
