@@ -194,39 +194,14 @@ export default class AppProjectConversationPageController extends Controller {
     }
 
     /**
-     * Tags the open thread with the text, reusing the project's tag of that name or creating it
+     * Reloads the tags of the open thread, after the tags modal saved
      *
-     * @method addTag
-     * @param {String} text
+     * @method reloadTags
      * @returns {Promise}
      * @public
      */
-    @action addTag(text) {
-        return this.threadTags.add(text);
-    }
-
-    /**
-     * Removes a tag from the open thread
-     *
-     * @method removeTag
-     * @param {Tagged} tagged
-     * @returns {Promise}
-     * @public
-     */
-    @action removeTag(tagged) {
-        return this.threadTags.remove(tagged);
-    }
-
-    /**
-     * Suggests the project's tags for the typed text
-     *
-     * @method suggestTags
-     * @param {String} text
-     * @returns {Promise<Array>}
-     * @public
-     */
-    @action suggestTags(text) {
-        return this.threadTags.suggest(text);
+    @action reloadTags() {
+        return this.threadTags.reload();
     }
 
     /**

@@ -7,7 +7,7 @@ import Service from '@ember/service';
 class AclStub extends Service {
     allowed = true;
     checkAccess(context) {
-        return context === 'tagged.create' ? this.allowed : true;
+        return context === 'tagged.create' || context === 'tagged.delete' ? this.allowed : true;
     }
 }
 
@@ -20,18 +20,24 @@ module('Integration | Component | conversation/tags-box', function (hooks) {
         this.set('noop', () => {});
     });
 
-    test('with tagged.create it shows the add field and the remove buttons', async function (assert) {
-        await render(hbs`<Conversation::TagsBox @tags={{this.tags}} @suggest={{this.noop}} @onAdd={{this.noop}} @onRemove={{this.noop}} />`);
+    test('it shows plain chips and the plus when the user may tag', async function (assert) {
+        await render(hbs`<Conversation::TagsBox @tags={{this.tags}} @projectId="p1" @threadId="1" @threadTitle="T" @onSaved={{this.noop}} />`);
         assert.dom('[data-tag-chip]').hasText('backend');
-        assert.dom('[data-tags-edit]').exists();
-        assert.dom('[data-app-ui-tag-remove]').exists();
+        assert.dom('[data-app-ui-tag-remove]').doesNotExist();
+        assert.dom('[data-tags-edit]').doesNotExist();
+        assert.dom('[data-btn="edit-tags"]').exists();
     });
 
-    test('without tagged.create it shows the tags only', async function (assert) {
+    test('without tagged.create or tagged.delete it shows the tags only', async function (assert) {
         this.owner.lookup('service:acl').allowed = false;
-        await render(hbs`<Conversation::TagsBox @tags={{this.tags}} @suggest={{this.noop}} @onAdd={{this.noop}} @onRemove={{this.noop}} />`);
+        await render(hbs`<Conversation::TagsBox @tags={{this.tags}} @projectId="p1" @threadId="1" @threadTitle="T" @onSaved={{this.noop}} />`);
         assert.dom('[data-tag-chip]').hasText('backend');
-        assert.dom('[data-tags-edit]').doesNotExist();
-        assert.dom('[data-app-ui-tag-remove]').doesNotExist();
+        assert.dom('[data-btn="edit-tags"]').doesNotExist();
+    });
+
+    test('with no tags the empty text stays', async function (assert) {
+        this.set('tags', []);
+        await render(hbs`<Conversation::TagsBox @tags={{this.tags}} @projectId="p1" @threadId="1" @threadTitle="T" @onSaved={{this.noop}} />`);
+        assert.dom('[data-tags-empty]').exists();
     });
 });

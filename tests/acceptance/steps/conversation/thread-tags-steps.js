@@ -1,4 +1,4 @@
-import { click, fillIn, waitUntil, find, findAll } from '@ember/test-helpers';
+import { click, findAll } from '@ember/test-helpers';
 import voteThreadSteps from './vote-thread-steps';
 
 const BOX = '[data-tags-box]';
@@ -17,21 +17,15 @@ export default function (assert) {
 			server.create('tagged', { relatedTo: 'conversationroom', relatedId: String(conversationIndex), tagId: String(tag.id), projectId: '1', tag });
 			assert.ok(true, `Conversation ${conversationIndex} has the tag ${name}`);
 		}).
-		when('User types "$text" in the thread tags field', async function (text) {
-			await click(`${BOX} .ember-power-select-trigger`);
-			await fillIn(`${BOX} .ember-power-select-search-input, ${BOX} .ember-power-select-trigger-multiple-input`, text);
-			assert.ok(true, `User types ${text} in the thread tags field`);
+		when('User clicks the edit tags button of the thread', async function () {
+			await click(`${BOX} [data-btn="edit-tags"]`);
+			assert.ok(true, 'User clicks the edit tags button');
 		}).
-		when('User chooses the option "$text" of the thread tags field', async function (text) {
-			await waitUntil(() => findAll(`${BOX} .ember-power-select-option`).some((el) => el.textContent.includes(text)));
-			await click(findAll(`${BOX} .ember-power-select-option`).find((el) => el.textContent.includes(text)));
-			await waitUntil(() => !find(`${BOX} .ember-power-select-dropdown`) || true);
-			assert.ok(true, `User chooses ${text}`);
+		then('The tags modal is open', function () {
+			assert.dom('[data-test-tags-edit-modal]').exists();
 		}).
-		when('User removes the tag "$name" from the thread', async function (name) {
-			let chip = findAll('[data-tag-chip]').find((el) => el.textContent.includes(name));
-			await click(chip.querySelector('[data-app-ui-tag-remove]'));
-			assert.ok(true, `User removes the tag ${name}`);
+		then('The thread tags have no remove buttons', function () {
+			assert.dom(`${BOX} [data-app-ui-tag-remove]`).doesNotExist();
 		}).
 		then('The thread shows the tags "$names"', function (names) {
 			let expected = names.split(',').map((name) => name.trim());
@@ -40,12 +34,5 @@ export default function (assert) {
 		then('The thread shows no tags', function () {
 			assert.dom(`${BOX} [data-tag-chip]`).doesNotExist();
 			assert.dom(`${BOX} [data-tags-empty]`).exists();
-		}).
-		then('The project has $count tags', function (count) {
-			assert.equal(server.schema.tags.all().length, parseInt(count));
-		}).
-		then('The thread tags field is not shown', function () {
-			assert.dom(`${BOX} [data-tags-edit]`).doesNotExist();
-			assert.dom(`${BOX} [data-app-ui-tag-remove]`).doesNotExist();
 		});
 }

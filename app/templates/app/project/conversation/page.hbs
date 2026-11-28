@@ -22,7 +22,7 @@
       {{else}}
         <Conversation::LinkedIssueBox @issue={{this.model.issue}} @thread={{this.model}} />
       {{/if}}
-      <Conversation::TagsBox @tags={{this.threadTags.records}} @suggest={{this.suggestTags}} @onAdd={{this.addTag}} @onRemove={{this.removeTag}} />
+      <Conversation::TagsBox @tags={{this.threadTags.records}} @projectId={{this.threadTags.projectId}} @threadId={{this.model.id}} @threadTitle={{this.model.subject}} @onSaved={{this.reloadTags}} />
       <Conversation::ParticipantsBox @participants={{this.participants}} />
       <Conversation::ActivityBox @activities={{this.threadActivities}} @roomType={{this.model.roomType}} />
     </div>
