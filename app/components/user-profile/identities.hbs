@@ -23,7 +23,7 @@
                 <span class="user-identity-handle">{{identity.handle}}</span>
                 {{#if identity.verified}}
                   <span class="label label-success user-identity-verified">
-                    <i class="fa fa-check"></i> {{t "views.app.user.page.identity.verified"}}
+                    <AppUi::Icon @name="check" /> {{t "views.app.user.page.identity.verified"}}
                   </span>
                 {{else}}
                   <span class="label label-default user-identity-unverified">{{t "views.app.user.page.identity.unverified"}}</span>
@@ -45,7 +45,7 @@
                 disabled={{this.isSaving}}
                 {{on "click" (fn this.removeItem identity)}}
               >
-                <i class="fa fa-times"></i>
+                <AppUi::Icon @name="times" />
               </button>
             {{/if}}
           </li>

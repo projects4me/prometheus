@@ -104,7 +104,7 @@
               @data-field="linkIssue.relation"
             />
           </div>
-          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.issue.detail.linkedIssues.linkModal.remove"}} data-test-link-issue-remove={{row.issue.id}} {{on "click" (fn this.removeRow row)}}><i class="fa fa-times" aria-hidden="true"></i></button>
+          <button type="button" class="btn btn-box-tool" aria-label={{t "views.app.issue.detail.linkedIssues.linkModal.remove"}} data-test-link-issue-remove={{row.issue.id}} {{on "click" (fn this.removeRow row)}}><AppUi::Icon @name="times" /></button>
         </div>
       {{else}}
         <p class="text-muted" data-test-link-issue-rows-empty>{{t "views.app.issue.detail.linkedIssues.linkModal.noRows"}}</p>

@@ -5,7 +5,7 @@
       @onClose={{@onClose}}>
     {{#if this.canPreview}}
       {{#if this.loading}}
-        <p class="text-center file-preview-loading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{t "views.app.issue.detail.file.loading"}}</p>
+        <p class="text-center file-preview-loading"><AppUi::Icon @name="spinner" @spin={{true}} /> {{t "views.app.issue.detail.file.loading"}}</p>
       {{else if this.failed}}
         <div class="alert alert-danger file-preview-error" role="alert">{{t "views.app.issue.detail.file.previewFailed"}}</div>
       {{else if this.previewUrl}}
@@ -18,7 +18,7 @@
     {{else}}
       <div class="file-preview-unsupported text-center">
         <p>{{t "views.app.issue.detail.file.noPreview"}}</p>
-        <button type="button" class="btn btn-primary" {{on "click" this.download}}><i class="fa fa-cloud-download" aria-hidden="true"></i> {{t "views.app.issue.detail.file.download"}}</button>
+        <button type="button" class="btn btn-primary" {{on "click" this.download}}><AppUi::Icon @name="cloud-download" /> {{t "views.app.issue.detail.file.download"}}</button>
       </div>
     {{/if}}
   </AppUi::Modal>

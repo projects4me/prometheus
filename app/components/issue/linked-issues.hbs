@@ -3,7 +3,7 @@
     <h3 class="box-title">{{t "views.app.issue.detail.linkedIssues.title"}}</h3>
     <div class="box-tools pull-right">
       <AccessControl @aclContext="issue.update">
-        <button type="button" class="btn btn-box-tool" title={{t "views.app.issue.detail.linkedIssues.link"}} data-test-linked-issues-link {{on "click" this.openLink}}><i class="fa fa-link" aria-hidden="true"></i> {{t "views.app.issue.detail.linkedIssues.link"}}</button>
+        <button type="button" class="btn btn-box-tool" title={{t "views.app.issue.detail.linkedIssues.link"}} data-test-linked-issues-link {{on "click" this.openLink}}><AppUi::Icon @name="link" /> {{t "views.app.issue.detail.linkedIssues.link"}}</button>
       </AccessControl>
     </div>
   </div>
@@ -11,7 +11,7 @@
   <div class="box-body no-padding">
     {{#if this.isLoading}}
       <div class="text-center linked-issues-loading" data-test-linked-issues-loading>
-        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        <AppUi::Icon @name="spinner" @spin={{true}} />
       </div>
     {{else if this.loadFailed}}
       <Exceptions::NothingFound @description={{t "views.app.issue.detail.linkedIssues.loadFailed"}} />
