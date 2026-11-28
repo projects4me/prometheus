@@ -11,7 +11,7 @@
         @sortOptions={{this.sortOptions}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.setSort}}
         @selectable={{this.selectable}} @embedded={{this.embedded}}>
         <:actions>
-          <button type="button" class="btn btn-box-tool" data-demo-new title="New record" {{on "click" this.newRecord}}><i class="fa fa-plus"></i></button>
+          <button type="button" class="btn btn-box-tool" data-demo-new title="New record" {{on "click" this.newRecord}}><AppUi::Icon @name="plus" /></button>
         </:actions>
         <:search>
           {{#if this.searchOn}}
@@ -36,7 +36,7 @@
                 {{#each record.tags as |tag|}}<AppUi::Tag>{{tag}}</AppUi::Tag> {{/each}}
               </:secondary>
               <:trailing>
-                <button type="button" class="btn btn-box-tool" title="Quick view" data-demo-preview {{on "click" (fn this.preview record.id)}}><i class="fa fa-eye"></i></button>
+                <button type="button" class="btn btn-box-tool" title="Quick view" data-demo-preview {{on "click" (fn this.preview record.id)}}><AppUi::Icon @name="eye" /></button>
               </:trailing>
             </Item>
           {{else}}

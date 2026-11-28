@@ -12,8 +12,8 @@
               <hr data-demo-dropdown-divider>
             {{else}}
               <button type="button" class="{{if item.active 'active'}}{{if item.long ' dropdown-long'}}" data-demo-dropdown-item={{item.key}} {{on "click" (fn this.choose log item)}}>
-                <span>{{#if item.icon}}<i class="fa {{item.icon}}"></i> {{/if}}{{item.label}}</span>
-                {{#if item.active}}<i class="fa fa-check"></i>{{/if}}
+                <span>{{#if item.icon}}<AppUi::Icon @name={{item.icon}} /> {{/if}}{{item.label}}</span>
+                {{#if item.active}}<AppUi::Icon @name="check" />{{/if}}
               </button>
             {{/if}}
           {{/each}}

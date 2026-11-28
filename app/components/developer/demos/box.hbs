@@ -3,7 +3,7 @@
   <:demo>
     <AppUi::Box @variant={{this.variant}} @listView={{this.listView}} @noPadding={{this.noPadding}} @collapsed={{this.collapsed}} data-test-demo-box>
       <:header>{{#if this.showHeader}}<h3 class="box-title">Box title</h3>{{/if}}</:header>
-      <:tools>{{#if this.showTools}}<button type="button" class="btn btn-box-tool"><i class="fa fa-cog"></i></button>{{/if}}</:tools>
+      <:tools>{{#if this.showTools}}<button type="button" class="btn btn-box-tool"><AppUi::Icon @name="cog" /></button>{{/if}}</:tools>
       <:body>The body of the box.</:body>
       <:footer>{{#if this.showFooter}}The footer of the box.{{/if}}</:footer>
     </AppUi::Box>

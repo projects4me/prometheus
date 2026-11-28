@@ -19,7 +19,7 @@
           <t.tab @name={{item.name}} @count={{item.count}} data-test-demo-counted-tab={{item.name}}>{{item.name}}</t.tab>
         {{/each}}
       </:tabs>
-      <:tools><button type="button" class="btn btn-box-tool" title="Tool"><i class="fa fa-plus"></i></button></:tools>
+      <:tools><button type="button" class="btn btn-box-tool" title="Tool"><AppUi::Icon @name="plus" /></button></:tools>
       <:panes as |t|>
         {{#each this.counted as |item|}}
           <t.pane @name={{item.name}}>Content of {{item.name}}</t.pane>

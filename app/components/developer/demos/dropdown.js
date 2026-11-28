@@ -37,8 +37,8 @@ export default class DeveloperDemosDropdownComponent extends Component {
 	 */
 	get items() {
 		let items = [
-			{ key: 'recent', label: 'Recent issues', icon: 'fa-clock-o' },
-			{ key: 'mine', label: 'Assigned to me', icon: 'fa-user' },
+			{ key: 'recent', label: 'Recent issues', icon: 'clock-o' },
+			{ key: 'mine', label: 'Assigned to me', icon: 'user' },
 			{ key: 'plain', label: 'Plain item' },
 			{ divider: true },
 			{ key: 'long', label: LONG_LABEL, long: true },

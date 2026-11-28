@@ -17,7 +17,7 @@
               {{#each group.items as |item|}}
                 <li class={{if (is-active-route item.route) "active"}} data-settings-item={{item.name}}>
                   <LinkTo @route={{item.route}}>
-                    <i class="fa fa-{{item.icon}}"></i> {{t item.label}}
+                    <AppUi::Icon @name={{item.icon}} /> {{t item.label}}
                   </LinkTo>
                 </li>
               {{/each}}
