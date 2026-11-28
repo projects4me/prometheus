@@ -930,5 +930,6 @@
   [class*="col-md-"] {
     float: none;
     width: 100%;
+    grid-column: 1 / -1; // the .row is a CSS grid (foundation/grid): stack the columns across it
   }
 }
