@@ -5,6 +5,7 @@
 import steps from '../steps';
 import { click, settled, waitFor } from '@ember/test-helpers';
 import { typeInSelectSearch } from 'prometheus/tests/helpers/select';
+import { waitForModalClosed } from '../common-steps/modal-steps';
 
 const TAGS = '[data-test-issue-tags]';
 const MODAL = '[data-test-tags-edit-modal]';
@@ -29,6 +30,7 @@ export default function (assert) {
 				await waitFor('.ember-power-select-option:not(.ember-power-select-option--search-message):not(.ember-power-select-option--loading-message)', { timeout: 3000 });
 				await click(document.querySelector('.ember-power-select-option'));
 				await click(`${MODAL} [data-btn="save"]`);
+				await waitForModalClosed(MODAL);
 			})
 			.when('User removes the tag "$name" from the issue', async function (name) {
 				await click(`${TAGS} [data-test-issue-tags-add]`);
@@ -36,6 +38,7 @@ export default function (assert) {
 				let chip = [...document.querySelectorAll(`${MODAL} [data-test-tag-chip]`)].find((el) => el.textContent.trim().startsWith(name));
 				await click(chip.querySelector('[data-app-ui-tag-remove]'));
 				await click(`${MODAL} [data-btn="save"]`);
+				await waitForModalClosed(MODAL);
 			})
 			.when('User clicks the tag "$name" of the issue', async function (name) {
 				await click(`${TAGS} [data-test-issue-tag="${name}"] [data-test-issue-tag-link]`);
