@@ -3,7 +3,7 @@
   <div class="ez-search-compact-saved ez-search-saved" data-ez-saved>
     <AppUi::Dropdown @isPrimary={{if this.pickedSearch true false}}>
       <:button>
-        <i class="fa {{if this.pickedSearch 'fa-bookmark' 'fa-bookmark-o'}}"></i>
+        <AppUi::Icon @name={{if this.pickedSearch "bookmark" "bookmark-o"}} />
         {{#if this.pickedSearch}}
           <span class="ez-search-compact-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
           {{#if this.isEdited}}
@@ -27,7 +27,7 @@
           <button type="button" class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
             {{item.search.name}}
             {{#if item.active}}
-              <i class="fa fa-check pull-right"></i>
+              <AppUi::Icon @name="check" class="pull-right" />
             {{/if}}
           </button>
         {{/each}}
@@ -64,7 +64,7 @@
     data-ez-builder-toggle
     {{on "click" this.openFilter}}
   >
-    <i class="fa fa-sliders"></i>
+    <AppUi::Icon @name="sliders" />
     <span class={{if @linear "sr-only"}}>{{t "components.ezSearchCompact.filter"}}</span>
     {{#if this.conditionCount}}
       <span class="label label-primary" data-ez-filter-count>{{this.conditionCount}}</span>

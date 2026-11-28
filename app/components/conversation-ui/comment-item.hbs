@@ -15,7 +15,7 @@
           {{tooltip (t 'global.form.edit')}}
           aria-label={{t 'global.form.edit'}}
         >
-          <i class="fa fa-pencil"></i>
+          <AppUi::Icon @name="pencil" />
         </AppUi::Button>
         <AppUi::Button
           data-btn="delete"
@@ -25,7 +25,7 @@
           {{tooltip (t 'global.form.delete')}}
           aria-label={{t 'global.form.delete'}}
         >
-          <i class="fa fa-trash-o"></i>
+          <AppUi::Icon @name="trash-o" />
         </AppUi::Button>
       {{/if}}
     </:tools>
@@ -68,7 +68,7 @@
     >
       <div class="delete-comment-confirmation">
         <div class="alert alert-warning flex-row flex-ai-c">
-          <i class="fa fa-exclamation-triangle"></i>
+          <AppUi::Icon @name="exclamation-triangle" />
           <p>{{safe-html (t "views.app.conversation.comment.delete.message")}}</p>
         </div>
       </div>

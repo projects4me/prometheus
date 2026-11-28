@@ -10,7 +10,7 @@
   {{/if}}
   {{#if @failed}}
     <p class="text-danger" data-thread-comments-failed>
-      <i class="fa fa-exclamation-triangle"></i> {{t "views.app.conversation.thread.commentsFailed"}}
+      <AppUi::Icon @name="exclamation-triangle" /> {{t "views.app.conversation.thread.commentsFailed"}}
       <button type="button" class="btn btn-link" data-btn="retry-comments" {{on "click" @onLoadOlder}}>{{t "views.app.conversation.thread.retry"}}</button>
     </p>
   {{/if}}

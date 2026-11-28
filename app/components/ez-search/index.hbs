@@ -4,10 +4,10 @@
       <AppUi::Dropdown @isPrimary={{true}}>
         <:button>
           {{#if this.isNarrow}}
-            <i class="fa fa-bookmark" title={{this.savedTitle}} data-ez-saved-icon></i>
+            <AppUi::Icon @name="bookmark" title={{this.savedTitle}} data-ez-saved-icon />
             <span class="sr-only">{{this.savedTitle}}</span>
           {{else}}
-            <i class="fa fa-bookmark visible-xs-inline"></i>
+            <AppUi::Icon @name="bookmark" class="visible-xs-inline" />
             <span class="sr-only visible-xs-inline">{{t "views.app.issue.list.savedsearch.label"}}</span>
             {{#if this.pickedSearch}}
               <span class="hidden-xs ez-search-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
@@ -33,7 +33,7 @@
             <button type="button" class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
               {{item.search.name}}
               {{#if item.active}}
-                <i class="fa fa-check pull-right"></i>
+                <AppUi::Icon @name="check" class="pull-right" />
               {{/if}}
             </button>
           {{/each}}
@@ -67,7 +67,7 @@
       data-ez-builder-toggle
       {{on "click" this.toggleBuilder}}
     >
-      <i class="fa fa-sliders"></i>
+      <AppUi::Icon @name="sliders" />
       {{#unless this.isNarrow}}
         <span class="hidden-xs">{{t "components.ezSearch.builderToggle"}}</span>
       {{/unless}}
@@ -82,8 +82,8 @@
         title={{t "components.ezSearch.searchBar.searchTitle"}}
         aria-label={{t "global.form.search"}}
         data-ez-search-apply
-      >{{#if this.isNarrow}}<i class="fa fa-search"></i>{{else}}{{t "global.form.search"}}{{/if}}</AppUi::Button>
-      <AppUi::Button class="btn btn-default" @onClick={{this.clear}} title={{t "global.form.clear"}} aria-label={{t "global.form.clear"}} data-ez-search-clear>{{#if this.isNarrow}}<i class="fa fa-times"></i>{{else}}{{t "global.form.clear"}}{{/if}}</AppUi::Button>
+      >{{#if this.isNarrow}}<AppUi::Icon @name="search" />{{else}}{{t "global.form.search"}}{{/if}}</AppUi::Button>
+      <AppUi::Button class="btn btn-default" @onClick={{this.clear}} title={{t "global.form.clear"}} aria-label={{t "global.form.clear"}} data-ez-search-clear>{{#if this.isNarrow}}<AppUi::Icon @name="times" />{{else}}{{t "global.form.clear"}}{{/if}}</AppUi::Button>
     </div>
   </div>
 

@@ -4,10 +4,10 @@
     <div class="col-sm-6 agree" data-vote-side="agree">
       <div class="info-box">
         {{#if this.hasVoted}}
-          <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.voted"}}><i class="fa {{if this.votedAgree "fa-thumbs-up" "fa-thumbs-o-up"}}"></i></span>
+          <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.voted"}}><AppUi::Icon @name={{if this.votedAgree "thumbs-up" "thumbs-o-up"}} /></span>
         {{else}}
           <a href="javascript:void(0);" data-btn="vote-agree" {{on "click" this.voteAgree}}>
-            <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.clickup"}}><i class="fa fa-thumbs-o-up"></i></span>
+            <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.clickup"}}><AppUi::Icon @name="thumbs-o-up" /></span>
           </a>
         {{/if}}
         <div class="info-box-content">
@@ -23,10 +23,10 @@
     <div class="col-sm-6 disagree" data-vote-side="disagree">
       <div class="info-box">
         {{#if this.hasVoted}}
-          <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.voted"}}><i class="fa {{if this.votedDisagree "fa-thumbs-down" "fa-thumbs-o-down"}}"></i></span>
+          <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.voted"}}><AppUi::Icon @name={{if this.votedDisagree "thumbs-down" "thumbs-o-down"}} /></span>
         {{else}}
           <a href="javascript:void(0);" data-btn="vote-disagree" {{on "click" this.voteDisagree}}>
-            <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.clickdown"}}><i class="fa fa-thumbs-o-down"></i></span>
+            <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.clickdown"}}><AppUi::Icon @name="thumbs-o-down" /></span>
           </a>
         {{/if}}
         <div class="info-box-content">
@@ -41,7 +41,7 @@
     </div>
   </div>
   {{#if @votes.failed}}
-    <p class="text-danger" data-vote-failed><i class="fa fa-exclamation-triangle"></i> {{t "views.app.conversation.vote.failed"}}</p>
+    <p class="text-danger" data-vote-failed><AppUi::Icon @name="exclamation-triangle" /> {{t "views.app.conversation.vote.failed"}}</p>
   {{else if this.hasVoted}}
     <p class="text-muted" data-vote-status="voted">{{t "views.app.conversation.vote.youVoted" vote=this.myVote}}</p>
   {{else}}

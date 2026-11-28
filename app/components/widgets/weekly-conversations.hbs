@@ -10,7 +10,7 @@
         {{on "click" this.refresh}}
         data-refresh-button
       >
-        <i class="fa {{if this.isRefreshing "fa-spin fa-spinner" "fa-refresh"}}"></i>
+        <AppUi::Icon @name={{if this.isRefreshing "spinner" "refresh"}} @spin={{this.isRefreshing}} />
       </button>
   </div>
   <Pagination

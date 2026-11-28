@@ -11,7 +11,7 @@
       <p>
         <AppUi::StatusLabel @status={{@issue.status}} data-linked-issue-status />
         {{#if @issue.issuemilestone.name}}
-          <span class="text-muted" data-linked-issue-milestone><i class="fa fa-flag-o"></i> {{@issue.issuemilestone.name}}</span>
+          <span class="text-muted" data-linked-issue-milestone><AppUi::Icon @name="flag-o" /> {{@issue.issuemilestone.name}}</span>
         {{/if}}
       </p>
     {{else}}
@@ -22,7 +22,7 @@
     <AccessControl @aclContext="issue.create">
       <div class="box-footer">
         <LinkTo @route="app.project.issue.create" @query={{hash fromThread=@thread.id}} class="btn btn-default btn-sm" data-btn="create-issue-from-thread">
-          <i class="fa fa-plus"></i> {{t "views.app.conversation.thread.createIssue"}}
+          <AppUi::Icon @name="plus" /> {{t "views.app.conversation.thread.createIssue"}}
         </LinkTo>
       </div>
     </AccessControl>
