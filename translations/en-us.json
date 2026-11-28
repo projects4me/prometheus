@@ -1390,8 +1390,8 @@
           "conversation": "Thread",
           "tags": {
             "title": "Tags",
-            "add": "Add a tag",
-            "failed": "The tag could not be saved. Please try again.",
+            "edit": "Edit tags",
+            "modalTitle": "Tags of #{number}",
             "loadFailed": "The tags could not be loaded."
           },
           "linkedIssues": {

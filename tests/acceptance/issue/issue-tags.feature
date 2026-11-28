@@ -14,6 +14,7 @@ Feature: Issue tags | Add, reuse and remove tags on the issue detail page
     When User navigates to app/project/PROJECT_1/issue/1
     And User adds the tag "backend" to the issue
     Then The issue should show the tag "backend"
+    And The issue tags should have no remove button
     And The project should have 1 tag named "backend"
 
   Scenario: User reuses an existing tag of the project

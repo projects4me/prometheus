@@ -7,6 +7,7 @@ import { click, settled, waitFor } from '@ember/test-helpers';
 import { typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 const TAGS = '[data-test-issue-tags]';
+const MODAL = '[data-test-tags-edit-modal]';
 
 export default function (assert) {
 	return (
@@ -22,17 +23,19 @@ export default function (assert) {
 			})
 			.when('User adds the tag "$name" to the issue', async function (name) {
 				await click(`${TAGS} [data-test-issue-tags-add]`);
-				await waitFor(`${TAGS} [data-field="issue.tags.add"]`);
-				await waitFor(`${TAGS} [data-field="issue.tags.add"]`);
+				await waitFor(MODAL);
 				await typeInSelectSearch(name);
 				await settled();
 				await waitFor('.ember-power-select-option:not(.ember-power-select-option--search-message):not(.ember-power-select-option--loading-message)', { timeout: 3000 });
-				let option = document.querySelector('.ember-power-select-option');
-				await click(option);
+				await click(document.querySelector('.ember-power-select-option'));
+				await click(`${MODAL} [data-btn="save"]`);
 			})
 			.when('User removes the tag "$name" from the issue', async function (name) {
 				await click(`${TAGS} [data-test-issue-tags-add]`);
-				await click(`${TAGS} [data-test-issue-tag="${name}"] [data-app-ui-tag-remove]`);
+				await waitFor(`${MODAL} [data-test-tag-chip]`);
+				let chip = [...document.querySelectorAll(`${MODAL} [data-test-tag-chip]`)].find((el) => el.textContent.trim().startsWith(name));
+				await click(chip.querySelector('[data-app-ui-tag-remove]'));
+				await click(`${MODAL} [data-btn="save"]`);
 			})
 			.when('User clicks the tag "$name" of the issue', async function (name) {
 				await click(`${TAGS} [data-test-issue-tag="${name}"] [data-test-issue-tag-link]`);
@@ -42,6 +45,9 @@ export default function (assert) {
 			})
 			.then('The issue should show the tag "$name"', async function (name) {
 				assert.dom(`${TAGS} [data-test-issue-tag="${name}"]`).exists();
+			})
+			.then('The issue tags should have no remove button', async function () {
+				assert.dom(`${TAGS} [data-app-ui-tag-remove]`).doesNotExist();
 			})
 			.then('The issue should not show the tag "$name"', async function (name) {
 				assert.dom(`${TAGS} [data-test-issue-tag="${name}"]`).doesNotExist();
