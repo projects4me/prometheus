@@ -1,2 +1,224 @@
-// Foundation: grid compatibility (.row, .col-*, hidden-*/visible-*).
-// Intentionally empty: filled by aprom-5060 (inventory: grid).
+// Foundation: grid compatibility (aprom-5060, phase 3 of aprom-4999).
+//
+// The grid-compat rows of docs/ui/foundation/inventory.md: Bootstrap 3's float grid rebuilt on CSS grid behind the
+// same class names, so the templates don't change.
+//
+// Layout model
+// - .row is a 12-column grid. The gutters stay what they are today: 15px padding on each column and -15px margins
+//   on the row (no gap), so nested rows and box edges line up exactly as with floats.
+// - Every direct child of a .row spans the full row by default, which is what a column below its breakpoint (or a
+//   non-column child) does today. A .col-{bp}-N sets --p4m-col-span to N from its breakpoint up, and the row child
+//   spans that many tracks. Breakpoints are Bootstrap's ($p4m-screen-*), mobile first, so the widest matching
+//   class wins as it does today.
+// - Items align to the top (align-items: start): float columns are as tall as their content.
+// - Push/pull: a relatively positioned grid item resolves left/right against its own grid area, so a push of N
+//   columns is N / span of the item's own width. The inventory found col-sm-push-8, col-sm-pull-1, col-md-push-8
+//   and col-md-pull-4; add more with p4m-col-shift if a template needs them.
+// - Columns that are not direct children of a .row (widgets.hbs in .widgets-container, the role-detail
+//   skeleton, see the inventory) keep today's float and percentage width: those rules are the base column rules,
+//   and only a .row child drops them (width: auto) for its grid track.
+// - Bootstrap's .row clearfix pseudo-elements would be grid items, so they are switched off.
+//
+// Selectors are no more specific than the vendor ones (the row-child reset is .row + one class), so module rules
+// in app/styles/modules still win.
+
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+
+$p4m-grid-columns: 12;
+
+// Breakpoint name → min-width (null: no media query, the xs tier).
+$p4m-grid-breakpoints: (
+  xs: null,
+  sm: $p4m-screen-sm,
+  md: $p4m-screen-md,
+  lg: $p4m-screen-lg,
+);
+
+// Bootstrap 3 .container widths (720/940/1140px plus the 30px gutter).
+$p4m-container-sm: 750px;
+$p4m-container-md: 970px;
+$p4m-container-lg: 1170px;
+
+@mixin p4m-from($bp) {
+  $min: map.get($p4m-grid-breakpoints, $bp);
+
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+// One push (left) or pull (right) of $n columns at breakpoint $bp.
+@mixin p4m-col-shift($bp, $dir, $n) {
+  $side: left;
+
+  @if $dir == pull {
+    $side: right;
+  }
+
+  @include p4m-from($bp) {
+    // outside a .row the containing block is the parent, as with floats
+    .col-#{$bp}-#{$dir}-#{$n} {
+      #{$side}: math.percentage(math.div($n, $p4m-grid-columns));
+    }
+
+    // in a .row it is the item's own grid area, N / span of its width
+    .row > .col-#{$bp}-#{$dir}-#{$n} {
+      #{$side}: calc(100% * #{$n} / var(--p4m-col-span));
+    }
+  }
+}
+
+// Every column class, for the shared rules.
+$p4m-col-selectors: ();
+
+@each $bp, $min in $p4m-grid-breakpoints {
+  @for $n from 1 through $p4m-grid-columns {
+    $p4m-col-selectors: list.append($p4m-col-selectors, ".col-#{$bp}-#{$n}", comma);
+  }
+}
+
+/* ── Containers ──────────────────────────────────────────────────────────── */
+.container,
+.container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--p4m-space-15);
+  padding-left: var(--p4m-space-15);
+}
+
+.container::before,
+.container::after,
+.container-fluid::before,
+.container-fluid::after {
+  display: table;
+  content: " ";
+}
+
+.container::after,
+.container-fluid::after {
+  clear: both;
+}
+
+@media (min-width: $p4m-screen-sm) {
+  .container {
+    width: $p4m-container-sm;
+  }
+}
+
+@media (min-width: $p4m-screen-md) {
+  .container {
+    width: $p4m-container-md;
+  }
+}
+
+@media (min-width: $p4m-screen-lg) {
+  .container {
+    width: $p4m-container-lg;
+  }
+}
+
+/* ── Row ─────────────────────────────────────────────────────────────────── */
+.row {
+  display: grid;
+  grid-template-columns: repeat($p4m-grid-columns, minmax(0, 1fr));
+  align-items: start;
+  margin-right: var(--p4m-space-neg-15);
+  margin-left: var(--p4m-space-neg-15);
+}
+
+.row::before,
+.row::after {
+  display: none;
+  content: none;
+}
+
+// Full width unless a column class narrows it; min-width: 0 keeps wide content overflowing the column, as with
+// a float of fixed width, instead of widening it.
+.row > * {
+  --p4m-col-span: #{$p4m-grid-columns};
+  grid-column: span var(--p4m-col-span);
+  min-width: 0;
+}
+
+/* ── Columns ─────────────────────────────────────────────────────────────── */
+#{$p4m-col-selectors} {
+  position: relative;
+  min-height: var(--p4m-space-1);
+  padding-right: var(--p4m-space-15);
+  padding-left: var(--p4m-space-15);
+}
+
+@each $bp, $min in $p4m-grid-breakpoints {
+  @include p4m-from($bp) {
+    @for $n from 1 through $p4m-grid-columns {
+      .col-#{$bp}-#{$n} {
+        // the float and width are the fallback for a column outside a .row
+        float: left;
+        width: math.percentage(math.div($n, $p4m-grid-columns));
+        --p4m-col-span: #{$n};
+      }
+    }
+  }
+}
+
+// In a .row the grid track sizes the column
+.row > :is(#{$p4m-col-selectors}) {
+  float: none;
+  width: auto;
+}
+
+/* ── Push / pull (the ones in use) ───────────────────────────────────────── */
+@include p4m-col-shift(sm, push, 8);
+@include p4m-col-shift(sm, pull, 1);
+@include p4m-col-shift(md, push, 8);
+@include p4m-col-shift(md, pull, 4);
+
+/* ── Clearfix ────────────────────────────────────────────────────────────── */
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: " ";
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+/* ── Responsive visibility ───────────────────────────────────────────────── */
+.visible-xs-inline {
+  display: none !important;
+}
+
+@media (max-width: $p4m-screen-xs-max) {
+  .visible-xs-inline {
+    display: inline !important;
+  }
+
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: $p4m-screen-sm) and (max-width: $p4m-screen-sm-max) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: $p4m-screen-md) and (max-width: $p4m-screen-md-max) {
+  .hidden-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: $p4m-screen-lg) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
