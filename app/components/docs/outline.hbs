@@ -1,0 +1,19 @@
+<div class="col-md-4" data-test-doc-outline ...attributes>
+  <span class="hidden" {{on-editor-event @editor "update" this.refresh}}></span>
+  <AppUi::Box @variant="default">
+    <:header><h3 class="box-title">{{t "components.docs.outline.title"}}</h3></:header>
+    <:body>
+      {{#if this.headings.length}}
+        <ul class="doc-outline list-unstyled">
+          {{#each this.headings as |heading|}}
+            <li class="doc-outline-level-{{heading.level}}">
+              <button type="button" class="btn btn-link" data-test-doc-outline-item {{on "click" (fn this.goTo heading)}}>{{heading.text}}</button>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p class="text-muted" data-test-doc-outline-empty>{{t "components.docs.outline.empty"}}</p>
+      {{/if}}
+    </:body>
+  </AppUi::Box>
+</div>

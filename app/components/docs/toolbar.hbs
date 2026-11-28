@@ -1,0 +1,22 @@
+<span class="hidden" {{on-editor-event @editor "transaction" this.refresh}}></span>
+{{#if this.visible}}
+  <div class="doc-toolbar" role="toolbar" aria-label={{t "components.docs.toolbar.label"}} data-test-doc-toolbar>
+    {{#each this.groups as |group|}}
+      <div class="btn-group" data-test-doc-toolbar-group>
+        {{#each group as |item|}}
+          <button type="button"
+            class="btn btn-default btn-sm {{if item.active "active"}}"
+            title={{t (concat "components.docs.toolbar." item.key)}}
+            aria-label={{t (concat "components.docs.toolbar." item.key)}}
+            aria-pressed={{if item.active "true" "false"}}
+            disabled={{item.disabled}}
+            data-test-doc-toolbar-button={{item.key}}
+            {{on "click" (fn this.run item)}}>
+            {{#if item.icon}}<i class="fa {{item.icon}}"></i>{{else}}{{item.label}}{{/if}}
+          </button>
+        {{/each}}
+      </div>
+    {{/each}}
+    {{yield}}
+  </div>
+{{/if}}
