@@ -5,6 +5,7 @@
 import Service, { service } from '@ember/service';
 import ENV from 'prometheus/config/environment';
 import snippetParts from 'prometheus/utils/search/snippet-parts';
+import { waitForPromise } from '@ember/test-waiters';
 
 /**
  * Finds issues through Gaia's ranked search (`GET /api/v1/search`), which combines exact, full-text, fuzzy and
@@ -57,13 +58,14 @@ export default class SearchService extends Service {
         }
 
         let params = new URLSearchParams({ types: 'issue', q: text, limit });
-        let response = await fetch(`${ENV.api.host}/api/v${ENV.api.version}/search?${params}`, {
+        // Native fetch is not waited for by the test helpers; the waiter keeps settled() waiting (as the adapter does)
+        let response = await waitForPromise(fetch(`${ENV.api.host}/api/v${ENV.api.version}/search?${params}`, {
             headers: { Authorization: `Bearer ${this.session.data.authenticated.access_token}` }
-        });
+        }));
         if (!response.ok) {
             throw new Error(`Search failed: ${response.status}`);
         }
-        let body = await response.json();
+        let body = await waitForPromise(response.json());
         let semanticUnavailable = body.meta?.semantic === 'unavailable';
         let found = (body.data ?? []).map(({ attributes }) => attributes);
         let ids = found.map((match) => match.recordId);
