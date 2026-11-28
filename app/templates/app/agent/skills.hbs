@@ -16,7 +16,7 @@
             <div class="box-tools pull-right">
               <AccessControl @aclContext="agent.update">
                 <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="new-skill" @onClick={{this.newSkill}}>
-                  <i class="fa fa-plus"></i> {{t "views.app.agent.skills.newSkill"}}
+                  <AppUi::Icon @name="plus" /> {{t "views.app.agent.skills.newSkill"}}
                 </AppUi::Button>
               </AccessControl>
             </div>
@@ -106,7 +106,7 @@
                 <span class="label label-default agent-grant" data-grant={{row.agentName}}>
                   {{row.agentName}}
                   <AccessControl @aclContext="agent.update">
-                    <a href="#" data-btn="remove-grant" {{on "click" (fn this.removeGrant row.grant)}}><i class="fa fa-times"></i></a>
+                    <a href="#" data-btn="remove-grant" {{on "click" (fn this.removeGrant row.grant)}}><AppUi::Icon @name="times" /></a>
                   </AccessControl>
                 </span>
               {{else}}

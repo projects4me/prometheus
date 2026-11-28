@@ -8,7 +8,7 @@
             <div class="box-tools pull-right">
               <AccessControl @aclContext="setting.update">
                 <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-issue-type" @onClick={{this.showAddDialog}}>
-                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  <AppUi::Icon @name="plus" />
                   {{t "views.app.settings.issueTypes.add"}}
                 </AppUi::Button>
               </AccessControl>
@@ -40,10 +40,10 @@
                     <td class="text-right">
                       <AccessControl @aclContext="setting.update">
                         <AppUi::Button type="button" class="btn btn-box-tool" data-btn="edit-issue-type" title={{t "global.form.edit"}} @onClick={{fn this.showEditDialog row.type}}>
-                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                          <AppUi::Icon @name="pencil" />
                         </AppUi::Button>
                         <AppUi::Button type="button" class="btn btn-box-tool" data-btn="delete-issue-type" title={{t "global.form.delete"}} @onClick={{fn this.deleteIssueType row.type}}>
-                          <i class="fa fa-trash" aria-hidden="true"></i>
+                          <AppUi::Icon @name="trash" />
                         </AppUi::Button>
                       </AccessControl>
                     </td>

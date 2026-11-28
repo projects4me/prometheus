@@ -8,7 +8,7 @@
       </div>
 
       <div class="btn-group">
-        <AppUi::Button type="button" class="btn btn-default"> <i class="fa fa-plus"></i> {{t "global.form.createnew"}}</AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-default"> <AppUi::Icon @name="plus" /> {{t "global.form.createnew"}}</AppUi::Button>
       </div>
 
     </div>
@@ -24,15 +24,15 @@
         <span class="list-view-count pull-left">{{t "global.list.selected"}} {{this.selectedCount}}</span>
         <span class="pagination">
           {{#if this.model.content.meta._links.prev}}
-            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><i class="fa fa-angle-double-left"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><AppUi::Icon @name="angle-double-left" /></AppUi::Button>
           {{else}}
-            <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-left"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default disabled"><AppUi::Icon @name="angle-double-left" /></AppUi::Button>
           {{/if}}
 
           {{#if this.model.content.meta._links.next}}
-            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><i class="fa fa-angle-double-right"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><AppUi::Icon @name="angle-double-right" /></AppUi::Button>
           {{else}}
-            <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-right"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default disabled"><AppUi::Icon @name="angle-double-right" /></AppUi::Button>
           {{/if}}
         </span>
       </div>

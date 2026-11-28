@@ -31,7 +31,7 @@
           <:actions>
             <AccessControl @aclContext="role.create">
               <button type="button" class="btn btn-primary btn-sm" {{on "click" this.showAddRoleDialog}} data-btn="role-add">
-                <i class="fa fa-plus"></i> {{t "views.app.role.browser.new"}}
+                <AppUi::Icon @name="plus" /> {{t "views.app.role.browser.new"}}
               </button>
             </AccessControl>
           </:actions>

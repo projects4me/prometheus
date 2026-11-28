@@ -85,7 +85,7 @@
               />
 
               <div class="user-dob">    
-                <i class="fa fa-birthday-cake"></i>
+                <AppUi::Icon @name="birthday-cake" />
                 <span class="user-meta-label">{{t "views.app.user.create.dateofbirth"}}:</span>
                 <AccessControl @aclContext="user.dateOfBirth.read">
                 <AppUi::InlineEditable
@@ -127,13 +127,13 @@
               </div>
 
               <div class="user-language">
-                <i class="fa fa-language"></i>
+                <AppUi::Icon @name="language" />
                 <span class="user-meta-label">{{t "views.app.user.create.language"}}:</span>
                 <span class="user-meta-value">{{or this.userLanguageLabel "-"}}</span>
               </div>
 
               <div class="user-timezone">
-                <i class="fa fa-clock-o"></i>
+                <AppUi::Icon @name="clock-o" />
                 <span class="user-meta-label">{{t "views.app.user.create.timezone"}}:</span>
                 <AppUi::InlineEditable
                   @value={{this.model.timezone}}
