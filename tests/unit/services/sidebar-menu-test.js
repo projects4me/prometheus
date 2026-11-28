@@ -17,31 +17,34 @@ module('Unit | Service | sidebar-menu', function (hooks) {
 				return context.mini;
 			}
 		});
+		this.owner.register('service:router', class extends Service {
+			currentRouteName = 'app.project.page';
+		});
 		this.menu = this.owner.lookup('service:sidebar-menu');
 	});
 
-	test('until a submenu is toggled the active item is open', function (assert) {
-		assert.true(this.menu.isOpen('Project', true));
-		assert.false(this.menu.isOpen('Issue', false));
+	test('until a submenu is toggled the active route item is open', function (assert) {
+		assert.true(this.menu.isOpen('Project', 'app.project'));
+		assert.false(this.menu.isOpen('Issue', 'app.issue'));
 	});
 
 	test('one submenu is open at a time and a second toggle closes it', function (assert) {
-		this.menu.toggle('Issue', false);
-		assert.true(this.menu.isOpen('Issue', false));
-		assert.false(this.menu.isOpen('Project', true), 'the active item closes once another is toggled');
+		this.menu.toggle('Issue', 'app.issue');
+		assert.true(this.menu.isOpen('Issue', 'app.issue'));
+		assert.false(this.menu.isOpen('Project', 'app.project'), 'the active item closes once another is toggled');
 
-		this.menu.toggle('Issue', false);
-		assert.false(this.menu.isOpen('Issue', false));
+		this.menu.toggle('Issue', 'app.issue');
+		assert.false(this.menu.isOpen('Issue', 'app.issue'));
 	});
 
 	test('toggling the active item first closes its submenu', function (assert) {
-		this.menu.toggle('Project', true);
-		assert.false(this.menu.isOpen('Project', true));
+		this.menu.toggle('Project', 'app.project');
+		assert.false(this.menu.isOpen('Project', 'app.project'));
 	});
 
 	test('nothing changes while the sidebar is collapsed to its icon strip', function (assert) {
 		this.mini = true;
-		this.menu.toggle('Project', false);
-		assert.false(this.menu.isOpen('Project', false));
+		this.menu.toggle('Issue', 'app.issue');
+		assert.false(this.menu.isOpen('Issue', 'app.issue'));
 	});
 });

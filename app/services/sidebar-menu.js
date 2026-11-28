@@ -4,6 +4,7 @@
 
 import Service, { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import { isActiveRoute } from 'prometheus/utils/navigation/active-route';
 
 /**
  * Which submenu of the sidebar menu is open, replacing AdminLTE's tree. One submenu is open at a time across the
@@ -27,6 +28,16 @@ export default class SidebarMenuService extends Service {
     @service sidebar;
 
     /**
+     * The router says which item's route is active.
+     *
+     * @property router
+     * @type Ember.Service
+     * @for SidebarMenuService
+     * @private
+     */
+    @service router;
+
+    /**
      * The module whose submenu is open; undefined until a submenu is toggled, null when all are closed.
      *
      * @property openModule
@@ -41,13 +52,13 @@ export default class SidebarMenuService extends Service {
      *
      * @method isOpen
      * @param {String} module The navigation module of the item
-     * @param {Boolean} active Whether the item's route is active
+     * @param {String} route The item's route
      * @return {Boolean}
      * @public
      */
-    isOpen = (module, active) => {
+    isOpen = (module, route) => {
         if (this.openModule === undefined) {
-            return Boolean(active);
+            return isActiveRoute(route, this.router.currentRouteName);
         }
         return this.openModule === module;
     };
@@ -57,13 +68,13 @@ export default class SidebarMenuService extends Service {
      *
      * @method toggle
      * @param {String} module The navigation module of the item
-     * @param {Boolean} active Whether the item's route is active
+     * @param {String} route The item's route
      * @public
      */
-    toggle = (module, active) => {
+    toggle = (module, route) => {
         if (this.sidebar.isMini) {
             return;
         }
-        this.openModule = this.isOpen(module, active) ? null : module;
+        this.openModule = this.isOpen(module, route) ? null : module;
     };
 }

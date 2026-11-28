@@ -23,6 +23,8 @@ const SIDEBAR_BODY_CLASSES = ['sidebar-collapse', 'sidebar-expanded-on-hover', '
  * header and content off these body classes. It sits on the layout root (`ApplicationWrapper`), the only writer of these classes. When AdminLTE
  * is replaced (aprom-4999) the state classes move onto the layout root and the body writes go.
  *
+ * TODO(aprom-4999): put the state classes on `.wrapper` once AdminLTE's body-keyed layout CSS is replaced.
+ *
  * Usage: `{{sidebar-body-classes collapsed=this.sidebar.collapsed hoverExpanded=this.sidebar.isExpandedOnHover
  * open=this.sidebar.isPhoneOpen}}` with the sidebar service's derived state.
  *

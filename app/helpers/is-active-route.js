@@ -4,6 +4,7 @@
 
 import Helper from '@ember/component/helper';
 import { service } from '@ember/service';
+import { isActiveRoute } from '../utils/navigation/active-route';
 
 /**
  * This helper checks whether a given route name is the currently active route
@@ -39,16 +40,6 @@ export default class IsActiveRouteHelper extends Helper {
      * @return {Boolean}
      */
     compute([routeName]) {
-        const currentRouteName = this.router.currentRouteName;
-
-        if (!routeName || !currentRouteName) {
-            return false;
-        }
-
-        if (routeName === 'app') {
-            return currentRouteName === 'app' || currentRouteName === 'app.index';
-        }
-
-        return currentRouteName === routeName || currentRouteName.startsWith(routeName + '.');
+        return isActiveRoute(routeName, this.router.currentRouteName);
     }
 }
