@@ -339,7 +339,22 @@
         "placeholder": "Add a tag",
         "empty": "No tags yet.",
         "loadFailed": "The tags could not be loaded.",
-        "failed": "{count, plural, one {One change} other {# changes}} could not be saved. The tags shown are the current ones."
+        "failed": "{count, plural, one {One change} other {# changes}} could not be saved. The tags shown are the current ones.",
+        "rename": "Rename for the whole project"
+      },
+      "renamePanel": {
+        "title": "Rename “{name}” in the whole project",
+        "label": "Tag name",
+        "usage": "Used on {issues, plural, one {# issue} other {# issues}} and {threads, plural, one {# thread} other {# threads}}.",
+        "merge": "“{target}” already exists. “{name}” will be merged into it and deleted.",
+        "rename": "Rename",
+        "mergeInto": "Merge into “{target}”",
+        "delete": "Delete “{name}” everywhere",
+        "deleteConfirm": "Delete “{name}” and remove it from every issue and thread of the project?",
+        "deleteYes": "Delete",
+        "renameFailed": "The tag could not be renamed.",
+        "mergeFailed": "The tags could not be merged.",
+        "deleteFailed": "The tag could not be deleted."
       }
     },
     "developerDocs": {

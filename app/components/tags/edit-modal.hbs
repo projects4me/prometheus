@@ -5,7 +5,7 @@
   @confirmLabel="components.tags.editModal.save"
   @confirm={{this.save}}
   @disableSaveBtn={{this.loading}}
-  @onClose={{@onClose}}
+  @onClose={{this.close}}
   @containerClass="tags-edit-modal"
   data-test-tags-edit-modal
 >
@@ -17,6 +17,9 @@
       {{#each this.chips as |chip|}}
         <span class="tags-edit-modal-chip" data-test-tags-edit-chip>
           <AppUi::Tag @colorKey={{chip.name}} @onRemove={{if this.canRemove (fn this.remove chip)}} data-test-tag-chip>{{chip.name}}</AppUi::Tag>
+          {{#if (and this.canManage chip.tagged)}}
+            <button type="button" class="btn btn-box-tool" disabled={{this.renamingTag}} title={{t "components.tags.editModal.rename"}} aria-label={{t "components.tags.editModal.rename"}} data-test-tags-edit-rename {{on "click" (fn this.openRename chip)}}><AppUi::Icon @name="pencil" /></button>
+          {{/if}}
         </span>
       {{else}}
         {{#unless this.loading}}
@@ -24,19 +27,30 @@
         {{/unless}}
       {{/each}}
     </div>
-    <FormFields::FieldRelateMulti
-      @data-field="tags-edit-input"
-      @label={{t "components.tags.editModal.title"}}
-      @relateType="relate-simple"
-      @searchField="label"
-      @searchEnabled={{true}}
-      @search={{this.search}}
-      @selected={{this.noSelection}}
-      @placeholder={{t "components.tags.editModal.placeholder"}}
-      @onchange={{this.addPicked}}
-      @onCreate={{this.add}}
-      @closeOnSelect={{false}}
-      @initiallyOpened={{true}}
-    />
+    {{#if this.renamingTag}}
+      <Tags::RenamePanel
+        @tag={{this.renamingTag}}
+        @projectId={{@projectId}}
+        @onRenamed={{this.renamed}}
+        @onMerged={{this.merged}}
+        @onDeleted={{this.deleted}}
+        @onCancel={{this.closeRename}}
+      />
+    {{else}}
+      <FormFields::FieldRelateMulti
+        @data-field="tags-edit-input"
+        @label={{t "components.tags.editModal.title"}}
+        @relateType="relate-simple"
+        @searchField="label"
+        @searchEnabled={{true}}
+        @search={{this.search}}
+        @selected={{this.noSelection}}
+        @placeholder={{t "components.tags.editModal.placeholder"}}
+        @onchange={{this.addPicked}}
+        @onCreate={{this.add}}
+        @closeOnSelect={{false}}
+        @initiallyOpened={{true}}
+      />
+    {{/if}}
   </div>
 </AppUi::Modal>

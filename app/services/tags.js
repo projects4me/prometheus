@@ -144,6 +144,94 @@ export default class TagsService extends Service {
 	}
 
 	/**
+	 * The project's other tag with this name, whatever its letter case: the target a rename would merge into.
+	 *
+	 * @method findOther
+	 * @param {String|Number} projectId
+	 * @param {String} name
+	 * @param {Tag} tag the tag being renamed, never its own match
+	 * @return {Promise<Tag|null>}
+	 */
+	async findOther(projectId, name, tag) {
+		let text = clean(name);
+		if (!text) {
+			return null;
+		}
+		return this._find(projectId, text, tag);
+	}
+
+	/**
+	 * Renames the tag for the whole project.
+	 *
+	 * @method rename
+	 * @param {Tag} tag
+	 * @param {String} name
+	 * @return {Promise<Tag>}
+	 */
+	async rename(tag, name) {
+		tag.tag = clean(name);
+		try {
+			return await tag.save();
+		} catch (error) {
+			tag.rollbackAttributes();
+			throw error;
+		}
+	}
+
+	/**
+	 * Merges the tag into another one of the project: Gaia moves its records to the target and deletes the tag.
+	 *
+	 * @method merge
+	 * @param {Tag} tag
+	 * @param {Tag} target
+	 * @return {Promise<Tag>} the target
+	 */
+	async merge(tag, target) {
+		let adapter = this.store.adapterFor('tag');
+		await adapter.ajax(adapter.buildURL('tag', tag.id), 'PATCH', {
+			data: { data: { type: 'tags', id: tag.id, attributes: { mergeInto: String(target.id) } } }
+		});
+		tag.unloadRecord();
+		return target;
+	}
+
+	/**
+	 * Deletes the tag for the whole project; Gaia removes it from its records.
+	 *
+	 * @method remove
+	 * @param {Tag} tag
+	 * @return {Promise<void>}
+	 */
+	async remove(tag) {
+		try {
+			await tag.destroyRecord();
+		} catch (error) {
+			tag.rollbackAttributes();
+			throw error;
+		}
+	}
+
+	/**
+	 * How many issues and threads carry the tag. A count is null when Gaia gives no total.
+	 *
+	 * @method usage
+	 * @param {Tag} tag
+	 * @return {Promise<{issues: Number|null, threads: Number|null}>}
+	 */
+	async usage(tag) {
+		let count = async (relatedTo) => {
+			let result = await this.store.query('tagged', {
+				query: `((Tagged.tagId : ${tag.id}) AND (Tagged.relatedTo : ${relatedTo}))`,
+				limit: 1
+			});
+			let total = result.meta?.total;
+			return total === undefined || total === null ? null : Number(total);
+		};
+		let [issues, threads] = await Promise.all([count('issue'), count('conversationroom')]);
+		return { issues, threads };
+	}
+
+	/**
 	 * @method _findOrCreate
 	 * @param {String|Number} projectId
 	 * @param {String} name
@@ -174,10 +262,10 @@ export default class TagsService extends Service {
 	 * @method _find
 	 * @private
 	 */
-	async _find(projectId, name) {
+	async _find(projectId, name, except) {
 		let result = await this.store.query('tag', { query: this._tagQuery(projectId, name), limit: LOOKUP_LIMIT });
 		let wanted = name.toLowerCase();
-		return result.slice().find((tag) => String(tag.tag).trim().toLowerCase() === wanted) ?? null;
+		return result.slice().find((tag) => tag !== except && String(tag.tag).trim().toLowerCase() === wanted) ?? null;
 	}
 
 	/**

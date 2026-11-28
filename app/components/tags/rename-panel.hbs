@@ -1,0 +1,40 @@
+<div class="tags-rename-panel" data-test-tags-rename-panel {{on-insert this.setup}}>
+  <h5 data-test-tags-rename-title>{{t "components.tags.renamePanel.title" name=@tag.tag}}</h5>
+  {{#if this.error}}
+    <div class="alert alert-danger" role="alert" data-test-tags-rename-error>{{this.error}}</div>
+  {{/if}}
+  <FormFields::FieldText
+    @data-field="tags-rename-input"
+    @type="text"
+    @label={{t "components.tags.renamePanel.label"}}
+    @value={{readonly this.name}}
+    @length="255"
+    @onInput={{this.typed}}
+    disabled={{this.busy}}
+  />
+  {{#if this.usage}}
+    <p class="text-muted" data-test-tags-rename-usage>{{t "components.tags.renamePanel.usage" issues=this.usage.issues threads=this.usage.threads}}</p>
+  {{/if}}
+  {{#if this.target}}
+    <div class="callout callout-warning" data-test-tags-rename-merge>
+      {{t "components.tags.renamePanel.merge" target=this.target.tag name=@tag.tag}}
+    </div>
+  {{/if}}
+  {{#if this.confirmingDelete}}
+    <div class="callout callout-danger" data-test-tags-rename-delete-confirm>
+      <p>{{t "components.tags.renamePanel.deleteConfirm" name=@tag.tag}}</p>
+      <AppUi::Button type="button" class="btn btn-danger" disabled={{this.busy}} @onClick={{this.confirmDelete}} data-test-tags-rename-delete-yes>{{t "components.tags.renamePanel.deleteYes"}}</AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-default" disabled={{this.busy}} @onClick={{this.cancelDelete}} data-test-tags-rename-delete-no>{{t "global.form.cancel"}}</AppUi::Button>
+    </div>
+  {{else}}
+    <div class="tags-rename-panel-actions">
+      <AppUi::Button type="button" class="btn btn-primary" disabled={{not this.canConfirm}} @onClick={{this.confirm}} data-test-tags-rename-confirm>
+        {{#if this.busy}}<AppUi::Icon @name="spinner" @spin={{true}} /> {{/if}}{{#if this.target}}{{t "components.tags.renamePanel.mergeInto" target=this.target.tag}}{{else}}{{t "components.tags.renamePanel.rename"}}{{/if}}
+      </AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-default" disabled={{this.busy}} @onClick={{@onCancel}} data-test-tags-rename-cancel>{{t "global.form.cancel"}}</AppUi::Button>
+      {{#if this.canDelete}}
+        <button type="button" class="btn btn-link text-red pull-right" disabled={{this.busy}} data-test-tags-rename-delete {{on "click" this.askDelete}}>{{t "components.tags.renamePanel.delete" name=@tag.tag}}</button>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
