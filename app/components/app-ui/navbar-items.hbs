@@ -2,7 +2,7 @@
 {{#if (this.isDisabled definition)}}
   <li class="nav-disabled" data-navigation-module={{module}} title={{t "views.nav.selectProjectTitle"}}>
     <a role="link" aria-disabled="true" tabindex="-1">
-      <i class="fa fa-{{definition.icon}}"></i>
+      <AppUi::Icon @name={{definition.icon}} />
       <span>{{t definition.label}}</span>
     </a>
   </li>
@@ -11,10 +11,10 @@
   {{#let (this.sidebarMenu.isOpen module definition.route) as |open|}}
   <li class="treeview {{if active 'active'}} {{if open 'menu-open'}}" data-navigation-module={{module}}>
     <a href={{this.hrefFor definition}} {{on "click" (prevent-default this.sidebarMenu.toggle module definition.route)}}>
-      <i class="fa fa-{{definition.icon}}"></i>
+      <AppUi::Icon @name={{definition.icon}} />
       <span>{{t definition.label}}</span>
       <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
+        <AppUi::Icon @name="angle-left" class="pull-right" />
       </span>
     </a>
     <ul class="treeview-menu">
@@ -22,7 +22,7 @@
         {{#each-in menu as |entity item|}}
           <li data-navigation-action={{entity}}>
             <a href={{this.hrefFor item}} {{on "click" (prevent-default @navigate item)}}>
-              <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
+              <AppUi::Icon @name="circle-o" class={{item.className}} />{{t item.label}}
             </a>
           </li>
         {{/each-in}}
@@ -37,7 +37,7 @@
 {{else}}
   <li class="treeview {{if (is-active-route definition.route) 'active'}}" data-navigation-module={{module}}>
     <a href={{this.hrefFor definition}} {{on "click" (prevent-default @navigate definition)}}>
-      <i class="fa fa-{{definition.icon}}"></i>
+      <AppUi::Icon @name={{definition.icon}} />
       <span>{{t definition.label}}</span>
     </a>
   </li>

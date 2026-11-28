@@ -615,7 +615,7 @@ export default class ToastEditor extends Modifier {
                     return (
                         '<span class="issue" contenteditable="false" id="#"><a class="' + item.original.status + ' badge"href="/app/project/' +
                         item.original.projectShortcode + '/issue/' + item.original.number +
-                        '"><i class="fa ' + iconClass + '"></i> #' +
+                        '"><i class="fa fa-' + iconClass + '"></i> #' +
                         item.original.number + ' - ' + item.original.name +
                         "</a></span>"
                     );

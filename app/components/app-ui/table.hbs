@@ -10,7 +10,7 @@
           @onClick={{this.handleRefresh}}
           data-refresh-button
         >
-          <i class="fa {{if this.isRefreshing "fa-spin fa-spinner" "fa-refresh"}}"></i>
+          <AppUi::Icon @name={{if this.isRefreshing "spinner" "refresh"}} @spin={{this.isRefreshing}} />
         </AppUi::Button>
       {{/if}}      
       </div>
@@ -19,7 +19,7 @@
       {{#if this.filters}}
         <AppUi::Dropdown @isPrimary={{true}}>
           <:button>
-            <i class="fa fa-filter"></i>
+            <AppUi::Icon @name="filter" />
             <span>{{t "views.app.components.table.filters"}}</span>
             {{#if this.activeFilters.length}}
               <span class="badge" data-active-filters-count>{{this.activeFilters.length}}</span>
@@ -30,7 +30,7 @@
               <a href="#" {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
                 {{filter.label}}
                 {{#if filter.isActive}}
-                  <i class="fa fa-check pull-right"></i>
+                  <AppUi::Icon @name="check" class="pull-right" />
                 {{/if}}
               </a>
             {{/each}}
@@ -44,7 +44,7 @@
         </label>
         <div class="input-group">
           <span class="input-group-addon">
-            <i class="fa fa-search"></i>
+            <AppUi::Icon @name="search" />
           </span>
           <Input
             @value={{this.query}}

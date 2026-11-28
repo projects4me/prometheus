@@ -3,7 +3,6 @@
  */
 
 import Component from '@glimmer/component';
-import { htmlSafe } from '@ember/template';
 
 /**
  * This component is used to render the application header
@@ -27,7 +26,7 @@ export default class AttachmentIconComponent extends Component {
     }
 
     /**
-     * HTML which can render the attachment icon based on the mime provided.
+     * Name of the icon (without the fa- prefix) for the mime provided.
      * 
      * @method get
      * @returns String
@@ -36,35 +35,35 @@ export default class AttachmentIconComponent extends Component {
         let mime = this.mime;
         let mime_parts = mime.split('/');
 
-        let HTML = '';
+        let icon = '';
 
         if (mime_parts[1] !== undefined) {
             if (mime_parts[1].match(/presentation|powerpoint/i)) {
-                HTML = '<i class="fa fa-file-powerpoint-o"></i>';
+                icon = 'file-powerpoint-o';
             } else if (mime_parts[1].match(/document|word/i)) {
-                HTML = '<i class="fa fa-file-word-o"></i>';
+                icon = 'file-word-o';
             } else if (mime_parts[1].match(/excel|spreadsheet/i)) {
-                HTML = '<i class="fa fa-file-excel-o"></i>';
+                icon = 'file-excel-o';
             } else if (mime_parts[1].match(/pdf/i)) {
-                HTML = '<i class="fa fa-file-pdf-o"></i>';
+                icon = 'file-pdf-o';
             } else if (mime_parts[1].match(/zip|tar|rar|compress/i)) {
-                HTML = '<i class="fa fa-file-archive-o"></i>';
+                icon = 'file-archive-o';
             } else if (mime_parts[0].match(/audio/i)) {
-                HTML = '<i class="fa fa-file-audio-o"></i>';
+                icon = 'file-audio-o';
             } else if (mime_parts[0].match(/application/i)) {
-                HTML = '<i class="fa fa-file-code-o"></i>';
+                icon = 'file-code-o';
             } else if (mime_parts[0].match(/image/i)) {
-                HTML = '<i class="fa fa-file-image-o"></i>';
+                icon = 'file-image-o';
             } else if (mime_parts[0].match(/text/i)) {
-                HTML = '<i class="fa fa-file-text-o"></i>';
+                icon = 'file-text-o';
             } else if (mime_parts[0].match(/video/i)) {
-                HTML = '<i class="fa fa-file-video-o"></i>';
+                icon = 'file-video-o';
             } else if (mime_parts[0].match(/font/i)) {
-                HTML = '<i class="fa fa-font"></i>';
+                icon = 'font';
             } else {
-                HTML = '<i class="fa fa-file-o"></i>';
+                icon = 'file-o';
             }
         }
-        return htmlSafe(HTML);
+        return icon;
     }
 }
