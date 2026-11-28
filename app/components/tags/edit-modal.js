@@ -41,6 +41,12 @@ export default class TagsEditModalComponent extends Component {
 	@tracked added = [];
 	@tracked loading = true;
 	@tracked error = '';
+	/** The saved chip whose tag is being renamed, merged or deleted for the whole project (its panel is open). */
+	@tracked renaming = null;
+	/** The tag of the renaming chip. */
+	@tracked renamingTag = null;
+	/** Whether a project-wide change was made: the page's tags are refreshed when the modal closes. */
+	changedProject = false;
 
 	/** The translation key of the title: @title, else a plain "Tags". */
 	get title() {
@@ -60,6 +66,84 @@ export default class TagsEditModalComponent extends Component {
 	get chips() {
 		let kept = this.current.filter((tagged) => !this.removed.includes(tagged)).map((tagged) => ({ name: nameOf(tagged), tagged }));
 		return [...kept, ...this.added.map((name) => ({ name, tagged: undefined }))];
+	}
+
+	/** Whether the project-wide rename panel can be opened: it needs to update or delete tags. */
+	get canManage() {
+		return this.acl.checkAccess('tag.update') || this.acl.checkAccess('tag.delete');
+	}
+
+	/**
+	 * Opens the rename panel for a saved chip, in place of the suggestion dropdown.
+	 *
+	 * @method openRename
+	 * @param {{name: String, tagged: Tagged|undefined}} chip
+	 */
+	@action
+	async openRename(chip) {
+		let tag = await chip.tagged?.tag;
+		if (tag && !this._gone) {
+			this.renamingTag = tag;
+			this.renaming = chip.tagged;
+		}
+	}
+
+	@action
+	closeRename() {
+		this.renaming = null;
+		this.renamingTag = null;
+		this.focusInput();
+	}
+
+	/** The tag was renamed: its chip shows the new name already. */
+	@action
+	renamed() {
+		this.changedProject = true;
+		this.closeRename();
+	}
+
+	/** The tag was merged into another: its records now carry the target, so the record's tags are loaded again. */
+	@action
+	async merged() {
+		this.changedProject = true;
+		await this.dropRenaming(true);
+	}
+
+	/** The tag was deleted everywhere: its chip is gone. */
+	@action
+	async deleted() {
+		this.changedProject = true;
+		await this.dropRenaming(false);
+	}
+
+	/**
+	 * Takes the changed tag's chip out of the staged lists at once, closes the panel and, after a merge, reloads the
+	 * record's tags while keeping the staged changes that still apply.
+	 */
+	async dropRenaming(reload) {
+		let gone = this.renaming;
+		let removedIds = this.removed.map((tagged) => tagged.id);
+		let added = this.added;
+		this.current = this.current.filter((tagged) => tagged !== gone);
+		this.removed = this.removed.filter((tagged) => tagged !== gone);
+		this.closeRename();
+		if (reload) {
+			await this.load();
+			if (!this._gone) {
+				this.removed = this.current.filter((tagged) => removedIds.includes(tagged.id));
+				let used = this.chips.map((chip) => chip.name.toLowerCase());
+				this.added = added.filter((name) => !used.includes(name.toLowerCase()));
+			}
+		}
+	}
+
+	/** Closes the modal; tells `@onSaved` first when a project-wide change was made, so the page's chips refresh. */
+	@action
+	close() {
+		if (this.changedProject) {
+			this.args.onSaved?.();
+		}
+		this.args.onClose?.();
 	}
 
 	/** Loads the record's tags and puts the cursor in the input once the modal is on the page. */
@@ -184,6 +268,7 @@ export default class TagsEditModalComponent extends Component {
 			}
 		}
 		if (failed === 0) {
+			this.changedProject = false;
 			this.args.onSaved?.();
 			return true;
 		}

@@ -125,4 +125,70 @@ module('Unit | Service | tags', function (hooks) {
         assert.strictEqual(this.server.schema.taggeds.all().length, 0);
         assert.strictEqual(this.server.schema.tags.all().length, 1);
     });
+
+    test('findOther finds another project tag by name, whatever its case, never the tag itself', async function (assert) {
+        this.server.create('tag', { projectId: '1', tag: 'Ember 7' });
+        let own = this.server.create('tag', { projectId: '1', tag: 'Ember 6.5' });
+        this.server.create('tag', { projectId: '2', tag: 'Other' });
+        let record = await this.store.findRecord('tag', own.id);
+
+        assert.strictEqual((await this.service.findOther(1, 'ember 7', record)).tag, 'Ember 7');
+        assert.strictEqual(await this.service.findOther(1, 'ember 6.5', record), null, 'not itself');
+        assert.strictEqual(await this.service.findOther(1, 'other', record), null, 'not another project');
+        assert.strictEqual(await this.service.findOther(1, '  ', record), null);
+    });
+
+    test('rename saves the new name', async function (assert) {
+        let own = this.server.create('tag', { projectId: '1', tag: 'Ember 6.5' });
+        let record = await this.store.findRecord('tag', own.id);
+
+        await this.service.rename(record, ' Ember 7 ');
+
+        assert.strictEqual(this.server.schema.tags.find(own.id).tag, 'Ember 7');
+    });
+
+    test('a refused rename restores the name and throws', async function (assert) {
+        this.server.create('tag', { projectId: '1', tag: 'Ember 7' });
+        let own = this.server.create('tag', { projectId: '1', tag: 'Ember 6.5' });
+        let record = await this.store.findRecord('tag', own.id);
+
+        await assert.rejects(this.service.rename(record, 'ember 7'));
+        assert.strictEqual(record.tag, 'Ember 6.5');
+    });
+
+    test('merge moves the records to the target and drops the tag', async function (assert) {
+        let source = this.server.create('tag', { projectId: '1', tag: 'Ember 6.5' });
+        let target = this.server.create('tag', { projectId: '1', tag: 'Ember 7' });
+        this.server.create('tagged', { tagId: String(source.id), relatedTo: 'issue', relatedId: '5' });
+        let record = await this.store.findRecord('tag', source.id);
+        let targetRecord = await this.store.findRecord('tag', target.id);
+
+        let result = await this.service.merge(record, targetRecord);
+
+        assert.strictEqual(result, targetRecord);
+        assert.strictEqual(this.server.schema.tags.find(source.id), null);
+        assert.strictEqual(this.server.schema.taggeds.all().models[0].tagId, String(target.id));
+    });
+
+    test('remove deletes the tag and its links', async function (assert) {
+        let tag = this.server.create('tag', { projectId: '1', tag: 'Old' });
+        this.server.create('tagged', { tagId: String(tag.id), relatedTo: 'issue', relatedId: '5' });
+        let record = await this.store.findRecord('tag', tag.id);
+
+        await this.service.remove(record);
+
+        assert.strictEqual(this.server.schema.tags.all().length, 0);
+        assert.strictEqual(this.server.schema.taggeds.all().length, 0);
+    });
+
+    test('usage counts the issues and the threads with the totals of Gaia', async function (assert) {
+        let tag = this.server.create('tag', { projectId: '1', tag: 'Ember' });
+        for (let id of ['1', '2', '3']) {
+            this.server.create('tagged', { tagId: String(tag.id), relatedTo: 'issue', relatedId: id });
+        }
+        this.server.create('tagged', { tagId: String(tag.id), relatedTo: 'conversationroom', relatedId: '9' });
+        let record = await this.store.findRecord('tag', tag.id);
+
+        assert.deepEqual(await this.service.usage(record), { issues: 3, threads: 1 });
+    });
 });
