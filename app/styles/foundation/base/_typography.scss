@@ -1,2 +1,337 @@
 // Foundation: base typography.
-// Intentionally empty: filled by issue TBD (typography issue of aprom-4999 phase 3).
+// Replaces Bootstrap's type scale, code and link rules and AdminLTE's body, heading and link rules
+// (docs/ui/foundation/inventory.md, "Element-level rules"). Where AdminLTE overrides Bootstrap, only the final
+// value is kept. The font import is the one AdminLTE loads today, as a plain CSS import (Sass puts it first).
+
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
+
+html,
+body {
+  min-height: var(--p4m-font-size-100pct);
+}
+
+body {
+  font-family: var(--p4m-font-family);
+  font-size: var(--p4m-font-size-14);
+  font-weight: var(--p4m-font-weight-400);
+  line-height: var(--p4m-line-height-base);
+  color: var(--p4m-grey-800);
+  background-color: var(--p4m-grey-0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+a {
+  color: var(--p4m-blue-515);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover,
+a:active,
+a:focus {
+  outline: none;
+  text-decoration: none;
+  color: var(--p4m-blue-365);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--p4m-font-family-source-sans);
+  font-weight: var(--p4m-font-weight-500);
+  line-height: var(--p4m-line-height-1-1);
+  color: inherit;
+}
+
+h1 small,
+h2 small,
+h3 small,
+h4 small,
+h5 small,
+h6 small,
+.h1 small,
+.h2 small,
+.h3 small,
+.h4 small,
+.h5 small,
+.h6 small,
+h1 .small,
+h2 .small,
+h3 .small,
+h4 .small,
+h5 .small,
+h6 .small,
+.h1 .small,
+.h2 .small,
+.h3 .small,
+.h4 .small,
+.h5 .small,
+.h6 .small {
+  font-weight: var(--p4m-font-weight-400);
+  line-height: var(--p4m-line-height-1);
+  color: var(--p4m-grey-535);
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3 {
+  margin-top: var(--p4m-space-20);
+  margin-bottom: var(--p4m-space-10);
+}
+
+h1 small,
+.h1 small,
+h2 small,
+.h2 small,
+h3 small,
+.h3 small,
+h1 .small,
+.h1 .small,
+h2 .small,
+.h2 .small,
+h3 .small,
+.h3 .small {
+  font-size: var(--p4m-font-size-65pct);
+}
+
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  margin-top: var(--p4m-space-10);
+  margin-bottom: var(--p4m-space-10);
+}
+
+h4 small,
+.h4 small,
+h5 small,
+.h5 small,
+h6 small,
+.h6 small,
+h4 .small,
+.h4 .small,
+h5 .small,
+.h5 .small,
+h6 .small,
+.h6 .small {
+  font-size: var(--p4m-font-size-75pct);
+}
+
+h1,
+.h1 {
+  font-size: var(--p4m-font-size-36);
+}
+
+h2,
+.h2 {
+  font-size: var(--p4m-font-size-30);
+}
+
+h3,
+.h3 {
+  font-size: var(--p4m-font-size-24);
+}
+
+h4,
+.h4 {
+  font-size: var(--p4m-font-size-18);
+}
+
+h5,
+.h5 {
+  font-size: var(--p4m-font-size-14);
+}
+
+h6,
+.h6 {
+  font-size: var(--p4m-font-size-12);
+}
+
+p {
+  margin: var(--p4m-space-0) var(--p4m-space-0) var(--p4m-space-10);
+}
+
+small,
+.small {
+  font-size: var(--p4m-font-size-85pct);
+}
+
+sub,
+sup {
+  font-size: var(--p4m-font-size-75pct);
+  line-height: var(--p4m-line-height-0);
+}
+
+// no negative em token: the offsets are -0.5em and -0.25em of the font size
+sup {
+  top: calc(var(--p4m-space-1em) * -0.5);
+}
+
+sub {
+  bottom: calc(var(--p4m-space-1em) * -0.25);
+}
+
+mark,
+.mark {
+  padding: var(--p4m-space-0-2em);
+  background-color: var(--p4m-orange-60);
+  color: var(--p4m-grey-1000);
+}
+
+b,
+strong {
+  font-weight: var(--p4m-font-weight-bold);
+}
+
+dfn {
+  font-style: italic;
+}
+
+abbr[title],
+abbr[data-original-title] {
+  cursor: help;
+}
+
+ul,
+ol {
+  margin-top: var(--p4m-space-0);
+  margin-bottom: var(--p4m-space-10);
+}
+
+ul ul,
+ul ol,
+ol ul,
+ol ol {
+  margin-bottom: var(--p4m-space-0);
+}
+
+dl {
+  margin-top: var(--p4m-space-0);
+  margin-bottom: var(--p4m-space-20);
+}
+
+dt,
+dd {
+  line-height: var(--p4m-line-height-base);
+}
+
+dt {
+  font-weight: var(--p4m-font-weight-700);
+}
+
+dd {
+  margin-left: var(--p4m-space-0);
+}
+
+blockquote {
+  padding: var(--p4m-space-10) var(--p4m-space-20);
+  margin: var(--p4m-space-0) var(--p4m-space-0) var(--p4m-space-20);
+  font-size: var(--p4m-font-size-17-5);
+  border-left: var(--p4m-border-width-5) solid var(--p4m-grey-65);
+}
+
+blockquote p:last-child,
+blockquote ul:last-child,
+blockquote ol:last-child {
+  margin-bottom: var(--p4m-space-0);
+}
+
+blockquote footer,
+blockquote small,
+blockquote .small {
+  display: block;
+  font-size: var(--p4m-font-size-80pct);
+  line-height: var(--p4m-line-height-base);
+  color: var(--p4m-grey-535);
+}
+
+blockquote footer:before,
+blockquote small:before,
+blockquote .small:before {
+  content: '\2014 \00A0';
+}
+
+address {
+  margin-bottom: var(--p4m-space-20);
+  font-style: normal;
+  line-height: var(--p4m-line-height-base);
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--p4m-font-family-mono);
+}
+
+samp {
+  font-size: var(--p4m-font-size-1em);
+}
+
+code {
+  padding: var(--p4m-space-2) var(--p4m-space-4);
+  font-size: var(--p4m-font-size-90pct);
+  color: var(--p4m-crimson-535);
+  background-color: var(--p4m-crimson-35);
+  border-radius: var(--p4m-radius-4);
+}
+
+kbd {
+  padding: var(--p4m-space-2) var(--p4m-space-4);
+  font-size: var(--p4m-font-size-90pct);
+  color: var(--p4m-grey-0);
+  background-color: var(--p4m-grey-800);
+  border-radius: var(--p4m-radius-3);
+  box-shadow: var(--p4m-shadow-kbd);
+}
+
+kbd kbd {
+  padding: var(--p4m-space-0);
+  font-size: var(--p4m-font-size-100pct);
+  font-weight: var(--p4m-font-weight-700);
+  box-shadow: var(--p4m-shadow-none);
+}
+
+pre {
+  display: block;
+  padding: var(--p4m-space-9-5);
+  margin: var(--p4m-space-0) var(--p4m-space-0) var(--p4m-space-10);
+  font-size: var(--p4m-font-size-13);
+  line-height: var(--p4m-line-height-base);
+  color: var(--p4m-grey-800);
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: var(--p4m-grey-40);
+  border: var(--p4m-border-width-1) solid var(--p4m-grey-200);
+  border-radius: var(--p4m-radius-4);
+}
+
+pre samp {
+  font-size: var(--p4m-font-size-1em);
+}
+
+pre code {
+  padding: var(--p4m-space-0);
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: var(--p4m-radius-none);
+}

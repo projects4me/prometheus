@@ -1,2 +1,256 @@
 // Foundation: base reset.
-// Intentionally empty: filled by issue TBD (reset issue of aprom-4999 phase 3).
+// Replaces Bootstrap's normalize and scaffolding element rules (docs/ui/foundation/inventory.md, "Element-level
+// rules"). Where Bootstrap overrides a normalize rule, only the final value is kept. Form controls, tables and
+// labels keep their component styles with the forms and tables issues; here only the normalize part is set.
+// Typography (body, headings, links, code) is in typography.
+
+* {
+  box-sizing: border-box;
+}
+
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--p4m-font-family-sans-serif);
+  font-size: 10px;
+  -ms-text-size-adjust: var(--p4m-font-size-100pct);
+  -webkit-text-size-adjust: var(--p4m-font-size-100pct);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+  margin: var(--p4m-space-0);
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: var(--p4m-space-0);
+}
+
+[hidden],
+template {
+  display: none;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration: underline dotted;
+}
+
+sub,
+sup {
+  position: relative;
+  vertical-align: baseline;
+}
+
+img {
+  border: 0;
+  vertical-align: middle;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+figure {
+  margin: var(--p4m-space-0);
+}
+
+hr {
+  box-sizing: content-box;
+  height: var(--p4m-space-0);
+  margin-top: var(--p4m-space-20);
+  margin-bottom: var(--p4m-space-20);
+  border: 0;
+  border-top: var(--p4m-border-width-1) solid var(--p4m-grey-65);
+}
+
+pre {
+  overflow: auto;
+}
+
+[role='button'] {
+  cursor: pointer;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: var(--p4m-space-0);
+}
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  overflow: visible;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+html input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: var(--p4m-space-0);
+}
+
+input {
+  line-height: normal;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+textarea {
+  overflow: auto;
+}
+
+optgroup {
+  font-weight: var(--p4m-font-weight-bold);
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: var(--p4m-space-0);
+}
+
+td,
+th {
+  padding: var(--p4m-space-0);
+}
+
+.sr-only {
+  position: absolute;
+  width: var(--p4m-border-width-1);
+  height: var(--p4m-border-width-1);
+  padding: var(--p4m-space-0);
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.has-feedback label.sr-only ~ .form-control-feedback {
+  top: var(--p4m-space-0);
+}
+
+@media print {
+  *,
+  *:before,
+  *:after {
+    color: var(--p4m-grey-1000) !important;
+    text-shadow: var(--p4m-shadow-none) !important;
+    background: transparent !important;
+    box-shadow: var(--p4m-shadow-none) !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]:after {
+    content: ' (' attr(href) ')';
+  }
+
+  abbr[title]:after {
+    content: ' (' attr(title) ')';
+  }
+
+  a[href^='#']:after,
+  a[href^='javascript:']:after {
+    content: '';
+  }
+
+  pre,
+  blockquote {
+    border: var(--p4m-border-width-1) solid var(--p4m-grey-400);
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: var(--p4m-font-size-100pct) !important;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
