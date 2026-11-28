@@ -15,7 +15,7 @@
                   class="permission-scope-section__header"
                   title={{if scopeConfig.hintKey (t scopeConfig.hintKey)}}
                 >
-                  <i class="fa {{scopeConfig.icon}}"></i>
+                  <AppUi::Icon @name={{scopeConfig.icon}} />
                   {{t (concat "views.app.role.tabs.permission.scope." scopeConfig.name)}}
                 </div>
                 <div class="permission-module-list">
@@ -44,13 +44,13 @@
                       <span class="permission-module-row__status" data-module="permission-state">
                         {{#each moduleGroup.controls as |control|}}
                           {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isRunning'))}}
-                            <i class="fa fa-spinner fa-spin"></i>
+                            <AppUi::Icon @name="spinner" @spin={{true}} />
                           {{/if}}
                           {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isSuccessful'))}}
-                            <i class="fa fa-check-circle"></i>
+                            <AppUi::Icon @name="check-circle" />
                           {{/if}}
                           {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isErrored'))}}
-                            <i class="fa fa-times-circle"></i>
+                            <AppUi::Icon @name="times-circle" />
                           {{/if}}
                         {{/each}}
                       </span>
@@ -79,7 +79,7 @@
                   class="permission-scope-section__header"
                   title={{if scopeConfig.hintKey (t scopeConfig.hintKey)}}
                 >
-                  <i class="fa {{scopeConfig.icon}}"></i>
+                  <AppUi::Icon @name={{scopeConfig.icon}} />
                   {{t (concat "views.app.role.tabs.permission.scope." scopeConfig.name)}}
                 </div>
                 <div class="permission-module-list">
@@ -112,13 +112,13 @@
                         {{#each moduleGroup.controls as |control|}}
                           {{#if control.permission}}
                             {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isRunning'))}}
-                              <i class="fa fa-spinner fa-spin"></i>
+                              <AppUi::Icon @name="spinner" @spin={{true}} />
                             {{/if}}
                             {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isSuccessful'))}}
-                              <i class="fa fa-check-circle"></i>
+                              <AppUi::Icon @name="check-circle" />
                             {{/if}}
                             {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isErrored'))}}
-                              <i class="fa fa-times-circle"></i>
+                              <AppUi::Icon @name="times-circle" />
                             {{/if}}
                           {{/if}}
                         {{/each}}

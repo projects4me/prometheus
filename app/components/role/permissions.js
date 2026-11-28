@@ -45,17 +45,17 @@ const FIELD_LABEL_MODULE_ALIASES = {
 const PERMISSION_SCOPES = [
     {
         name: 'system',
-        icon: 'fa-cog',
+        icon: 'cog',
         hintKey: 'views.app.role.tabs.permission.scope.systemHint'
     },
     {
         name: 'user',
-        icon: 'fa-user',
+        icon: 'user',
         hintKey: null
     },
     {
         name: 'project',
-        icon: 'fa-folder-open',
+        icon: 'folder-open',
         hintKey: null
     }
 ];

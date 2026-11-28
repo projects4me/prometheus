@@ -42,7 +42,7 @@ import Component from '@glimmer/component';
  *   </:primary>
  *   <:secondary>{{idea.createdUserName}}</:secondary>
  *   <:trailing>
- *     <button type="button" class="btn btn-box-tool" {{on "click" (fn this.preview idea)}}><i class="fa fa-eye"></i></button>
+ *     <button type="button" class="btn btn-box-tool" {{on "click" (fn this.preview idea)}}><AppUi::Icon @name="eye" /></button>
  *   </:trailing>
  * </QuickList::Item>
  */

@@ -6,7 +6,7 @@
     {{#if this.hasGroupOptions}}
       <AppUi::Dropdown class="quick-list-toolbar-group">
         <:button>
-          <i class="fa fa-object-group"></i>
+          <AppUi::Icon @name="object-group" />
           <span>{{t "components.quickList.toolbar.groupBy"}}{{#if this.groupLabel}}: {{this.groupLabel}}{{/if}}</span>
         </:button>
         <:content>
@@ -18,7 +18,7 @@
               {{on "click" (fn this.selectGroup option.key)}}
             >
               <span>{{option.label}}</span>
-              {{#if (eq option.key @groupBy)}}<i class="fa fa-check"></i>{{/if}}
+              {{#if (eq option.key @groupBy)}}<AppUi::Icon @name="check" />{{/if}}
             </button>
           {{/each}}
         </:content>
@@ -27,7 +27,7 @@
     {{#if this.hasSortOptions}}
       <AppUi::Dropdown class="quick-list-toolbar-sort">
         <:button>
-          <i class="fa {{this.orderIcon}}"></i>
+          <AppUi::Icon @name={{this.orderIcon}} />
           <span>{{t "components.quickList.toolbar.sortBy"}}{{#if this.sortLabel}}: {{this.sortLabel}}{{/if}}</span>
         </:button>
         <:content>
@@ -39,7 +39,7 @@
               {{on "click" (fn this.selectSort option.key)}}
             >
               <span>{{option.label}}</span>
-              {{#if (eq option.key @sort)}}<i class="fa {{this.orderIcon}}"></i>{{/if}}
+              {{#if (eq option.key @sort)}}<AppUi::Icon @name={{this.orderIcon}} />{{/if}}
             </button>
           {{/each}}
         </:content>

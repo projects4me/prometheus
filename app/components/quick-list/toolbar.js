@@ -40,8 +40,8 @@ export default class QuickListToolbarComponent extends Component {
 
 	get orderIcon() {
 		return this.args.order === 'asc'
-			? 'fa-sort-amount-asc'
-			: 'fa-sort-amount-desc';
+			? 'sort-amount-asc'
+			: 'sort-amount-desc';
 	}
 
 	@action

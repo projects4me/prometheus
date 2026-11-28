@@ -21,6 +21,6 @@ export default class QuickListGroupComponent extends Component {
      * @type String
      */
     get caretClass() {
-        return this.args.collapsed ? 'fa-caret-right' : 'fa-caret-down';
+        return this.args.collapsed ? 'caret-right' : 'caret-down';
     }
 }

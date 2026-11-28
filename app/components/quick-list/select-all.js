@@ -7,9 +7,9 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 const ICONS = {
-	none: 'fa-square-o',
-	some: 'fa-minus-square-o',
-	all: 'fa-check-square',
+	none: 'square-o',
+	some: 'minus-square-o',
+	all: 'check-square',
 };
 
 /**

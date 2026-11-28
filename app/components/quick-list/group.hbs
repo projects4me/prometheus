@@ -1,7 +1,7 @@
 <div class="quick-list-group" data-test-quick-list-group={{@group.key}}>
     <button type="button" class="quick-list-group-heading" aria-expanded={{if @collapsed "false" "true"}}
         data-test-quick-list-group-toggle {{on "click" @onToggle}}>
-        <i class="fa {{this.caretClass}}" aria-hidden="true"></i>
+        <AppUi::Icon @name={{this.caretClass}} />
         <span class="quick-list-group-label" data-test-quick-list-group-label>
             {{#if (has-block "heading")}}
                 {{yield @group to="heading"}}
