@@ -11,9 +11,9 @@
         >
           {{@entity.votes.length}}
           {{#if (user-created @entity.votes @currentUser.user.id)}}
-            <i class="fa fa-heart"></i>
+            <AppUi::Icon @name="heart" />
           {{else}}
-            <i class="fa fa-heart-o"></i>
+            <AppUi::Icon @name="heart-o" />
           {{/if}}
         </AppUi::Button>
         {{#if this.isOwnConversation}}
@@ -25,7 +25,7 @@
             {{tooltip (t 'global.form.edit')}}
             aria-label={{t 'global.form.edit'}}
           >
-            <i class="fa fa-pencil"></i>
+            <AppUi::Icon @name="pencil" />
           </AppUi::Button>
         {{/if}}
       </div>

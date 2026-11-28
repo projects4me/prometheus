@@ -17,7 +17,7 @@
           @onClick={{@onRetry}}
           title="{{t 'views.app.conversation.comment.pending.retry'}}"
         >
-          <i class="fa fa-refresh"></i>
+          <AppUi::Icon @name="refresh" />
         </AppUi::Button>
         <AppUi::Button
           data-btn="discard"
@@ -26,7 +26,7 @@
           @onClick={{@onDiscard}}
           title="{{t 'views.app.conversation.comment.pending.discard'}}"
         >
-          <i class="fa fa-times"></i>
+          <AppUi::Icon @name="times" />
         </AppUi::Button>
       {{else}}
         <span class="comment-posting" data-pending-comment-status>

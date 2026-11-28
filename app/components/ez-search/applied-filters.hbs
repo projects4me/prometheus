@@ -11,7 +11,7 @@
         {{on "click" (fn this.removeChip chip.id)}}
       >
         <span class="ez-search-chip-text">{{chip.label}}{{#if chip.value}} <strong>{{chip.value}}</strong>{{/if}}</span>
-        <i class="fa fa-times" aria-hidden="true"></i>
+        <AppUi::Icon @name="times" />
       </button>
     {{/each}}
   </div>
