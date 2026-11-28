@@ -16,7 +16,7 @@
 
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" aria-label={{t "global.form.edit"}} {{tooltip (t "global.form.edit")}} @onClick={{fn this.editProject this.model.shortCode}} @aclContext="project.update"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" aria-label={{t "global.form.edit"}} {{tooltip (t "global.form.edit")}} @onClick={{fn this.editProject this.model.shortCode}} @aclContext="project.update"><AppUi::Icon @name="pencil" /></AppUi::Button>
             </div>
             {{!-- /.box-tools --}}
           </div>
@@ -280,7 +280,7 @@
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}
                   <AppUi::Button data-delete-member class="btn btn-box-tool" aria-label={{t "views.app.project.detail.membership.removeMember"}} {{tooltip (t "views.app.project.detail.membership.removeMember")}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="membership.delete">
-                    <i class="fa fa-times"></i>
+                    <AppUi::Icon @name="times" />
                   </AppUi::Button>
 
                   <div class="member-avatar-wrap">
@@ -339,7 +339,7 @@
                   @onClose={{this.removeDeleteMemberModal}}>
                   
                   <div class="flex-row" data-remove-member-warning>
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <AppUi::Icon @name="exclamation-triangle" />
                     <h5>{{this.deleteMemberWarning}}</h5>
                   </div>
                   <div class="form-group">
@@ -397,7 +397,7 @@
           <div class="box-body no-padding">
             {{#if this.milestonesError}}
               <p class="quick-list__state quick-list__state--error" data-test-milestones-error>
-                <i class="fa fa-exclamation-triangle"></i>
+                <AppUi::Icon @name="exclamation-triangle" />
                 {{t "components.quickList.error"}}
                 <button type="button" class="btn btn-link quick-list__state-action" data-test-milestones-retry {{on "click" this.retryMilestones}}>
                   {{t "components.quickList.retry"}}
@@ -534,7 +534,7 @@
         <div class="box-body no-padding">
 
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
+            <span class="info-box-icon bg-aqua"><AppUi::Icon @name="users" /></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.teamsize"}}</span>
               <span class="info-box-number">{{this.model.members.length}}</span>
@@ -542,7 +542,7 @@
           </div>
 
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
+            <span class="info-box-icon bg-aqua"><AppUi::Icon @name="tasks" /></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.openissues"}}</span>
               <span class="info-box-number">{{get-issuecount this.issuetime "open"}}</span>
@@ -550,7 +550,7 @@
           </div>
 
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
+            <span class="info-box-icon bg-aqua"><AppUi::Icon @name="tasks" /></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.closedissues"}}</span>
               <span class="info-box-number">{{get-issuecount this.issuetime "closed"}}</span>

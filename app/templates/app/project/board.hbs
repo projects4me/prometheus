@@ -87,7 +87,7 @@
           {{on "click" this.toggleBoardCollapse}}
         >
           <span class="divider-handle">
-            <i class="fa fa-angle-{{if this.isBoardCollapsed "right" "left"}}"></i>
+            <AppUi::Icon @name={{if this.isBoardCollapsed "angle-right" "angle-left"}} />
           </span>
         </button>
         {{#if this.isLoadingIssueDetails}}

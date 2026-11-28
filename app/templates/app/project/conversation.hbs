@@ -24,7 +24,7 @@
           <:actions>
             <AccessControl @aclContext="conversationroom.create">
               <button type="button" class="btn btn-primary btn-sm" {{on "click" this.showDialog}} data-btn="addConversation">
-                <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
+                <AppUi::Icon @name="plus" /> {{t "views.app.conversation.browser.new"}}
               </button>
             </AccessControl>
           </:actions>
@@ -48,7 +48,7 @@
           <:item as |conversation Item|>
             <Item @route="app.project.conversation.page" @model={{conversation.id}} @query={{this.linkQuery}} data-conversation={{conversation.id}}>
               <:leading>
-                <i class="fa {{if (eq conversation.roomType "vote") "fa-thumbs-o-up" "fa-comment-o"}}" data-conversation-type={{conversation.roomType}}></i>
+                <AppUi::Icon @name={{if (eq conversation.roomType "vote") "thumbs-o-up" "comment-o"}} data-conversation-type={{conversation.roomType}} />
               </:leading>
               <:primary>
                 <span data-conversation-subject>{{conversation.subject}}</span>
@@ -66,7 +66,7 @@
                     {{#if (eq conversation.roomType "vote")}}
                       <span data-conversation-votes>{{t "views.app.conversation.browser.votes" agree=counts.agreeCount disagree=counts.disagreeCount}}</span>
                     {{else}}
-                      <span data-conversation-comments><i class="fa fa-comment-o"></i> {{counts.commentCount}}</span>
+                      <span data-conversation-comments><AppUi::Icon @name="comment-o" /> {{counts.commentCount}}</span>
                     {{/if}}
                   {{/if}}
                 {{/let}}
@@ -75,7 +75,7 @@
           </:item>
           <:empty>
             <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>
-              <i class="fa fa-info-circle"></i> {{t "views.app.conversation.browser.empty"}}
+              <AppUi::Icon @name="info-circle" /> {{t "views.app.conversation.browser.empty"}}
               {{#if this.isSearching}}
                 <button type="button" class="btn btn-link quick-list__state-action" {{on "click" this.clearListSearch}} data-test-quick-list-clear-search>
                   {{t "components.quickList.clearSearch"}}

@@ -48,9 +48,9 @@
             <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="issue.read"/>
           </span>
           <div class="btn-group">
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="delete-issues" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @onClick={{this.deleteSelected}} @aclContext="issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="mass-update-issues" aria-label={{t "global.form.massupdate"}} {{tooltip (t "global.form.massupdate")}} @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.form.export"}} {{tooltip (t "global.form.export")}} @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="delete-issues" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @onClick={{this.deleteSelected}} @aclContext="issue.delete"><AppUi::Icon @name="trash-o" /></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="mass-update-issues" aria-label={{t "global.form.massupdate"}} {{tooltip (t "global.form.massupdate")}} @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><AppUi::Icon @name="pencil" /></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.form.export"}} {{tooltip (t "global.form.export")}} @onClick={{this.showExportDialog}}><AppUi::Icon @name="download" /></AppUi::Button>
           </div>
           <div class="pull-right">
             <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
@@ -58,14 +58,14 @@
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><AppUi::Icon @name="chevron-left" /></AppUi::Button>
               {{else}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}}><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}}><AppUi::Icon @name="chevron-left" /></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><AppUi::Icon @name="chevron-right" /></AppUi::Button>
               {{else}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}}><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}}><AppUi::Icon @name="chevron-right" /></AppUi::Button>
               {{/if}}
             </div>
 
@@ -77,12 +77,12 @@
             <thead>
               <tr>
                 <th class="select-box"></th>
-                <th data-sort="Issue.issueNumber">{{t "views.app.issue.list.overview"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.issueNumber')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                <th data-sort="Issue.assignee">{{t "views.app.issue.list.assignee"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.assignee')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                <th data-sort="issuetype.name">{{t "views.app.issue.list.issuetype"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuetype.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                <th data-sort="issuemilestone.name">{{t "views.app.issue.list.milestone"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuemilestone.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                <th data-sort="Issue.startDate">{{t "views.app.issue.list.startDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.startDate')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                <th data-sort="Issue.endDate">{{t "views.app.issue.list.endDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.endDate')}}><i class="fa fa-sort"></i></AppUi::Button></th>                
+                <th data-sort="Issue.issueNumber">{{t "views.app.issue.list.overview"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.issueNumber')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>
+                <th data-sort="Issue.assignee">{{t "views.app.issue.list.assignee"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.assignee')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>
+                <th data-sort="issuetype.name">{{t "views.app.issue.list.issuetype"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuetype.name')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>
+                <th data-sort="issuemilestone.name">{{t "views.app.issue.list.milestone"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuemilestone.name')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>
+                <th data-sort="Issue.startDate">{{t "views.app.issue.list.startDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.startDate')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>
+                <th data-sort="Issue.endDate">{{t "views.app.issue.list.endDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.endDate')}}><AppUi::Icon @name="sort" /></AppUi::Button></th>                
               </tr>
             </thead>
 
@@ -126,26 +126,26 @@
                         {{#if issue.conversationRoomId}}
                           <AppUi::Button type="button" class="btn btn-box-tool" aria-label={{t "views.app.issue.list.openConversation"}} {{tooltip (t "views.app.issue.list.openConversation")}}>
                             <LinkTo @route="app.project.conversation.page" @model={{issue.conversationRoomId}}>
-                              <i class="fa fa-comments-o"></i>
+                              <AppUi::Icon @name="comments-o" />
                             </LinkTo>
                           </AppUi::Button>
                         {{else}}
                           <AppUi::Button {{on "click" (fn this.routeToIssueComments issue)}} type="button" class="btn btn-box-tool btn-comment-add" aria-label={{t "views.app.issue.list.startConversation"}} {{tooltip (t "views.app.issue.list.startConversation")}}>
-                            <i class="fa fa-plus fa-comments-plus"></i>
-                            <i class="fa fa-comments-o"></i>
+                            <AppUi::Icon @name="plus" class="fa-comments-plus" />
+                            <AppUi::Icon @name="comments-o" />
                           </AppUi::Button>
                         {{/if}}  
 
                         {{!-- More Actions Button --}}
                         <AppUi::Button type="button" class="btn btn-box-tool dropdown-toggle" aria-expanded="false" {{dropdown-toggle}}>
-                          <i class="fa fa-ellipsis-v"></i>
+                          <AppUi::Icon @name="ellipsis-v" />
                         </AppUi::Button>
 
                         {{!-- More Actions Dropdown --}}
                         <ul class="dropdown-menu" role="menu">
                           <li>
                             <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @aclContext="issue.delete">
-                              <i class="fa fa-trash"></i> {{t "global.form.delete"}}
+                              <AppUi::Icon @name="trash" /> {{t "global.form.delete"}}
                             </AppUi::Button>
                           </li>
                         </ul>
@@ -176,9 +176,9 @@
             <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="issue.read"/>
           </span>
           <div class="btn-group">
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="delete-issues" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @onClick={{this.deleteSelected}} @aclContext="issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="mass-update-issues" aria-label={{t "global.form.massupdate"}} {{tooltip (t "global.form.massupdate")}} @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.form.export"}} {{tooltip (t "global.form.export")}} @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="delete-issues" aria-label={{t "global.form.delete"}} {{tooltip (t "global.form.delete")}} @onClick={{this.deleteSelected}} @aclContext="issue.delete"><AppUi::Icon @name="trash-o" /></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="mass-update-issues" aria-label={{t "global.form.massupdate"}} {{tooltip (t "global.form.massupdate")}} @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><AppUi::Icon @name="pencil" /></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.form.export"}} {{tooltip (t "global.form.export")}} @onClick={{this.showExportDialog}}><AppUi::Icon @name="download" /></AppUi::Button>
           </div>
           <div class="pull-right">
             <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
@@ -186,14 +186,14 @@
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><AppUi::Icon @name="chevron-left" /></AppUi::Button>
               {{else}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}}><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.prevPage"}} {{tooltip (t "global.list.prevPage")}}><AppUi::Icon @name="chevron-left" /></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}} @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><AppUi::Icon @name="chevron-right" /></AppUi::Button>
               {{else}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}}><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm disabled" aria-label={{t "global.list.nextPage"}} {{tooltip (t "global.list.nextPage")}}><AppUi::Icon @name="chevron-right" /></AppUi::Button>
               {{/if}}
             </div>
           </div>
@@ -215,7 +215,7 @@
         {{on "click" this.toggleListCollapse}}
       >
         <span class="divider-handle">
-          <i class="fa fa-angle-{{if this.isListCollapsed "right" "left"}}"></i>
+          <AppUi::Icon @name={{if this.isListCollapsed "angle-right" "angle-left"}} />
         </span>
       </button>
       {{#if this.isLoadingIssueDetails}}

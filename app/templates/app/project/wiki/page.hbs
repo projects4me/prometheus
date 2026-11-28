@@ -5,15 +5,15 @@
         {{#if (eq this.model.createdUser this.currentUser.user.id)}}
           {{#if (eq this.model.locked "0")}}
             <a href="javascript:void(0);" {{on "click" (fn this.lockWiki "unlock")}}>
-              <i class="fa fa-unlock lock" aria-label={{t "views.app.wiki.lock"}} {{tooltip (t "views.app.wiki.lock")}}></i>
+              <AppUi::Icon @name="unlock" class="lock" @label={{t "views.app.wiki.lock"}} {{tooltip (t "views.app.wiki.lock")}} />
             </a>
           {{else}}
             <a href="javascript:void(0);" {{on "click" (fn this.lockWiki "lock")}}>
-              <i class="fa fa-lock lock" aria-label={{t "views.app.wiki.unlock"}} {{tooltip (t "views.app.wiki.unlock")}}></i>
+              <AppUi::Icon @name="lock" class="lock" @label={{t "views.app.wiki.unlock"}} {{tooltip (t "views.app.wiki.unlock")}} />
             </a>
           {{/if}}
         {{else}}
-          {{#if (eq this.model.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
+          {{#if (eq this.model.locked "0")}}<AppUi::Icon @name="unlock" class="disabled" />{{else}}<AppUi::Icon @name="lock" class="disabled" />{{/if}}
         {{/if}}
         <h2 class="box-title">{{this.model.name}} - </h2>
         {{#if this.model.parentId}}
@@ -25,10 +25,10 @@
         <span class="wiki-upvotes">
           {{this.model.vote.length}}
           {{#if this.iVoted}}
-            <i class="fa fa-heart" aria-label={{t "views.app.wiki.voted"}} {{tooltip (t "views.app.wiki.voted")}} ></i>
+            <AppUi::Icon @name="heart" @label={{t "views.app.wiki.voted"}} {{tooltip (t "views.app.wiki.voted")}} />
           {{else}}
             <a href="javascript:void(0);" {{on "click" (fn this.upvote this.model.id)}}>
-              <i class="fa fa-heart-o" aria-label={{t "views.app.wiki.upvote"}} {{tooltip (t "views.app.wiki.upvote")}}></i>
+              <AppUi::Icon @name="heart-o" @label={{t "views.app.wiki.upvote"}} {{tooltip (t "views.app.wiki.upvote")}} />
             </a>
           {{/if}}
         </span>
@@ -52,15 +52,15 @@
 
       <div class="box-footer">
         {{#if (eq this.model.locked "0")}}
-          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.edit}} @aclContext="wiki.update"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
-          <AppUi::Button type="button" class="btn btn-default" @onClick={{this.delete}} @aclContext="wiki.delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.edit}} @aclContext="wiki.update"><AppUi::Icon @name="pencil" /> {{t "global.form.edit"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default" @onClick={{this.delete}} @aclContext="wiki.delete"><AppUi::Icon @name="trash" /> {{t "global.form.delete"}}</AppUi::Button>
         {{/if}}
 
         <div class="pull-right">
           {{t "views.app.wiki.tags"}}<span class="colon"></span>
           {{#if this.model.tag.length}}
             {{#each this.model.tag as |tags|}}
-              <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
+              <span class="label label-primary"><AppUi::Icon @name="tag" /> {{tags.tag}}</span>
             {{/each}}
           {{else}}
             <span class="disabled-text">{{t "global.noentry"}}</span>
@@ -101,13 +101,13 @@
                 {{/if}}
                 <div class="attachment-info">
                   <div class="attachment-name clearfix">
-                    <a href="#" {{on "click" (prevent-default this.previewFile file)}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                    <a href="#" {{on "click" (prevent-default this.previewFile file)}}><AppUi::Icon @name="paperclip" /><span class="attachment-file-name">{{file.name}}</span></a>
                   </div>
                   <div class="attachment-additional">
                     <span class="attachment-size">
                       {{file-size file.fileSize}}
-                      <a href="#" {{on "click" (prevent-default this.deleteFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                      <a href="#" {{on "click" (prevent-default this.downloadFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                      <a href="#" {{on "click" (prevent-default this.deleteFile file)}} class="btn btn-default btn-xs pull-right"><AppUi::Icon @name="trash-o" /></a>
+                      <a href="#" {{on "click" (prevent-default this.downloadFile file)}} class="btn btn-default btn-xs pull-right"><AppUi::Icon @name="cloud-download" /></a>
                     </span>
                   </div>
                 </div>
@@ -140,7 +140,7 @@
 
     <div class="callout callout-danger">
       <h4>
-        <i class="fa fa-exclamation-triangle"></i> {{t "views.app.wiki.notfound"}}
+        <AppUi::Icon @name="exclamation-triangle" /> {{t "views.app.wiki.notfound"}}
       </h4>
       {{t "views.app.wiki.page.empty"}}
     </div>
